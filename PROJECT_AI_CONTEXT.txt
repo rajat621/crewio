@@ -1,0 +1,392 @@
+CREWCONTROL - COMPLETE AI HANDOFF CONTEXT
+Generated: 2026-04-22
+Workspace Root: D:/Crew_control
+Purpose: This file is a full context package for AI models to understand the current project state, architecture, modules, and component inventory.
+
+==================================================
+1) PROJECT OVERVIEW
+==================================================
+CrewControl is a workforce management platform with:
+- Backend API (Node.js + Express + MongoDB/Mongoose)
+- Frontend SPA (React + Vite + MUI)
+- AI extraction service (Python FastAPI + Camelot)
+
+Main business domains:
+- Authentication and account security (OTP + optional 2FA)
+- Employees and assignments
+- Attendance tracking
+- Company profiles
+- Tax invoices and PDF generation
+- File upload + extraction pipeline for invoice data
+
+==================================================
+2) RUNTIME + STACK
+==================================================
+Backend:
+- Path: backend/
+- Entry: backend/src/server.js
+- App wiring: backend/src/app.js
+- Script: npm start
+- Default port: 5000
+
+Frontend:
+- Path: crewcontrol-fron/
+- Entry: crewcontrol-fron/src/main.jsx
+- Router app shell: crewcontrol-fron/src/app/App.jsx
+- Scripts: npm run dev, npm run build, npm run preview
+- Default dev port: 5173
+
+AI Service:
+- Path: ai-service/
+- Entry: ai-service/main.py
+- Typical run: uvicorn main:app
+- Typical port: 8001
+
+Root package (utility deps):
+- package.json at repo root includes axios, number-to-words, pdf-parse, pdfkit
+
+==================================================
+3) HIGH-LEVEL DATA FLOW
+==================================================
+Authentication Flow:
+1. Frontend auth pages call backend auth endpoints.
+2. Backend issues JWT.
+3. Frontend stores token in localStorage (crewcontrol_token) and user object (crewcontrol_user).
+4. API client attaches Bearer token automatically.
+
+Protected API Flow:
+1. Frontend calls API wrappers in crewcontrol-fron/src/api/*.js
+2. Requests hit backend /api/* routes.
+3. verifyToken middleware protects business routes.
+4. Controllers call models/services and return JSON.
+
+Invoice + AI Extraction Flow:
+1. User uploads PDF via /api/upload.
+2. Backend stores upload metadata and path.
+3. Backend invoice service calls AI service /extract with PDF path.
+4. AI service extracts rows from PDF tables.
+5. Backend computes totals/tax, persists invoice, generates invoice PDF.
+
+==================================================
+4) BACKEND ARCHITECTURE
+==================================================
+Core Files:
+- backend/src/server.js (bootstraps env, DB connection, server start)
+- backend/src/app.js (middleware + route registration)
+- backend/src/config/db.js (database connection)
+- backend/src/config/env.js (environment helpers)
+
+Middleware:
+- backend/src/middleware/auth.middleware.js
+- backend/src/middleware/error.middleware.js
+
+Route Files:
+- backend/src/routes/auth.routes.js
+- backend/src/routes/employee.routes.js
+- backend/src/routes/attendance.routes.js
+- backend/src/routes/dashboard.routes.js
+- backend/src/routes/company.routes.js
+- backend/src/routes/invoice.routes.js
+- backend/src/routes/upload.routes.js
+
+Controller Files:
+- backend/src/controllers/auth.controller.js
+- backend/src/controllers/employee.controller.js
+- backend/src/controllers/attendance.controller.js
+- backend/src/controllers/dashboard.controller.js
+- backend/src/controllers/company.controller.js
+- backend/src/controllers/invoice.controller.js
+- backend/src/controllers/upload.controller.js
+
+Model Files:
+- backend/src/models/User.js
+- backend/src/models/Employee.js
+- backend/src/models/Company.js
+- backend/src/models/Attendance.js
+- backend/src/models/Invoice.js
+- backend/src/models/InvoiceItem.js
+- backend/src/models/SalarySlip.js
+- backend/src/models/File.js
+- backend/src/models/index.js
+
+Service Files:
+- backend/src/services/company.service.js
+- backend/src/services/extraction.service.js
+- backend/src/services/invoice.service.js
+- backend/src/services/invoiceNumber.service.js
+- backend/src/services/pdf.service.js
+- backend/src/services/upload.service.js
+- backend/src/services/pdf/coordinates.js
+- backend/src/services/pdf/invoiceTemplate.service.js
+
+Utility Files:
+- backend/src/utils/email.util.js
+- backend/src/utils/employee.util.js
+- backend/src/utils/invoice.util.js
+- backend/src/utils/money.util.js
+- backend/src/utils/validator.util.js
+
+Storage Paths:
+- backend/src/storage/database.sqlite
+- backend/src/storage/uploads/
+- backend/src/storage/invoices/
+
+Current route protection in app.js:
+- Public: /api/auth
+- Protected by verifyToken:
+  - /api/employees
+  - /api/attendance
+  - /api/dashboard
+  - /api/companies
+  - /api/invoices
+  - /api/upload
+
+==================================================
+5) FRONTEND ARCHITECTURE
+==================================================
+Entry + Shell:
+- crewcontrol-fron/src/main.jsx (AuthProvider + ThemeProvider + App)
+- crewcontrol-fron/src/app/App.jsx (BrowserRouter + layouts + route tree)
+- crewcontrol-fron/src/routes/routesConfig.js (sidebar/topbar route metadata)
+- crewcontrol-fron/src/context/AuthContext.jsx (auth state + restore + login/logout)
+
+Layout Files:
+- crewcontrol-fron/src/layouts/DashboardLayout.jsx
+- crewcontrol-fron/src/layouts/FlowLayout.jsx
+
+API Layer:
+- crewcontrol-fron/src/api/client.js
+- crewcontrol-fron/src/api/auth.js
+- crewcontrol-fron/src/api/employees.js
+- crewcontrol-fron/src/api/attendance.js
+- crewcontrol-fron/src/api/companies.js
+- crewcontrol-fron/src/api/dashboard.js
+- crewcontrol-fron/src/api/invoices.js
+
+Hooks:
+- crewcontrol-fron/src/hooks/useAssignedKpi.js
+- crewcontrol-fron/src/hooks/useAttendanceKpi.js
+
+Theme:
+- crewcontrol-fron/src/theme/designSystem.js
+- crewcontrol-fron/src/theme/theme.js
+
+Frontend Utilities:
+- crewcontrol-fron/src/utils/companyProfileStatus.js
+- crewcontrol-fron/src/utils/countriesData.js
+- crewcontrol-fron/src/utils/phoneValidation.js
+
+==================================================
+6) FULL FRONTEND COMPONENT INVENTORY
+==================================================
+Add New:
+- crewcontrol-fron/src/components/addNew/AddNewDialog.jsx
+- crewcontrol-fron/src/components/addNew/AddNewItemCard.jsx
+
+Alerts:
+- crewcontrol-fron/src/components/alerts/AlertAccordion.jsx
+- crewcontrol-fron/src/components/alerts/AlertBox.jsx
+- crewcontrol-fron/src/components/alerts/AlertContent.jsx
+- crewcontrol-fron/src/components/alerts/AlertItem.jsx
+
+Attendance Widgets:
+- crewcontrol-fron/src/components/attendance/AttendanceBarChart.jsx
+- crewcontrol-fron/src/components/attendance/AttendanceCard.jsx
+- crewcontrol-fron/src/components/attendance/AttendanceChartPlaceholder.jsx
+- crewcontrol-fron/src/components/attendance/AttendanceHeader.jsx
+- crewcontrol-fron/src/components/attendance/AttendanceLegend.jsx
+
+Auth:
+- crewcontrol-fron/src/components/auth/ProtectedRoute.jsx
+
+Chat:
+- crewcontrol-fron/src/components/chat/ChatDetail.jsx
+- crewcontrol-fron/src/components/chat/ChatList.jsx
+- crewcontrol-fron/src/components/chaticon/FloatingChatButton.jsx
+
+Common:
+- crewcontrol-fron/src/components/common/NoDataOverlay.jsx
+
+Company:
+- crewcontrol-fron/src/components/company/CompanyCard.jsx
+- crewcontrol-fron/src/components/company/companyData.js
+- crewcontrol-fron/src/components/company/CompanyDetails.jsx
+- crewcontrol-fron/src/components/company/CompanyDetailsPanel.jsx
+- crewcontrol-fron/src/components/company/CompanyGrid.jsx
+- crewcontrol-fron/src/components/company/CompanyHeader.jsx
+- crewcontrol-fron/src/components/company/CompanyStatusChip.jsx
+- crewcontrol-fron/src/components/company/CompanyWorkersTable.jsx
+
+Employees Core:
+- crewcontrol-fron/src/components/employees/EmployeeCell.jsx
+- crewcontrol-fron/src/components/employees/EmployeeRow.jsx
+- crewcontrol-fron/src/components/employees/EmployeesHeader.jsx
+- crewcontrol-fron/src/components/employees/EmployeesTable.jsx
+- crewcontrol-fron/src/components/employees/EmployeesTabs.jsx
+- crewcontrol-fron/src/components/employees/EmployeesToolbar.jsx
+- crewcontrol-fron/src/components/employees/StatusChip.jsx
+
+Employees Assigned:
+- crewcontrol-fron/src/components/employees/assigned/AssignedKpiRow.jsx
+- crewcontrol-fron/src/components/employees/assigned/AssignedRow.jsx
+- crewcontrol-fron/src/components/employees/assigned/AssignedTable.jsx
+
+Employees Attendance:
+- crewcontrol-fron/src/components/employees/attendance/attendanceData.js
+- crewcontrol-fron/src/components/employees/attendance/AttendanceKpiRow.jsx
+- crewcontrol-fron/src/components/employees/attendance/AttendanceRow.jsx
+- crewcontrol-fron/src/components/employees/attendance/AttendanceTable.jsx
+- crewcontrol-fron/src/components/employees/attendance/attendanceUtils.js
+
+Employees Passport:
+- crewcontrol-fron/src/components/employees/passport/PassportKpiRow.jsx
+- crewcontrol-fron/src/components/employees/passport/PassportRow.jsx
+- crewcontrol-fron/src/components/employees/passport/PassportTable.jsx
+
+Employees Track:
+- crewcontrol-fron/src/components/employees/track/TrackEmployee.jsx
+- crewcontrol-fron/src/components/employees/track/trackEmployeeData.js
+- crewcontrol-fron/src/components/employees/track/TrackEmployeeList.jsx
+- crewcontrol-fron/src/components/employees/track/TrackEmployeeMap.jsx
+- crewcontrol-fron/src/components/employees/track/TrackEmployeeRow.jsx
+- crewcontrol-fron/src/components/employees/track/TrackEmployeeTable.jsx
+
+KPI:
+- crewcontrol-fron/src/components/kpi/KpiCard.jsx
+- crewcontrol-fron/src/components/kpi/KPIGrid.jsx
+- crewcontrol-fron/src/components/kpi/UniversalKpiRow.jsx
+
+Notifications:
+- crewcontrol-fron/src/components/notification/NotificationItem.jsx
+- crewcontrol-fron/src/components/notification/NotificationPopover.jsx
+
+Page Header:
+- crewcontrol-fron/src/components/pageHeader/PageHeader.jsx
+
+Profile:
+- crewcontrol-fron/src/components/profile/ProfileCard.jsx
+- crewcontrol-fron/src/components/profile/ProfilePopover.jsx
+
+Sidebar:
+- crewcontrol-fron/src/components/sidebar/Sidebar.jsx
+
+Table:
+- crewcontrol-fron/src/components/table/RowActionMenu.jsx
+- crewcontrol-fron/src/components/table/TableHeader.jsx
+- crewcontrol-fron/src/components/table/TableToolbar.jsx
+- crewcontrol-fron/src/components/table/tableUtils.js
+- crewcontrol-fron/src/components/table/UniversalTable.jsx
+
+Tax Invoices Components:
+- crewcontrol-fron/src/components/taxInvoices/taxInvoiceColumns.js
+- crewcontrol-fron/src/components/taxInvoices/taxInvoiceData.js
+- crewcontrol-fron/src/components/taxInvoices/TaxInvoiceRow.jsx
+- crewcontrol-fron/src/components/taxInvoices/TaxInvoiceTable.jsx
+
+Topbar:
+- crewcontrol-fron/src/components/topbar/FlowTopbar.jsx
+- crewcontrol-fron/src/components/topbar/Topbar.jsx
+
+==================================================
+7) FULL FRONTEND PAGE INVENTORY
+==================================================
+Main pages:
+- crewcontrol-fron/src/pages/AccountSecurity.jsx
+- crewcontrol-fron/src/pages/AddEmployee.jsx
+- crewcontrol-fron/src/pages/Chat.jsx
+- crewcontrol-fron/src/pages/CommunitySupport.jsx
+- crewcontrol-fron/src/pages/Company.jsx
+- crewcontrol-fron/src/pages/CompanyDetail.jsx
+- crewcontrol-fron/src/pages/CompanyProfile.jsx
+- crewcontrol-fron/src/pages/ComprehensiveOnboarding.jsx
+- crewcontrol-fron/src/pages/EmailSupport.jsx
+- crewcontrol-fron/src/pages/EmployeeProfile.jsx
+- crewcontrol-fron/src/pages/Employees.jsx
+- crewcontrol-fron/src/pages/GenerateFlowPlaceholder.jsx
+- crewcontrol-fron/src/pages/HelpSupport.jsx
+- crewcontrol-fron/src/pages/HelpSupportFaq.jsx
+- crewcontrol-fron/src/pages/Home.jsx
+- crewcontrol-fron/src/pages/NotFound.jsx
+- crewcontrol-fron/src/pages/OnboardingAuthorizedSignature.jsx
+- crewcontrol-fron/src/pages/OnboardingCompanyLogo.jsx
+- crewcontrol-fron/src/pages/OnboardingCompanyProfile.jsx
+- crewcontrol-fron/src/pages/OnboardingCompanyTemplate.jsx
+- crewcontrol-fron/src/pages/OnboardingSuccess.jsx
+- crewcontrol-fron/src/pages/SignIn.jsx
+- crewcontrol-fron/src/pages/SignUp.jsx
+- crewcontrol-fron/src/pages/Subscription.jsx
+- crewcontrol-fron/src/pages/UserProfile.jsx
+- crewcontrol-fron/src/pages/VerifyEmail.jsx
+
+Nested pages:
+- crewcontrol-fron/src/pages/employees/add/AddEmployeeWizard.jsx
+- crewcontrol-fron/src/pages/tax-invoices/TaxInvoiceList.jsx
+- crewcontrol-fron/src/pages/tax-invoices/generate/GenerateTaxInvoice.jsx
+- crewcontrol-fron/src/pages/tax-invoices/generate/Success.jsx
+- crewcontrol-fron/src/pages/tax-invoices/generate/components/InvoiceStepper.jsx
+- crewcontrol-fron/src/pages/tax-invoices/generate/steps/ConfirmCompanyStep.jsx
+- crewcontrol-fron/src/pages/tax-invoices/generate/steps/InvoiceDetailsStep.jsx
+- crewcontrol-fron/src/pages/tax-invoices/generate/steps/SelectCompanyStep.jsx
+
+==================================================
+8) AI SERVICE DETAILS
+==================================================
+Files:
+- ai-service/main.py
+- ai-service/extractor.py
+- ai-service/schema.py
+- ai-service/requirements.txt
+
+Role:
+- Provides POST /extract endpoint to parse PDF table rows.
+- Backend invoice flow can call this service for structured extraction.
+
+==================================================
+9) ROOT DOCUMENTATION FILES YOU ALREADY HAVE
+==================================================
+- AUTH_TROUBLESHOOTING.md
+- DESIGN_AUDIT_PROGRESS.md
+- PROJECT_COMPLETION_SUMMARY.md
+- PROJECT_STATUS.md
+- QUICK_START.md
+- TASK_12_COMPLETED.md
+- filestructure.txt
+
+==================================================
+10) IMPORTANT IMPLEMENTATION NOTES FOR ANY AI MODEL
+==================================================
+- Frontend auth token key: crewcontrol_token
+- Frontend user key: crewcontrol_user
+- Backend protected routes are mounted globally in app.js with verifyToken
+- API base URL in frontend client:
+  - import.meta.env.VITE_API_URL OR http://localhost:5000
+- AI extraction service expected around localhost:8001
+- Do not remove existing route paths without syncing both routesConfig.js and app/App.jsx usages.
+- Employee/attendance/tax invoice features are spread across pages + components + api wrappers.
+
+==================================================
+11) HOW TO USE THIS FILE WITH ANY AI
+==================================================
+Recommended prompt:
+"Use PROJECT_AI_CONTEXT.txt as the source of truth. Help me create/update technical documentation for CrewControl. Keep architecture, routes, models, and component names aligned with this file. If any section is ambiguous, ask me and I will share the exact source file."
+
+==================================================
+12) QUICK BOOT COMMANDS
+==================================================
+From project root (D:/Crew_control):
+- Backend:
+  cd backend
+  npm install
+  npm start
+
+- Frontend:
+  cd crewcontrol-fron
+  npm install
+  npm run dev
+
+- AI Service (Python env assumed):
+  cd ai-service
+  pip install -r requirements.txt
+  uvicorn main:app --reload --port 8001
+
+End of file.

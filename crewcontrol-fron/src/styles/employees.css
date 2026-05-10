@@ -1,0 +1,89 @@
+/* Employees Page */
+.employees-page {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header section */
+.employees-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-add-employee {
+  height: 32px;
+  padding: 0 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-add-employee:hover {
+  background-color: #1565c0;
+}
+
+.btn-add-employee:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Loading state */
+.employees-loading {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+/* Error state */
+.employees-error {
+  background-color: #fee2e2;
+  padding: 16px;
+  border-radius: 4px;
+  text-align: center;
+  color: #dc2626;
+}
+
+/* Content sections */
+.employees-content {
+  background-color: #ffffff;
+  border: 1px solid #dedede;
+  border-radius: 6px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.employees-table-wrapper {
+  background-color: #ffffff;
+  border: 1px solid #dedede;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .employees-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .employees-page {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

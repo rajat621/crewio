@@ -1,0 +1,464 @@
+├── ai-service
+│   ├── extractor.py
+│   ├── main.py
+│   ├── requirements.txt
+│   └── schema.py
+├── backend
+│   ├── src
+│   │   ├── config
+│   │   │   ├── db.js
+│   │   │   └── env.js
+│   │   ├── controllers
+│   │   │   ├── company.controller.js
+│   │   │   ├── invoice.controller.js
+│   │   │   └── upload.controller.js
+│   │   ├── middleware
+│   │   │   └── error.middleware.js
+│   │   ├── models
+│   │   │   ├── Company.js
+│   │   │   ├── File.js
+│   │   │   ├── index.js
+│   │   │   ├── Invoice.js
+│   │   │   └── InvoiceItem.js
+│   │   ├── routes
+│   │   │   ├── company.routes.js
+│   │   │   ├── invoice.routes.js
+│   │   │   └── upload.routes.js
+│   │   ├── services
+│   │   │   ├── pdf
+│   │   │   │   ├── coordinates.js
+│   │   │   │   └── invoiceTemplate.service.js
+│   │   │   ├── company.service.js
+│   │   │   ├── extraction.service.js
+│   │   │   ├── invoice.service.js
+│   │   │   ├── invoiceNumber.service.js
+│   │   │   ├── pdf.service.js
+│   │   │   └── upload.service.js
+│   │   ├── storage
+│   │   │   ├── invoices
+│   │   │   ├── uploads
+│   │   │   └── database.sqlite
+│   │   ├── utils
+│   │   │   ├── invoice.util.js
+│   │   │   ├── money.util.js
+│   │   │   └── validator.util.js
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── uploads
+│   │   ├── 1767466340419-admit card.pdf
+│   │   ├── 1767466465803-Invoice 8.pdf
+│   │   └── 1767466538014-Invoice 8.pdf
+│   ├── .env
+│   ├── database.sqlite
+│   ├── package-lock.json
+│   ├── package.json
+│   └── requirements.txt
+├── crewcontrol-fron
+│   ├── public
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── app
+│   │   │   └── App.jsx
+│   │   ├── assets
+│   │   │   ├── google.svg
+│   │   │   └── react.svg
+│   │   ├── components
+│   │   │   ├── addNew
+│   │   │   │   ├── AddNewDialog.jsx
+│   │   │   │   └── AddNewItemCard.jsx
+│   │   │   ├── alerts
+│   │   │   │   ├── AlertAccordion.jsx
+│   │   │   │   ├── AlertBox.jsx
+│   │   │   │   ├── AlertContent.jsx
+│   │   │   │   └── AlertItem.jsx
+│   │   │   ├── attendance
+│   │   │   │   ├── AttendanceBarChart.jsx
+│   │   │   │   ├── AttendanceCard.jsx
+│   │   │   │   ├── AttendanceChartPlaceholder.jsx
+│   │   │   │   ├── AttendanceHeader.jsx
+│   │   │   │   └── AttendanceLegend.jsx
+│   │   │   ├── chaticon
+│   │   │   │   └── FloatingChatButton.jsx
+│   │   │   ├── company
+│   │   │   │   ├── MainContainer
+│   │   │   │   ├── CompanyCard.jsx
+│   │   │   │   ├── companyData.js
+│   │   │   │   ├── CompanyDetails.jsx
+│   │   │   │   ├── CompanyDetailsPanel.jsx
+│   │   │   │   ├── CompanyGrid.jsx
+│   │   │   │   ├── CompanyHeader.jsx
+│   │   │   │   ├── CompanyStatusChip.jsx
+│   │   │   │   └── CompanyWorkersTable.jsx
+│   │   │   ├── employees
+│   │   │   │   ├── assigned
+│   │   │   │   │   ├── AssignedKpiRow.jsx
+│   │   │   │   │   ├── AssignedRow.jsx
+│   │   │   │   │   └── AssignedTable.jsx
+│   │   │   │   ├── attendance
+│   │   │   │   │   ├── attendanceData.js
+│   │   │   │   │   ├── AttendanceKpiRow.jsx
+│   │   │   │   │   ├── AttendanceRow.jsx
+│   │   │   │   │   ├── AttendanceTable.jsx
+│   │   │   │   │   └── attendanceUtils.js
+│   │   │   │   ├── passport
+│   │   │   │   │   ├── PassportKpiRow.jsx
+│   │   │   │   │   ├── PassportRow.jsx
+│   │   │   │   │   └── PassportTable.jsx
+│   │   │   │   ├── track
+│   │   │   │   │   ├── TrackEmployee.jsx
+│   │   │   │   │   ├── trackEmployeeData.js
+│   │   │   │   │   ├── TrackEmployeeList.jsx
+│   │   │   │   │   ├── TrackEmployeeMap.jsx
+│   │   │   │   │   ├── TrackEmployeeRow.jsx
+│   │   │   │   │   └── TrackEmployeeTable.jsx
+│   │   │   │   ├── EmployeeCell.jsx
+│   │   │   │   ├── EmployeeRow.jsx
+│   │   │   │   ├── EmployeesHeader.jsx
+│   │   │   │   ├── EmployeesTable.jsx
+│   │   │   │   ├── EmployeesTabs.jsx
+│   │   │   │   ├── EmployeesToolbar.jsx
+│   │   │   │   └── StatusChip.jsx
+│   │   │   ├── kpi
+│   │   │   │   ├── KpiCard.jsx
+│   │   │   │   ├── KPIGrid.jsx
+│   │   │   │   └── UniversalKpiRow.jsx
+│   │   │   ├── notification
+│   │   │   │   ├── NotificationItem.jsx
+│   │   │   │   └── NotificationPopover.jsx
+│   │   │   ├── pageHeader
+│   │   │   │   └── PageHeader.jsx
+│   │   │   ├── profile
+│   │   │   │   ├── ProfileCard.jsx
+│   │   │   │   └── ProfilePopover.jsx
+│   │   │   ├── sidebar
+│   │   │   │   └── Sidebar.jsx
+│   │   │   ├── table
+│   │   │   │   ├── RowActionMenu.jsx
+│   │   │   │   ├── TableHeader.jsx
+│   │   │   │   ├── TableToolbar.jsx
+│   │   │   │   ├── tableUtils.js
+│   │   │   │   └── UniversalTable.jsx
+│   │   │   ├── taxInvoices
+│   │   │   │   ├── FileUploadBox.tsx
+│   │   │   │   ├── InvoiceTable.tsx
+│   │   │   │   ├── StepSidebar.tsx
+│   │   │   │   ├── taxInvoiceColumns.js
+│   │   │   │   ├── taxInvoiceData.js
+│   │   │   │   ├── TaxInvoiceRow.jsx
+│   │   │   │   ├── TaxInvoicesPage.tsx
+│   │   │   │   └── TaxInvoiceTable.jsx
+│   │   │   ├── topbar
+│   │   │   │   ├── FlowTopbar.jsx
+│   │   │   │   └── Topbar.jsx
+│   │   │   ├── AddNewModal.tsx
+│   │   │   ├── Button.tsx
+│   │   │   ├── Card.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── NotificationPopup.tsx
+│   │   │   ├── OtpInput.tsx
+│   │   │   ├── ProfilePopup.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Topbar.tsx
+│   │   ├── data
+│   │   │   └── employees.js
+│   │   ├── hooks
+│   │   │   ├── useAssignedKpi.js
+│   │   │   └── useAttendanceKpi.js
+│   │   ├── layouts
+│   │   │   ├── AuthLayout.tsx
+│   │   │   ├── DashboardLayout.jsx
+│   │   │   ├── DashboardLayout.tsx
+│   │   │   ├── FlowLayout.jsx
+│   │   │   └── InvoiceLayout.tsx
+│   │   ├── pages
+│   │   │   ├── tax-invoices
+│   │   │   │   ├── generate
+│   │   │   │   │   ├── components
+│   │   │   │   │   │   └── InvoiceStepper.jsx
+│   │   │   │   │   ├── steps
+│   │   │   │   │   │   ├── ConfirmCompanyStep.jsx
+│   │   │   │   │   │   ├── InvoiceDetailsStep.jsx
+│   │   │   │   │   │   └── SelectCompanyStep.jsx
+│   │   │   │   │   ├── GenerateTaxInvoice.jsx
+│   │   │   │   │   └── Success.jsx
+│   │   │   │   └── TaxInvoiceList.jsx
+│   │   │   ├── taxInvoices
+│   │   │   │   ├── GenerateInvoiceCompany.tsx
+│   │   │   │   ├── GenerateInvoiceStart.tsx
+│   │   │   │   ├── GenerateInvoiceUpload.tsx
+│   │   │   │   ├── InvoiceList.tsx
+│   │   │   │   └── InvoiceSuccess.tsx
+│   │   │   ├── Company.jsx
+│   │   │   ├── CompanyDetail.jsx
+│   │   │   ├── Employees.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Home.tsx
+│   │   │   ├── NotFound.jsx
+│   │   │   ├── SignIn.tsx
+│   │   │   ├── SignUp.tsx
+│   │   │   └── VerifyEmail.tsx
+│   │   ├── routes
+│   │   │   ├── AppRoutes.tsx
+│   │   │   └── routesConfig.js
+│   │   ├── styles
+│   │   │   ├── auth.css
+│   │   │   ├── Button.module.css
+│   │   │   ├── Card.module.css
+│   │   │   ├── global.css
+│   │   │   ├── home.css
+│   │   │   ├── Input.module.css
+│   │   │   ├── InvoiceTable.module.css
+│   │   │   ├── Sidebar.module.css
+│   │   │   └── taxInvoice.css
+│   │   ├── theme
+│   │   │   └── theme.js
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   └── main.tsx
+│   ├── .gitignore
+│   ├── eslint.config.js
+│   ├── index.css
+│   ├── index.html
+│   ├── main.jsx
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+│   ├── src.zip
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── vite.config.js
+│   └── vite.config.ts
+├── New folder
+│   ├── backend
+│   │   ├── src
+│   │   │   ├── config
+│   │   │   │   ├── db.js
+│   │   │   │   └── env.js
+│   │   │   ├── controllers
+│   │   │   │   ├── company.controller.js
+│   │   │   │   ├── invoice.controller.js
+│   │   │   │   └── upload.controller.js
+│   │   │   ├── middleware
+│   │   │   │   └── error.middleware.js
+│   │   │   ├── models
+│   │   │   │   ├── Company.js
+│   │   │   │   ├── File.js
+│   │   │   │   ├── index.js
+│   │   │   │   ├── Invoice.js
+│   │   │   │   └── InvoiceItem.js
+│   │   │   ├── routes
+│   │   │   │   ├── company.routes.js
+│   │   │   │   ├── invoice.routes.js
+│   │   │   │   └── upload.routes.js
+│   │   │   ├── services
+│   │   │   │   ├── pdf
+│   │   │   │   │   ├── coordinates.js
+│   │   │   │   │   └── invoiceTemplate.service.js
+│   │   │   │   ├── company.service.js
+│   │   │   │   ├── extraction.service.js
+│   │   │   │   ├── invoice.service.js
+│   │   │   │   ├── invoiceNumber.service.js
+│   │   │   │   ├── pdf.service.js
+│   │   │   │   └── upload.service.js
+│   │   │   ├── storage
+│   │   │   │   ├── invoices
+│   │   │   │   ├── uploads
+│   │   │   │   └── database.sqlite
+│   │   │   ├── utils
+│   │   │   │   ├── invoice.util.js
+│   │   │   │   ├── money.util.js
+│   │   │   │   └── validator.util.js
+│   │   │   ├── app.js
+│   │   │   └── server.js
+│   │   ├── uploads
+│   │   │   ├── 1767466340419-admit card.pdf
+│   │   │   ├── 1767466465803-Invoice 8.pdf
+│   │   │   └── 1767466538014-Invoice 8.pdf
+│   │   ├── .env
+│   │   ├── database.sqlite
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   └── requirements.txt
+│   ├── frontend
+│   │   ├── public
+│   │   │   └── vite.svg
+│   │   ├── src
+│   │   │   ├── app
+│   │   │   │   └── App.jsx
+│   │   │   ├── assets
+│   │   │   │   ├── google.svg
+│   │   │   │   └── react.svg
+│   │   │   ├── components
+│   │   │   │   ├── addNew
+│   │   │   │   │   ├── AddNewDialog.jsx
+│   │   │   │   │   └── AddNewItemCard.jsx
+│   │   │   │   ├── alerts
+│   │   │   │   │   ├── AlertAccordion.jsx
+│   │   │   │   │   ├── AlertBox.jsx
+│   │   │   │   │   ├── AlertContent.jsx
+│   │   │   │   │   └── AlertItem.jsx
+│   │   │   │   ├── attendance
+│   │   │   │   │   ├── AttendanceBarChart.jsx
+│   │   │   │   │   ├── AttendanceCard.jsx
+│   │   │   │   │   ├── AttendanceChartPlaceholder.jsx
+│   │   │   │   │   ├── AttendanceHeader.jsx
+│   │   │   │   │   └── AttendanceLegend.jsx
+│   │   │   │   ├── chaticon
+│   │   │   │   │   └── FloatingChatButton.jsx
+│   │   │   │   ├── company
+│   │   │   │   │   ├── MainContainer
+│   │   │   │   │   ├── CompanyCard.jsx
+│   │   │   │   │   ├── companyData.js
+│   │   │   │   │   ├── CompanyDetails.jsx
+│   │   │   │   │   ├── CompanyDetailsPanel.jsx
+│   │   │   │   │   ├── CompanyGrid.jsx
+│   │   │   │   │   ├── CompanyHeader.jsx
+│   │   │   │   │   ├── CompanyStatusChip.jsx
+│   │   │   │   │   └── CompanyWorkersTable.jsx
+│   │   │   │   ├── employees
+│   │   │   │   │   ├── assigned
+│   │   │   │   │   │   ├── AssignedKpiRow.jsx
+│   │   │   │   │   │   ├── AssignedRow.jsx
+│   │   │   │   │   │   └── AssignedTable.jsx
+│   │   │   │   │   ├── attendance
+│   │   │   │   │   │   ├── attendanceData.js
+│   │   │   │   │   │   ├── AttendanceKpiRow.jsx
+│   │   │   │   │   │   ├── AttendanceRow.jsx
+│   │   │   │   │   │   ├── AttendanceTable.jsx
+│   │   │   │   │   │   └── attendanceUtils.js
+│   │   │   │   │   ├── passport
+│   │   │   │   │   │   ├── PassportKpiRow.jsx
+│   │   │   │   │   │   ├── PassportRow.jsx
+│   │   │   │   │   │   └── PassportTable.jsx
+│   │   │   │   │   ├── track
+│   │   │   │   │   │   ├── TrackEmployee.jsx
+│   │   │   │   │   │   ├── trackEmployeeData.js
+│   │   │   │   │   │   ├── TrackEmployeeList.jsx
+│   │   │   │   │   │   ├── TrackEmployeeMap.jsx
+│   │   │   │   │   │   ├── TrackEmployeeRow.jsx
+│   │   │   │   │   │   └── TrackEmployeeTable.jsx
+│   │   │   │   │   ├── EmployeeCell.jsx
+│   │   │   │   │   ├── EmployeeRow.jsx
+│   │   │   │   │   ├── EmployeesHeader.jsx
+│   │   │   │   │   ├── EmployeesTable.jsx
+│   │   │   │   │   ├── EmployeesTabs.jsx
+│   │   │   │   │   ├── EmployeesToolbar.jsx
+│   │   │   │   │   └── StatusChip.jsx
+│   │   │   │   ├── kpi
+│   │   │   │   │   ├── KpiCard.jsx
+│   │   │   │   │   ├── KPIGrid.jsx
+│   │   │   │   │   └── UniversalKpiRow.jsx
+│   │   │   │   ├── notification
+│   │   │   │   │   ├── NotificationItem.jsx
+│   │   │   │   │   └── NotificationPopover.jsx
+│   │   │   │   ├── pageHeader
+│   │   │   │   │   └── PageHeader.jsx
+│   │   │   │   ├── profile
+│   │   │   │   │   ├── ProfileCard.jsx
+│   │   │   │   │   └── ProfilePopover.jsx
+│   │   │   │   ├── sidebar
+│   │   │   │   │   └── Sidebar.jsx
+│   │   │   │   ├── table
+│   │   │   │   │   ├── RowActionMenu.jsx
+│   │   │   │   │   ├── TableHeader.jsx
+│   │   │   │   │   ├── TableToolbar.jsx
+│   │   │   │   │   ├── tableUtils.js
+│   │   │   │   │   └── UniversalTable.jsx
+│   │   │   │   ├── taxInvoices
+│   │   │   │   │   ├── FileUploadBox.tsx
+│   │   │   │   │   ├── InvoiceTable.tsx
+│   │   │   │   │   ├── StepSidebar.tsx
+│   │   │   │   │   ├── taxInvoiceColumns.js
+│   │   │   │   │   ├── taxInvoiceData.js
+│   │   │   │   │   ├── TaxInvoiceRow.jsx
+│   │   │   │   │   ├── TaxInvoicesPage.tsx
+│   │   │   │   │   └── TaxInvoiceTable.jsx
+│   │   │   │   ├── topbar
+│   │   │   │   │   ├── FlowTopbar.jsx
+│   │   │   │   │   └── Topbar.jsx
+│   │   │   │   ├── AddNewModal.tsx
+│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── Card.tsx
+│   │   │   │   ├── Input.tsx
+│   │   │   │   ├── NotificationPopup.tsx
+│   │   │   │   ├── OtpInput.tsx
+│   │   │   │   ├── ProfilePopup.tsx
+│   │   │   │   ├── Sidebar.tsx
+│   │   │   │   └── Topbar.tsx
+│   │   │   ├── data
+│   │   │   │   └── employees.js
+│   │   │   ├── hooks
+│   │   │   │   ├── useAssignedKpi.js
+│   │   │   │   └── useAttendanceKpi.js
+│   │   │   ├── layouts
+│   │   │   │   ├── AuthLayout.tsx
+│   │   │   │   ├── DashboardLayout.jsx
+│   │   │   │   ├── DashboardLayout.tsx
+│   │   │   │   ├── FlowLayout.jsx
+│   │   │   │   └── InvoiceLayout.tsx
+│   │   │   ├── pages
+│   │   │   │   ├── tax-invoices
+│   │   │   │   │   ├── generate
+│   │   │   │   │   │   ├── components
+│   │   │   │   │   │   │   └── InvoiceStepper.jsx
+│   │   │   │   │   │   ├── steps
+│   │   │   │   │   │   │   ├── ConfirmCompanyStep.jsx
+│   │   │   │   │   │   │   ├── InvoiceDetailsStep.jsx
+│   │   │   │   │   │   │   └── SelectCompanyStep.jsx
+│   │   │   │   │   │   ├── GenerateTaxInvoice.jsx
+│   │   │   │   │   │   └── Success.jsx
+│   │   │   │   │   └── TaxInvoiceList.jsx
+│   │   │   │   ├── taxInvoices
+│   │   │   │   │   ├── GenerateInvoiceCompany.tsx
+│   │   │   │   │   ├── GenerateInvoiceStart.tsx
+│   │   │   │   │   ├── GenerateInvoiceUpload.tsx
+│   │   │   │   │   ├── InvoiceList.tsx
+│   │   │   │   │   └── InvoiceSuccess.tsx
+│   │   │   │   ├── Company.jsx
+│   │   │   │   ├── CompanyDetail.jsx
+│   │   │   │   ├── Employees.jsx
+│   │   │   │   ├── Home.jsx
+│   │   │   │   ├── Home.tsx
+│   │   │   │   ├── NotFound.jsx
+│   │   │   │   ├── SignIn.tsx
+│   │   │   │   ├── SignUp.tsx
+│   │   │   │   └── VerifyEmail.tsx
+│   │   │   ├── routes
+│   │   │   │   ├── AppRoutes.tsx
+│   │   │   │   └── routesConfig.js
+│   │   │   ├── styles
+│   │   │   │   ├── auth.css
+│   │   │   │   ├── Button.module.css
+│   │   │   │   ├── Card.module.css
+│   │   │   │   ├── global.css
+│   │   │   │   ├── home.css
+│   │   │   │   ├── Input.module.css
+│   │   │   │   ├── InvoiceTable.module.css
+│   │   │   │   ├── Sidebar.module.css
+│   │   │   │   └── taxInvoice.css
+│   │   │   ├── theme
+│   │   │   │   └── theme.js
+│   │   │   ├── App.tsx
+│   │   │   ├── index.css
+│   │   │   ├── main.jsx
+│   │   │   └── main.tsx
+│   │   ├── .gitignore
+│   │   ├── eslint.config.js
+│   │   ├── index.css
+│   │   ├── index.html
+│   │   ├── main.jsx
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── README.md
+│   │   ├── src.zip
+│   │   ├── tsconfig.app.json
+│   │   ├── tsconfig.json
+│   │   ├── tsconfig.node.json
+│   │   ├── vite.config.js
+│   │   └── vite.config.ts
+│   ├── backend.zip
+│   └── frontend.zip
+├── package-lock.json
+└── package.json

@@ -1,0 +1,32 @@
+export const taxInvoices = [
+  {
+    id: 1,
+    invoiceNo: "01",
+    company: "MCC",
+    invoiceDate: "20 Jul 2023",
+    timesheet: "MCC.pdf",
+    subtotal: 22756.6,
+    vat: 1140.0,
+    netAmount: 23925.6,
+  },
+  {
+    id: 2,
+    invoiceNo: "02",
+    company: "BKC",
+    invoiceDate: "20 Jul 2023",
+    timesheet: "BKC.pdf",
+    subtotal: 22756.6,
+    vat: 1140.0,
+    netAmount: 23925.6,
+  },
+  {
+    id: 3,
+    invoiceNo: "03",
+    company: "BKC",
+    invoiceDate: "20 Jul 2023",
+    timesheet: "BKC.pdf",
+    subtotal: 22756.6,
+    vat: 1140.0,
+    netAmount: 23925.6,
+  },
+];

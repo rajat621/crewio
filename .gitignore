@@ -1,0 +1,67 @@
+# Virtual environment
+.venv/
+venv/
+env/
+.env/
+
+# Secrets and Environment Files
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+backend/.env
+ai-service/.env
+crewcontrol-fron/.env
+crewcontrol-fron/.env.local
+
+# Local databases
+*.db
+*.db-journal
+
+# Downloaded model cache
+backend/.cache/
+ai-service/__pycache__/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# VS Code and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/
+package-lock.json
+dist/
+build/
+frontend/dist/
+frontend/.vite/
+crewcontrol-fron/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Test/Sample files
+*.pdf
+test-logo.png
+timesheet.pdf
+Invoice*.pdf
+
+# Storage uploads (keep structure, not contents)
+backend/src/storage/uploads/*
+backend/src/storage/invoices/*
+!backend/src/storage/uploads/.gitkeep
+!backend/src/storage/invoices/.gitkeep

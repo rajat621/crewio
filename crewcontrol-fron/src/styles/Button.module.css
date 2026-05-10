@@ -1,0 +1,23 @@
+.button {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primary {
+  background-color: #2F5BEA;
+  color: #FFFFFF;
+}
+
+.secondary {
+  background-color: #FFFFFF;
+  color: #111827;
+  border-color: #E5E7EB;
+}
