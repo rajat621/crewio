@@ -1,7 +1,26 @@
 import axios from 'axios'
 
+const trimTrailingSlash = (value) => String(value || '').replace(/\/$/, '')
+const trimApiSuffix = (value) => trimTrailingSlash(String(value || '').replace(/\/api\/?$/i, ''))
+
+export const getApiBaseUrl = () => {
+  const configuredUrl = import.meta.env.VITE_API_URL
+  if (configuredUrl) {
+    return trimApiSuffix(configuredUrl)
+  }
+
+  if (typeof window !== 'undefined') {
+    const isLocalhost = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname)
+    if (isLocalhost) {
+      return 'http://localhost:5000'
+    }
+  }
+
+  return 'https://crewio.onrender.com'
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000'
+  baseURL: getApiBaseUrl()
 })
 
 // Request interceptor - add auth token

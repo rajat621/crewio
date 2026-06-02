@@ -16,7 +16,7 @@ const getFrontendBase = (req) => {
   if (origin && /^https?:\/\//i.test(origin)) {
     return origin.replace(/\/$/, '');
   }
-  return (env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+  return (env.FRONTEND_URL || 'https://crewio-rust.vercel.app').replace(/\/$/, '');
 };
 
 const getBackendBase = (req) => {

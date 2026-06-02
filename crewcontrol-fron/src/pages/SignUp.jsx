@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { authApi } from '../api/auth'
+import { getApiBaseUrl } from '../api/client'
 import '../styles/auth.css'
 import logo from '../assets/crewio_logo.png'
 
@@ -174,7 +175,7 @@ export default function SignUp() {
             className="btn-google"
             disabled={loading}
             onClick={() => {
-              const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+              const apiBase = getApiBaseUrl()
               const frontend = encodeURIComponent(window.location.origin)
               window.location.href = `${apiBase}/api/auth/google?flow=signup&frontend=${frontend}`
             }}

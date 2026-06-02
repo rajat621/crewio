@@ -2,6 +2,7 @@ import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../api/auth";
 import { companiesApi } from "../api/companies";
+import { getApiBaseUrl } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import { COUNTRIES_LIST } from "../utils/countriesData";
 import { clampMobileByCountry } from "../utils/phoneValidation";
@@ -437,7 +438,7 @@ export default function ComprehensiveOnboarding() {
         type="button"
         className="btn-google"
         onClick={() => {
-          const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+          const apiBase = getApiBaseUrl();
           const frontend = encodeURIComponent(window.location.origin);
           window.location.href = `${apiBase}/api/auth/google?flow=signup&frontend=${frontend}`;
         }}
