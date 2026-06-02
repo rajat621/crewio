@@ -4,7 +4,7 @@
       "name": "mcc",
       "fingerprint": "office|#|452|,|4th|floor|,|al|fahad|building|4|,|al|qusais|industrial|area|2|,|dubai.|uae|mcc|on|demand|labors",
       "config_overrides": {},
-      "success_count": 74
+      "success_count": 67
     },
     {
       "name": "bkc",
@@ -144,36 +144,6 @@
     {
       "name": "bkc",
       "fingerprint": "bkc|intergrande|bkc|labour|supply|l.l.c|timesheetno:ts-011619-2026|timesheetforthemonthofapril2026|preparationdate:may22,2026|printdate|:may22,2026|issued|to:|alqaser|alsatea|tech|cont|s#|i.|d.|no|employeename|trade|rate",
-      "config_overrides": {},
-      "success_count": 12
-    },
-    {
-      "name": "bkc",
-      "fingerprint": "net|total|absent|12|14|15|19|22|24|25|26|28|29|30|i.|d.|no|10|11|13|16|17|18|20",
-      "config_overrides": {},
-      "success_count": 10
-    },
-    {
-      "name": "bkc",
-      "fingerprint": "net|total|26|absent|s#|i.|d.|no|15|19|23|24|25|27|29|rate|11|12|13|14|16|17|18|21",
-      "config_overrides": {},
-      "success_count": 5
-    },
-    {
-      "name": "bkc",
-      "fingerprint": "110.00|100.00|80.00|98.00|98.00|40.00|40.00|totat|hrs|50.00|10.00|10.00|10.00|10.00|10.00|25|23|10.00|10.00|10.00|10.00|10.00|10.00|10.00",
-      "config_overrides": {},
-      "success_count": 2
-    },
-    {
-      "name": "bkc",
-      "fingerprint": "total|hrs|110.00|100.00|00'08|00'86|00*86|00'0b|40.00|50.00|616.00|10.00|10.00|grans|total|hours|10.00|approved|by|10.00|10.00|23/05/2026|date|ahe",
-      "config_overrides": {},
-      "success_count": 2
-    },
-    {
-      "name": "bkc",
-      "fingerprint": "s#|rr|execu|1.|d.no|os47009|os50933|0s4x567|0s48567|live|name|:|n|employee|nani|rikesh|baitha|saroi|kumar|sah|gagandey|sah|chandar|sah",
       "config_overrides": {},
       "success_count": 2
     }

@@ -151,7 +151,7 @@ def render_employee_invoice(
     rows: List[InvoiceRow] = result.rows
     total_amt = total_vat_amt = total_net = 0.0
 
-    for i, row in enumerate(rows, 1):
+    for i, row in enumerate(rows[:15], 1):
         y_row -= _ROW_H
         rx = tx
         # BKC uses percentage string for VAT column

@@ -174,14 +174,6 @@ def classify_row(cells: Sequence[str]) -> RowType:
         return RowType.SIGNATURE_ROW
 
     # --- Financial summary lines ---
-    # Block on exact first-cell financial labels regardless of column count
-    _FINANCIAL_EXACT = {
-        "TOTAL", "SUBTOTAL", "SUB TOTAL", "NET TOTAL", "GRAND TOTAL",
-        "GROSS TOTAL", "NET AMOUNT", "NET AMOUNT PAYABLE", "VAT",
-        "DEDUCTION", "DEDUCTIONS", "TOTAL DEDUCTION", "BALANCE", "SUMMARY",
-    }
-    if first in _FINANCIAL_EXACT:
-        return RowType.FINANCIAL_SUMMARY_ROW
     if _FINANCIAL_RE.search(first) and len(non_empty) <= 3:
         return RowType.FINANCIAL_SUMMARY_ROW
 

@@ -365,6 +365,9 @@ def render_project_invoice(
 
     for i, row in enumerate(rows, 1):
 
+        if y_row < 70 * mm:
+            break
+
         y_row -= _ROW_H
 
         rx = tx

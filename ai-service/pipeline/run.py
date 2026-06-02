@@ -22,9 +22,11 @@ from typing import Optional
 from schema import (
     CompanyProfile,
     ExtractionResult,
+    InvoiceRow,
 )
 
 from pipeline.classifier import classify_pdf
+from pipeline.fallback_extractor import fallback_extract
 from pipeline.financial_block_detector import detect_financial_blocks_in_text, extract_best_financial_value
 from pipeline.text_extractor import extract_text_pdf
 from pipeline.structured_logging import log_event
@@ -62,7 +64,29 @@ def _apply_semantic_recovery(result: ExtractionResult, vat_rate: float) -> None:
             result.warnings.append("recovery:footer_net_payable")
 
     if not result.rows and text:
-        result.warnings.append("structured_rows_required:no_blob_row_recovery")
+        fallback = fallback_extract(full_text=text, vat_rate=vat_rate)
+        if fallback.rows:
+            recovered_rows = []
+            for row in fallback.rows:
+                trade = str(row.get("trade") or "").strip().upper() or "UNKNOWN"
+                recovered_rows.append(
+                    InvoiceRow(
+                        trade=trade,
+                        project_id=row.get("project_id"),
+                        employee_id=row.get("employee_id"),
+                        hours=float(row.get("hours") or 0.0),
+                        rate=float(row.get("rate") or 0.0),
+                        amount=float(row.get("amount") or 0.0),
+                    )
+                )
+            result.rows = recovered_rows
+            result.warnings.append(f"recovery:{fallback.method}")
+
+        if fallback.financials:
+            result.financials.subtotal = max(float(result.financials.subtotal or 0.0), float(fallback.financials.get("subtotal", 0.0) or 0.0))
+            result.financials.total_deduction = max(float(result.financials.total_deduction or 0.0), float(fallback.financials.get("total_deduction", 0.0) or 0.0))
+            result.financials.total_vat = max(float(result.financials.total_vat or 0.0), float(fallback.financials.get("total_vat", 0.0) or 0.0))
+            result.financials.net_payable = max(float(result.financials.net_payable or 0.0), float(fallback.financials.get("net_payable", 0.0) or 0.0))
 
     if result.rows:
         row_sum = round(sum(float(r.amount or 0.0) for r in result.rows), 2)

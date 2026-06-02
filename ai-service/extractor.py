@@ -2,9 +2,10 @@
 extractor.py  –  Universal timesheet extraction using Claude Vision API.
 
 This module is the intelligence layer of the pipeline. It:
-    1. Uses Claude Vision as the primary extraction engine for every PDF page
-    2. Merges multi-page results into a single normalised payload without overwrite
-    3. Falls back to pdfplumber table parsing only when Vision fails or returns no rows
+  1. Converts every PDF page to an image (handles both text-based and scanned PDFs)
+  2. Sends the image to Claude with a structured prompt asking for JSON extraction
+  3. Merges multi-page results into a single normalised payload
+  4. Falls back to pdfplumber structured table parsing for clean text-based PDFs
 
 Supports any timesheet layout:
   - MCC format: project-grouped rows (TRADE + PROJECT + HOURS + RATE + AMOUNT)
@@ -115,12 +116,7 @@ def _clean(v: Any) -> str:
     return " ".join(str(v or "").split())
 
 
-def _pdf_page_to_b64_png(
-    pdf_path: str,
-    page_number: int,
-    dpi: int = 180,
-    rotation: int = 0,
-) -> Optional[str]:
+def _pdf_page_to_b64_png(pdf_path: str, page_number: int, dpi: int = 180) -> Optional[str]:
     """Rasterise a single PDF page and return base64-encoded PNG."""
     convert_from_path = _get_pdf2image()
     if convert_from_path is None:
@@ -130,8 +126,6 @@ def _pdf_page_to_b64_png(
                                    last_page=page_number, dpi=dpi)
         if not images:
             return None
-        if rotation:
-            images[0] = images[0].rotate(rotation, expand=True)
         buf = io.BytesIO()
         images[0].save(buf, format="PNG")
         return base64.b64encode(buf.getvalue()).decode("utf-8")
@@ -229,23 +223,13 @@ Return this exact JSON schema (use null for missing values, not empty strings):
   }
 }
 
-Extraction rules (priority order):
-1) Use summary tables when present.
-2) Otherwise aggregate attendance/grid rows into trade rows.
-3) Never skip any visible trade row.
-4) Include ALL trades even when repeated across pages.
-5) Preserve project separation when project context exists.
-6) Preserve employee IDs when available.
-7) NEVER include rows where the trade name is any of the following — these are financial
-   summary labels and MUST NOT appear in rows[]:
-     TOTAL, SUBTOTAL, NET TOTAL, TOTAL DEDUCTION, VAT, GRAND TOTAL, SUMMARY,
-     NET AMOUNT, GROSS TOTAL, DEDUCTION, DEDUCTIONS, BALANCE
-8) Never truncate rows and always extract from all visible pages/sections.
-
-Normalization rules:
-- For MCC format: each row = one trade+project combination.
-- For BKC format: each row = one trade+employee combination (use employee_id).
-- Amounts must be plain floats (no commas), e.g. 2422.50 not "2,422.50".
+Rules:
+- Extract ONLY from the summary table, not from the attendance grid
+- For MCC format: each row = one trade+project combination
+- For BKC format: each row = one trade+employee combination (use employee_id field)
+- Amounts must be plain floats (no commas), e.g. 2422.50 not "2,422.50"
+- If no summary table exists, aggregate hours from the attendance grid by trade
+- Always include ALL data rows; never truncate
 """
 
 EXTRACTION_USER = """Extract all structured data from this timesheet image.
@@ -255,251 +239,6 @@ Return ONLY the JSON object, nothing else."""
 # ---------------------------------------------------------------------------
 # Vision-based extractor
 # ---------------------------------------------------------------------------
-
-_NON_TRADE_ROW_SIGNALS = {
-    "TOTAL",
-    "SUBTOTAL",
-    "GRAND TOTAL",
-    "NET TOTAL",
-    "NET AMOUNT",
-    "GROSS TOTAL",
-    "DEDUCTION",
-    "DEDUCTIONS",
-    "TOTAL DEDUCTION",
-    "VAT",
-    "BALANCE",
-    "SUMMARY",
-}
-
-
-def _is_non_trade_row(trade: str) -> bool:
-    txt = _normalize_trade(trade)
-    if not txt:
-        return True
-    return txt in _NON_TRADE_ROW_SIGNALS
-
-
-def _normalize_trade(trade: Any) -> str:
-    return _clean(trade).upper()
-
-
-def _normalize_optional_id(value: Any) -> Optional[str]:
-    cleaned = _clean(value)
-    return cleaned if cleaned else None
-
-
-def _rows_for_log(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    return [
-        {
-            "trade": _normalize_trade(r.get("trade")),
-            "project_id": _normalize_optional_id(r.get("project_id")),
-            "employee_id": _normalize_optional_id(r.get("employee_id")),
-            "hours": _to_float(r.get("hours")),
-            "rate": _to_float(r.get("rate")),
-            "amount": _to_float(r.get("amount")),
-        }
-        for r in (rows or [])
-    ]
-
-
-def _clean_extracted_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    cleaned_rows: List[Dict[str, Any]] = []
-    for row in rows or []:
-        trade = _normalize_trade(row.get("trade"))
-        if not trade or _is_non_trade_row(trade):
-            continue
-
-        project_id = _normalize_optional_id(row.get("project_id"))
-        employee_id = _normalize_optional_id(row.get("employee_id"))
-        hours = _to_float(row.get("hours"))
-        rate = _to_float(row.get("rate"))
-        amount = _to_float(row.get("amount"))
-
-        # Compute expected amount when both hours and rate are available
-        if hours > 0 and rate > 0:
-            expected = round(hours * rate, 2)
-            if amount == 0:
-                # No amount extracted at all — compute it
-                amount = expected
-            else:
-                ratio = amount / expected
-                # Detect OCR decimal-placement corruption:
-                # e.g. expected=4450, extracted=4.45 → ratio≈0.001
-                # e.g. expected=4450, extracted=44500 → ratio≈10
-                if ratio < 0.1 or ratio > 10:
-                    logger.warning(
-                        "Amount sanity correction | trade=%s | extracted=%s | expected=%s",
-                        trade,
-                        amount,
-                        expected,
-                    )
-                    amount = expected
-
-        cleaned_rows.append({
-            "trade": trade,
-            "project_id": project_id,
-            "employee_id": employee_id,
-            "hours": hours,
-            "rate": rate,
-            "amount": amount,
-        })
-
-    return cleaned_rows
-
-
-def _merge_financials(base: Dict[str, Any], incoming: Dict[str, Any]) -> Dict[str, Any]:
-    merged = {
-        "subtotal": _to_float(base.get("subtotal")),
-        "deductions": _to_float(base.get("deductions")),
-        "deduction_breakdown": dict(base.get("deduction_breakdown", {})),
-        "net_total": _to_float(base.get("net_total")),
-    }
-
-    in_subtotal = _to_float(incoming.get("subtotal"))
-    in_deductions = _to_float(incoming.get("deductions"))
-    in_net_total = _to_float(incoming.get("net_total"))
-
-    if in_subtotal > 0:
-        merged["subtotal"] = max(merged["subtotal"], in_subtotal)
-    if in_deductions > 0:
-        merged["deductions"] = max(merged["deductions"], in_deductions)
-    if in_net_total > 0:
-        merged["net_total"] = max(merged["net_total"], in_net_total)
-
-    for label, value in (incoming.get("deduction_breakdown") or {}).items():
-        label_key = _clean(label) or "DEDUCTION"
-        merged["deduction_breakdown"][label_key] = (
-            _to_float(merged["deduction_breakdown"].get(label_key)) + _to_float(value)
-        )
-
-    return merged
-
-
-def merge_rows(rows: List[Dict[str, Any]], fmt: str = "unknown") -> List[Dict[str, Any]]:
-    """
-    Generalized merge engine.
-
-    Rules:
-      - mcc: merge key is (trade, project_id)
-      - bkc: merge key is (trade)
-      - fallback: merge key is (trade, project_id or employee_id)
-    """
-    logger.info(
-        "Row lifecycle | stage=before_merge_raw | format=%s | count=%d | rows=%s",
-        fmt,
-        len(rows or []),
-        json.dumps(_rows_for_log(rows or []), ensure_ascii=True),
-    )
-
-    cleaned_rows = _clean_extracted_rows(rows)
-    logger.info(
-        "Row lifecycle | stage=before_merge | format=%s | count=%d | rows=%s",
-        fmt,
-        len(cleaned_rows),
-        json.dumps(_rows_for_log(cleaned_rows), ensure_ascii=True),
-    )
-
-    merged_map: Dict[Tuple[str, ...], Dict[str, Any]] = {}
-
-    def _merge_employee_ids(current: Optional[str], incoming: Optional[str]) -> Optional[str]:
-        current_clean = _normalize_optional_id(current)
-        incoming_clean = _normalize_optional_id(incoming)
-        if not current_clean:
-            return incoming_clean
-        if not incoming_clean:
-            return current_clean
-        existing = {part.strip() for part in current_clean.split(",") if part.strip()}
-        for part in incoming_clean.split(","):
-            p = part.strip()
-            if p:
-                existing.add(p)
-        return ", ".join(sorted(existing)) if existing else None
-
-    for row in cleaned_rows:
-        trade = _normalize_trade(row.get("trade"))
-        # Hard-block: financial summary rows must never enter the merge map
-        if _is_non_trade_row(trade):
-            logger.warning("merge_rows: skipping financial row trade=%r", trade)
-            continue
-        project_id = _normalize_optional_id(row.get("project_id"))
-        employee_id = _normalize_optional_id(row.get("employee_id"))
-
-        if fmt == "mcc":
-            key = (trade, project_id or "")
-        elif fmt == "bkc":
-            key = (trade,)
-        else:
-            key = (trade, project_id or employee_id or "")
-
-        if key not in merged_map:
-            merged_map[key] = {
-                "trade": trade,
-                "project_id": project_id,
-                "employee_id": employee_id,
-                "hours": _to_float(row.get("hours")),
-                "rate": _to_float(row.get("rate")),
-                "amount": _to_float(row.get("amount")),
-            }
-            continue
-
-        target = merged_map[key]
-        incoming_hours = _to_float(row.get("hours"))
-        incoming_amount = _to_float(row.get("amount"))
-        incoming_rate = _to_float(row.get("rate"))
-
-        target["hours"] = round(_to_float(target.get("hours")) + incoming_hours, 2)
-        target["amount"] = round(_to_float(target.get("amount")) + incoming_amount, 2)
-
-        if not target.get("project_id") and project_id:
-            target["project_id"] = project_id
-        target["employee_id"] = _merge_employee_ids(target.get("employee_id"), employee_id)
-
-        if _to_float(target.get("rate")) <= 0 and incoming_rate > 0:
-            target["rate"] = incoming_rate
-        elif _to_float(target.get("hours")) > 0 and _to_float(target.get("amount")) > 0:
-            target["rate"] = round(_to_float(target.get("amount")) / _to_float(target.get("hours")), 2)
-
-    merged_rows = list(merged_map.values())
-    logger.info(
-        "Row lifecycle | stage=after_merge | format=%s | count=%d | rows=%s",
-        fmt,
-        len(merged_rows),
-        json.dumps(_rows_for_log(merged_rows), ensure_ascii=True),
-    )
-    return merged_rows
-
-
-def _extract_vision_json_from_b64(
-    client: Any,
-    b64: str,
-    model: str,
-    media_type: str = "image/png",
-) -> Optional[Dict[str, Any]]:
-    response = client.messages.create(
-        model=model,
-        max_tokens=4096,
-        system=EXTRACTION_SYSTEM,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "source": {
-                            "type": "base64",
-                            "media_type": media_type,
-                            "data": b64,
-                        },
-                    },
-                    {"type": "text", "text": EXTRACTION_USER},
-                ],
-            }
-        ],
-    )
-    raw = response.content[0].text.strip()
-    raw = re.sub(r"^```(?:json)?\s*", "", raw)
-    raw = re.sub(r"\s*```$", "", raw)
-    return json.loads(raw)
 
 def _extract_via_vision(
     pdf_path: str,
@@ -518,44 +257,45 @@ def _extract_via_vision(
     page_extractions: List[Dict[str, Any]] = []
 
     for page_num in range(1, n_pages + 1):
-        logger.info("Sending page %d/%d to Claude Vision...", page_num, n_pages)
-        best_page: Optional[Dict[str, Any]] = None
-        best_row_count = -1
-
-        # First pass: as-is orientation
-        b64 = _pdf_page_to_b64_png(pdf_path, page_num, dpi=220, rotation=0)
+        b64 = _pdf_page_to_b64_png(pdf_path, page_num, dpi=200)
         if b64 is None:
             logger.warning("Could not rasterise page %d – skipping", page_num)
             continue
 
+        logger.info("Sending page %d/%d to Claude Vision...", page_num, n_pages)
         try:
-            parsed = _extract_vision_json_from_b64(client, b64=b64, model=model)
-            parsed_rows = _clean_extracted_rows(parsed.get("rows", []))
-            parsed["rows"] = parsed_rows
-            best_page = parsed
-            best_row_count = len(parsed_rows)
+            response = client.messages.create(
+                model=model,
+                max_tokens=4096,
+                system=EXTRACTION_SYSTEM,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/png",
+                                    "data": b64,
+                                },
+                            },
+                            {"type": "text", "text": EXTRACTION_USER},
+                        ],
+                    }
+                ],
+            )
+            raw = response.content[0].text.strip()
+            # Strip markdown fences if model wraps output
+            raw = re.sub(r"^```(?:json)?\s*", "", raw)
+            raw = re.sub(r"\s*```$", "", raw)
+            parsed = json.loads(raw)
+            page_extractions.append(parsed)
+            logger.info("Page %d: %d rows extracted", page_num, len(parsed.get("rows", [])))
+        except json.JSONDecodeError as e:
+            logger.error("JSON parse error on page %d: %s", page_num, e)
         except Exception as e:
-            logger.warning("Vision extraction failed on page %d (rotation=0): %s", page_num, e)
-
-        # Rotation retries when initial extraction is weak/empty (rotated scans, low OCR quality)
-        if best_row_count <= 0:
-            for rotation in (90, 270, 180):
-                rotated_b64 = _pdf_page_to_b64_png(pdf_path, page_num, dpi=220, rotation=rotation)
-                if rotated_b64 is None:
-                    continue
-                try:
-                    parsed = _extract_vision_json_from_b64(client, b64=rotated_b64, model=model)
-                    parsed_rows = _clean_extracted_rows(parsed.get("rows", []))
-                    parsed["rows"] = parsed_rows
-                    if len(parsed_rows) > best_row_count:
-                        best_page = parsed
-                        best_row_count = len(parsed_rows)
-                except Exception as e:
-                    logger.warning("Vision extraction failed on page %d (rotation=%d): %s", page_num, rotation, e)
-
-        if best_page is not None:
-            page_extractions.append(best_page)
-            logger.info("Page %d: %d rows extracted", page_num, len(best_page.get("rows", [])))
+            logger.error("Vision API error on page %d: %s", page_num, e)
 
     if not page_extractions:
         return None
@@ -594,16 +334,14 @@ def _extract_via_pdfplumber(pdf_path: str) -> Optional[Dict[str, Any]]:
                 # This looks like a summary table
                 parsed, fin = _parse_pdfplumber_summary(table)
                 if parsed:
-                    rows.extend(parsed)
-                if fin:
-                    financials = _merge_financials(financials, fin)
+                    rows = parsed
+                    financials = fin
 
     if not rows:
         return None
 
     meta = _extract_meta_from_text(meta_text)
     client_info = _extract_client_from_text(meta_text)
-    rows = _clean_extracted_rows(rows)
     detected_format = _detect_format_from_rows(rows)
 
     return _build_payload(detected_format, client_info, meta, rows, financials)
@@ -650,7 +388,7 @@ def _parse_pdfplumber_summary(
     }
 
     def _get(row: List, idx: int) -> str:
-        if idx < -len(row) or idx >= len(row):
+        if idx < 0 or idx >= len(row):
             return ""
         return _clean(row[idx])
 
@@ -680,6 +418,8 @@ def _parse_pdfplumber_summary(
         hours  = _to_float(_get(row, i_hours))
         rate   = _to_float(_get(row, i_rate))
         amount = _to_float(_get(row, i_amount))
+        if hours == 0 and amount == 0:
+            continue
 
         rows.append({
             "trade":       trade,
@@ -690,7 +430,7 @@ def _parse_pdfplumber_summary(
             "amount":      amount,
         })
 
-    return _clean_extracted_rows(rows), financials
+    return rows, financials
 
 
 # ---------------------------------------------------------------------------
@@ -796,44 +536,47 @@ def _detect_format_from_rows(rows: List[Dict]) -> str:
 
 def _merge_page_extractions(pages: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
-        Merge extractions from multiple pages.
-        Strategy:
-            - Collect rows from ALL pages
-            - Merge metadata/client by first non-empty value
-            - Merge totals conservatively without overwriting with zeros
-            - Never replace one page's rows with another page's rows
+    Merge extractions from multiple pages.
+    Strategy:
+      - Prefer the page with the most rows (summary page)
+      - For metadata/client: take first non-null value across pages
+      - Deduplication: if the same rows appear on multiple pages, keep unique set
     """
-    merged: Dict[str, Any] = {
-        "format": "unknown",
-        "client": {},
-        "timesheet_meta": {},
-        "rows": [],
-        "totals": {
-            "subtotal": 0.0,
-            "deductions": 0.0,
-            "deduction_breakdown": {},
-            "net_total": 0.0,
-        },
-    }
+    if len(pages) == 1:
+        return pages[0]
 
+    # Pick best page (most rows) as base
+    best = max(pages, key=lambda p: len(p.get("rows", [])))
+    merged = json.loads(json.dumps(best))  # deep copy
+
+    # Fill missing metadata from other pages
     for page in pages:
-        page_fmt = str(page.get("format") or "unknown").lower()
-        if page_fmt != "unknown" and merged["format"] == "unknown":
-            merged["format"] = page_fmt
-
+        if page is best:
+            continue
+        # client fields
         for k, v in page.get("client", {}).items():
-            if v and not merged["client"].get(k):
-                merged["client"][k] = v
-
+            if v and not merged.get("client", {}).get(k):
+                merged.setdefault("client", {})[k] = v
+        # timesheet_meta fields
         for k, v in page.get("timesheet_meta", {}).items():
-            if v and not merged["timesheet_meta"].get(k):
-                merged["timesheet_meta"][k] = v
-
-        merged["rows"].extend(_clean_extracted_rows(page.get("rows", [])))
-        merged["totals"] = _merge_financials(merged["totals"], page.get("totals", {}))
-
-    if merged["format"] == "unknown":
-        merged["format"] = _detect_format_from_rows(merged["rows"])
+            if v and not merged.get("timesheet_meta", {}).get(k):
+                merged.setdefault("timesheet_meta", {})[k] = v
+        # format
+        if page.get("format") and page["format"] != "unknown" and merged.get("format") == "unknown":
+            merged["format"] = page["format"]
+        # rows: merge if best page had few rows and this page has more
+        if len(page.get("rows", [])) > len(merged.get("rows", [])):
+            merged["rows"] = page["rows"]
+        # totals: merge if best page had zeroes
+        page_totals = page.get("totals", {})
+        merged_totals = merged.get("totals", {})
+        for k in ("subtotal", "deductions", "net_total"):
+            if page_totals.get(k, 0) > 0 and merged_totals.get(k, 0) == 0:
+                merged_totals[k] = page_totals[k]
+        if page_totals.get("deduction_breakdown"):
+            merged_totals.setdefault("deduction_breakdown", {}).update(
+                page_totals["deduction_breakdown"]
+            )
 
     return merged
 
@@ -890,24 +633,25 @@ def extract_timesheet(
 
     result: Optional[Dict[str, Any]] = None
 
-    # ── Primary path: Claude Vision API ───────────────────────────────────
-    logger.info("Using Claude Vision API as primary extraction engine")
-    try:
-        result = _extract_via_vision(pdf_path, api_key=api_key)
-    except Exception as e:
-        logger.warning("Vision extraction failed: %s", e)
-        result = None
-
-    # ── Fallback path: pdfplumber only when Vision fails or yields no rows ─
-    if not force_vision and (result is None or not result.get("rows")):
-        logger.info("Falling back to pdfplumber extraction")
+    # ── Fast path: pdfplumber for text-based PDFs ──────────────────────────
+    if not force_vision and _has_extractable_text(pdf_path):
+        logger.info("Text layer detected – trying pdfplumber fast path")
         try:
-            fallback = _extract_via_pdfplumber(pdf_path)
-            if fallback and fallback.get("rows"):
-                result = fallback
-                logger.info("pdfplumber fallback extracted %d rows", len(result.get("rows", [])))
+            result = _extract_via_pdfplumber(pdf_path)
+            if result:
+                logger.info("pdfplumber extracted %d rows", len(result.get("rows", [])))
         except Exception as e:
-            logger.warning("pdfplumber fallback failed: %s", e)
+            logger.warning("pdfplumber fast path failed: %s", e)
+            result = None
+
+    # ── Vision path: Claude Vision API ────────────────────────────────────
+    if result is None or not result.get("rows"):
+        logger.info("Using Claude Vision API for extraction")
+        try:
+            result = _extract_via_vision(pdf_path, api_key=api_key)
+        except Exception as e:
+            logger.error("Vision extraction failed: %s", e)
+            return {"success": False, "error": str(e)}
 
     if not result:
         return {"success": False, "error": "No data could be extracted from the timesheet"}
@@ -920,28 +664,4 @@ def extract_timesheet(
     result.setdefault("rows",           [])
     result.setdefault("totals",         {"subtotal": 0, "deductions": 0,
                                          "deduction_breakdown": {}, "net_total": 0})
-
-    result["rows"] = merge_rows(result.get("rows", []), fmt=str(result.get("format") or "unknown").lower())
-    logger.info(
-        "FINAL VERIFIED ROWS: %s",
-        json.dumps(_rows_for_log(result.get("rows", [])), ensure_ascii=True),
-    )
-    logger.info(
-        "Row lifecycle | stage=extractor_final_rows | format=%s | count=%d | rows=%s",
-        str(result.get("format") or "unknown").lower(),
-        len(result.get("rows", [])),
-        json.dumps(_rows_for_log(result.get("rows", [])), ensure_ascii=True),
-    )
-    if result.get("format") == "unknown":
-        result["format"] = _detect_format_from_rows(result["rows"])
-
-    row_subtotal = round(sum(_to_float(r.get("amount")) for r in result.get("rows", [])), 2)
-    totals = result.get("totals", {})
-    deductions = _to_float(totals.get("deductions"))
-    totals["subtotal"] = round(max(_to_float(totals.get("subtotal")), row_subtotal), 2)
-    if _to_float(totals.get("net_total")) <= 0:
-        totals["net_total"] = round(max(totals["subtotal"] - deductions, 0.0), 2)
-    totals.setdefault("deduction_breakdown", {})
-    result["totals"] = totals
-
     return result

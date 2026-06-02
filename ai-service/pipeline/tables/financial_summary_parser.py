@@ -21,14 +21,8 @@ class FinancialSummaryParseResult:
 
 
 def _to_float(value: str) -> float:
-    cleaned = re.sub(r"[^0-9.\-]", "", str(value or "").replace(",", ""))
-    if cleaned.count(".") > 1:
-        first = cleaned.find(".")
-        cleaned = cleaned[: first + 1] + cleaned[first + 1 :].replace(".", "")
-    if cleaned.startswith(".") and len(cleaned) > 1:
-        cleaned = "0" + cleaned
     try:
-        return float(cleaned)
+        return float(str(value).replace(",", "").strip())
     except Exception:
         return 0.0
 
@@ -36,14 +30,8 @@ def _to_float(value: str) -> float:
 def _last_amount(cells: Sequence[str]) -> float:
     nums: List[float] = []
     for c in cells:
-        value = _to_float(str(c or ""))
-        if value > 0:
-            nums.append(value)
-            continue
         for n in _NUM_RE.findall(str(c or "")):
-            parsed = _to_float(n)
-            if parsed > 0:
-                nums.append(parsed)
+            nums.append(_to_float(n))
     return nums[-1] if nums else 0.0
 
 

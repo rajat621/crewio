@@ -1,7 +1,7 @@
 {
   "table_index": 1,
   "table_type": "financial_summary_table",
-  "confidence": 0.6232240437158469,
+  "confidence": 0.7259398496240601,
   "parser": "financial_summary_parser",
   "rows_count": 0,
   "financials": {
@@ -12,5 +12,5 @@
     "net_payable": 0.0,
     "deduction_breakdown": {}
   },
-  "source_text": "10.00 10.00 00'Ot 12.00 12.00 11.50 FINISHING CARPENTER TILE MASON TILE MASON OS00327 RAJARAM MUKHIYA OS00328 BIJaY MuKHIYa Bin OS003S2|RIKESH BAITHA"
+  "source_text": "14             10     10     "
 }

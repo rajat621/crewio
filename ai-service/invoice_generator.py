@@ -39,7 +39,6 @@ from __future__ import annotations
 
 import base64
 import io
-import logging
 import os
 import re
 from datetime import datetime
@@ -54,8 +53,6 @@ try:
     from pdf2image import convert_from_path as _pdf2img
 except ImportError:
     _pdf2img = None  # type: ignore
-
-logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -393,12 +390,6 @@ def generate_invoice_pdf(
     rows:   List[Dict[str, Any]] = extraction.get("rows", [])
     totals: Dict[str, Any]       = extraction.get("totals", {})
     meta:   Dict[str, Any]       = extraction.get("timesheet_meta", {})
-
-    logger.info(
-        "Row lifecycle | stage=renderer_input | count=%d | rows=%s",
-        len(rows),
-        rows,
-    )
 
     # Invoice layout: auto-detect from format, allow override
     fmt = extraction.get("format", "mcc")

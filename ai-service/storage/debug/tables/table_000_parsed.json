@@ -1,16 +1,16 @@
 {
   "table_index": 0,
   "table_type": "financial_summary_table",
-  "confidence": 0.7745283018867924,
+  "confidence": 0.875,
   "parser": "financial_summary_parser",
   "rows_count": 0,
   "financials": {
-    "subtotal": 110.0,
+    "subtotal": 6.512,
     "total_vat": 0.0,
     "total_deduction": 0.0,
     "gross_total": 0.0,
     "net_payable": 0.0,
     "deduction_breakdown": {}
   },
-  "source_text": " Total Hrs 110.00       0.00 0.00 .0.00       00' 00        10.00 00' 10.00 10.00       10.00 10.00 10. 10.00 10. 10.00 10.00       00'0 10.00 10.00 10. 10.00      10.00   10.00 00'    "
+  "source_text": "   TRACE            RATE   AOUNTCAED!       Carpanier          265                              2.422.60                261                              27429.60     Te Mesor           161       1:610.00        Total       877.00       6.512.00       Doducin            Abbent umourt      26.C0    TataDoducianAEo                       Not Amount Payable AED                                        64"
 }

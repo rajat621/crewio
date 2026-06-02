@@ -210,10 +210,8 @@ def _parse_mcc_summary_table(table: Sequence[Sequence[Any]]) -> Tuple[List[Invoi
         c1 = row_vals[1] if len(row_vals) > 1 else ""
         last = row_vals[-1]
 
-        # Always skip TOTAL row regardless of whether c1 is populated
-        if c0 == "TOTAL":
-            if fin.subtotal == 0.0:
-                fin.subtotal = _to_float(last)
+        if c0 == "TOTAL" and not c1:
+            fin.subtotal = _to_float(last)
             continue
 
         if c0 in {"ADDITIONS", "DEDUCTIONS"} or (c0 == "" and c1):
@@ -245,14 +243,6 @@ def _parse_mcc_summary_table(table: Sequence[Sequence[Any]]) -> Tuple[List[Invoi
         if not trade or hours <= 0:
             continue
 
-        # OCR decimal-corruption guard
-        if hours > 0 and rate > 0:
-            _expected = round(hours * rate, 2)
-            if _expected > 0:
-                _ratio = amount / _expected
-                if _ratio < 0.1 or _ratio > 10:
-                    amount = _expected
-
         rows.append(
             InvoiceRow(
                 trade=trade.upper(),
@@ -275,192 +265,21 @@ _GENERIC_REJECT = (
     "H.I.NO", "H.I.NO.",
 )
 
-_GENERIC_METADATA_REJECT = (
-    "PRINTDATE",
-    "PREPARATIONDATE",
-    "ISSUED TO",
-    "EXECUTIVE NAME",
-    "TIMESHEET",
-    "TRN",
-)
-
-# Financial-summary labels that must NEVER become trade rows in any parser
-_FINANCIAL_TRADE_BLOCK = frozenset({
-    "TOTAL", "SUBTOTAL", "SUB TOTAL", "NET TOTAL", "GRAND TOTAL",
-    "GROSS TOTAL", "NET AMOUNT", "NET AMOUNT PAYABLE", "VAT",
-    "DEDUCTION", "DEDUCTIONS", "TOTAL DEDUCTION", "BALANCE", "SUMMARY",
-})
-
-
-def _is_financial_trade_exact(trade: str) -> bool:
-    return str(trade or "").strip().upper() in _FINANCIAL_TRADE_BLOCK
-
-
-def _aggregate_primary_rows(rows: Sequence[InvoiceRow]) -> List[InvoiceRow]:
-    """
-    Full-table aggregation (primary source):
-      - if project_id exists, merge by (trade, project_id)
-      - else merge by exact trade name only
-    """
-    aggregated: Dict[Tuple[str, str], InvoiceRow] = {}
-
-    for row in rows or []:
-        trade = _clean(row.trade).upper()
-        if not trade or _is_financial_trade_exact(trade):
-            continue
-
-        project = _clean(row.project_id).upper() if row.project_id else ""
-        key = (trade, project) if project else (trade, "")
-
-        if key not in aggregated:
-            aggregated[key] = InvoiceRow(
-                trade=trade,
-                project_id=project or None,
-                employee_id=row.employee_id,
-                hours=max(0.0, float(row.hours or 0.0)),
-                rate=max(0.0, float(row.rate or 0.0)),
-                amount=max(0.0, float(row.amount or 0.0)),
-            )
-            continue
-
-        cur = aggregated[key]
-        cur.hours = round(float(cur.hours or 0.0) + max(0.0, float(row.hours or 0.0)), 2)
-        cur.amount = round(float(cur.amount or 0.0) + max(0.0, float(row.amount or 0.0)), 2)
-
-        if cur.rate <= 0 and float(row.rate or 0.0) > 0:
-            cur.rate = float(row.rate)
-
-    result = list(aggregated.values())
-    for row in result:
-        if row.rate <= 0 and row.hours > 0 and row.amount > 0:
-            row.rate = round(row.amount / row.hours, 4)
-    return result
-
-
-def _cross_validate_with_summary(
-    primary_rows: Sequence[InvoiceRow],
-    summary_rows: Sequence[InvoiceRow],
-    warnings: List[str],
-) -> List[InvoiceRow]:
-    """
-    Summary table is validation/correction layer only.
-    It can repair OCR corruption and add missing trades, but does not use fuzzy matching.
-    """
-    out: Dict[Tuple[str, str], InvoiceRow] = {}
-    corrections = 0
-
-    for row in primary_rows or []:
-        trade = _clean(row.trade).upper()
-        if not trade or _is_financial_trade_exact(trade):
-            continue
-        project = _clean(row.project_id).upper() if row.project_id else ""
-        out[(trade, project)] = InvoiceRow(
-            trade=trade,
-            project_id=row.project_id,
-            employee_id=row.employee_id,
-            hours=max(0.0, float(row.hours or 0.0)),
-            rate=max(0.0, float(row.rate or 0.0)),
-            amount=max(0.0, float(row.amount or 0.0)),
-        )
-
-    summary_map: Dict[Tuple[str, str], InvoiceRow] = {}
-    for row in summary_rows or []:
-        trade = _clean(row.trade).upper()
-        if not trade or _is_financial_trade_exact(trade):
-            continue
-        if re.search(r"\d", trade):
-            continue
-        if any(tok in trade for tok in ("ID", "EMPLOYEE", "RATE", "AMOUNT", "MONTH", "NET", "TOTAL")):
-            continue
-        project = _clean(row.project_id).upper() if row.project_id else ""
-        summary_map[(trade, project)] = row
-
-    # Repair existing primary rows from summary layer.
-    for (trade, project), row in list(out.items()):
-        s = summary_map.get((trade, project)) or (summary_map.get((trade, "")) if project else None)
-        if not s:
-            continue
-
-        # For exact trade matches, summary layer is the validation/correction source.
-        # Replace corrupted primary values with summary values when present.
-        if float(s.hours or 0.0) > 0 and abs(float(row.hours or 0.0) - float(s.hours or 0.0)) > 0.01:
-            row.hours = float(s.hours)
-            corrections += 1
-        if float(s.rate or 0.0) > 0 and abs(float(row.rate or 0.0) - float(s.rate or 0.0)) > 0.01:
-            row.rate = float(s.rate)
-            corrections += 1
-        if float(s.amount or 0.0) > 0 and abs(float(row.amount or 0.0) - float(s.amount or 0.0)) > 0.01:
-            row.amount = float(s.amount)
-            corrections += 1
-
-        # OCR sanity: expected = hours * rate
-        if row.hours > 0 and row.rate > 0:
-            expected = round(row.hours * row.rate, 2)
-            if row.amount > 0 and expected > 0:
-                ratio = row.amount / expected
-                if ratio < 0.1 or ratio > 10:
-                    logger.info(
-                        "VALIDATION_CORRECTION | trade=%s | old_amount=%s | expected=%s",
-                        trade,
-                        row.amount,
-                        expected,
-                    )
-                    row.amount = expected
-                    corrections += 1
-
-        # Summary is allowed to repair notable mismatches for the same exact trade.
-        summary_amount = max(0.0, float(s.amount or 0.0))
-        if summary_amount > 0 and row.amount > 0:
-            if abs(summary_amount - row.amount) > max(1.0, row.amount * 0.25):
-                logger.info(
-                    "VALIDATION_CORRECTION | trade=%s | old_amount=%s | summary_amount=%s",
-                    trade,
-                    row.amount,
-                    summary_amount,
-                )
-                row.amount = summary_amount
-                corrections += 1
-
-    # Add missing trades from summary layer.
-    for (trade, project), s in summary_map.items():
-        if (trade, project) in out:
-            continue
-        out[(trade, project)] = InvoiceRow(
-            trade=trade,
-            project_id=project or None,
-            employee_id=None,
-            hours=max(0.0, float(s.hours or 0.0)),
-            rate=max(0.0, float(s.rate or 0.0)),
-            amount=max(0.0, float(s.amount or 0.0)),
-        )
-        corrections += 1
-        logger.info("VALIDATION_CORRECTION | added_missing_trade=%s", trade)
-
-    warnings.append(f"summary_validation_corrections:{corrections}")
-    return list(out.values())
-
 
 def _parse_generic_rows(full_text: str) -> List[InvoiceRow]:
     rows: List[InvoiceRow] = []
 
     for line in full_text.splitlines():
         ln = " ".join(line.split())
-        logger.info("OCR_ROW_RAW | %s", ln)
         if len(ln) < 8:
-            logger.info("ROW_REJECTED | reason=generic:too_short | row=%s", ln)
             continue
 
         ln_upper = ln.upper()
         if any(rej in ln_upper for rej in _GENERIC_REJECT):
-            logger.info("ROW_REJECTED | reason=generic:header_or_metadata | row=%s", ln)
-            continue
-        if any(rej in ln_upper for rej in _GENERIC_METADATA_REJECT):
-            logger.info("ROW_REJECTED | reason=generic:metadata_keyword | row=%s", ln)
             continue
 
         numbers = re.findall(r"\d{1,3}(?:,\d{3})*(?:\.\d+)?", ln)
-        if len(numbers) < 2:
-            logger.info("ROW_REJECTED | reason=generic:insufficient_numbers | row=%s", ln)
+        if len(numbers) < 3:
             continue
 
         proj = _PROJECT_RE.search(ln)
@@ -473,62 +292,15 @@ def _parse_generic_rows(full_text: str) -> List[InvoiceRow]:
 
         trade_name = " ".join(trade_words).strip()
         if not trade_name:
-            logger.info("ROW_REJECTED | reason=generic:empty_trade | row=%s", ln)
             continue
-        if not re.fullmatch(r"[A-Za-z][A-Za-z\s&./-]{1,40}", trade_name):
-            logger.info("ROW_REJECTED | reason=generic:invalid_trade_text | row=%s", ln)
-            continue
-        if trade_name.upper() in _FINANCIAL_TRADE_BLOCK:
-            logger.info("ROW_REJECTED | reason=generic:financial_trade | row=%s", ln)
-            continue
-
-        _hours = 0.0
-        _rate = 0.0
-        _amount = 0.0
-
-        if len(numbers) >= 3:
-            _hours = _to_float(numbers[0])
-            _rate = _to_float(numbers[1])
-            _amount = _to_float(numbers[2])
-        else:
-            # Handle compact OCR lines like: "Carpenter 10 50.00"
-            # where hours may be missing but can be inferred.
-            n1 = _to_float(numbers[0])
-            n2 = _to_float(numbers[1])
-            if n1 > 0 and n2 > 0 and n1 <= 100 and n2 >= n1:
-                _rate = n1
-                _amount = n2
-                _hours = round(_amount / _rate, 2)
-            elif n1 > 0 and n2 > 0 and n2 <= 100 and n1 > n2:
-                _hours = n1
-                _rate = n2
-                _amount = round(_hours * _rate, 2)
-            else:
-                logger.info("ROW_REJECTED | reason=generic:ambiguous_two_number_row | row=%s", ln)
-                continue
-
-        if _hours <= 0 or _rate <= 0:
-            logger.info("ROW_REJECTED | reason=generic:invalid_hours_or_rate | row=%s", ln)
-            continue
-
-        if _hours > 0 and _rate > 0:
-            _expected = round(_hours * _rate, 2)
-            if _expected > 0:
-                _ratio = _amount / _expected
-                if _ratio < 0.1 or _ratio > 10:
-                    logger.warning(
-                        "Amount sanity correction (generic) | trade=%s | extracted=%s | expected=%s",
-                        trade_name, _amount, _expected,
-                    )
-                    _amount = _expected
 
         rows.append(
             InvoiceRow(
                 trade=trade_name.upper(),
                 project_id=proj.group(0).upper() if proj else None,
-                hours=_hours,
-                rate=_rate,
-                amount=_amount,
+                hours=_to_float(numbers[0]),
+                rate=_to_float(numbers[1]),
+                amount=_to_float(numbers[2]),
             )
         )
 
@@ -614,12 +386,10 @@ def _batch_ocr_image(
     if not result:
         return []
 
-    effective_min_conf = max(0.0, float(min_confidence or 0.0))
-
     cells: List[Dict[str, Any]] = []
     for item in result:
         box_pts, text, score = item[0], item[1], float(item[2] or 0.0)
-        if not text or score < effective_min_conf:
+        if not text or score < min_confidence:
             continue
         xs = [int(p[0]) for p in box_pts]
         ys = [int(p[1]) for p in box_pts]
@@ -647,16 +417,14 @@ def _extract_table_engine(
     config = load_extraction_config()
     config = apply_runtime_overrides(config, config_overrides)
 
-    # Keep 300 DPI for accurate morphology and cell-level OCR.
+    # Performance gain comes from batch OCR (1 call per table vs N per cell).
+    # Keep 300 DPI for accurate morphological line detection.
     OCR_DPI = 300
     pages = _convert_from_path(pdf_path, dpi=OCR_DPI)
     normalizer = TableNormalizer(config=TableNormalizerConfig())
-    cell_extractor = CellExtractor(
-        config=CellExtractorConfig(
-            min_confidence=config.ocr.min_confidence,
-            debug_dir=None,
-        )
-    )
+
+    # Shared OCR engine — instantiate ONCE and reuse across all tables
+    _shared_ocr = _RapidOCR() if _RapidOCR else None
 
     all_tables: List[List[List[str]]] = []
     warnings: List[str] = []
@@ -704,57 +472,41 @@ def _extract_table_engine(
             x, y, w, h = contour.x, contour.y, contour.w, contour.h
             log_event(
                 logger,
-                "TABLE_DETECTED",
+                "table_detected",
                 page=page_idx,
                 table=table_idx,
                 bbox={"x": x, "y": y, "w": w, "h": h},
                 area=int(w * h),
             )
-            # Add padding around contour so first/top-border rows are not clipped.
-            pad = 8
-            y0 = max(0, y - pad)
-            x0 = max(0, x - pad)
-            y1 = min(page_img.shape[0], y + h + pad)
-            x1 = min(page_img.shape[1], x + w + pad)
+            crop = page_img[y : y + h, x : x + w]
 
-            crop = page_img[y0:y1, x0:x1]
+            h_mask = detected.horizontal_mask[y : y + h, x : x + w]
+            v_mask = detected.vertical_mask[y : y + h, x : x + w]
 
-            h_mask = detected.horizontal_mask[y0:y1, x0:x1]
-            v_mask = detected.vertical_mask[y0:y1, x0:x1]
+            # --- BATCH OCR: run once per table crop (not per cell) ---
+            rel_cells = _batch_ocr_image(crop, _shared_ocr, min_confidence=config.ocr.min_confidence)
+            if not rel_cells:
+                # Low-quality scan: retry with lower confidence threshold
+                rel_cells = _batch_ocr_image(crop, _shared_ocr, min_confidence=0.1)
 
-            boundary_recon = GridReconstructor(config=GridReconstructorConfig()).reconstruct(
-                table_image=crop,
-                ocr_cells=[],
-                horizontal_mask=h_mask,
-                vertical_mask=v_mask,
-            )
-            cell_boxes = _build_cell_boxes_from_bounds(
-                boundary_recon.row_boundaries,
-                boundary_recon.col_boundaries,
-            )
-            if not cell_boxes:
-                warnings.append(f"page_{page_idx}_table_{table_idx}:no_cell_grid")
-                log_event(
-                    logger,
-                    "TABLE_REJECTED",
-                    page=page_idx,
-                    table=table_idx,
-                    reason="no_cell_grid",
+            # Always record raw batch-OCR text so attendance tokens (W/H/A/OFF)
+            # are preserved in ocr_text_parts even if grid normalization filters them out.
+            if rel_cells:
+                raw_tokens = " ".join(c["text"] for c in rel_cells if c.get("text"))
+                if raw_tokens:
+                    ocr_text_parts.append(raw_tokens)
+
+            if not rel_cells:
+                # Fallback: grid boundaries from masks only (no OCR text)
+                t_mask = cv2.bitwise_or(h_mask, v_mask)
+                recon_fallback = GridReconstructor(config=GridReconstructorConfig()).reconstruct(
+                    table_image=crop, ocr_cells=[],
+                    horizontal_mask=h_mask, vertical_mask=v_mask,
                 )
-                continue
-
-            rel_cells = cell_extractor.extract_cells(crop, cell_boxes)
-
-            if not any(c.get("text") for c in rel_cells):
-                warnings.append(f"page_{page_idx}_table_{table_idx}:no_cell_ocr_text")
-                log_event(
-                    logger,
-                    "TABLE_REJECTED",
-                    page=page_idx,
-                    table=table_idx,
-                    reason="no_cell_ocr_text",
-                    cell_count=len(rel_cells),
-                )
+                # Still push an empty-but-structured table
+                normalized = normalizer.normalize(recon_fallback.table)
+                if normalized:
+                    all_tables.append(normalized)
                 continue
 
             recon = GridReconstructor(config=GridReconstructorConfig()).reconstruct(
@@ -778,8 +530,8 @@ def _extract_table_engine(
             abs_cells: List[Dict[str, Any]] = []
             for cell in rel_cells:
                 abs_cell = dict(cell)
-                abs_cell["x"] = int(cell.get("x", 0) + x0)
-                abs_cell["y"] = int(cell.get("y", 0) + y0)
+                abs_cell["x"] = int(cell.get("x", 0) + x)
+                abs_cell["y"] = int(cell.get("y", 0) + y)
                 abs_cells.append(abs_cell)
 
             debug.image(f"page_{page_idx:02d}_table_{table_idx:02d}_detected", crop)
@@ -804,6 +556,14 @@ def _extract_table_engine(
                     "avg_confidence": float(np.mean(rel_conf)) if rel_conf else 0.0,
                 }
             )
+
+        # Full-page OCR pass — ensures any text that didn't land in a table crop
+        # (headers, attendance markers, etc.) is still captured in ocr_text_parts.
+        page_wide_cells = _batch_ocr_image(page_img, _shared_ocr, min_confidence=0.3)
+        if page_wide_cells:
+            page_tokens = " ".join(c["text"] for c in page_wide_cells if c.get("text"))
+            if page_tokens:
+                ocr_text_parts.append(page_tokens)
 
     if not all_tables:
         warnings.append("No structured table reconstructed from OCR pipeline")
@@ -835,17 +595,11 @@ def _rows_from_normalized_tables(
             if not any(cells):
                 continue
 
-            row_text = " | ".join(cells)
-            logger.info("OCR_ROW_RAW | %s", row_text)
-
-            def _log_rejected(reason: str) -> None:
-                logger.info("ROW_REJECTED | reason=%s | row=%s", reason, cells)
-
             # ===== SEMANTIC FILTER: Classify row type =====
             row_type = classify_row(cells)
             if row_type != RowType.VALID_LABOUR_ROW:
                 rejected_count += 1
-                _log_rejected(f"semantic:{row_type.name}")
+                logger.debug(f"Rejected row (type={row_type.name}): {cells[:3]}")
                 continue
             # ===== END SEMANTIC FILTER =====
 
@@ -876,12 +630,10 @@ def _rows_from_normalized_tables(
             numbers = [n for n in numbers if n > 0]
 
             if len(numbers) < 2:
-                _log_rejected("insufficient_numeric_tokens")
                 continue
 
             trade = cells[0]
-            if not trade or trade.upper() in _FINANCIAL_TRADE_BLOCK or trade.lower() in _SKIP_FIRST:
-                _log_rejected("financial_or_invalid_trade")
+            if not trade or trade.lower() in _SKIP_FIRST:
                 continue
 
             project = ""
@@ -903,19 +655,6 @@ def _rows_from_normalized_tables(
                 u = token.upper()
                 if "OT" in u or "O/T" in u or "OVERTIME" in u:
                     overtime = max(overtime, _to_float(token))
-
-            # OCR decimal-corruption guard: if hours*rate is available but amount
-            # differs by more than one order of magnitude, auto-correct.
-            if hours > 0 and rate > 0:
-                _expected = round(hours * rate, 2)
-                if _expected > 0:
-                    _ratio = amount / _expected
-                    if _ratio < 0.1 or _ratio > 10:
-                        logger.warning(
-                            "Amount sanity correction (table) | trade=%s | extracted=%s | expected=%s",
-                            trade, amount, _expected,
-                        )
-                        amount = _expected
 
             row_item = InvoiceRow(
                 trade=trade.upper(),
@@ -982,62 +721,6 @@ def _validate_rows(rows: List[InvoiceRow], fin: InvoiceFinancials, warnings: Lis
             warnings.append(
                 f"Deduction mismatch: rows={row_ded_sum} summary={fin.total_deduction}"
             )
-
-
-def _hard_validate_rows(rows: Sequence[InvoiceRow], warnings: List[str]) -> List[InvoiceRow]:
-    valid: List[InvoiceRow] = []
-    metadata_terms = {
-        "INVOICE", "TIMESHEET", "TRN", "TEL", "PHONE", "EMAIL", "ADDRESS",
-        "PREPARED", "APPROVED", "CLIENT", "COMPANY", "SUBCONTRACTOR",
-        "SUB-CONTRACTOR", "PAGE", "DATE",
-    }
-    for r in rows or []:
-        trade = _clean(r.trade).upper()
-        if not trade:
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:empty_trade", row=str(r))
-            continue
-        if _is_financial_trade_exact(trade):
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:financial_trade", row=str(r))
-            continue
-        if any(term in trade for term in metadata_terms):
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:metadata_trade", row=str(r))
-            continue
-        if len(trade) > 60 or re.search(r"\d", trade):
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:invalid_trade_text", row=str(r))
-            continue
-        letters = len(re.findall(r"[A-Z]", trade))
-        if letters < 3 or letters / max(len(trade.replace(" ", "")), 1) < 0.65:
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:noise_trade", row=str(r))
-            continue
-        if float(r.hours or 0.0) <= 0 or float(r.hours or 0.0) > 744:
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:absurd_hours", row=str(r))
-            continue
-        if float(r.rate or 0.0) <= 0 or float(r.rate or 0.0) > 10000:
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:absurd_rate", row=str(r))
-            continue
-        if float(r.amount or 0.0) <= 0 or float(r.amount or 0.0) > 1000000:
-            log_event(logger, "ROW_REJECTED", reason="hard_validation:non_positive_amount", row=str(r))
-            continue
-        expected_amount = round(float(r.hours or 0.0) * float(r.rate or 0.0), 2)
-        if expected_amount > 0:
-            ratio = float(r.amount or 0.0) / expected_amount
-            if ratio < 0.1 or ratio > 10:
-                log_event(
-                    logger,
-                    "VALIDATION_CORRECTION",
-                    trade=trade,
-                    reason="hard_validation:amount_decimal_corruption",
-                    old_amount=float(r.amount or 0.0),
-                    expected_amount=expected_amount,
-                )
-                r.amount = expected_amount
-                warnings.append(f"amount_corrected:{trade}")
-            elif abs(float(r.amount or 0.0) - expected_amount) > max(2.0, expected_amount * 0.15):
-                warnings.append(f"low_confidence_amount:{trade}")
-        valid.append(r)
-
-    warnings.append(f"hard_validation_rows:{len(valid)}")
-    return valid
 
 
 def _should_use_ocr_pipeline(total_chars: int, has_text_rows: bool, full_text: str, fmt: TimesheetFormat) -> bool:
@@ -1116,39 +799,21 @@ def extract_text_pdf(
             if tables:
                 table_payloads = route_document_tables(tables=tables, layout=layout)
 
-                attendance_payloads = []
-                summary_payloads = []
-                financial_payloads = []
-                metadata_payloads = []
-
                 for payload in table_payloads:
                     log_event(
                         logger,
-                        "TABLE_CLASSIFIED",
+                        "table_classified",
                         table_index=payload.table_index,
                         table_type=payload.table_type.value,
                         confidence=payload.confidence,
                     )
                     log_event(
                         logger,
-                        "TABLE_PARSER_SELECTED",
+                        "table_parser_selected",
                         table_index=payload.table_index,
                         parser=payload.parser_name,
                         table_type=payload.table_type.value,
                     )
-
-                    if payload.table_type in {TableType.ATTENDANCE_TABLE, TableType.OVERTIME_TABLE}:
-                        attendance_payloads.append(payload)
-                    elif payload.table_type == TableType.PROJECT_SUMMARY_TABLE:
-                        summary_payloads.append(payload)
-                    elif payload.table_type in {
-                        TableType.FINANCIAL_SUMMARY_TABLE,
-                        TableType.DEDUCTION_SUMMARY_TABLE,
-                        TableType.TOTALS_FOOTER_TABLE,
-                    }:
-                        financial_payloads.append(payload)
-                    elif payload.table_type == TableType.METADATA_TABLE:
-                        metadata_payloads.append(payload)
 
                     if payload.table_type in {
                         TableType.FINANCIAL_SUMMARY_TABLE,
@@ -1194,98 +859,24 @@ def extract_text_pdf(
                             },
                         )
 
-                log_event(
-                    logger,
-                    "TABLE_ROUTING_SUMMARY",
-                    attendance_tables=len(attendance_payloads),
-                    summary_tables=len(summary_payloads),
-                    financial_tables=len(financial_payloads),
-                    metadata_tables=len(metadata_payloads),
-                )
-
-                attendance_rows_raw: List[InvoiceRow] = []
-                for p in attendance_payloads:
-                    attendance_rows_raw.extend(p.rows or [])
-                log_event(
-                    logger,
-                    "ATTENDANCE_ROWS_EXTRACTED",
-                    count=len(attendance_rows_raw),
-                    rows=[
-                        {
-                            "trade": r.trade,
-                            "employee_id": r.employee_id,
-                            "project_id": r.project_id,
-                            "hours": r.hours,
-                            "rate": r.rate,
-                            "amount": r.amount,
-                        }
-                        for r in attendance_rows_raw
-                    ],
-                )
-
-                primary_rows = _aggregate_primary_rows(attendance_rows_raw or rows)
-                log_event(
-                    logger,
-                    "AGGREGATION_COMPLETE",
-                    primary_input=len(attendance_rows_raw or rows),
-                    aggregated_count=len(primary_rows),
-                    aggregated_rows=[
-                        {
-                            "trade": r.trade,
-                            "employee_id": r.employee_id,
-                            "project_id": r.project_id,
-                            "hours": r.hours,
-                            "rate": r.rate,
-                            "amount": r.amount,
-                        }
-                        for r in primary_rows
-                    ],
-                )
+                labour_tables = [
+                    tables[p.table_index]
+                    for p in table_payloads
+                    if p.table_type in {TableType.ATTENDANCE_TABLE, TableType.PROJECT_SUMMARY_TABLE, TableType.OVERTIME_TABLE}
+                ]
+                labour_rows: List[InvoiceRow] = []
+                labour_fin = InvoiceFinancials()
+                if labour_tables:
+                    labour_rows, labour_fin, labour_summary_hours = _rows_from_normalized_tables(labour_tables, layout, warnings)
+                    summary_hours = labour_summary_hours
 
                 merge_result = merge_table_payloads(
-                    base_rows=primary_rows or rows,
-                    base_financials=fin,
+                    base_rows=labour_rows or rows,
+                    base_financials=labour_fin if (labour_fin.subtotal > 0 or labour_fin.total_deduction > 0) else fin,
                     payloads=table_payloads,
                 )
+                rows = merge_result.rows or rows
                 fin = merge_result.financials
-
-                # Summary-table extraction used for validation/correction layer only.
-                summary_rows: List[InvoiceRow] = []
-                for p in summary_payloads:
-                    summary_rows.extend(p.rows or [])
-                log_event(
-                    logger,
-                    "SUMMARY_ROWS_EXTRACTED",
-                    count=len(summary_rows),
-                    rows=[
-                        {
-                            "trade": r.trade,
-                            "hours": r.hours,
-                            "rate": r.rate,
-                            "amount": r.amount,
-                        }
-                        for r in summary_rows
-                    ],
-                )
-
-                merged_primary_rows = _aggregate_primary_rows(merge_result.rows or primary_rows or rows)
-                validated_rows = _cross_validate_with_summary(merged_primary_rows, summary_rows, warnings)
-                rows = _hard_validate_rows(validated_rows or merged_primary_rows or rows, warnings)
-                log_event(
-                    logger,
-                    "VALIDATION_COMPLETE",
-                    validated_count=len(rows),
-                )
-
-                # Keep financial rows aligned with validated normalized rows.
-                row_subtotal = round(sum(float(r.amount or 0.0) for r in rows), 2)
-                if fin.subtotal <= 0.0 or abs(fin.subtotal - row_subtotal) > max(3.0, row_subtotal * 0.35):
-                    logger.info(
-                        "VALIDATION_CORRECTION | subtotal_rebased_from_rows | old=%s | new=%s",
-                        fin.subtotal,
-                        row_subtotal,
-                    )
-                    fin.subtotal = row_subtotal
 
                 has_summary_table = merge_result.debug.get("selected_financial_summary_table") is not None
                 fin.summary_detected = bool(has_summary_table)
@@ -1310,7 +901,7 @@ def extract_text_pdf(
 
                 log_event(
                     logger,
-                    "TABLE_MERGE_COMPLETE",
+                    "table_merge_complete",
                     merged_rows=len(rows),
                     payload_count=merge_result.debug.get("payload_count", 0),
                     selected_financial_summary_table=merge_result.debug.get("selected_financial_summary_table"),
@@ -1321,14 +912,24 @@ def extract_text_pdf(
                 full_text = f"{full_text}\n{ocr_table_text}".strip()
 
             if not rows:
-                warnings.append("structured_rows_required:no_generic_ocr_row_fallback")
+                ocr_text = _ocr_full_text(pdf_path)
+                if ocr_text:
+                    full_text = ocr_text
+                    rows = _parse_generic_rows(ocr_text)
+                    warnings.append("Fallback generic OCR parser used")
 
             confidence = max(0.58, min(0.92, avg_conf if avg_conf > 0 else 0.7))
         else:
             confidence = 0.98 if rows else 0.6
 
         if not rows and not used_ocr:
-            warnings.append("structured_rows_required:no_full_page_ocr_row_fallback")
+            ocr_text = _ocr_full_text(pdf_path)
+            if ocr_text:
+                used_ocr = True
+                rows = _parse_generic_rows(ocr_text)
+                full_text = ocr_text
+                confidence = 0.68
+                warnings.append("OCR extraction used")
 
         meta = _extract_metadata(full_text)
         deduction_result = extract_deduction_total(
@@ -1345,7 +946,7 @@ def extract_text_pdf(
             fin.deduction_breakdown = deduction_result.breakdown
         log_event(
             logger,
-            "FINANCIALS_EXTRACTED",
+            "deduction_extracted",
             run_id=run_id or "",
             pdf_path=pdf_path,
             source=deduction_result.source,

@@ -41,28 +41,15 @@ def merge_table_payloads(
     financial_summaries: List[ParsedTablePayload] = []
 
     for payload in payloads:
+        for row in payload.rows:
+            key = (row.trade, row.project_id or "", row.employee_id or "", row.hours, row.rate, row.amount)
+            rows_map[key] = row
         if payload.table_type in {
             TableType.FINANCIAL_SUMMARY_TABLE,
             TableType.DEDUCTION_SUMMARY_TABLE,
             TableType.TOTALS_FOOTER_TABLE,
-            TableType.PROJECT_SUMMARY_TABLE,
         }:
-            if (
-                payload.financials.subtotal > 0
-                or payload.financials.total_deduction > 0
-                or payload.financials.total_vat > 0
-                or payload.financials.net_payable > 0
-            ):
-                financial_summaries.append(payload)
-
-        if payload.table_type not in {
-            TableType.FINANCIAL_SUMMARY_TABLE,
-            TableType.DEDUCTION_SUMMARY_TABLE,
-            TableType.TOTALS_FOOTER_TABLE,
-        }:
-            for row in payload.rows:
-                key = (row.trade, row.project_id or "", row.employee_id or "", row.hours, row.rate, row.amount)
-                rows_map[key] = row
+            financial_summaries.append(payload)
 
     merged_rows = list(rows_map.values())
     fin = InvoiceFinancials(
