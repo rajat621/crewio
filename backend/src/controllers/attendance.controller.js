@@ -1,12 +1,18 @@
 import Attendance from '../models/Attendance.js';
+import User from '../models/User.js';
 
 export const getAttendance = async (req, res) => {
   try {
-    const { employee, company, from, to } = req.query;
-    const filter = {};
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user || !user.company) {
+      return res.status(403).json({ message: 'No company associated with user' });
+    }
+
+    const { employee, from, to } = req.query;
+    const filter = { company: user.company };
 
     if (employee) filter.employee = employee;
-    if (company) filter.company = company;
     if (from || to) {
       filter.date = {};
       if (from) filter.date.$gte = new Date(from);
@@ -25,7 +31,13 @@ export const getAttendance = async (req, res) => {
 
 export const createAttendance = async (req, res) => {
   try {
-    const record = await Attendance.create(req.body);
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user || !user.company) {
+      return res.status(403).json({ message: 'No company associated with user' });
+    }
+
+    const record = await Attendance.create({ ...req.body, company: user.company });
     res.status(201).json({
       message: 'Attendance record created',
       data: record,
@@ -37,7 +49,17 @@ export const createAttendance = async (req, res) => {
 
 export const updateAttendance = async (req, res) => {
   try {
-    const updated = await Attendance.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user || !user.company) {
+      return res.status(403).json({ message: 'No company associated with user' });
+    }
+
+    const updated = await Attendance.findOneAndUpdate(
+      { _id: req.params.id, company: user.company },
+      { ...req.body, company: user.company },
+      { new: true }
+    );
     if (!updated) {
       return res.status(404).json({ message: 'Attendance record not found' });
     }
@@ -47,10 +69,34 @@ export const updateAttendance = async (req, res) => {
   }
 };
 
+export const deleteAttendance = async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user || !user.company) {
+      return res.status(403).json({ message: 'No company associated with user' });
+    }
+
+    const deleted = await Attendance.findOneAndDelete({ _id: req.params.id, company: user.company });
+    if (!deleted) {
+      return res.status(404).json({ message: 'Attendance record not found' });
+    }
+
+    res.json({ message: 'Attendance deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete attendance', error: error.message });
+  }
+};
+
 export const getAttendanceSummary = async (req, res) => {
   try {
-    const { company } = req.query;
-    const filter = company ? { company } : {};
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user || !user.company) {
+      return res.status(403).json({ message: 'No company associated with user' });
+    }
+
+    const filter = { company: user.company };
     const [present, absent, leave] = await Promise.all([
       Attendance.countDocuments({ ...filter, status: 'present' }),
       Attendance.countDocuments({ ...filter, status: 'absent' }),

@@ -10,12 +10,18 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 const actionMenuStyles = {
   container: {
     position: 'relative',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    padding: '6px 8px',
+    padding: 0,
+    width: '28px',
+    height: '28px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -72,7 +78,7 @@ const actionMenuStyles = {
 /**
  * ThreeDotIcon - SVG icon for the three-dot menu button
  */
-const ThreeDotIcon = ({ color = '#6B7280', size = 20 }) => (
+const ThreeDotIcon = ({ color = '#6B7280', size = 16 }) => (
   <svg
     width={size}
     height={size}
@@ -203,7 +209,7 @@ export const EmployeeActionMenu = ({ actions = [], employeeId }) => {
         aria-label="Employee actions"
         title="Employee actions"
       >
-        <ThreeDotIcon color={buttonHover ? '#111827' : '#6B7280'} size={20} />
+        <ThreeDotIcon color={buttonHover ? '#111827' : '#6B7280'} size={16} />
       </button>
 
       {isOpen && (

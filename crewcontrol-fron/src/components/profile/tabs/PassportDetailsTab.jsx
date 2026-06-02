@@ -16,7 +16,29 @@ const mapEmployeeToForm = (employee) => ({
   passportNo: employee.passportNo || '',
   passportExpiry: toInputDate(employee.passportExpiry),
   passportCopy: employee.passportCopy || '',
+  emiratesId: employee.emiratesId || employee.employeeId || '',
+  emiratesIdExpiry: toInputDate(employee.emiratesIdExpiry),
+  emiratesIdCopy: employee.emiratesIdCopy || '',
+  laborCardCopy: employee.laborCardCopy || '',
+  medicalCertificateCopy: employee.medicalCertificateCopy || '',
+  residenceIdCopy: employee.residenceIdCopy || '',
+  contractPaperCopy: employee.contractPaperCopy || '',
 });
+
+const readFileAsDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+const getUploadDisplayName = (value) => {
+  if (!value) return 'No file uploaded';
+  if (typeof value !== 'string') return 'Uploaded file';
+  if (value.startsWith('data:')) return 'Uploaded file';
+  return value;
+};
 
 const fileUploadStyles = {
   container: {
@@ -70,7 +92,7 @@ const FileUpload = ({ fileName, onUpload, isEditing }) => {
     inputRef.current?.click();
   };
 
-  const displayName = fileName || 'No file uploaded';
+  const displayName = getUploadDisplayName(fileName);
 
   return isEditing ? (
     <div style={fileUploadStyles.container}>
@@ -113,8 +135,15 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = (file) => {
-    setFormData((prev) => ({ ...prev, passportCopy: file?.name || '' }));
+  const handleFileUpload = async (field, file) => {
+    if (!file) return;
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      setFormData((prev) => ({ ...prev, [field]: dataUrl || file?.name || '' }));
+    } catch (error) {
+      setFormData((prev) => ({ ...prev, [field]: file?.name || '' }));
+    }
   };
 
   const handleSave = () => {
@@ -165,7 +194,119 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
           </label>
           <FileUpload
             fileName={formData.passportCopy}
-            onUpload={handleFileUpload}
+            onUpload={(file) => handleFileUpload('passportCopy', file)}
+            isEditing={isEditing}
+          />
+        </div>
+
+        <div style={{ gridColumn: '1 / -1' }}>
+          <ProfileField
+            label="Emirates ID"
+            value={formData.emiratesId}
+            isEditing={isEditing}
+            onChange={(value) => handleFieldChange('emiratesId', value)}
+          />
+        </div>
+
+        <ProfileField
+          label="Emirates ID Expiry Date"
+          value={formData.emiratesIdExpiry}
+          isEditing={isEditing}
+          type="date"
+          onChange={(value) => handleFieldChange('emiratesIdExpiry', value)}
+        />
+
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#6B7280',
+              display: 'block',
+              marginBottom: '8px',
+            }}
+          >
+            Emirates Card Copy
+          </label>
+          <FileUpload
+            fileName={formData.emiratesIdCopy}
+            onUpload={(file) => handleFileUpload('emiratesIdCopy', file)}
+            isEditing={isEditing}
+          />
+        </div>
+
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#6B7280',
+              display: 'block',
+              marginBottom: '8px',
+            }}
+          >
+            Labor Card Copy
+          </label>
+          <FileUpload
+            fileName={formData.laborCardCopy}
+            onUpload={(file) => handleFileUpload('laborCardCopy', file)}
+            isEditing={isEditing}
+          />
+        </div>
+
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#6B7280',
+              display: 'block',
+              marginBottom: '8px',
+            }}
+          >
+            Medical Certificate Copy
+          </label>
+          <FileUpload
+            fileName={formData.medicalCertificateCopy}
+            onUpload={(file) => handleFileUpload('medicalCertificateCopy', file)}
+            isEditing={isEditing}
+          />
+        </div>
+
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#6B7280',
+              display: 'block',
+              marginBottom: '8px',
+            }}
+          >
+            Residence ID Copy
+          </label>
+          <FileUpload
+            fileName={formData.residenceIdCopy}
+            onUpload={(file) => handleFileUpload('residenceIdCopy', file)}
+            isEditing={isEditing}
+          />
+        </div>
+
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#6B7280',
+              display: 'block',
+              marginBottom: '8px',
+            }}
+          >
+            Contract Paper Copy
+          </label>
+          <FileUpload
+            fileName={formData.contractPaperCopy}
+            onUpload={(file) => handleFileUpload('contractPaperCopy', file)}
             isEditing={isEditing}
           />
         </div>

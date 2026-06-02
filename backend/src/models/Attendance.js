@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 const attendanceSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      index: true,
+    },
     employee: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Employee',

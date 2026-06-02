@@ -72,15 +72,32 @@ const mockChats = [
   },
 ];
 
-function ChatList({ selectedChat, onSelectChat, onBack }) {
+function ChatList({ selectedChat, onSelectChat, onBack, additionalChats = [] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  const mergedChats = useMemo(() => {
+    const chatMap = new Map(mockChats.map((chat) => [String(chat.id), chat]));
+
+    additionalChats.forEach((chat) => {
+      if (!chat?.id) return;
+
+      chatMap.set(String(chat.id), {
+        lastMessage: "",
+        timestamp: "Now",
+        unread: 0,
+        ...chat,
+      });
+    });
+
+    return Array.from(chatMap.values());
+  }, [additionalChats]);
+
   const filteredChats = useMemo(() => {
-    return mockChats.filter((chat) =>
+    return mergedChats.filter((chat) =>
       chat.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [mergedChats, searchQuery]);
 
   return (
     <Box

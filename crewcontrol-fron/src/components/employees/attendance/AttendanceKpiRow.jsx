@@ -67,8 +67,8 @@
 
 // export default AttendanceKpiRow;
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 import UniversalKpiRow from "../../kpi/UniversalKpiRow";
 
@@ -82,19 +82,19 @@ const KPI_ITEMS = [
     filterKey: "attendanceStatus",
   },
   {
+    key: "absent",
+    label: "Absent Today",
+    icon: <HighlightOffOutlinedIcon sx={{ fontSize: 32 }} />,
+    iconBg: "#FECACA",
+    iconColor: "#DC2626",
+    filterKey: "attendanceStatus",
+  },
+  {
     key: "on-leave",
     label: "On Leave",
     icon: <PersonOffOutlinedIcon sx={{ fontSize: 32 }} />,
     iconBg: "#FEF3C7",
     iconColor: "#92400E",
-    filterKey: "attendanceStatus",
-  },
-  {
-    key: "late",
-    label: "Late Check-ins",
-    icon: <AccessTimeOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#E5E7EB",
-    iconColor: "#374151",
     filterKey: "attendanceStatus",
   },
 ];

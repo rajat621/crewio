@@ -8,6 +8,9 @@ export const env = {
   MONGODB_URI: process.env.MONGODB_URI,
   JWT_SECRET: process.env.JWT_SECRET || 'your_secret_key',
   JWT_EXPIRE: process.env.JWT_EXPIRE || '7d',
+  BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:5000',
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || '',
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
   
   SMTP_HOST: process.env.SMTP_HOST,
   SMTP_PORT: process.env.SMTP_PORT || 587,

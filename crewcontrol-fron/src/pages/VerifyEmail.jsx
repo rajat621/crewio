@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { authApi } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/crewio_logo.png";
 import '../styles/auth.css'
 
 const VerifyEmail = () => {
@@ -114,7 +115,7 @@ const VerifyEmail = () => {
   return (
     <div className="auth-wrapper">
       {/* LOGO */}
-      <div className="brand"><img src={import.meta.env.BASE_URL + 'crewio_logo.png'} alt="CrewControl logo" /></div>
+      <div className="brand"><img src={logo} alt="CrewControl logo" /></div>
 
       {/* CARD */}
       <div className="auth-card verify-email-card">

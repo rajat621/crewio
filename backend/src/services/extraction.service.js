@@ -1,9 +1,14 @@
 import axios from 'axios';
 import env from '../config/env.js';
 
+const requestedTimeoutMs = Number(env.AI_SERVICE_TIMEOUT_MS || 0);
+const effectiveTimeoutMs = Number.isFinite(requestedTimeoutMs)
+  ? Math.max(requestedTimeoutMs, 90000)
+  : 90000;
+
 const aiClient = axios.create({
   baseURL: env.AI_SERVICE_URL,
-  timeout: Number(env.AI_SERVICE_TIMEOUT_MS || 45000),
+  timeout: effectiveTimeoutMs,
 });
 
 const postToAi = async (path, payload) => {
@@ -49,17 +54,47 @@ export const extractAttendance = async ({ pdfPath }) => {
 
 export const generateInvoiceFromPdf = async ({
   pdfPath,
-  templatePath,
-  signaturePath,
-  stampPath,
-  companyData = {},
+  owner_company_id,
+  owner_template_id,
+  template_override,
+  signature_override,
+  stamp_override,
+  include_signature = true,
+  include_stamp = true,
+  company_data = {},
 }) => {
+  // Resolve owner company data from database if owner_company_id provided
+  let ownerTemplate = template_override;
+  let ownerSignature = signature_override;
+  let ownerStamp = stamp_override;
+
+  if (owner_company_id && !template_override && !signature_override && !stamp_override) {
+    try {
+      // Import Company model dynamically to avoid circular dependencies
+      const { default: Company } = await import('../models/Company.js');
+      const ownerCompany = await Company.findById(owner_company_id);
+      
+      if (ownerCompany) {
+        ownerTemplate = ownerTemplate || ownerCompany.invoiceTemplate;
+        ownerSignature = ownerSignature || ownerCompany.signature;
+        ownerStamp = ownerStamp || ownerCompany.stamp;
+      }
+    } catch (err) {
+      console.error('Failed to fetch owner company data:', err.message);
+      // Continue with provided overrides or defaults
+    }
+  }
+
   return postToAi('/generate-invoice', {
     pdf_path: pdfPath,
-    template_path: templatePath,
-    signature_path: signaturePath,
-    stamp_path: stampPath,
-    company_data: companyData,
+    owner_company_id: owner_company_id,
+    owner_template_id: owner_template_id,
+    template_path: template_override || ownerTemplate,
+    signature_path: signature_override || ownerSignature,
+    stamp_path: stamp_override || ownerStamp,
+    include_signature: include_signature,
+    include_stamp: include_stamp,
+    company_data: company_data,
   });
 };
 

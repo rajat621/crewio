@@ -10,6 +10,8 @@ import invoiceRoutes from './routes/invoice.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import aiRoutes from './routes/ai.routes.js';
+import templateProfileRoutes from './routes/templateProfile.routes.js';
+import mobileRoutes from './routes/mobile.routes.js';
 import errorHandler from './middleware/error.middleware.js';
 
 dotenv.config();
@@ -58,6 +60,8 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/template-profiles', templateProfileRoutes);
+app.use('/api/mobile', mobileRoutes);
 
 // 404 handler
 app.use((req, res) => {

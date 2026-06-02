@@ -13,6 +13,7 @@ const toInputDate = (value) => {
 };
 
 const mapEmployeeToForm = (employee) => ({
+  emiratesId: employee.emiratesId || employee.employeeId || '',
   firstName: employee.firstName || '',
   lastName: employee.lastName || '',
   gender: employee.gender || '',
@@ -44,7 +45,10 @@ export const EmployeeDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
   };
 
   const handleSave = () => {
-    onUpdate(formData);
+    onUpdate({
+      ...formData,
+      employeeId: formData.emiratesId,
+    });
     setIsEditing(false);
   };
 
@@ -66,9 +70,10 @@ export const EmployeeDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
       <div style={{ maxWidth: '580px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div style={{ gridColumn: '1 / -1' }}>
           <ProfileField
-            label="Employee ID"
-            value={employee.employeeId}
-            isEditing={false}
+            label="Emirates ID"
+            value={formData.emiratesId}
+            isEditing={isEditing}
+            onChange={(value) => handleFieldChange('emiratesId', value)}
           />
         </div>
         <ProfileField

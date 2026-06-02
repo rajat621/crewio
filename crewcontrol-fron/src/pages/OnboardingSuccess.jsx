@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "../styles/auth.css";
+import logo from "../assets/crewio_logo.png";
 
 export default function OnboardingSuccess() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export default function OnboardingSuccess() {
 
   return (
     <div className="auth-wrapper onboarding-wrapper">
-      <div className="brand"><img src={import.meta.env.BASE_URL + 'crewio_logo.png'} alt="CrewControl logo" /></div>
+      <div className="brand"><img src={logo} alt="CrewControl logo" /></div>
 
       <div className="auth-card onboarding-card onboarding-success-card">
         <div className="success-icon-container">

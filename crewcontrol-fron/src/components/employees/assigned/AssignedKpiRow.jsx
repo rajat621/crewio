@@ -61,7 +61,6 @@
 // export default AssignedKpiRow;
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
-import HourglassBottomOutlinedIcon from "@mui/icons-material/HourglassBottomOutlined";
 
 import UniversalKpiRow from "../../kpi/UniversalKpiRow";
 
@@ -80,14 +79,6 @@ const KPI_ITEMS = [
     icon: <PersonOffOutlinedIcon sx={{ fontSize: 32 }} />,
     iconBg: "#FEE2E2",
     iconColor: "#DC2626",
-    filterKey: "assignedStatus",
-  },
-  {
-    key: "ending-soon",
-    label: "Ending Soon",
-    icon: <HourglassBottomOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#E5E7EB",
-    iconColor: "#6B7280",
     filterKey: "assignedStatus",
   },
 ];

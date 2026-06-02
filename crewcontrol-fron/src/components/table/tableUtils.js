@@ -28,6 +28,22 @@ export const BODY_CELL_SX = {
   color: "text.primary",
 };
 
+/* ================= ACTION CELL ================= */
+export const ACTION_CELL_SX = {
+  ...CELL_SX,
+  textAlign: "center",
+  verticalAlign: "middle",
+};
+
+export const ACTION_ICON_BUTTON_SX = {
+  width: 28,
+  height: 28,
+  p: 0,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
 /* ================= ROW ================= */
 export const ROW_SX = {
   height: TABLE_ROW_HEIGHT,

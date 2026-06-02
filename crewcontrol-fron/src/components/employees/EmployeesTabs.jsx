@@ -5,6 +5,7 @@ const TABS = [
   { label: "Assigned", value: "assigned" },
   { label: "Attendance", value: "attendance" },
   { label: "Passport Status", value: "passport" },
+  { label: "EmirateID Status", value: "emirate-id" },
   { label: "Track Employee", value: "track" },
 ];
 

@@ -1,10 +1,28 @@
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ChatList from "../components/chat/ChatList";
 import ChatDetail from "../components/chat/ChatDetail";
 
 function Chat() {
-  const [selectedChat, setSelectedChat] = useState(null);
+  const location = useLocation();
+  const preselectedChat = useMemo(() => {
+    const chat = location.state?.selectedChat;
+    if (!chat?.id) return null;
+
+    return {
+      unread: 0,
+      timestamp: "Now",
+      ...chat,
+    };
+  }, [location.state]);
+  const [selectedChat, setSelectedChat] = useState(preselectedChat);
+
+  useEffect(() => {
+    if (preselectedChat?.id) {
+      setSelectedChat(preselectedChat);
+    }
+  }, [preselectedChat]);
 
   const handleBackToChat = () => {
     setSelectedChat(null);
@@ -27,6 +45,7 @@ border: "1px solid #DEDEDE",
       <ChatList
         selectedChat={selectedChat}
         onSelectChat={setSelectedChat}
+        additionalChats={preselectedChat ? [preselectedChat] : []}
       />
 
       {/* CHAT DETAIL */}

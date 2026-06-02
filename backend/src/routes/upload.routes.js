@@ -6,14 +6,22 @@ import { uploadFile } from '../controllers/upload.controller.js';
 
 const router = express.Router();
 
-const uploadDir = path.resolve(process.cwd(), 'src', 'storage', 'uploads');
-if (!fs.existsSync(uploadDir)) {
-	fs.mkdirSync(uploadDir, { recursive: true });
+const uploadRoot = path.resolve(process.cwd(), 'src', 'storage', 'uploads');
+const allowedFolders = new Set(['timesheets', 'invoices', 'templates', 'signatures', 'stamps']);
+
+for (const folder of allowedFolders) {
+	const dir = path.join(uploadRoot, folder);
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir, { recursive: true });
+	}
 }
 
 const storage = multer.diskStorage({
-	destination: (_req, _file, cb) => {
-		cb(null, uploadDir);
+	destination: (req, _file, cb) => {
+		const requested = String(req.body?.folder || req.query?.folder || 'timesheets').toLowerCase();
+		const folder = allowedFolders.has(requested) ? requested : 'timesheets';
+		req.uploadFolder = folder;
+		cb(null, path.join(uploadRoot, folder));
 	},
 	filename: (_req, file, cb) => {
 		const ext = path.extname(file.originalname) || '';

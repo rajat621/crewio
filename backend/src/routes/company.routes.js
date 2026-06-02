@@ -14,15 +14,17 @@ import authenticateToken from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
+router.use(authenticateToken);
+
 router.get('/', getCompanies);
 router.post('/', createCompany);
 router.get('/clients', getClientCompanies);
 router.post('/clients', createClientCompany);
 router.post('/client', createClientCompany);
-router.get('/owner/me', authenticateToken, getOwnerCompany);
-router.put('/owner/me', authenticateToken, updateOwnerCompany);
+router.get('/owner/me', getOwnerCompany);
+router.put('/owner/me', updateOwnerCompany);
 router.get('/:id', getCompany);
-router.put('/:id', authenticateToken, updateCompany);
-router.delete('/:id', authenticateToken, deleteCompany);
+router.put('/:id', updateCompany);
+router.delete('/:id', deleteCompany);
 
 export default router;

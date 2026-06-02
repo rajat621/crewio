@@ -437,7 +437,9 @@ export default function ComprehensiveOnboarding() {
         type="button"
         className="btn-google"
         onClick={() => {
-          window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/google`;
+          const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+          const frontend = encodeURIComponent(window.location.origin);
+          window.location.href = `${apiBase}/api/auth/google?flow=signup&frontend=${frontend}`;
         }}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

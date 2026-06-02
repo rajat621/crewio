@@ -1,6 +1,9 @@
 import api from './client'
 
 export const invoicesApi = {
+  getNextInvoiceNumber: () =>
+    api.get('/api/invoices/next-number'),
+
   uploadTimesheet: (file) => {
     const formData = new FormData()
     formData.append('file', file)
@@ -19,7 +22,7 @@ export const invoicesApi = {
     api.get(`/api/invoices/${id}`),
   
   generateInvoiceRecord: (data) =>
-    api.post('/api/invoices/generate', data),
+    api.post('/api/invoices/generate', data, { timeout: 120000 }),
 
   generateInvoice: (data) =>
     api.post('/api/invoices', data),

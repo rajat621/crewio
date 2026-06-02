@@ -2,9 +2,10 @@ import { Box, Typography, Button } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import routesConfig from "../../routes/routesConfig";
+import crewioLogo from "../../assets/crewio_logo.png";
 
 /* ---------- NAV ITEM ---------- */
-function NavItem({ Icon, label, selected, onClick }) {
+function NavItem({ Icon, label, selected, onClick, comingSoon = false }) {
   const iconColor = selected ? "#1D4ED8" : "#757575";
   const textColor = selected ? "#141414" : "#757575";
 
@@ -15,6 +16,7 @@ function NavItem({ Icon, label, selected, onClick }) {
         height: 32,
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-between",
         px: "12px",
         borderRadius: "8px",
         cursor: "pointer",
@@ -38,12 +40,29 @@ function NavItem({ Icon, label, selected, onClick }) {
           {label}
         </Typography>
       </Box>
+
+      {comingSoon ? (
+        <Box
+          sx={{
+            px: "10px",
+            height: 18,
+            borderRadius: "999px",
+            backgroundColor: "#E3E9FA",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography sx={{ fontSize: 10, fontWeight: 500, color: "#3B82F6" }}>
+            Coming Soon
+          </Typography>
+        </Box>
+      ) : null}
     </Box>
   );
 }
 
 /* ---------- SIDEBAR ---------- */
-function Sidebar({ onAddNew }) {
+function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -74,16 +93,19 @@ function Sidebar({ onAddNew }) {
             borderBottom: "1px solid #DEDEDE",
             display: "flex",
             alignItems: "center",
-            px: "26px",
+            px: "22px",
           }}
         >
-          <Typography fontSize={24} fontWeight={600}>
-            CrewControl
-          </Typography>
+          <Box
+            component="img"
+            src={crewioLogo}
+            alt="Crewio logo"
+            sx={{ height: 30, width: "auto", display: "block" }}
+          />
         </Box>
 
         {/* NAVIGATION */}
-        <Box sx={{ px: "14px", mt: "24px" }}>
+        <Box sx={{ px: "14px", mt: "18px" }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {routesConfig.map((route) => (
               <NavItem
@@ -91,7 +113,12 @@ function Sidebar({ onAddNew }) {
                 Icon={route.icon}
                 label={route.label}
                 selected={location.pathname === route.path}
-                onClick={() => navigate(route.path)}
+                comingSoon={Boolean(route.comingSoon)}
+                onClick={() => {
+                  if (!route.comingSoon) {
+                    navigate(route.path);
+                  }
+                }}
               />
             ))}
           </Box>
@@ -101,27 +128,49 @@ function Sidebar({ onAddNew }) {
       {/* CTA SECTION */}
       <Box
         sx={{
-          height: 72,
-          px: "14px",
-          py: "20px",
-          borderTop: "1px solid #DEDEDE",
+          px: "12px",
+          pb: "18px",
+          pt: "14px",
         }}
       >
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={onAddNew}
+        <Box
           sx={{
-            height: 32,
-            borderRadius: "8px",
-            textTransform: "none",
-            fontSize: 14,
-            fontWeight: 500,
-            boxShadow: "none",
+            border: "1px solid #E5E7EB",
+            borderRadius: "12px",
+            backgroundColor: "#FFFFFF",
+            boxShadow: "0px 0px 2px rgba(20, 20, 20, 0.12)",
+            px: "18px",
+            py: "14px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
           }}
         >
-          Add New
-        </Button>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography sx={{ fontSize: 12, color: "#9CA3AF", mb: "2px" }}>
+              Current Plan
+            </Typography>
+            <Typography sx={{ fontSize: 18, fontWeight: 600, color: "#141414" }}>
+              Crewio Plus
+            </Typography>
+          </Box>
+
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={() => navigate("/subscription")}
+            sx={{
+              height: 32,
+              borderRadius: "8px",
+              textTransform: "none",
+              fontSize: 14,
+              fontWeight: 500,
+              boxShadow: "none",
+            }}
+          >
+            Upgrade Plan
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

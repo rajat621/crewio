@@ -4,7 +4,8 @@ export const uploadFile = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    const relativePath = `/uploads/${req.file.filename}`;
+    const folder = req.uploadFolder || 'timesheets';
+    const relativePath = `/uploads/${folder}/${req.file.filename}`;
 
     res.status(201).json({
       message: 'File uploaded successfully',
