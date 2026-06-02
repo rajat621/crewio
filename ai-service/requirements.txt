@@ -20,5 +20,6 @@ anthropic>=0.25.0
 # Data handling
 numpy==1.26.4
 pandas==2.2.1
+opencv-python-headless==4.10.0.84
 
 gunicorn==22.0.0
