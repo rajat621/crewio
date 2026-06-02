@@ -260,8 +260,16 @@ export const signup = async (req, res) => {
 
     await user.save();
 
-    // Send OTP email
-    await sendOtpEmail(normalizedEmail, otp);
+    // Send OTP email. Roll back the user if email delivery fails so signup can be retried cleanly.
+    try {
+      await sendOtpEmail(normalizedEmail, otp);
+    } catch (emailError) {
+      await User.deleteOne({ _id: user._id });
+      return res.status(502).json({
+        message: 'Unable to send OTP email right now. Please try again shortly.',
+        error: emailError.message,
+      });
+    }
 
     res.status(201).json({
       message: 'User registered. OTP sent to email.',
@@ -270,6 +278,11 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
     console.error('Signup error:', error);
+    if (error?.code === 11000 && error?.message?.includes('employeeId_1')) {
+      return res.status(500).json({
+        message: 'Signup temporarily unavailable due to a stale database index. Run the user index migration and retry.',
+      });
+    }
     res.status(500).json({ message: 'Signup failed', error: error.message });
   }
 };

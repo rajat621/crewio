@@ -1,10 +1,15 @@
 import nodemailer from 'nodemailer';
 import { env } from '../config/env.js';
 
+const smtpPort = Number(env.SMTP_PORT || 587);
+
 const transporter = nodemailer.createTransport({
   host: env.SMTP_HOST,
-  port: env.SMTP_PORT,
-  secure: env.SMTP_PORT === 465,
+  port: smtpPort,
+  secure: smtpPort === 465,
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
   auth: {
     user: env.SMTP_USER,
     pass: env.SMTP_PASS,
