@@ -24,8 +24,56 @@ const companySchema = new mongoose.Schema(
     invoiceTemplate: {
       type: String,
     },
+    isOwner: {
+      type: Boolean,
+      default: false,
+    },
+    companyRole: {
+      type: String,
+      enum: ['owner', 'client'],
+      default: 'client',
+      index: true,
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+      index: true,
+    },
+    poBox: {
+      type: String,
+    },
+    faxNumber: {
+      type: String,
+    },
+    telephoneNumber: {
+      type: String,
+    },
     signature: {
       type: String,
+    },
+    invoiceTemplateConfig: {
+      type: mongoose.Schema.Types.Mixed,
+      default: () => ({
+        templateId: 'branded-enterprise-v1',
+        headerBoundaryY: 120,
+        footerBoundaryY: 120,
+        tableStartY: 320,
+        safeContentLeft: 38,
+        safeContentRight: 38,
+        signatureAreaX: 48,
+        signatureAreaY: 55,
+        signatureAreaWidth: 150,
+        signatureAreaHeight: 90,
+        currencyCode: 'AED',
+        footerNotes: '',
+        safeZones: {},
+        coordinates: {},
+        columnLayout: {},
+        footerRules: {},
+        paginationRules: {},
+        renderRules: {},
+      }),
     },
     address: {
       type: String,

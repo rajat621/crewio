@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Snackbar, Alert } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
@@ -42,6 +42,19 @@ function TaxInvoiceList() {
   const navigate = useNavigate();
   const [invoiceRows, setInvoiceRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
+  const handleNotify = (message, severity = "success") => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
+  const handleDeleteSuccess = (invoiceId) => {
+    setInvoiceRows((prevRows) => prevRows.filter((row) => row.id !== invoiceId));
+  };
 
   useEffect(() => {
     let active = true;
@@ -94,7 +107,7 @@ function TaxInvoiceList() {
     <Box
       sx={{
         px: "40px",
-        pt: "24px",
+        py: "24px",
         display: "flex",
         flexDirection: "column",
         gap: 2,
@@ -126,8 +139,19 @@ function TaxInvoiceList() {
           p: "20px",
         }}
       >
-        <TaxInvoiceTable rows={invoiceRows} />
+        <TaxInvoiceTable rows={invoiceRows} onDeleteSuccess={handleDeleteSuccess} onNotify={handleNotify} />
       </Box>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

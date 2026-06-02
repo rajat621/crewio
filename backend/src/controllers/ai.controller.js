@@ -60,10 +60,14 @@ export const generateInvoice = async (req, res) => {
   try {
     const {
       pdfPath,
-      templatePath,
-      signaturePath,
-      stampPath,
-      companyData = {},
+      owner_company_id,
+      owner_template_id,
+      template_override,
+      signature_override,
+      stamp_override,
+      include_signature = true,
+      include_stamp = true,
+      company_data = {},
     } = req.body || {};
 
     if (!pdfPath) {
@@ -72,13 +76,20 @@ export const generateInvoice = async (req, res) => {
 
     const result = await generateInvoiceFromPdf({
       pdfPath,
-      templatePath,
-      signaturePath,
-      stampPath,
-      companyData,
+      owner_company_id,
+      owner_template_id,
+      template_override,
+      signature_override,
+      stamp_override,
+      include_signature,
+      include_stamp,
+      company_data,
     });
 
-    return res.status(201).json({ message: 'Invoice generated', ...result });
+    return res.status(201).json({ 
+      message: 'Invoice generated', 
+      ...result 
+    });
   } catch (error) {
     return sendFailure(res, 'Invoice generation failed', error);
   }

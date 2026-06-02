@@ -268,7 +268,6 @@ const COLUMNS = [
   { key: "id", label: "Employee ID" },
   { key: "name", label: "Employee Name" },
   { key: "company", label: "Assigned Company" },
-  { key: "project", label: "Project No." },
   { key: "trade", label: "Trade" },
   { key: "startDate", label: "Start Date" },
   { key: "rate", label: "Rate" },
@@ -276,7 +275,13 @@ const COLUMNS = [
   { key: "action", label: "Action", align: "center" },
 ];
 
-export default function AssignedTable({ rows = [], activeStatus }) {
+export default function AssignedTable({
+  rows = [],
+  activeStatus,
+  onViewProfile,
+  onAssign,
+  onUnassign,
+}) {
   return (
     <UniversalTable
       columns={COLUMNS}
@@ -285,7 +290,15 @@ export default function AssignedTable({ rows = [], activeStatus }) {
       kpiFilterKey={activeStatus}
       filterKey="assignedStatus"
       searchKeys={["id", "name", "trade"]}
-      renderRow={(row) => <AssignedRow key={row.id} row={row} />}
+      renderRow={(row) => (
+        <AssignedRow
+          key={row.id}
+          row={row}
+          onViewProfile={onViewProfile}
+          onAssign={onAssign}
+          onUnassign={onUnassign}
+        />
+      )}
     />
   );
 }

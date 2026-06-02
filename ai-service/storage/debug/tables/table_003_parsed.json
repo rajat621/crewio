@@ -1,0 +1,16 @@
+{
+  "table_index": 3,
+  "table_type": "financial_summary_table",
+  "confidence": 0.7097122302158273,
+  "parser": "financial_summary_parser",
+  "rows_count": 0,
+  "financials": {
+    "subtotal": 0.0,
+    "total_vat": 0.0,
+    "total_deduction": 0.0,
+    "gross_total": 0.0,
+    "net_payable": 0.0,
+    "deduction_breakdown": {}
+  },
+  "source_text": "     10   10             12.5                                 25  "
+}

@@ -1,5 +1,8 @@
-import { TableRow, TableCell, Chip, IconButton } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { TableRow, TableCell, Chip } from "@mui/material";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import LinkOffOutlinedIcon from "@mui/icons-material/LinkOffOutlined";
+import AddLinkOutlinedIcon from "@mui/icons-material/AddLinkOutlined";
+import { EmployeeActionMenu } from "../../profile/EmployeeActionMenu";
 import { CELL_SX } from "../../table/tableUtils";
 
 const STATUS_CONFIG = {
@@ -8,15 +11,36 @@ const STATUS_CONFIG = {
   unassigned: { label: "Unassigned", bg: "#FECACA", color: "#DC2626" },
 };
 
-export default function AssignedRow({ row }) {
+export default function AssignedRow({ row, onViewProfile, onAssign, onUnassign }) {
   const cfg = STATUS_CONFIG[row.assignedStatus] || STATUS_CONFIG.unassigned;
+
+  const actions = [
+    {
+      id: "view-profile",
+      label: "View Profile",
+      icon: <VisibilityOutlinedIcon fontSize="small" />,
+      onClick: () => onViewProfile?.(row),
+    },
+    row.assignedStatus === "unassigned"
+      ? {
+          id: "assign",
+          label: "Assign",
+          icon: <AddLinkOutlinedIcon fontSize="small" />,
+          onClick: () => onAssign?.(row),
+        }
+      : {
+          id: "unassign",
+          label: "Unassign",
+          icon: <LinkOffOutlinedIcon fontSize="small" />,
+          onClick: () => onUnassign?.(row),
+        },
+  ];
 
   return (
     <TableRow sx={{ height: 44 }}>
       <TableCell sx={CELL_SX}>{row.id}</TableCell>
       <TableCell sx={CELL_SX}>{row.name}</TableCell>
       <TableCell sx={CELL_SX}>{row.company}</TableCell>
-      <TableCell sx={CELL_SX}>{row.project}</TableCell>
       <TableCell sx={CELL_SX}>{row.trade}</TableCell>
       <TableCell sx={CELL_SX}>{row.startDate}</TableCell>
       <TableCell sx={CELL_SX}>{row.rate}</TableCell>
@@ -35,9 +59,7 @@ export default function AssignedRow({ row }) {
       </TableCell>
 
       <TableCell align="center" sx={CELL_SX}>
-        <IconButton size="small">
-          <MoreVertIcon fontSize="small" />
-        </IconButton>
+        <EmployeeActionMenu actions={actions} employeeId={row.id} />
       </TableCell>
     </TableRow>
   );

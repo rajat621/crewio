@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { ProfileSection } from '../ProfileSection';
-import { Height } from '@mui/icons-material';
+
+const readFileAsDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+const getUploadLabel = (value) => {
+  if (!value) return 'Upload';
+  if (typeof value !== 'string') return 'Uploaded';
+  return value.startsWith('data:') ? 'Uploaded' : value;
+};
 
 const S = {
   /* ── Layout ─────────────────────────────────────────────── */
@@ -250,14 +263,16 @@ const AmountCell = ({ value, isEditing, onChange }) => {
 /**
  * EmployeeExpensesTab — pixel-perfect implementation matching design spec
  */
-export const EmployeeExpensesTab = ({ expenses = {}, onUpdate = () => {} }) => {
+export const EmployeeExpensesTab = ({ employee = {}, expenses = {}, onUpdate = () => {} }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(expenses || {});
+  const [receipts, setReceipts] = useState(employee.expenseReceipts || {});
 
   useEffect(() => {
     setFormData(expenses || {});
+    setReceipts(employee.expenseReceipts || {});
     setIsEditing(false);
-  }, [expenses]);
+  }, [employee, expenses]);
 
   const totalExpenses = Object.values(formData).reduce(
     (sum, val) => sum + (parseFloat(val) || 0),
@@ -269,13 +284,25 @@ export const EmployeeExpensesTab = ({ expenses = {}, onUpdate = () => {} }) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handleReceiptUpload = async (key, file) => {
+    if (!file) return;
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      setReceipts((prev) => ({ ...prev, [key]: dataUrl || file.name }));
+    } catch (error) {
+      setReceipts((prev) => ({ ...prev, [key]: file.name }));
+    }
+  };
+
   const handleSave = () => {
-    onUpdate({ expenses: formData });
+    onUpdate({ expenses: formData, expenseReceipts: receipts });
     setIsEditing(false);
   };
 
   const handleCancel = () => {
     setFormData(expenses || {});
+    setReceipts(employee.expenseReceipts || {});
     setIsEditing(false);
   };
 
@@ -319,7 +346,16 @@ export const EmployeeExpensesTab = ({ expenses = {}, onUpdate = () => {} }) => {
                           />
                         </td>
                         <td style={{ ...S.td, ...S.tdReceipt }}>
-                          <span style={S.uploadLink}>Upload</span>
+                          <label style={S.uploadLink}>
+                            {getUploadLabel(receipts[item.key])}
+                            <input
+                              type="file"
+                              style={{ display: 'none' }}
+                              disabled={!isEditing}
+                              accept=".pdf,.png,.jpg,.jpeg"
+                              onChange={(e) => handleReceiptUpload(item.key, e.target.files?.[0])}
+                            />
+                          </label>
                         </td>
                       </tr>
                     ))}

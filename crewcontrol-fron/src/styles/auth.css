@@ -3,10 +3,22 @@
   font-family: sans-serif !important;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
 /* ─── PAGE BACKGROUND ─────────────────────────────────────── */
 .auth-wrapper {
   
   min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: transparent;
   background-image: radial-gradient(#d8daf0 1px, transparent 1px);
   background-size: 20px 20px;
@@ -29,7 +41,10 @@
   z-index: 9999; /* increase this */
 }
 .signup-wrapper {
+  width: 100vw;
+  min-height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .brand img {
@@ -517,7 +532,7 @@
 
 /* ─── ONBOARDING COMPANY PROFILE ─────────────────────────── */
 .onboarding-wrapper {
-  align-items: flex-start;
+  align-items: center;
   padding-top: 96px;
 }
 

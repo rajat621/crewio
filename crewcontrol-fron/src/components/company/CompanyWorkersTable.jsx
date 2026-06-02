@@ -11,9 +11,10 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useNavigate } from "react-router-dom";
 import UniversalTable from "../table/UniversalTable";
-import { ROW_SX } from "../table/tableUtils";
+import { ACTION_CELL_SX, ACTION_ICON_BUTTON_SX, ROW_SX } from "../table/tableUtils";
 
 const COLUMNS = [
   { key: "slNo", label: "Sl no." },
@@ -24,7 +25,7 @@ const COLUMNS = [
   { key: "action", label: "Action", align: "center" },
 ];
 
-function CompanyWorkersTable({ workers }) {
+function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -52,7 +53,15 @@ function CompanyWorkersTable({ workers }) {
 
   const handleMenuAction = (action) => {
     if (action === "view" && selectedRow?.id) {
-      navigate(`/employees/${selectedRow.id}`);
+      if (typeof onViewProfile === "function") {
+        onViewProfile(selectedRow);
+      } else {
+        navigate(`/employees/${selectedRow.id}`);
+      }
+    }
+
+    if (action === "remove" && selectedRow?.id && typeof onRemoveWorker === "function") {
+      onRemoveWorker(selectedRow);
     }
 
     handleCloseMenu();
@@ -126,8 +135,12 @@ function CompanyWorkersTable({ workers }) {
               />
             </TableCell>
 
-            <TableCell align="center" sx={cellSx}>
-              <IconButton size="small" onClick={(event) => handleOpenMenu(event, row)} sx={{ p: "4px" }}>
+            <TableCell align="center" sx={{ ...cellSx, ...ACTION_CELL_SX }}>
+              <IconButton
+                size="small"
+                onClick={(event) => handleOpenMenu(event, row)}
+                sx={ACTION_ICON_BUTTON_SX}
+              >
                 <MoreVertIcon sx={{ fontSize: 16, color: "#757575" }} />
               </IconButton>
             </TableCell>
@@ -155,6 +168,12 @@ function CompanyWorkersTable({ workers }) {
             <VisibilityOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>View Profile</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleMenuAction("remove")}>
+          <ListItemIcon>
+            <DeleteOutlineOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Remove</ListItemText>
         </MenuItem>
       </Menu>
     </>

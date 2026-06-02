@@ -165,7 +165,6 @@ import {
 } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
-import employeesData from "../../../data/employees";
 
 // ✅ IMPORT UNIVERSAL TABLE STYLES
 import {
@@ -180,11 +179,11 @@ const STATUS_CONFIG = {
   absent: { label: "Absent", bg: "#FECACA", color: "#DC2626" },
 };
 
-function TrackEmployeeTable() {
+function TrackEmployeeTable({ rows = [] }) {
   const [search, setSearch] = useState("");
 
-  const filtered = employeesData.filter((e) =>
-    e.name?.toLowerCase().includes(search.toLowerCase())
+  const filtered = rows.filter((row) =>
+    String(row?.name || "").toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -215,7 +214,7 @@ function TrackEmployeeTable() {
           </Typography>
 
           <Typography fontSize={18} color="text.secondary">
-            {filtered.length}/{employeesData.length}
+            {filtered.length}/{rows.length}
           </Typography>
         </Box>
 

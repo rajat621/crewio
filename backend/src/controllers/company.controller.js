@@ -1,6 +1,12 @@
 import Company from '../models/Company.js';
 import User from '../models/User.js';
 
+const getAuthenticatedUser = async (req) => {
+  const userId = req.user?.userId;
+  if (!userId) return null;
+  return User.findById(userId).populate('company');
+};
+
 const estimateDataUrlBytes = (dataUrl) => {
   if (!dataUrl || typeof dataUrl !== 'string') return 0;
   const base64Part = dataUrl.split(',')[1];
@@ -37,7 +43,13 @@ const validateAssetField = (fieldName, value) => {
 
 export const createCompany = async (req, res) => {
   try {
-    const { name, trn, websiteLink, stamp, invoiceTemplate, signature } = req.body;
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const { name, trn, websiteLink, stamp, invoiceTemplate, signature,
+      address, telephoneNumber, poBox, faxNumber, city } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: 'Company name is required' });
@@ -60,6 +72,14 @@ export const createCompany = async (req, res) => {
       stamp,
       invoiceTemplate,
       signature,
+      owner: user._id,
+      companyRole: 'client',
+      isOwner: false,
+      ...(address !== undefined && { address }),
+      ...(telephoneNumber !== undefined && { telephoneNumber }),
+      ...(poBox !== undefined && { poBox }),
+      ...(faxNumber !== undefined && { faxNumber }),
+      ...(city !== undefined && { city }),
     });
 
     await company.save();
@@ -76,12 +96,7 @@ export const createCompany = async (req, res) => {
 
 export const updateOwnerCompany = async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ message: 'User not authenticated' });
-    }
-
-    const user = await User.findById(userId);
+    const user = await getAuthenticatedUser(req);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -122,12 +137,18 @@ export const updateOwnerCompany = async (req, res) => {
         stamp,
         invoiceTemplate,
         signature,
-        owner: userId,
+        owner: user._id,
+        companyRole: 'owner',
+        isOwner: true,
         ...otherFields,
       });
     } else {
       // Update existing company
       Object.assign(company, updateData);
+      // Ensure owner flag is set for existing owner companies
+      if (!company.isOwner) company.isOwner = true;
+      company.companyRole = 'owner';
+      company.owner = user._id;
     }
 
     await company.save();
@@ -150,18 +171,20 @@ export const updateOwnerCompany = async (req, res) => {
 
 export const getOwnerCompany = async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ message: 'User not authenticated' });
-    }
-
-    const user = await User.findById(userId).populate('company');
+    const user = await getAuthenticatedUser(req);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     if (!user.company) {
       return res.status(404).json({ message: 'No company associated with this user' });
+    }
+
+    // Ensure isOwner flag is set (migration for pre-existing records)
+    if (!user.company.isOwner || user.company.companyRole !== 'owner') {
+      await Company.findByIdAndUpdate(user.company._id, { isOwner: true, companyRole: 'owner', owner: user._id });
+      user.company.isOwner = true;
+      user.company.companyRole = 'owner';
     }
 
     res.json({
@@ -175,10 +198,26 @@ export const getOwnerCompany = async (req, res) => {
 
 export const updateCompany = async (req, res) => {
   try {
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
     const { id } = req.params;
     const updateData = req.body;
 
-    const company = await Company.findByIdAndUpdate(id, updateData, { new: true });
+    const company = await Company.findOneAndUpdate(
+      {
+        _id: id,
+        owner: user._id,
+        $or: [
+          { companyRole: 'client' },
+          { companyRole: { $exists: false }, isOwner: { $ne: true } },
+        ],
+      },
+      { ...updateData, companyRole: 'client', isOwner: false },
+      { new: true }
+    );
     if (!company) {
       return res.status(404).json({ message: 'Company not found' });
     }
@@ -195,7 +234,13 @@ export const updateCompany = async (req, res) => {
 
 export const createClientCompany = async (req, res) => {
   try {
-    const { name, trn, stamp, invoiceTemplate, signature } = req.body;
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const { name, trn, stamp, invoiceTemplate, signature,
+      address, telephoneNumber, poBox, faxNumber, city } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: 'Company name is required' });
@@ -217,6 +262,14 @@ export const createClientCompany = async (req, res) => {
       stamp,
       invoiceTemplate,
       signature,
+      owner: user._id,
+      companyRole: 'client',
+      isOwner: false,
+      ...(address !== undefined && { address }),
+      ...(telephoneNumber !== undefined && { telephoneNumber }),
+      ...(poBox !== undefined && { poBox }),
+      ...(faxNumber !== undefined && { faxNumber }),
+      ...(city !== undefined && { city }),
     });
 
     await company.save();
@@ -233,7 +286,18 @@ export const createClientCompany = async (req, res) => {
 
 export const getCompanies = async (req, res) => {
   try {
-    const companies = await Company.find({}).sort({ createdAt: -1 });
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companies = await Company.find({
+      owner: user._id,
+      $or: [
+        { companyRole: 'client' },
+        { companyRole: { $exists: false }, isOwner: { $ne: true } },
+      ],
+    }).sort({ createdAt: -1 });
     res.json({ data: companies });
   } catch (error) {
     console.error('Get companies error:', error);
@@ -243,7 +307,12 @@ export const getCompanies = async (req, res) => {
 
 export const getCompany = async (req, res) => {
   try {
-    const company = await Company.findById(req.params.id);
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const company = await Company.findOne({ _id: req.params.id, owner: user._id });
     if (!company) {
       return res.status(404).json({ message: 'Company not found' });
     }
@@ -256,7 +325,19 @@ export const getCompany = async (req, res) => {
 
 export const deleteCompany = async (req, res) => {
   try {
-    const deleted = await Company.findByIdAndDelete(req.params.id);
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const deleted = await Company.findOneAndDelete({
+      _id: req.params.id,
+      owner: user._id,
+      $or: [
+        { companyRole: 'client' },
+        { companyRole: { $exists: false }, isOwner: { $ne: true } },
+      ],
+    });
     if (!deleted) {
       return res.status(404).json({ message: 'Company not found' });
     }
@@ -269,7 +350,18 @@ export const deleteCompany = async (req, res) => {
 
 export const getClientCompanies = async (req, res) => {
   try {
-    const companies = await Company.find({}).sort({ createdAt: -1 });
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companies = await Company.find({
+      owner: user._id,
+      $or: [
+        { companyRole: 'client' },
+        { companyRole: { $exists: false }, isOwner: { $ne: true } },
+      ],
+    }).sort({ createdAt: -1 });
     res.json({ data: companies });
   } catch (error) {
     console.error('Get client companies error:', error);

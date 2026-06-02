@@ -1,8 +1,13 @@
-import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
+import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +36,8 @@ function StatusChip({ status }) {
 function CompanyCard({ company }) {
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const isActiveCompany = company?.status === "active";
 
   const handleMenuOpen = (event) => {
     event.stopPropagation();
@@ -42,15 +49,37 @@ function CompanyCard({ company }) {
     setMenuAnchor(null);
   };
 
-  const handleMenuAction = (action) => {
+  const handleMenuAction = (event, action) => {
+    event?.stopPropagation?.();
+    event?.preventDefault?.();
+
     if (action === "view") navigate(`/company/${company.id}`);
     if (action === "edit") navigate(`/company/${company.id}?mode=edit`);
-    if (action === "assign") navigate(`/employees?companyId=${company.id}`);
+    if (action === "assign") {
+      if (typeof company.onAssignEmployees === "function") {
+        company.onAssignEmployees(company.id);
+      } else {
+        navigate(`/employees?companyId=${company.id}`);
+      }
+    }
     if (action === "invoice") navigate(`/tax-invoices/generate?companyId=${company.id}`);
-    if (action === "deactivate" && typeof company.onDeactivate === "function") {
-      company.onDeactivate(company.id);
+    if (action === "toggle-status") {
+      setConfirmOpen(true);
     }
     setMenuAnchor(null);
+  };
+
+  const handleConfirmToggleStatus = (event) => {
+    event?.stopPropagation?.();
+    setConfirmOpen(false);
+    if (typeof company.onDeactivate === "function") {
+      company.onDeactivate(company.id, company.status);
+    }
+  };
+
+  const handleCloseConfirm = (event) => {
+    event?.stopPropagation?.();
+    setConfirmOpen(false);
   };
 
   const handleCardClick = () => {
@@ -176,41 +205,66 @@ function CompanyCard({ company }) {
           },
         }}
       >
-        <MenuItem onClick={() => handleMenuAction("view")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "view")}>
           <ListItemIcon>
             <VisibilityOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>View Company</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("edit")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "edit")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            <EditOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Edit Company</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("assign")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "assign")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            <GroupAddOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Assign Employees</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("invoice")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "invoice")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            <ReceiptLongOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Generate Invoice</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("deactivate")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "toggle-status")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            {isActiveCompany ? (
+              <BlockOutlinedIcon fontSize="small" />
+            ) : (
+              <CheckCircleOutlineOutlinedIcon fontSize="small" />
+            )}
           </ListItemIcon>
-          <ListItemText>Deactivate Company</ListItemText>
+          <ListItemText>{isActiveCompany ? "Deactivate Company" : "Activate Company"}</ListItemText>
         </MenuItem>
       </Menu>
+
+      <Dialog open={confirmOpen} onClose={handleCloseConfirm} onClick={(event) => event.stopPropagation()}>
+        <DialogTitle>{isActiveCompany ? "Deactivate Company" : "Activate Company"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {isActiveCompany
+              ? "Are you sure you want to deactivate this company?"
+              : "Are you sure you want to activate this company?"}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirm}>Cancel</Button>
+          <Button
+            onClick={handleConfirmToggleStatus}
+            color={isActiveCompany ? "error" : "primary"}
+            variant="contained"
+          >
+            {isActiveCompany ? "Deactivate" : "Activate"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

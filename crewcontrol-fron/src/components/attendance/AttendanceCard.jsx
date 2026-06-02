@@ -4,7 +4,7 @@ import { useState } from "react";
 import AttendanceHeader from "./AttendanceHeader";
 import AttendanceBarChart from "./AttendanceBarChart";
 
-function AttendanceCard() {
+function AttendanceCard({ weeklyData = [], monthlyData = [] }) {
   const [view, setView] = useState("weekly"); // 🔑 state owner
 
   return (
@@ -31,7 +31,7 @@ function AttendanceCard() {
       >
         <AttendanceHeader value={view} onChange={setView} />
 
-        <AttendanceBarChart view={view} />
+        <AttendanceBarChart view={view} weeklyData={weeklyData} monthlyData={monthlyData} />
       </Box>
     </Box>
   );

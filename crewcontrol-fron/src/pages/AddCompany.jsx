@@ -6,6 +6,9 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import EditIcon from "@mui/icons-material/Edit";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import { ReusableStepper } from "../components/ReusableStepper";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -25,7 +28,9 @@ const LIGHT  = "#F9FAFB";
 const baseInput = {
   width: "100%",
   height: "44px",
-  border: `1px solid ${BORDER}`,
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: BORDER,
   borderRadius: "8px",
   padding: "0 12px",
   fontSize: "14px",
@@ -57,9 +62,9 @@ const backButtonStyle = {
 };
 
 const COMPANY_STEPS = [
-  { id: 1, label: "Company Information" },
-  { id: 2, label: "Contract Details" },
-  { id: 3, label: "Review & Save" },
+  { id: 1, label: "Company Information", icon: BusinessOutlinedIcon },
+  { id: 2, label: "Contract Details", icon: AssignmentOutlinedIcon },
+  { id: 3, label: "Review & Save", icon: FactCheckOutlinedIcon },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -427,9 +432,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
       style={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        height: "100%",
+        minHeight: 0,
         background: "#F3F4F6",
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        overflow: "hidden",
       }}
     >
       {/* BODY */}
@@ -437,7 +444,8 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
         <div
           style={{
             display: "flex",
-            minHeight: "100%",
+            height: "100%",
+            minHeight: 0,
             background: "#fff",
             border: `1px solid ${BORDER}`,
             borderRadius: "12px",
@@ -449,19 +457,20 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
             style={{
               width: "282px",
               flexShrink: 0,
+              height: "100%",
               background: "#F9FAFB",
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
-              overflow: "visible",
+              overflow: "hidden",
             }}
           >
             <ReusableStepper currentStep={currentStep} steps={COMPANY_STEPS} />
           </div>
 
           {/* MAIN */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100%" }}>
-            {/* Content area without scrolling */}
-            <div style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: "1 0 auto" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, height: "100%" }}>
+            {/* Content area with independent scrolling */}
+            <div className="thin-overlay-scroll" style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: 1, minHeight: 0 }}>
               {isSuccess ? (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
                   <button

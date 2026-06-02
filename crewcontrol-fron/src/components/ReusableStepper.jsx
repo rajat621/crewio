@@ -9,9 +9,7 @@ const BORDER = "#DEDEDE";
 ═══════════════════════════════════════════════════════════════ */
 
 export function ReusableStepper({ currentStep, steps, subSteps = null }) {
-  const DocIcon = ({ color = "#9CA3AF", size = 15 }) => (
-    <DescriptionOutlinedIcon sx={{ fontSize: size, color }} />
-  );
+  const DocIcon = DescriptionOutlinedIcon;
 
   const CheckIcon = () => (
     <DoneIcon sx={{ color: "#fff", fontSize: 18, fontWeight: "bold" }} />
@@ -23,6 +21,7 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
         const isCompleted = step.id < currentStep;
         const isActive    = step.id === currentStep;
         const isLast      = idx === steps.length - 1;
+        const StepIcon = step.icon || DocIcon;
 
         // Show sub-steps only if provided and if this is the active/completed sub-step section
         const shouldShowSubSteps = subSteps && subSteps.parentStepId === step.id && 
@@ -62,11 +61,11 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
                   <CheckIcon />
                 ) : isActive ? (
                   <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: DARK, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <DocIcon color="#fff" size={18} />
+                    <StepIcon sx={{ fontSize: 18, color: "#fff" }} />
                   </div>
                 ) : (
                   <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <DocIcon color="#9CA3AF" size={18} />
+                    <StepIcon sx={{ fontSize: 18, color: "#9CA3AF" }} />
                   </div>
                 )}
               </div>

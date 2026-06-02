@@ -71,7 +71,7 @@ const EmployeeProfile = () => {
         setLoading(true);
         setError(null);
         const response = await employeesApi.getEmployee(id);
-        setEmployee(response?.data?.employee || null);
+        setEmployee(response?.data?.employee || response?.data?.data || null);
       } catch (err) {
         setError(err.message || 'Failed to load employee profile');
         console.error('Error fetching employee:', err);
@@ -97,8 +97,9 @@ const EmployeeProfile = () => {
 
   const handleUpdateData = async (updatedData) => {
     try {
-      await employeesApi.updateEmployee(id, updatedData);
-      setEmployee((prev) => ({ ...prev, ...updatedData }));
+      const response = await employeesApi.updateEmployee(id, updatedData);
+      const updatedEmployee = response?.data?.data || updatedData;
+      setEmployee((prev) => ({ ...prev, ...updatedEmployee }));
       console.log('Employee updated successfully');
     } catch (err) {
       console.error('Error updating employee:', err);
@@ -149,7 +150,11 @@ const EmployeeProfile = () => {
           <PassportDetailsTab employee={employee} onUpdate={handleUpdateData} />
         )}
         {activeTab === 'expenses' && (
-          <EmployeeExpensesTab expenses={employee.expenses || {}} onUpdate={handleUpdateData} />
+          <EmployeeExpensesTab
+            employee={employee}
+            expenses={employee.expenses || {}}
+            onUpdate={handleUpdateData}
+          />
         )}
         {activeTab === 'work' && (
           <WorkDetailsTab employee={employee} onUpdate={handleUpdateData} />

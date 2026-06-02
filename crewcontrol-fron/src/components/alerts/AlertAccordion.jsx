@@ -1,7 +1,6 @@
 import {
   Box,
   Typography,
-  Badge,
   Collapse,
   IconButton,
   Button,
@@ -31,11 +30,13 @@ function AlertAccordion({
         onClick={onToggle}
         sx={{
           height: 44,
+          minHeight: 44,
           p: "12px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           cursor: "pointer",
+          backgroundColor: "#FFFFFF",
           "&:hover": {
             backgroundColor: "#F9FAFB",
           },
@@ -45,28 +46,57 @@ function AlertAccordion({
         <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <KeyboardArrowRightIcon
             sx={{
+              color: "#808080",
               fontSize: 20,
               transform: isOpen ? "rotate(90deg)" : "rotate(0deg)",
               transition: "0.2s",
             }}
           />
-          <Typography fontSize={14} color="#141414">
+          <Typography
+            sx={{
+              fontSize: 14,
+              fontWeight: 400,
+              lineHeight: "20px",
+              color: "#808080",
+              whiteSpace: "nowrap",
+            }}
+          >
             {title}
           </Typography>
         </Box>
 
         {/* RIGHT (BADGE WITH PADDING) */}
-        <Box sx={{ pr: "4px" }}>
-          <Badge
-            badgeContent={count}
+        {count !== undefined && count !== null ? (
+          <Box
             sx={{
-              "& .MuiBadge-badge": {
+              width: 28,
+              display: "flex",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <Box
+              sx={{
+                minWidth: 20,
+                height: 20,
+                px: "6px",
+                borderRadius: "999px",
                 backgroundColor: "#1D4ED8",
                 color: "#FFFFFF",
-              },
-            }}
-          />
-        </Box>
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 12,
+                fontWeight: 600,
+                lineHeight: "12px",
+              }}
+            >
+              {count}
+            </Box>
+          </Box>
+        ) : (
+          <Box sx={{ width: 28, flexShrink: 0 }} />
+        )}
       </Box>
 
       {/* EXPANDED CONTENT */}
@@ -94,13 +124,15 @@ function AlertAccordion({
                 <Typography fontSize={14} color="#141414">
                   {item.name}
                 </Typography>
-                <Typography
-                  fontSize={8}
-                  fontStyle="italic"
-                  color="#757575"
-                >
-                  {item.meta}
-                </Typography>
+                {item.meta ? (
+                  <Typography
+                    fontSize={10}
+                    fontStyle="italic"
+                    color="#757575"
+                  >
+                    {item.meta}
+                  </Typography>
+                ) : null}
               </Box>
 
               {/* RIGHT ACTION */}

@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-05-12 22:17:55",
+  "overall": "PARTIAL",
+  "passed": 18,
+  "failed": 1,
+  "results": {
+    "TEST1_classify_TEXT/PROJECT PDF (ti": {
+      "passed": true,
+      "notes": "format=TimesheetFormat.MCC layout=InvoiceLayout.PROJECT_BASED is_image=False"
+    },
+    "TEST1_classify_IMAGE/ATTENDANCE PDF": {
+      "passed": true,
+      "notes": "format=TimesheetFormat.BKC layout=InvoiceLayout.EMPLOYEE_BASED is_image=True"
+    },
+    "TEST2_extraction_text_pdf": {
+      "passed": true,
+      "notes": "rows=12 ocr=False conf=0.980"
+    },
+    "TEST2_extraction_image_pdf": {
+      "passed": true,
+      "notes": "rows=3 ocr=True conf=0.772"
+    },
+    "TEST3_ocr_routing_triggered": {
+      "passed": true,
+      "notes": "chars=0 text_rows=0"
+    },
+    "TEST3_ocr_tables_extracted": {
+      "passed": true,
+      "notes": "tables=1 conf=0.772 time=15362ms"
+    },
+    "TEST3_ocr_confidence": {
+      "passed": true,
+      "notes": "avg_confidence=0.772"
+    },
+    "TEST3_attendance_tokens": {
+      "passed": false,
+      "notes": "tokens={}"
+    },
+    "TEST4_aggregation_text_pdf": {
+      "passed": true,
+      "notes": "raw=12 normalized=12 distinct_keys=12"
+    },
+    "TEST4_aggregation_image_pdf": {
+      "passed": true,
+      "notes": "raw=3 normalized=3 distinct_keys=3"
+    },
+    "TEST5_invoice_generated_text_pdf": {
+      "passed": true,
+      "notes": "path=D:\\Crew_control\\test-outputs\\real_execution\\tax-invoice-1778604439.pdf size=3.2KB time=23ms"
+    },
+    "TEST5_invoice_generated_image_pdf": {
+      "passed": true,
+      "notes": "path=D:\\Crew_control\\test-outputs\\real_execution\\tax-invoice-1778604439.pdf size=2.4KB time=6ms"
+    },
+    "TEST6_safe_zone_computed": {
+      "passed": true,
+      "notes": "Fallback: {'content_left': 50, 'content_right': 555, 'content_top': 711, 'content_bottom': 120}"
+    },
+    "TEST7_pagination_text_pdf": {
+      "passed": true,
+      "notes": "pages=1 rows=12 preserved=True"
+    },
+    "TEST7_pagination_image_pdf": {
+      "passed": true,
+      "notes": "pages=1 rows=3 preserved=True"
+    },
+    "TEST8_debug_dir_exists": {
+      "passed": true,
+      "notes": "files=12"
+    },
+    "TEST8_output_files_generated": {
+      "passed": true,
+      "notes": "files=34"
+    },
+    "TEST9_performance_text_pdf": {
+      "passed": true,
+      "notes": "classify=2351ms extract=3450ms render=9ms total=5811ms"
+    },
+    "TEST9_performance_image_pdf": {
+      "passed": true,
+      "notes": "classify=4ms extract=30719ms render=7ms total=30730ms"
+    }
+  }
+}

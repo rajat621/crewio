@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import TrackEmployeeTable from "./TrackEmployeeTable";
 import TrackEmployeeMap from "./TrackEmployeeMap";
 
-function TrackEmployee() {
+function TrackEmployee({ rows = [] }) {
   return (
     <Box
       sx={{
@@ -24,7 +24,7 @@ function TrackEmployee() {
           flex: 1,
         }}
       >
-        <TrackEmployeeTable />
+        <TrackEmployeeTable rows={rows} />
         <TrackEmployeeMap />
       </Box>
     </Box>

@@ -2,7 +2,9 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
-// import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
+import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
+import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 
 const routesConfig = [
   {
@@ -45,16 +47,39 @@ const routesConfig = [
       showAddNew: false,
     },
   },
-  // {
-  //   path: "/salary-slip",
-  //   label: "Salary Slip",
-  //   title: "Salary Slip",
-  //   icon: PaidOutlinedIcon,
-  //   topbar: {
-  //     showSearch: false,
-  //     showAddNew: false,
-  //   },
-  // },
+  {
+    path: "/finance",
+    label: "Finance",
+    title: "Finance",
+    icon: CategoryOutlinedIcon,
+    comingSoon: true,
+    topbar: {
+      showSearch: false,
+      showAddNew: false,
+    },
+  },
+  {
+    path: "/salary-slip",
+    label: "Salary Slip",
+    title: "Salary Slip",
+    icon: PaidOutlinedIcon,
+    comingSoon: true,
+    topbar: {
+      showSearch: false,
+      showAddNew: false,
+    },
+  },
+  {
+    path: "/quotation",
+    label: "Quotation",
+    title: "Quotation",
+    icon: RequestQuoteOutlinedIcon,
+    comingSoon: true,
+    topbar: {
+      showSearch: false,
+      showAddNew: false,
+    },
+  },
 ];
 
 export default routesConfig;

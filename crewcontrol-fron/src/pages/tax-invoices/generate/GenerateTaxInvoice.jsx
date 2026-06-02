@@ -1,9 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import DomainVerificationOutlinedIcon from "@mui/icons-material/DomainVerificationOutlined";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import { companiesApi } from "../../../api/companies";
 import { invoicesApi } from "../../../api/invoices";
 import { ReusableStepper } from "../../../components/ReusableStepper";
@@ -26,7 +29,9 @@ const LIGHT  = "#F9FAFB";
 const baseInput = {
   width: "100%",
   height: "44px",
-  border: `1px solid ${BORDER}`,
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: BORDER,
   borderRadius: "8px",
   padding: "0 12px",
   fontSize: "14px",
@@ -61,9 +66,9 @@ const backButtonStyle = {
 };
 
 const TAX_INVOICE_STEPS = [
-  { id: 1, label: "Select Company" },
-  { id: 2, label: "Confirm Company Details" },
-  { id: 3, label: "Invoice Details" },
+  { id: 1, label: "Select Company", icon: BusinessOutlinedIcon },
+  { id: 2, label: "Confirm Company Details", icon: DomainVerificationOutlinedIcon },
+  { id: 3, label: "Invoice Details", icon: ReceiptLongOutlinedIcon },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -295,6 +300,10 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
     onChange({ ...data, vat: numValue });
   };
 
+  const toggleField = (field) => {
+    onChange({ ...data, [field]: !Boolean(data[field]) });
+  };
+
   return (
     <div style={{ display: "flex", gap: "40px", width: "100%", maxWidth: "100%" }}>
       {/* LEFT COLUMN - FORM */}
@@ -481,7 +490,7 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
         <div
           style={{
             width: "240px",
-            height: "110px",
+            minHeight: "110px",
             background: "#F6F6F6",
             border: `1px solid ${BORDER}`,
             borderRadius: "8px",
@@ -503,7 +512,7 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
         <div
           style={{
             width: "240px",
-            height: "110px",
+            minHeight: "110px",
             background: "#F6F6F6",
             border: `1px solid ${BORDER}`,
             borderRadius: "8px",
@@ -520,6 +529,87 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
             {invoiceNumber}
           </p>
         </div>
+
+        <div
+          style={{
+            width: "240px",
+            minHeight: "140px",
+            background: "#F6F6F6",
+            border: `1px solid ${BORDER}`,
+            borderRadius: "8px",
+            padding: "16px 16px 14px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            gap: "12px",
+          }}
+        >
+          <p style={{ fontSize: "16px", fontWeight: 400, color: "#808080", margin: 0, lineHeight: "26px" }}>
+            Add
+          </p>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: "14px", fontWeight: 400, color: "#141414", lineHeight: "26px" }}>Signature</span>
+            <button
+              type="button"
+              onClick={() => toggleField("includeSignature")}
+              style={{
+                width: "38px",
+                height: "18px",
+                borderRadius: "999px",
+                border: "none",
+                background: data.includeSignature ? "#111827" : "#9CA3AF",
+                position: "relative",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  left: data.includeSignature ? "20px" : "2px",
+                  width: "14px",
+                  height: "14px",
+                  borderRadius: "999px",
+                  background: "#fff",
+                  transition: "left 0.15s ease",
+                }}
+              />
+            </button>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: "14px", fontWeight: 400, color: "#141414", lineHeight: "26px" }}>Stamp</span>
+            <button
+              type="button"
+              onClick={() => toggleField("includeStamp")}
+              style={{
+                width: "38px",
+                height: "18px",
+                borderRadius: "999px",
+                border: "none",
+                background: data.includeStamp ? "#111827" : "#9CA3AF",
+                position: "relative",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  left: data.includeStamp ? "20px" : "2px",
+                  width: "14px",
+                  height: "14px",
+                  borderRadius: "999px",
+                  background: "#fff",
+                  transition: "left 0.15s ease",
+                }}
+              />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -535,9 +625,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
+        height: "100%",
+        minHeight: 0,
         background: "#F3F4F6",
         fontFamily: "sans-serif",
+        overflow: "hidden",
       }}
     >
       {/* BODY */}
@@ -545,7 +637,8 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
         <div
           style={{
             display: "flex",
-            minHeight: "100%",
+            height: "100%",
+            minHeight: 0,
             background: "#fff",
             border: `1px solid ${BORDER}`,
             borderRadius: "12px",
@@ -557,19 +650,20 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
             style={{
               width: "282px",
               flexShrink: 0,
+              height: "100%",
               background: "#F9FAFB",
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
-              overflow: "visible",
+              overflow: "hidden",
             }}
           >
             <ReusableStepper currentStep={currentStep} steps={TAX_INVOICE_STEPS} />
           </div>
 
           {/* MAIN */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100%" }}>
-            {/* Content area without scrolling */}
-            <div style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: "1 0 auto" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, height: "100%" }}>
+            {/* Content area with independent scrolling */}
+            <div className="thin-overlay-scroll" style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: 1, minHeight: 0 }}>
               {isSuccess ? (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
                   <button
@@ -739,10 +833,12 @@ function SuccessDialog({ onPreview, onDownload, onClose }) {
 
 export default function GenerateTaxInvoice() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedInvoice, setGeneratedInvoice] = useState(null);
+  const [invoiceNumberPreview, setInvoiceNumberPreview] = useState("--");
   const [companies, setCompanies] = useState([]);
   const [generateError, setGenerateError] = useState("");
 
@@ -760,19 +856,45 @@ export default function GenerateTaxInvoice() {
       vat: 5,
       invoiceDate: "",
       timesheetFile: null,
+      includeSignature: true,
+      includeStamp: true,
     },
   });
+
+  const preselectedCompanyId = searchParams.get("companyId") || "";
 
   useEffect(() => {
     let active = true;
 
     const loadCompanies = async () => {
       try {
-        const response = await companiesApi.getCompanies();
+        const response = await companiesApi.getClientCompanies();
         const nextCompanies = Array.isArray(response?.data?.data) ? response.data.data : [];
 
         if (active) {
           setCompanies(nextCompanies);
+
+          if (preselectedCompanyId) {
+            const preselectedCompany = nextCompanies.find(
+              (company) => String(company?._id || company?.id) === String(preselectedCompanyId)
+            );
+
+            if (preselectedCompany) {
+              setFormData((prev) => ({
+                ...prev,
+                companyId: String(preselectedCompany._id || preselectedCompany.id),
+                companyDetails: {
+                  name: preselectedCompany.name || preselectedCompany.companyLegalName || "",
+                  phone: preselectedCompany.telephoneNumber || preselectedCompany.phone || "",
+                  poBox: preselectedCompany.poBox || "",
+                  fax: preselectedCompany.faxNumber || preselectedCompany.fax || "",
+                  address: preselectedCompany.address || preselectedCompany.companyAddress || "",
+                  trn: preselectedCompany.trn || "",
+                },
+              }));
+              setCurrentStep(2);
+            }
+          }
         }
       } catch (error) {
         if (active) {
@@ -786,11 +908,39 @@ export default function GenerateTaxInvoice() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [preselectedCompanyId]);
 
   const getSelectedCompany = () => {
     return companies.find((c) => String(c._id || c.id) === String(formData.companyId));
   };
+
+  useEffect(() => {
+    let active = true;
+
+    const loadNextInvoiceNumber = async () => {
+      if (currentStep !== 3) {
+        return;
+      }
+
+      try {
+        const response = await invoicesApi.getNextInvoiceNumber();
+        const nextNumber = response?.data?.data?.invoiceNumber || "--";
+        if (active) {
+          setInvoiceNumberPreview(nextNumber);
+        }
+      } catch (_error) {
+        if (active) {
+          setInvoiceNumberPreview("--");
+        }
+      }
+    };
+
+    loadNextInvoiceNumber();
+
+    return () => {
+      active = false;
+    };
+  }, [currentStep]);
 
   const isStep1Valid = () => formData.companyId !== "";
 
@@ -808,12 +958,12 @@ export default function GenerateTaxInvoice() {
         setFormData((prev) => ({
           ...prev,
           companyDetails: {
-            name: company.name,
-            phone: company.phone,
-            poBox: company.poBox,
-            fax: company.fax,
-            address: company.address,
-            trn: company.trn,
+            name: company.name || company.companyLegalName || "",
+            phone: company.telephoneNumber || company.phone || "",
+            poBox: company.poBox || "",
+            fax: company.faxNumber || company.fax || "",
+            address: company.address || company.companyAddress || "",
+            trn: company.trn || "",
           },
         }));
       }
@@ -843,12 +993,15 @@ export default function GenerateTaxInvoice() {
         throw new Error("Timesheet upload failed");
       }
 
-      const parsedInvoiceDate = dayjs(formData.invoiceDetails.invoiceDate, "DD/MM/YYYY");
+      const parsedInvoiceDate = dayjs(formData.invoiceDetails.invoiceDate, "DD/MM/YYYY", true);
 
       const generatedResponse = await invoicesApi.generateInvoiceRecord({
         clientCompanyId: formData.companyId,
+        invoiceNumber: invoiceNumberPreview !== "--" ? invoiceNumberPreview : undefined,
         timesheetPath,
         vatRate: Number(formData.invoiceDetails.vat || 0) / 100,
+        includeSignature: Boolean(formData.invoiceDetails.includeSignature),
+        includeStamp: Boolean(formData.invoiceDetails.includeStamp),
         invoiceDate: parsedInvoiceDate.isValid() ? parsedInvoiceDate.toDate() : new Date(),
       });
 
@@ -890,13 +1043,43 @@ export default function GenerateTaxInvoice() {
     navigate("/tax-invoices");
   };
 
-  const handlePreview = () => {
+  const handlePreview = async () => {
     const invoiceId = generatedInvoice?._id;
     if (!invoiceId) return;
 
-    const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
-    const previewUrl = `${apiBase}/api/invoices/${invoiceId}/download?inline=1`;
-    window.open(previewUrl, "_blank", "noopener,noreferrer");
+    const previewWindow = window.open("", "_blank");
+    if (!previewWindow) {
+      setGenerateError("Popup blocked. Please allow popups and try again.");
+      return;
+    }
+
+    try {
+      previewWindow.opener = null;
+    } catch (error) {
+      // Ignore if browser disallows setting opener.
+    }
+
+    previewWindow.document.title = "Loading invoice...";
+    previewWindow.document.body.innerHTML = '<p style="font-family: Arial, sans-serif; padding: 16px;">Loading invoice preview...</p>';
+
+    try {
+      const response = await invoicesApi.downloadInvoice(invoiceId);
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      previewWindow.location.href = url;
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 60000);
+
+      setIsSuccess(false);
+      navigate("/tax-invoices");
+    } catch (error) {
+      previewWindow.close();
+      console.error("Invoice preview failed:", error);
+      setGenerateError("Failed to open invoice preview. Please try again.");
+    }
   };
 
   const handleDownload = async () => {
@@ -918,6 +1101,9 @@ export default function GenerateTaxInvoice() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Invoice download failed:", error);
+    } finally {
+      setIsSuccess(false);
+      navigate("/tax-invoices");
     }
   };
 
@@ -964,7 +1150,7 @@ export default function GenerateTaxInvoice() {
             }))
           }
           companyName={formData.companyDetails.name.split(" ")[0]}
-          invoiceNumber="01"
+          invoiceNumber={invoiceNumberPreview}
         />
       )}
 

@@ -2,11 +2,16 @@ import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import AlertAccordion from "./AlertAccordion";
 
-function AlertBox() {
+function AlertBox({ alerts }) {
   const [openKey, setOpenKey] = useState(null);
 
-  const toggle = (key) =>
-    setOpenKey((prev) => (prev === key ? null : key));
+  const absentWorkers = Array.isArray(alerts?.absentWorkers) ? alerts.absentWorkers : [];
+  const payments = Array.isArray(alerts?.payments) ? alerts.payments : [];
+  const taxPayments = Array.isArray(alerts?.taxPayments) ? alerts.taxPayments : [];
+  const passportExpiring = Array.isArray(alerts?.documentExpiring) ? alerts.documentExpiring : [];
+  const siteFinished = Array.isArray(alerts?.siteFinished) ? alerts.siteFinished : [];
+
+  const toggle = (key) => setOpenKey((prev) => (prev === key ? null : key));
 
   return (
     <Box
@@ -19,69 +24,79 @@ function AlertBox() {
         border: "1px solid #DEDEDE",
         borderRadius: "8px",
         boxShadow: "0px 0px 2px rgba(20,20,20,0.12)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        overflowY: "auto",
+        scrollbarGutter: "stable",
+        scrollbarWidth: "thin",
+        scrollbarColor: "#C7CDD8 transparent",
+        "&::-webkit-scrollbar": {
+          width: 6,
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#C7CDD8",
+          borderRadius: "999px",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
       }}
     >
-      {/* CONTENT */}
+      <Typography fontSize={18} fontWeight={600} color="#141414">
+        Alert Box
+      </Typography>
+
       <Box
         sx={{
-          height: 436,
           display: "flex",
           flexDirection: "column",
           gap: "12px",
-          overflowY: "auto",
         }}
       >
-        {/* HEADING (TOP ALIGNED) */}
-        <Typography
-          fontSize={18}
-          fontWeight={600}
-          color="#141414"
-          sx={{ mb: "12px" }}
-        >
-          Alert Box
-        </Typography>
-
         <AlertAccordion
-          title="Absent labor"
-          count={6}
+          title="Absent worker"
+          count={absentWorkers.length}
           isOpen={openKey === "absent"}
           onToggle={() => toggle("absent")}
           type="absent"
-          items={[
-            { name: "John Doe", meta: "4 days absent in this month" },
-            { name: "Alex Smith", meta: "4 days absent in this month" },
-            { name: "Rahul Kumar", meta: "4 days absent in this month" },
-            { name: "Ravi Patel", meta: "4 days absent in this month" },
-            { name: "Aman Verma", meta: "4 days absent in this month" },
-            { name: "Karan Singh", meta: "4 days absent in this month" },
-          ]}
+          items={absentWorkers}
         />
 
         <AlertAccordion
-          title="Tax payment"
-          count={3}
+          title="Payment"
+          count={payments.length}
+          isOpen={openKey === "payment"}
+          onToggle={() => toggle("payment")}
+          type="payment"
+          items={payments}
+        />
+
+        <AlertAccordion
+          title="Tax Payment"
+          count={taxPayments.length}
           isOpen={openKey === "tax"}
           onToggle={() => toggle("tax")}
           type="tax"
-          items={[
-            { name: "ABC Pvt Ltd", meta: "5 days remaining to pay tax" },
-            { name: "Zen Corp", meta: "5 days remaining to pay tax" },
-            { name: "Nova LLC", meta: "5 days remaining to pay tax" },
-          ]}
+          items={taxPayments}
         />
 
         <AlertAccordion
-          title="Passport expire"
-          count={1}
-          isOpen={openKey === "passport"}
-          onToggle={() => toggle("passport")}
-          type="passport"
-          items={[
-            {
-              name: "Michael Scott",
-              meta: "After 1 month passport is expire",
-            },
-          ]}
+          title="Document Expiring"
+          count={passportExpiring.length}
+          isOpen={openKey === "document-expiring"}
+          onToggle={() => toggle("document-expiring")}
+          type="document"
+          items={passportExpiring}
+        />
+
+        <AlertAccordion
+          title="Site Finished"
+          count={siteFinished.length}
+          isOpen={openKey === "site-finished"}
+          onToggle={() => toggle("site-finished")}
+          type="site"
+          items={siteFinished}
         />
       </Box>
     </Box>

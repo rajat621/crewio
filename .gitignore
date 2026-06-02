@@ -65,3 +65,7 @@ backend/src/storage/uploads/*
 backend/src/storage/invoices/*
 !backend/src/storage/uploads/.gitkeep
 !backend/src/storage/invoices/.gitkeep
+
+AI_SERVICE_CONSOLIDATED.txt
+*.txt
+!requirements.txt
