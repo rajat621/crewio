@@ -224,6 +224,14 @@ function Home() {
         const attendanceRecords = parseDataArray(attendanceResponse);
         const companies = parseDataArray(companiesResponse);
         const invoices = parseDataArray(invoicesResponse);
+        const employeeIds = new Set(
+          employees
+            .map((employee) => String(employee?._id || ""))
+            .filter(Boolean)
+        );
+        const userAttendanceRecords = attendanceRecords.filter((record) =>
+          employeeIds.has(String(record?.employee || ""))
+        );
 
         const latestAttendanceByEmployee = new Map();
         attendanceRecords.forEach((record) => {
@@ -337,8 +345,8 @@ function Home() {
         });
 
         setChartData({
-          weekly: buildWeeklyChartData(attendanceRecords),
-          monthly: buildMonthlyChartData(attendanceRecords),
+          weekly: buildWeeklyChartData(userAttendanceRecords),
+          monthly: buildMonthlyChartData(userAttendanceRecords),
         });
 
         setAlerts({

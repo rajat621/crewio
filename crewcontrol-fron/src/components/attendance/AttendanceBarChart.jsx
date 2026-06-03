@@ -7,25 +7,7 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-import { Box } from "@mui/material";
-
-const fallbackWeeklyData = [
-  { day: "Mon", present: 1, absent: 0 },
-  { day: "Tue", present: 2, absent: 1 },
-  { day: "Wed", present: 1, absent: 1 },
-  { day: "Thu", present: 3, absent: 1 },
-  { day: "Fri", present: 2, absent: 0 },
-  { day: "Sat", present: 1, absent: 1 },
-  { day: "Sun", present: 2, absent: 1 },
-];
-
-const fallbackMonthlyData = [
-  { day: "Week 1", present: 8, absent: 2 },
-  { day: "Week 2", present: 9, absent: 3 },
-  { day: "Week 3", present: 7, absent: 2 },
-  { day: "Week 4", present: 10, absent: 2 },
-  { day: "Week 5", present: 6, absent: 1 },
-];
+import { Box, Typography } from "@mui/material";
 
 const hasVisibleBars = (items) =>
   Array.isArray(items) &&
@@ -34,8 +16,28 @@ const hasVisibleBars = (items) =>
 
 function AttendanceBarChart({ view, weeklyData = [], monthlyData = [] }) {
   const sourceData = view === "monthly" ? monthlyData : weeklyData;
-  const fallbackData = view === "monthly" ? fallbackMonthlyData : fallbackWeeklyData;
-  const data = hasVisibleBars(sourceData) ? sourceData : fallbackData;
+  const hasData = hasVisibleBars(sourceData);
+
+  if (!hasData) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          height: 360,
+          border: "1px solid #DEDEDE",
+          borderRadius: "4px",
+          p: "8px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography fontSize={13} color="#757575">
+          No attendance data
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -48,7 +50,7 @@ function AttendanceBarChart({ view, weeklyData = [], monthlyData = [] }) {
       }}
     >
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} barCategoryGap={24}>
+        <BarChart data={sourceData} barCategoryGap={24}>
           <XAxis dataKey="day" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis allowDecimals={false} axisLine={false} tickLine={false} width={28} />
           <Tooltip />
