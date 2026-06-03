@@ -7,6 +7,8 @@ const smtpSecure = smtpPort === 465;
 const transporter = nodemailer.createTransport({
   host: env.SMTP_HOST,
   port: smtpPort,
+  logger: true,
+  debug: true,
   secure: smtpSecure,
   connectionTimeout: 15000,
   greetingTimeout: 15000,
