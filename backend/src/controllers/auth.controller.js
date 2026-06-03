@@ -389,7 +389,17 @@ export const signin = async (req, res) => {
     user.otpExpiry = otpExpiry;
     await user.save();
 
-    await sendOtpEmail(user.email, otp);
+    try {
+      await sendOtpEmail(user.email, otp);
+    } catch (emailError) {
+      user.otp = null;
+      user.otpExpiry = null;
+      await user.save();
+      return res.status(502).json({
+        message: 'Unable to send OTP email right now. Please try again shortly.',
+        error: emailError.message,
+      });
+    }
 
     res.json({
       message: 'OTP sent to email',
@@ -421,7 +431,17 @@ export const resendOtp = async (req, res) => {
     user.otpExpiry = otpExpiry;
     await user.save();
 
-    await sendOtpEmail(user.email, otp);
+    try {
+      await sendOtpEmail(user.email, otp);
+    } catch (emailError) {
+      user.otp = null;
+      user.otpExpiry = null;
+      await user.save();
+      return res.status(502).json({
+        message: 'Unable to send OTP email right now. Please try again shortly.',
+        error: emailError.message,
+      });
+    }
 
     res.json({ message: 'OTP resent successfully' });
   } catch (error) {
