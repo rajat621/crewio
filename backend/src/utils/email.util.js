@@ -1,51 +1,53 @@
-import nodemailer from 'nodemailer';
-import { env } from '../config/env.js';
+import { Resend } from 'resend';
 
-const smtpPort = Number(env.SMTP_PORT || 587);
-const smtpSecure = smtpPort === 465;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const transporter = nodemailer.createTransport({
-  host: env.SMTP_HOST,
-  port: smtpPort,
-  logger: true,
-  debug: true,
-  secure: smtpSecure,
-  connectionTimeout: 15000,
-  greetingTimeout: 15000,
-  socketTimeout: 15000,
-  auth: {
-    user: env.SMTP_USER,
-    pass: env.SMTP_PASS,
-  },
-});
+const verifyResendConfig = async () => {
+  try {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY is not set');
+    }
 
-transporter
-  .verify()
-  .then(() => {
-    console.log(`SMTP transporter verified (host=${env.SMTP_HOST}, port=${smtpPort}, secure=${smtpSecure})`);
-  })
-  .catch((error) => {
-    console.error('SMTP transporter verify failed:', error.message);
-  });
+    if (!process.env.RESEND_FROM_EMAIL) {
+      throw new Error('RESEND_FROM_EMAIL is not set');
+    }
+
+    console.log('Resend email configured (from=' + process.env.RESEND_FROM_EMAIL + ')');
+  } catch (error) {
+    console.error('Resend configuration error:', error.message);
+  }
+};
+
+verifyResendConfig();
 
 export const sendOtpEmail = async (email, otp) => {
-  const fromEmail = env.SMTP_FROM_EMAIL || env.SMTP_USER;
-  const mailOptions = {
-    from: `${env.SMTP_FROM_NAME} <${fromEmail}>`,
-    to: email,
-    subject: 'Your OTP for CrewControl',
-    html: `
-      <h2>Email Verification</h2>
-      <p>Your OTP is: <strong>${otp}</strong></p>
-      <p>This OTP will expire in 10 minutes.</p>
-    `,
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`OTP sent to ${email}`);
+    const from = process.env.RESEND_FROM_EMAIL;
+    if (!from) {
+      throw new Error('RESEND_FROM_EMAIL is not set');
+    }
+
+    const response = await resend.emails.send({
+      from,
+      to: [email],
+      subject: 'Your OTP for CrewControl',
+      html:
+        '<h2>Email Verification</h2>' +
+        '<p>Your OTP is: <strong>' + otp + '</strong></p>' +
+        '<p>This OTP will expire in 10 minutes.</p>',
+    });
+
+    if (response?.error) {
+      throw new Error(response.error.message || 'Resend email send failed');
+    }
+
+    console.log('OTP sent to ' + email);
   } catch (error) {
-    console.error('Error sending OTP email:', error);
+    console.error('Error sending OTP email via Resend:', {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack,
+    });
     throw error;
   }
 };
