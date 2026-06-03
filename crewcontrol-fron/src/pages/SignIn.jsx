@@ -34,9 +34,17 @@ export default function SignIn() {
 
 		setLoading(true)
 		try {
+			console.log('[auth-ui] signin.request', { email })
 			await authApi.signin(email, password)
+			console.log('[auth-ui] signin.response.success', { email })
 			navigate(`/verify-email?email=${encodeURIComponent(email)}&flow=signin`)
 		} catch (err) {
+			console.error('[auth-ui] signin.response.error', {
+				email,
+				status: err?.response?.status,
+				message: err?.response?.data?.message || err?.message,
+				error: err?.response?.data?.error,
+			})
 			setError(err.response?.data?.message || 'Sign in failed. Please try again.')
 		} finally {
 			setLoading(false)

@@ -8,25 +8,16 @@ export const env = {
   MONGODB_URI: process.env.MONGODB_URI,
   JWT_SECRET: process.env.JWT_SECRET || 'your_secret_key',
   JWT_EXPIRE: process.env.JWT_EXPIRE || '7d',
-  BACKEND_URL: process.env.BACKEND_URL || 'https://crewio.onrender.com',
+  BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:5000',
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || '',
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
+  RESEND_API_KEY: process.env.RESEND_API_KEY || '',
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || '',
   
-  SMTP_HOST: process.env.SMTP_HOST,
-  SMTP_PORT: process.env.SMTP_PORT || 587,
-  SMTP_SECURE:
-    typeof process.env.SMTP_SECURE === 'string'
-      ? process.env.SMTP_SECURE.toLowerCase() === 'true'
-      : undefined,
-  SMTP_USER: process.env.SMTP_USER,
-  SMTP_PASS: process.env.SMTP_PASS,
-  SMTP_FROM_EMAIL: process.env.SMTP_FROM_EMAIL || process.env.EMAIL_FROM,
-  SMTP_FROM_NAME: process.env.SMTP_FROM_NAME || 'CrewControl',
-  
-  FRONTEND_URL: process.env.FRONTEND_URL || 'https://crewio-rust.vercel.app',
-  VITE_API_URL: process.env.VITE_API_URL || 'https://crewio.onrender.com/api',
-  AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'https://crewio-ai-services.onrender.com',
-  AI_SERVICE_TIMEOUT_MS: process.env.AI_SERVICE_TIMEOUT_MS || 45000,
+  // FRONTEND_URL: process.env.FRONTEND_URL || 'https://crewio-rust.vercel.app',
+  // VITE_API_URL: process.env.VITE_API_URL || 'https://crewio.onrender.com/api',
+  // AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'https://crewio-ai-services.onrender.com',
+  // AI_SERVICE_TIMEOUT_MS: process.env.AI_SERVICE_TIMEOUT_MS || 45000,
 };
 
 export default env;

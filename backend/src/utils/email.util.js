@@ -1,18 +1,19 @@
 import { Resend } from 'resend';
+import { env } from '../config/env.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY);
 
 const verifyResendConfig = async () => {
   try {
-    if (!process.env.RESEND_API_KEY) {
+    if (!env.RESEND_API_KEY) {
       throw new Error('RESEND_API_KEY is not set');
     }
 
-    if (!process.env.RESEND_FROM_EMAIL) {
+    if (!env.RESEND_FROM_EMAIL) {
       throw new Error('RESEND_FROM_EMAIL is not set');
     }
 
-    console.log('Resend email configured (from=' + process.env.RESEND_FROM_EMAIL + ')');
+    console.log('[email][resend] configured', { from: env.RESEND_FROM_EMAIL });
   } catch (error) {
     console.error('Resend configuration error:', error.message);
   }
@@ -22,10 +23,16 @@ verifyResendConfig();
 
 export const sendOtpEmail = async (email, otp) => {
   try {
-    const from = process.env.RESEND_FROM_EMAIL;
+    const from = env.RESEND_FROM_EMAIL;
     if (!from) {
       throw new Error('RESEND_FROM_EMAIL is not set');
     }
+
+    console.log('[email][resend][send.start]', {
+      to: email,
+      from,
+      subject: 'Your OTP for CrewControl',
+    });
 
     const response = await resend.emails.send({
       from,
@@ -38,10 +45,14 @@ export const sendOtpEmail = async (email, otp) => {
     });
 
     if (response?.error) {
+      console.error('[email][resend][send.error]', response.error);
       throw new Error(response.error.message || 'Resend email send failed');
     }
 
-    console.log('OTP sent to ' + email);
+    console.log('[email][resend][send.success]', {
+      to: email,
+      responseId: response?.data?.id || null,
+    });
   } catch (error) {
     console.error('Error sending OTP email via Resend:', {
       message: error?.message,

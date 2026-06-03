@@ -14,7 +14,8 @@ export default function AuthCallback() {
 
     if (error) {
       console.error('Authentication error:', error)
-      navigate('/signin?error=Google authentication failed')
+      const safeError = String(error || 'Google authentication failed')
+      navigate('/signin?error=' + encodeURIComponent(safeError))
       return
     }
 

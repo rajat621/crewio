@@ -47,15 +47,23 @@ export default function SignUp() {
     
     try {
       setLoading(true)
+      console.log('[auth-ui] signup.request', { email: formData.email })
       await authApi.signup({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password
       })
+      console.log('[auth-ui] signup.response.success', { email: formData.email })
       // Redirect to OTP verification
       navigate(`/verify-email?email=${encodeURIComponent(formData.email)}&flow=signup`)
     } catch (err) {
+      console.error('[auth-ui] signup.response.error', {
+        email: formData.email,
+        status: err?.response?.status,
+        message: err?.response?.data?.message || err?.message,
+        error: err?.response?.data?.error,
+      })
       setError(err.response?.data?.message || 'Sign up failed. Please try again.')
     } finally {
       setLoading(false)

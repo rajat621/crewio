@@ -338,16 +338,24 @@ export default function ComprehensiveOnboarding() {
     setSignupError("");
     try {
       setSignupLoading(true);
+      console.log('[auth-ui] onboarding.signup.request', { email: formData.email.trim() });
       await authApi.signup({
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
         email: formData.email.trim(),
         password: formData.password
       });
+      console.log('[auth-ui] onboarding.signup.response.success', { email: formData.email.trim() });
       setOtpValues(Array(6).fill(""));
       setOtpTimeLeft(240);
       goToNextStep();
     } catch (error) {
+      console.error('[auth-ui] onboarding.signup.response.error', {
+        email: formData.email.trim(),
+        status: error?.response?.status,
+        message: error?.response?.data?.message || error?.message,
+        error: error?.response?.data?.error,
+      });
       setSignupError(error.response?.data?.message || "Failed to create account. Please try again.");
     } finally {
       setSignupLoading(false);
@@ -504,11 +512,20 @@ export default function ComprehensiveOnboarding() {
 
       try {
         setOtpVerifyLoading(true);
-        const response = await authApi.verifyOtp(enteredEmail, otpValues.join(""));
+        const otpCode = otpValues.join("");
+        console.log('[auth-ui] onboarding.otp.verify.request', { email: enteredEmail, otpLength: otpCode.length });
+        const response = await authApi.verifyOtp(enteredEmail, otpCode);
         const { token, user } = response.data;
+        console.log('[auth-ui] onboarding.otp.verify.response.success', { email: enteredEmail, userId: user?.id || user?._id || null });
         login(token, user);
         goToNextStep();
       } catch (error) {
+        console.error('[auth-ui] onboarding.otp.verify.response.error', {
+          email: enteredEmail,
+          status: error?.response?.status,
+          message: error?.response?.data?.message || error?.message,
+          error: error?.response?.data?.error,
+        });
         setOtpError(error.response?.data?.message || "Invalid OTP. Please try again.");
       } finally {
         setOtpVerifyLoading(false);
@@ -525,11 +542,19 @@ export default function ComprehensiveOnboarding() {
 
       try {
         setOtpResendLoading(true);
+        console.log('[auth-ui] onboarding.otp.resend.request', { email: enteredEmail });
         await authApi.resendOtp(enteredEmail);
+        console.log('[auth-ui] onboarding.otp.resend.response.success', { email: enteredEmail });
         setOtpValues(Array(6).fill(""));
         setOtpTimeLeft(240);
         otpInputsRef.current[0]?.focus();
       } catch (error) {
+        console.error('[auth-ui] onboarding.otp.resend.response.error', {
+          email: enteredEmail,
+          status: error?.response?.status,
+          message: error?.response?.data?.message || error?.message,
+          error: error?.response?.data?.error,
+        });
         setOtpError(error.response?.data?.message || "Failed to resend OTP. Please try again.");
       } finally {
         setOtpResendLoading(false);
