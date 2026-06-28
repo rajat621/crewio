@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""
+=======
+"""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 Cell-level OCR extraction.
 
 This module crops each detected cell region and runs RapidOCR offline.
@@ -12,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+<<<<<<< HEAD
 from pipeline.profiler import current, new_request_collector
 import threading
 import time
@@ -22,6 +27,10 @@ import os
 
 from pipeline.cache import load_ocr_cache, store_ocr_cache
 from pipeline.structured_logging import log_event
+=======
+import cv2
+import numpy as np
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 try:
     from rapidocr_onnxruntime import RapidOCR  # type: ignore
@@ -49,12 +58,16 @@ class CellExtractorConfig:
     merge_line_breaks: bool = True
     sharpen: bool = True
     debug_dir: Optional[str] = None
+<<<<<<< HEAD
     max_cell_area_px: int = 120000
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 
 class CellExtractor:
     """Extract text from table cell boxes using offline RapidOCR."""
 
+<<<<<<< HEAD
     def __init__(self, config: Optional[CellExtractorConfig] = None, ocr_engine: Any = None, request_cache: Optional[Dict[str, Any]] = None) -> None:
         self.config = config or CellExtractorConfig()
         # allow passing a preloaded OCR engine (for reuse across threads)
@@ -77,6 +90,11 @@ class CellExtractor:
                         prof.set_meta("rapid_model_load_time_ms", int((time.time() - prof_start) * 1000))
         except Exception:
             pass
+=======
+    def __init__(self, config: Optional[CellExtractorConfig] = None) -> None:
+        self.config = config or CellExtractorConfig()
+        self._ocr_engine = RapidOCR() if _RAPID_OCR_AVAILABLE else None
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     @property
     def is_ocr_available(self) -> bool:
@@ -84,7 +102,11 @@ class CellExtractor:
 
         return self._ocr_engine is not None
 
+<<<<<<< HEAD
     def extract_cells(self, image: np.ndarray, boxes: Sequence[BBox], table_offset: Tuple[int, int] = (0, 0), submit_ts: Optional[float] = None, table_index: Optional[int] = None) -> List[OCRCell]:
+=======
+    def extract_cells(self, image: np.ndarray, boxes: Sequence[BBox], table_offset: Tuple[int, int] = (0, 0)) -> List[OCRCell]:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         """
         OCR each cell and return position-preserving dictionaries.
 
@@ -98,6 +120,7 @@ class CellExtractor:
             {x, y, w, h, text, confidence}
         """
 
+<<<<<<< HEAD
 
         prof = current()
         with (prof or new_request_collector()).time_stage("cell_extractor.extract_cells"):
@@ -602,6 +625,78 @@ class CellExtractor:
                 pass
 
             return full_text, mean_conf, rapid_ms if 'rapid_ms' in locals() else 0, False
+=======
+        if image is None or image.size == 0:
+            raise ValueError("Input image is empty")
+
+        h_img, w_img = image.shape[:2]
+        dx, dy = table_offset
+
+        cells: List[OCRCell] = []
+
+        for idx, box in enumerate(boxes):
+            x, y, w, h = self._sanitize_box(box, w_img, h_img)
+            if w < self.config.min_box_w or h < self.config.min_box_h:
+                continue
+
+            padded = self._apply_padding(x, y, w, h, w_img, h_img)
+            crop = image[padded[1] : padded[1] + padded[3], padded[0] : padded[0] + padded[2]]
+
+            prepared = self._prepare_crop(crop)
+            text, conf = self._ocr_cell(prepared)
+
+            cell = {
+                "x": int(x + dx),
+                "y": int(y + dy),
+                "w": int(w),
+                "h": int(h),
+                "text": text,
+                "confidence": float(conf),
+            }
+            cells.append(cell)
+
+            self._debug_write(f"cell_{idx:04d}", prepared)
+
+        return cells
+
+    def _ocr_cell(self, crop: np.ndarray) -> Tuple[str, float]:
+        """Run OCR with confidence-aware line filtering."""
+
+        if self._ocr_engine is None:
+            return "", 0.0
+
+        try:
+            result, _ = self._ocr_engine(crop)
+        except Exception as exc:
+            logger.warning("RapidOCR cell OCR failed: %s", exc)
+            return "", 0.0
+
+        if not result:
+            return "", 0.0
+
+        parts: List[str] = []
+        confs: List[float] = []
+
+        for item in result:
+            text = str(item[1] or "").strip()
+            score = float(item[2] or 0.0)
+            if not text:
+                continue
+            if score < self.config.min_confidence:
+                continue
+
+            parts.append(text)
+            confs.append(score)
+
+        if not parts:
+            return "", 0.0
+
+        joiner = " " if self.config.merge_line_breaks else "\n"
+        full_text = joiner.join(parts).strip()
+        mean_conf = float(np.mean(confs)) if confs else 0.0
+
+        return full_text, mean_conf
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     def _prepare_crop(self, crop: np.ndarray) -> np.ndarray:
         """Enhance cell crop to improve OCR quality on faint scans."""
@@ -661,6 +756,7 @@ class CellExtractor:
             return image
         return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+<<<<<<< HEAD
     def _estimate_expected_ocr_ms(self, prof=None) -> int:
         """Estimate expected per-cell OCR ms from profiler metadata or a sensible default."""
         try:
@@ -870,6 +966,8 @@ def _estimate_expected_ocr_ms(self_obj, prof=None) -> int:
 
 
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 def extract_cell_texts(
     image: np.ndarray,

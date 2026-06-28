@@ -280,6 +280,247 @@ export const googleAuthCallback = async (req, res) => {
   }
 };
 
+const logAuth = (stage, details = {}) => {
+  console.log(`[auth] ${stage}`, details);
+};
+
+const sanitizeFlow = (flow) => (flow === 'signup' ? 'signup' : 'signin');
+
+const getFrontendBase = (req) => {
+  const explicit = req.query?.frontend;
+  if (explicit && /^https?:\/\//i.test(explicit)) {
+    return explicit.replace(/\/$/, '');
+  }
+  const origin = req.headers.origin || req.headers.referer?.split('/').slice(0, 3).join('/');
+  if (origin && /^https?:\/\//i.test(origin)) {
+    return origin.replace(/\/$/, '');
+  }
+  return (env.FRONTEND_URL || 'https://crewio-rust.vercel.app').replace(/\/$/, '');
+};
+
+const getBackendBase = (req) => {
+  if (env.BACKEND_URL) {
+    return String(env.BACKEND_URL).replace(/\/$/, '');
+  }
+  const host = req.get('host');
+  return `${req.protocol}://${host}`.replace(/\/$/, '');
+};
+
+const createState = ({ flow, frontend }) => {
+  const payload = JSON.stringify({ flow: sanitizeFlow(flow), frontend });
+  return Buffer.from(payload).toString('base64url');
+};
+
+const parseState = (state) => {
+  try {
+    const decoded = Buffer.from(String(state || ''), 'base64url').toString('utf8');
+    const parsed = JSON.parse(decoded);
+    return {
+      flow: sanitizeFlow(parsed?.flow),
+      frontend: parsed?.frontend,
+    };
+  } catch (_error) {
+    return { flow: 'signin', frontend: null };
+  }
+};
+
+const redirectWithError = (res, frontend, flow, message) => {
+  const authPath = flow === 'signup' ? '/signup' : '/signin';
+  const target = `${frontend}${authPath}?error=${encodeURIComponent(message)}`;
+  return res.redirect(target);
+};
+
+const issueOtpForUser = async (user) => {
+  logAuth('otp.generate.start', { email: user.email, userId: String(user._id) });
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+  user.otp = otp;
+  user.otpExpiry = otpExpiry;
+  await user.save();
+  logAuth('otp.generate.saved', { email: user.email, expiresAt: otpExpiry.toISOString() });
+  logAuth('otp.email.send.start', { email: user.email });
+  await sendOtpEmail(user.email, otp);
+  logAuth('otp.email.send.success', { email: user.email });
+};
+
+const splitDisplayName = (displayName) => {
+  const parts = String(displayName || '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) {
+    return { firstName: '', lastName: '' };
+  }
+  if (parts.length === 1) {
+    return { firstName: parts[0], lastName: '' };
+  }
+  return {
+    firstName: parts[0],
+    lastName: parts.slice(1).join(' '),
+  };
+};
+
+const buildAuthUserPayload = (user) => ({
+  id: user._id,
+  email: user.email,
+  firstName: user.firstName || '',
+  lastName: user.lastName || '',
+  mobileNumber: user.mobileNumber || '',
+  countryCode: user.countryCode || '',
+  dateOfBirth: user.dateOfBirth || '',
+  gender: user.gender || '',
+  avatar: user.avatar || null,
+  role: user.role,
+  companyId: user.company?._id || user.company || null,
+});
+
+export const googleAuthStart = async (req, res) => {
+  try {
+    const flow = sanitizeFlow(req.query?.flow);
+    const frontend = getFrontendBase(req);
+    logAuth('google.start.request', { flow, frontend, origin: req.headers.origin || null });
+
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+      return redirectWithError(res, frontend, flow, 'Google sign-in is not configured yet');
+    }
+
+    const backend = getBackendBase(req);
+    const redirectUri = `${backend}/api/auth/google/callback`;
+    const state = createState({ flow, frontend });
+    logAuth('google.start.redirect', { flow, redirectUri, frontend });
+
+    const params = new URLSearchParams({
+      client_id: env.GOOGLE_CLIENT_ID,
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      scope: 'openid email profile',
+      access_type: 'offline',
+      prompt: 'select_account',
+      state,
+    });
+
+    return res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
+  } catch (error) {
+    logAuth('google.start.error', { message: error.message });
+    const frontend = getFrontendBase(req);
+    const flow = sanitizeFlow(req.query?.flow);
+    return redirectWithError(res, frontend, flow, `Google auth start failed: ${error.message}`);
+  }
+};
+
+export const googleAuthCallback = async (req, res) => {
+  const { flow, frontend: frontendFromState } = parseState(req.query?.state);
+  const frontend = (frontendFromState && /^https?:\/\//i.test(frontendFromState)
+    ? frontendFromState
+    : getFrontendBase(req)).replace(/\/$/, '');
+  logAuth('google.callback.received', {
+    flow,
+    frontend,
+    hasErrorParam: Boolean(req.query?.error),
+    hasCode: Boolean(req.query?.code),
+  });
+
+  try {
+    if (req.query?.error) {
+      return redirectWithError(res, frontend, flow, 'Google authorization was cancelled');
+    }
+
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+      return redirectWithError(res, frontend, flow, 'Google sign-in is not configured yet');
+    }
+
+    const code = req.query?.code;
+    if (!code) {
+      return redirectWithError(res, frontend, flow, 'Missing Google authorization code');
+    }
+
+    const backend = getBackendBase(req);
+    const redirectUri = `${backend}/api/auth/google/callback`;
+    logAuth('google.callback.exchange.start', { redirectUri });
+
+    const tokenResponse = await axios.post(
+      'https://oauth2.googleapis.com/token',
+      new URLSearchParams({
+        code: String(code),
+        client_id: env.GOOGLE_CLIENT_ID,
+        client_secret: env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code',
+      }).toString(),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      }
+    );
+
+    const accessToken = tokenResponse.data?.access_token;
+    if (!accessToken) {
+      return redirectWithError(res, frontend, flow, 'Google token exchange failed');
+    }
+    logAuth('google.callback.exchange.success', { hasAccessToken: true });
+
+    const profileResponse = await axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    const googleEmail = String(profileResponse.data?.email || '').toLowerCase().trim();
+    if (!googleEmail) {
+      return redirectWithError(res, frontend, flow, 'Unable to read Google account email');
+    }
+    logAuth('google.callback.profile.received', { googleEmail, flow });
+
+    const fallbackName = splitDisplayName(profileResponse.data?.name);
+    const googleFirstName = String(profileResponse.data?.given_name || fallbackName.firstName || '').trim();
+    const googleLastName = String(profileResponse.data?.family_name || fallbackName.lastName || '').trim();
+
+    let user = await User.findOne({ email: googleEmail });
+
+    if (flow === 'signup') {
+      if (!user) {
+        const randomPassword = `google-${Math.random().toString(36).slice(2)}-${Date.now()}`;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(randomPassword, salt);
+        user = await User.create({
+          firstName: googleFirstName,
+          lastName: googleLastName,
+          email: googleEmail,
+          password: hashedPassword,
+        });
+        logAuth('google.callback.user.created', { email: googleEmail, userId: String(user._id) });
+      } else if (user.isVerified) {
+        return redirectWithError(res, frontend, flow, 'Email already registered. Please sign in instead');
+      }
+
+      if (!user.firstName && googleFirstName) user.firstName = googleFirstName;
+      if (!user.lastName && googleLastName) user.lastName = googleLastName;
+
+      try {
+        await issueOtpForUser(user);
+      } catch (otpError) {
+        logAuth('google.callback.otp.error', { email: googleEmail, message: otpError.message });
+        return redirectWithError(res, frontend, flow, `Unable to send OTP email right now. Please try again shortly. (${otpError.message})`);
+      }
+      logAuth('google.callback.redirect.verify', { email: googleEmail, flow: 'signup' });
+      return res.redirect(`${frontend}/verify-email?email=${encodeURIComponent(googleEmail)}&flow=signup`);
+    }
+
+    if (!user) {
+      return redirectWithError(res, frontend, flow, 'No account found. Please sign up first');
+    }
+
+    if (!user.firstName && googleFirstName) user.firstName = googleFirstName;
+    if (!user.lastName && googleLastName) user.lastName = googleLastName;
+
+    try {
+      await issueOtpForUser(user);
+    } catch (otpError) {
+      logAuth('google.callback.otp.error', { email: googleEmail, message: otpError.message });
+      return redirectWithError(res, frontend, flow, `Unable to send OTP email right now. Please try again shortly. (${otpError.message})`);
+    }
+    logAuth('google.callback.redirect.verify', { email: googleEmail, flow: 'signin' });
+    return res.redirect(`${frontend}/verify-email?email=${encodeURIComponent(googleEmail)}&flow=signin`);
+  } catch (error) {
+    logAuth('google.callback.error', { message: error.message, name: error.name });
+    return redirectWithError(res, frontend, flow, `Google authentication failed: ${error.message}`);
+  }
+};
+
 export const signup = async (req, res) => {
   try {
     const {
@@ -294,6 +535,10 @@ export const signup = async (req, res) => {
     const normalizedEmail = String(email || '').toLowerCase().trim();
     const normalizedFirstName = String(firstName || '').trim();
     const normalizedLastName = String(lastName || '').trim();
+<<<<<<< HEAD
+=======
+    logAuth('signup.request.received', { email: normalizedEmail, hasPassword: Boolean(password) });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     // Validation
     if (!normalizedEmail || !password) {
@@ -303,6 +548,7 @@ export const signup = async (req, res) => {
     // Check if user exists
     const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
+      logAuth('signup.user.exists', { email: normalizedEmail, userId: String(existingUser._id) });
       return res.status(400).json({ message: 'Email already registered' });
     }
 
@@ -319,7 +565,11 @@ export const signup = async (req, res) => {
       firstName: normalizedFirstName,
       lastName: normalizedLastName,
       email: normalizedEmail,
+<<<<<<< HEAD
       passwordHash: hashedPassword,
+=======
+      password: hashedPassword,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       mobileNumber,
       countryCode,
       role: 'OWNER',
@@ -330,17 +580,41 @@ export const signup = async (req, res) => {
     });
 
     await user.save();
+    logAuth('signup.user.created', { email: normalizedEmail, userId: String(user._id) });
 
+<<<<<<< HEAD
     // Send OTP email
     await sendOtpEmail(normalizedEmail, otp);
+=======
+    // Send OTP email. Roll back the user if email delivery fails so signup can be retried cleanly.
+    try {
+      logAuth('signup.otp.send.start', { email: normalizedEmail });
+      await sendOtpEmail(normalizedEmail, otp);
+      logAuth('signup.otp.send.success', { email: normalizedEmail });
+    } catch (emailError) {
+      logAuth('signup.otp.send.error', { email: normalizedEmail, message: emailError.message });
+      await User.deleteOne({ _id: user._id });
+      return res.status(502).json({
+        message: 'Unable to send OTP email right now. Please try again shortly.',
+        error: emailError.message,
+      });
+    }
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     res.status(201).json({
       message: 'User registered. OTP sent to email.',
       userId: user._id,
       email: user.email,
     });
+    logAuth('signup.response.success', { email: normalizedEmail, status: 201 });
   } catch (error) {
     console.error('Signup error:', error);
+    logAuth('signup.error', { message: error.message, code: error.code || null });
+    if (error?.code === 11000 && error?.message?.includes('employeeId_1')) {
+      return res.status(500).json({
+        message: 'Signup temporarily unavailable due to a stale database index. Run the user index migration and retry.',
+      });
+    }
     res.status(500).json({ message: 'Signup failed', error: error.message });
   }
 };
@@ -348,6 +622,7 @@ export const signup = async (req, res) => {
 export const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
+    logAuth('otp.verify.request', { email, otpLength: String(otp || '').length });
 
     if (!email || !otp) {
       return res.status(400).json({ message: 'Email and OTP are required' });
@@ -379,8 +654,10 @@ export const verifyOtp = async (req, res) => {
       token,
       user: buildAuthUserPayload(user),
     });
+    logAuth('otp.verify.success', { email: user.email, userId: String(user._id) });
   } catch (error) {
     console.error('OTP verification error:', error);
+    logAuth('otp.verify.error', { message: error.message });
     res.status(500).json({ message: 'Verification failed', error: error.message });
   }
 };
@@ -426,6 +703,7 @@ export const login = async (req, res) => {
 export const signin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    logAuth('signin.request.received', { email: String(email || '').toLowerCase().trim(), hasPassword: Boolean(password) });
 
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
@@ -433,12 +711,14 @@ export const signin = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password +passwordHash');
     if (!user) {
+      logAuth('signin.user.notFound', { email: email.toLowerCase().trim() });
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     const storedPassword = getStoredPasswordHash(user);
     const isPasswordValid = storedPassword ? await bcrypt.compare(password, storedPassword) : false;
     if (!isPasswordValid) {
+      logAuth('signin.password.invalid', { email: user.email, userId: String(user._id) });
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
@@ -453,15 +733,31 @@ export const signin = async (req, res) => {
     // Write only canonical otp field
     user.otpExpiresAt = otpExpiry;
     await user.save();
+    logAuth('signin.otp.generated', { email: user.email, userId: String(user._id) });
 
-    await sendOtpEmail(user.email, otp);
+    try {
+      logAuth('signin.otp.send.start', { email: user.email });
+      await sendOtpEmail(user.email, otp);
+      logAuth('signin.otp.send.success', { email: user.email });
+    } catch (emailError) {
+      logAuth('signin.otp.send.error', { email: user.email, message: emailError.message });
+      user.otp = null;
+      user.otpExpiry = null;
+      await user.save();
+      return res.status(502).json({
+        message: 'Unable to send OTP email right now. Please try again shortly.',
+        error: emailError.message,
+      });
+    }
 
     res.json({
       message: 'OTP sent to email',
       email: user.email,
     });
+    logAuth('signin.response.success', { email: user.email, status: 200 });
   } catch (error) {
     console.error('Signin error:', error);
+    logAuth('signin.error', { message: error.message });
     res.status(500).json({ message: 'Signin failed', error: error.message });
   }
 };
@@ -469,6 +765,7 @@ export const signin = async (req, res) => {
 export const resendOtp = async (req, res) => {
   try {
     const { email } = req.body;
+    logAuth('otp.resend.request', { email: String(email || '').toLowerCase().trim() });
 
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });
@@ -476,6 +773,7 @@ export const resendOtp = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
+      logAuth('otp.resend.user.notFound', { email: email.toLowerCase().trim() });
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -486,12 +784,28 @@ export const resendOtp = async (req, res) => {
     // Write only canonical otp field
     user.otpExpiresAt = otpExpiry;
     await user.save();
+    logAuth('otp.resend.generated', { email: user.email, userId: String(user._id) });
 
-    await sendOtpEmail(user.email, otp);
+    try {
+      logAuth('otp.resend.send.start', { email: user.email });
+      await sendOtpEmail(user.email, otp);
+      logAuth('otp.resend.send.success', { email: user.email });
+    } catch (emailError) {
+      logAuth('otp.resend.send.error', { email: user.email, message: emailError.message });
+      user.otp = null;
+      user.otpExpiry = null;
+      await user.save();
+      return res.status(502).json({
+        message: 'Unable to send OTP email right now. Please try again shortly.',
+        error: emailError.message,
+      });
+    }
 
     res.json({ message: 'OTP resent successfully' });
+    logAuth('otp.resend.response.success', { email: user.email, status: 200 });
   } catch (error) {
     console.error('Resend OTP error:', error);
+    logAuth('otp.resend.error', { message: error.message });
     res.status(500).json({ message: 'Failed to resend OTP', error: error.message });
   }
 };

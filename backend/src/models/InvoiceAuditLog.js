@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import mongoose from 'mongoose';
+=======
+import mongoose from 'mongoose';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 const InvoiceAuditLogSchema = new mongoose.Schema(
   {
@@ -77,12 +81,15 @@ const InvoiceAuditLogSchema = new mongoose.Schema(
       },
     ],
 
+<<<<<<< HEAD
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       index: true,
     },
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     // Data snapshots for legal/finance traceability
     extractionSnapshot: {
       // Full extraction JSON saved for audit

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿"""Universal text + OCR extraction with intelligent routing and table reconstruction."""
 
 from __future__ import annotations
@@ -11,6 +12,17 @@ from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 from types import SimpleNamespace
+=======
+"""Universal text + OCR extraction with intelligent routing and table reconstruction."""
+
+from __future__ import annotations
+
+import logging
+import re
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Sequence, Tuple
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 import cv2
 import numpy as np
@@ -19,15 +31,25 @@ import pdfplumber
 try:
     import numpy as _np
     from pdf2image import convert_from_path as _convert_from_path
+<<<<<<< HEAD
+=======
+    from rapidocr_onnxruntime import RapidOCR as _RapidOCR
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     _OCR_OK = True
 except ImportError:
     _np = None
     _convert_from_path = None
+<<<<<<< HEAD
     _OCR_OK = False
 
 from providers.ocr import get_ocr_provider
 
+=======
+    _RapidOCR = None
+    _OCR_OK = False
+
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 from schema import (
     ExtractionResult,
     InvoiceFinancials,
@@ -37,6 +59,7 @@ from schema import (
     TimesheetMetadata,
 )
 
+<<<<<<< HEAD
 from pipeline.debug_utils import DebugExporter, ensure_debug
 from pipeline.deduction_parser import extract_deduction_total
 from pipeline.extraction_config import apply_runtime_overrides, apply_template_overrides, config_to_dict, load_extraction_config
@@ -54,6 +77,14 @@ from pipeline.structured_logging import (
     stage_failure,
     stage_start,
 )
+=======
+from pipeline.debug_utils import DebugExporter
+from pipeline.deduction_parser import extract_deduction_total
+from pipeline.extraction_config import apply_runtime_overrides, apply_template_overrides, config_to_dict, load_extraction_config
+from pipeline.scan_quality import score_scan_quality
+from pipeline.semantic_filter import filter_labour_rows
+from pipeline.structured_logging import log_event
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 from pipeline.tables import (
     CellExtractor,
     CellExtractorConfig,
@@ -69,11 +100,15 @@ from pipeline.tables import (
 )
 from pipeline.template_learning import TemplateLearningStore, build_template_fingerprint
 from pipeline.template_profiles import detect_template_profile
+<<<<<<< HEAD
 from config_runtime import CONFIG
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 logger = logging.getLogger(__name__)
 
 
+<<<<<<< HEAD
 _OCR_META_CACHE: Dict[str, Dict[str, Any]] = {}
 _OCR_META_CACHE_LOCK = threading.Lock()
 
@@ -115,6 +150,8 @@ def _budget_expired(started: float, budget_s: float) -> bool:
     return (time.time() - started) >= max(1.0, float(budget_s))
 
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def _clean(v: Any) -> str:
     return " ".join(str(v).split()) if v is not None else ""
 
@@ -194,6 +231,7 @@ def _calculate_attendance_hours(cells: Sequence[str]) -> float:
 
 
 def _ocr_full_text(pdf_path: str) -> str:
+<<<<<<< HEAD
     if (_convert_from_path is None) or (not _OCR_OK):
         return ""
 
@@ -239,6 +277,29 @@ def _ocr_full_text(pdf_path: str) -> str:
             if not tokens:
                 continue
 
+=======
+    if not _OCR_OK:
+        return ""
+
+    try:
+        ocr = _RapidOCR()
+        pages = _convert_from_path(pdf_path, dpi=250)
+        page_texts: List[str] = []
+
+        for image in pages:
+            result, _ = ocr(_np.array(image))
+            if not result:
+                continue
+
+            tokens = []
+            for box, text, _score in result:
+                if not text:
+                    continue
+                y = sum(point[1] for point in box) / 4
+                x = sum(point[0] for point in box) / 4
+                tokens.append((y, x, text))
+
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             tokens.sort(key=lambda item: (item[0], item[1]))
 
             lines: List[str] = []
@@ -291,10 +352,15 @@ def _parse_mcc_summary_table(table: Sequence[Sequence[Any]]) -> Tuple[List[Invoi
         c1 = row_vals[1] if len(row_vals) > 1 else ""
         last = row_vals[-1]
 
+<<<<<<< HEAD
         # Always skip TOTAL row regardless of whether c1 is populated
         if c0 == "TOTAL":
             if fin.subtotal == 0.0:
                 fin.subtotal = _to_float(last)
+=======
+        if c0 == "TOTAL" and not c1:
+            fin.subtotal = _to_float(last)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             continue
 
         if c0 in {"ADDITIONS", "DEDUCTIONS"} or (c0 == "" and c1):
@@ -326,6 +392,7 @@ def _parse_mcc_summary_table(table: Sequence[Sequence[Any]]) -> Tuple[List[Invoi
         if not trade or hours <= 0:
             continue
 
+<<<<<<< HEAD
         # OCR decimal-corruption guard
         if hours > 0 and rate > 0:
             _expected = round(hours * rate, 2)
@@ -334,6 +401,8 @@ def _parse_mcc_summary_table(table: Sequence[Sequence[Any]]) -> Tuple[List[Invoi
                 if _ratio < 0.1 or _ratio > 10:
                     amount = _expected
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         rows.append(
             InvoiceRow(
                 trade=trade.upper(),
@@ -356,6 +425,7 @@ _GENERIC_REJECT = (
     "H.I.NO", "H.I.NO.",
 )
 
+<<<<<<< HEAD
 _GENERIC_METADATA_REJECT = (
     "PRINTDATE",
     "PREPARATIONDATE",
@@ -520,19 +590,26 @@ def _cross_validate_with_summary(
     warnings.append(f"summary_validation_corrections:{corrections}")
     return list(out.values())
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 def _parse_generic_rows(full_text: str) -> List[InvoiceRow]:
     rows: List[InvoiceRow] = []
 
     for line in full_text.splitlines():
         ln = " ".join(line.split())
+<<<<<<< HEAD
         logger.info("OCR_ROW_RAW | %s", ln)
         if len(ln) < 8:
             logger.info("ROW_REJECTED | reason=generic:too_short | row=%s", ln)
+=======
+        if len(ln) < 8:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             continue
 
         ln_upper = ln.upper()
         if any(rej in ln_upper for rej in _GENERIC_REJECT):
+<<<<<<< HEAD
             logger.info("ROW_REJECTED | reason=generic:header_or_metadata | row=%s", ln)
             continue
         if any(rej in ln_upper for rej in _GENERIC_METADATA_REJECT):
@@ -542,6 +619,12 @@ def _parse_generic_rows(full_text: str) -> List[InvoiceRow]:
         numbers = re.findall(r"\d{1,3}(?:,\d{3})*(?:\.\d+)?", ln)
         if len(numbers) < 2:
             logger.info("ROW_REJECTED | reason=generic:insufficient_numbers | row=%s", ln)
+=======
+            continue
+
+        numbers = re.findall(r"\d{1,3}(?:,\d{3})*(?:\.\d+)?", ln)
+        if len(numbers) < 3:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             continue
 
         proj = _PROJECT_RE.search(ln)
@@ -554,6 +637,7 @@ def _parse_generic_rows(full_text: str) -> List[InvoiceRow]:
 
         trade_name = " ".join(trade_words).strip()
         if not trade_name:
+<<<<<<< HEAD
             logger.info("ROW_REJECTED | reason=generic:empty_trade | row=%s", ln)
             continue
         if not re.fullmatch(r"[A-Za-z][A-Za-z\s&./-]{1,40}", trade_name):
@@ -602,20 +686,30 @@ def _parse_generic_rows(full_text: str) -> List[InvoiceRow]:
                         trade_name, _amount, _expected,
                     )
                     _amount = _expected
+=======
+            continue
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         rows.append(
             InvoiceRow(
                 trade=trade_name.upper(),
                 project_id=proj.group(0).upper() if proj else None,
+<<<<<<< HEAD
                 hours=_hours,
                 rate=_rate,
                 amount=_amount,
+=======
+                hours=_to_float(numbers[0]),
+                rate=_to_float(numbers[1]),
+                amount=_to_float(numbers[2]),
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             )
         )
 
     return rows
 
 
+<<<<<<< HEAD
 _ATTENDANCE_GRID_ROW_RE = re.compile(
     r"^\s*(?P<seq>\d+)\s+"
     r"(?P<emp_id>[A-Z]{1,3}\d{4,8})\s+"
@@ -726,10 +820,14 @@ def _parse_attendance_grid_from_ocr_text(full_text: str) -> Tuple[List[InvoiceRo
 
 
 def _extract_pdf_text_tables(pdf_path: str) -> Tuple[str, List[InvoiceRow], InvoiceFinancials, int, float]:
+=======
+def _extract_pdf_text_tables(pdf_path: str) -> Tuple[str, List[InvoiceRow], InvoiceFinancials, int]:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     rows: List[InvoiceRow] = []
     fin = InvoiceFinancials()
     full_text_parts: List[str] = []
     total_chars = 0
+<<<<<<< HEAD
     page_count = 0
     textful_pages = 0
 
@@ -826,6 +924,26 @@ def _truncate_ocr_text_prioritized(text: str, limit: int) -> Tuple[str, bool]:
             out.append(ln)
             size += add
     return "\n".join(out), True
+=======
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text() or ""
+            full_text_parts.append(page_text)
+            total_chars += len(page_text)
+
+            for tbl in page.extract_tables() or []:
+                if not tbl or len(tbl) < 2:
+                    continue
+                hdr = " ".join(_clean(c).upper() for c in (tbl[0] or []) if c)
+                if "TRADE" in hdr and "AMOUNT" in hdr:
+                    parsed_rows, parsed_fin = _parse_mcc_summary_table(tbl)
+                    if parsed_rows:
+                        rows = parsed_rows
+                        fin = parsed_fin
+
+    return "\n".join(full_text_parts), rows, fin, total_chars
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 
 def _build_cell_boxes_from_mask(mask: np.ndarray) -> List[Tuple[int, int, int, int]]:
@@ -873,10 +991,15 @@ def _batch_ocr_image(
     if ocr_engine is None or image is None or image.size == 0:
         return []
 
+<<<<<<< HEAD
     prof = current()
     try:
         with (prof or new_request_collector()).time_stage("batch_ocr.call"):
             result, _ = ocr_engine(image)
+=======
+    try:
+        result, _ = ocr_engine(image)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     except Exception as exc:
         logger.warning("Batch OCR failed: %s", exc)
         return []
@@ -884,6 +1007,7 @@ def _batch_ocr_image(
     if not result:
         return []
 
+<<<<<<< HEAD
     effective_min_conf = max(0.0, float(min_confidence or 0.0))
 
     cells: List[Dict[str, Any]] = []
@@ -1468,6 +1592,25 @@ def _extract_layout_ocr_tables_from_pages(
             confidences.append(avg_conf)
 
     return tables, warnings, float(np.mean(confidences)) if confidences else 0.0, "\n".join(text_parts), {"layout_ocr_pages": debug_pages}, tokens_all
+=======
+    cells: List[Dict[str, Any]] = []
+    for item in result:
+        box_pts, text, score = item[0], item[1], float(item[2] or 0.0)
+        if not text or score < min_confidence:
+            continue
+        xs = [int(p[0]) for p in box_pts]
+        ys = [int(p[1]) for p in box_pts]
+        x0, y0 = min(xs), min(ys)
+        x1, y1 = max(xs), max(ys)
+        cells.append({
+            "x": x0, "y": y0,
+            "w": max(1, x1 - x0),
+            "h": max(1, y1 - y0),
+            "text": str(text).strip(),
+            "confidence": score,
+        })
+    return cells
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 
 def _extract_table_engine(
@@ -1475,18 +1618,23 @@ def _extract_table_engine(
     fmt: TimesheetFormat,
     debug: DebugExporter,
     config_overrides: Optional[Dict[str, Any]] = None,
+<<<<<<< HEAD
     request_cache: Optional[Dict[str, Any]] = None,
 ) -> Tuple[List[List[List[str]]], List[str], float, str, Dict[str, Any]]:
     set_extraction_metrics_context(pdf_path=pdf_path)
     # Ensure we always have a debug object (may be NoOpDebug)
     debug = ensure_debug(debug)
 
+=======
+) -> Tuple[List[List[List[str]]], List[str], float, str, Dict[str, Any]]:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if not _OCR_OK:
         return [], ["RapidOCR/pdf2image not available; OCR pipeline skipped"], 0.0, "", {}
 
     config = load_extraction_config()
     config = apply_runtime_overrides(config, config_overrides)
 
+<<<<<<< HEAD
     warnings: List[str] = []
     started = time.time()
     budget_s = _table_ocr_budget_s()
@@ -1619,6 +1767,26 @@ def _extract_table_engine(
         page_img, was_downscaled = _downscale_for_ocr(page_img)
         if was_downscaled:
             downscaled_pages += 1
+=======
+    # Performance gain comes from batch OCR (1 call per table vs N per cell).
+    # Keep 300 DPI for accurate morphological line detection.
+    OCR_DPI = 300
+    pages = _convert_from_path(pdf_path, dpi=OCR_DPI)
+    normalizer = TableNormalizer(config=TableNormalizerConfig())
+
+    # Shared OCR engine — instantiate ONCE and reuse across all tables
+    _shared_ocr = _RapidOCR() if _RapidOCR else None
+
+    all_tables: List[List[List[str]]] = []
+    warnings: List[str] = []
+    confidences: List[float] = []
+    ocr_text_parts: List[str] = []
+    debug_tables: List[Dict[str, Any]] = []
+    quality_scores: List[float] = []
+
+    for page_idx, page in enumerate(pages, 1):
+        page_img = cv2.cvtColor(_np.array(page), cv2.COLOR_RGB2BGR)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         quality = score_scan_quality(page_img)
         quality_scores.append(quality.score)
@@ -1649,6 +1817,7 @@ def _extract_table_engine(
         )
 
         detected = detector.detect_tables(page_img)
+<<<<<<< HEAD
         if detected.contours:
             layout_fallback_allowed = True
 
@@ -1678,11 +1847,22 @@ def _extract_table_engine(
             log_event(
                 logger,
                 "TABLE_DETECTED",
+=======
+
+        debug.image(f"page_{page_idx:02d}_table_mask", detected.table_mask)
+
+        for table_idx, contour in enumerate(detected.contours, 1):
+            x, y, w, h = contour.x, contour.y, contour.w, contour.h
+            log_event(
+                logger,
+                "table_detected",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 page=page_idx,
                 table=table_idx,
                 bbox={"x": x, "y": y, "w": w, "h": h},
                 area=int(w * h),
             )
+<<<<<<< HEAD
             # Add padding around contour so first/top-border rows are not clipped.
             pad = 8
             y0 = max(0, y - pad)
@@ -1933,6 +2113,37 @@ def _extract_table_engine(
                     reason="no_cell_ocr_text",
                     cell_count=len(rel_cells),
                 )
+=======
+            crop = page_img[y : y + h, x : x + w]
+
+            h_mask = detected.horizontal_mask[y : y + h, x : x + w]
+            v_mask = detected.vertical_mask[y : y + h, x : x + w]
+
+            # --- BATCH OCR: run once per table crop (not per cell) ---
+            rel_cells = _batch_ocr_image(crop, _shared_ocr, min_confidence=config.ocr.min_confidence)
+            if not rel_cells:
+                # Low-quality scan: retry with lower confidence threshold
+                rel_cells = _batch_ocr_image(crop, _shared_ocr, min_confidence=0.1)
+
+            # Always record raw batch-OCR text so attendance tokens (W/H/A/OFF)
+            # are preserved in ocr_text_parts even if grid normalization filters them out.
+            if rel_cells:
+                raw_tokens = " ".join(c["text"] for c in rel_cells if c.get("text"))
+                if raw_tokens:
+                    ocr_text_parts.append(raw_tokens)
+
+            if not rel_cells:
+                # Fallback: grid boundaries from masks only (no OCR text)
+                t_mask = cv2.bitwise_or(h_mask, v_mask)
+                recon_fallback = GridReconstructor(config=GridReconstructorConfig()).reconstruct(
+                    table_image=crop, ocr_cells=[],
+                    horizontal_mask=h_mask, vertical_mask=v_mask,
+                )
+                # Still push an empty-but-structured table
+                normalized = normalizer.normalize(recon_fallback.table)
+                if normalized:
+                    all_tables.append(normalized)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 continue
 
             recon = GridReconstructor(config=GridReconstructorConfig()).reconstruct(
@@ -1956,8 +2167,13 @@ def _extract_table_engine(
             abs_cells: List[Dict[str, Any]] = []
             for cell in rel_cells:
                 abs_cell = dict(cell)
+<<<<<<< HEAD
                 abs_cell["x"] = int(cell.get("x", 0) + x0)
                 abs_cell["y"] = int(cell.get("y", 0) + y0)
+=======
+                abs_cell["x"] = int(cell.get("x", 0) + x)
+                abs_cell["y"] = int(cell.get("y", 0) + y)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 abs_cells.append(abs_cell)
 
             debug.image(f"page_{page_idx:02d}_table_{table_idx:02d}_detected", crop)
@@ -1983,6 +2199,7 @@ def _extract_table_engine(
                 }
             )
 
+<<<<<<< HEAD
     if not all_tables and layout_fallback_allowed and not _budget_expired(started, budget_s):
         layout_tables, layout_warnings, layout_conf, layout_text, layout_debug, layout_tokens = _extract_layout_ocr_tables_from_pages(pages, debug)
         if layout_tables:
@@ -2050,6 +2267,15 @@ def _extract_table_engine(
                             logger.exception("Failed to write semantic debug file")
     elif not all_tables and not layout_fallback_allowed:
         warnings.append("layout_ocr_fallback_skipped:no_table_contours")
+=======
+        # Full-page OCR pass — ensures any text that didn't land in a table crop
+        # (headers, attendance markers, etc.) is still captured in ocr_text_parts.
+        page_wide_cells = _batch_ocr_image(page_img, _shared_ocr, min_confidence=0.3)
+        if page_wide_cells:
+            page_tokens = " ".join(c["text"] for c in page_wide_cells if c.get("text"))
+            if page_tokens:
+                ocr_text_parts.append(page_tokens)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     if not all_tables:
         warnings.append("No structured table reconstructed from OCR pipeline")
@@ -2059,10 +2285,14 @@ def _extract_table_engine(
         "tables": debug_tables,
         "scan_quality_avg": float(np.mean(quality_scores)) if quality_scores else 0.0,
         "config": config_to_dict(config),
+<<<<<<< HEAD
         "downscaled_pages": downscaled_pages,
     }
     if downscaled_pages > 0:
         log_event(logger, "ocr_truncation_activated", pdf_path=pdf_path, downscaled_pages=downscaled_pages)
+=======
+    }
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     return all_tables, warnings, avg_conf, "\n".join(ocr_text_parts), debug_payload
 
 
@@ -2073,6 +2303,7 @@ def _rows_from_normalized_tables(
 ) -> Tuple[List[InvoiceRow], InvoiceFinancials, Optional[float]]:
     from pipeline.semantic_filter import classify_row, RowType
     
+<<<<<<< HEAD
     prof = current()
     with (prof or new_request_collector()).time_stage("row_extraction.rows_from_normalized_tables"):
         rows: List[InvoiceRow] = []
@@ -2236,11 +2467,116 @@ def _rows_from_normalized_tables(
             warnings.append(f"semantic_filter: Rejected {rejected_count} metadata/header rows")
 
         return result_rows, fin, summary_hours
+=======
+    rows: List[InvoiceRow] = []
+    fin = InvoiceFinancials()
+    summary_hours: Optional[float] = None
+    rejected_count = 0
+
+    for table in tables:
+        for row in table:
+            cells = [_clean(c) for c in row]
+            if not any(cells):
+                continue
+
+            # ===== SEMANTIC FILTER: Classify row type =====
+            row_type = classify_row(cells)
+            if row_type != RowType.VALID_LABOUR_ROW:
+                rejected_count += 1
+                logger.debug(f"Rejected row (type={row_type.name}): {cells[:3]}")
+                continue
+            # ===== END SEMANTIC FILTER =====
+
+            upper = [c.upper() for c in cells]
+            joined_upper = " ".join(upper)
+
+            if "TOTAL DEDUCTION" in joined_upper:
+                fin.total_deduction = max(fin.total_deduction, _to_float(cells[-1]))
+                continue
+            if "GROSS TOTAL" in joined_upper:
+                fin.gross_total = max(fin.gross_total, _to_float(cells[-1]))
+                continue
+            if "NET AMOUNT" in joined_upper:
+                fin.net_payable = max(fin.net_payable, _to_float(cells[-1]))
+                continue
+            if "TOTAL" in joined_upper and "HOUR" in joined_upper:
+                summary_hours = _to_float(cells[-1], summary_hours or 0.0)
+                continue
+
+            if any(key in joined_upper.lower() for key in _DEDUCTION_KEYS):
+                amount = _to_float(cells[-1])
+                if amount > 0:
+                    fin.total_deduction += amount
+                    fin.deduction_breakdown[cells[0] or "deduction"] = amount
+                continue
+
+            numbers = [_to_float(c) for c in cells if re.search(r"\d", c)]
+            numbers = [n for n in numbers if n > 0]
+
+            if len(numbers) < 2:
+                continue
+
+            trade = cells[0]
+            if not trade or trade.lower() in _SKIP_FIRST:
+                continue
+
+            project = ""
+            for token in cells:
+                m = _PROJECT_RE.search(token)
+                if m:
+                    project = m.group(0).upper()
+                    break
+
+            # Numeric selection strategy: prefer trailing rate/amount pairs.
+            amount = numbers[-1]
+            rate = numbers[-2] if len(numbers) >= 2 else 0.0
+
+            attendance_hours = _calculate_attendance_hours(cells[1:])
+            hours = attendance_hours if attendance_hours > 0 else (numbers[-3] if len(numbers) >= 3 else 0.0)
+            overtime = 0.0
+
+            for token in cells:
+                u = token.upper()
+                if "OT" in u or "O/T" in u or "OVERTIME" in u:
+                    overtime = max(overtime, _to_float(token))
+
+            row_item = InvoiceRow(
+                trade=trade.upper(),
+                project_id=project or None,
+                employee_id=None if layout == InvoiceLayout.PROJECT_BASED else (cells[1] if len(cells) > 1 else None),
+                hours=round(hours, 2),
+                rate=round(rate, 2),
+                amount=round(amount, 2),
+                calculated_hours=round(attendance_hours, 2),
+                attendance_days=sum(1 for c in cells if c.upper() in {"W", "H", "OFF"}),
+                overtime_hours=round(overtime, 2),
+            )
+            rows.append(row_item)
+
+    deduped: Dict[Tuple[str, float, float, float], InvoiceRow] = {}
+    for r in rows:
+        key = (r.trade, r.hours, r.rate, r.amount)
+        deduped[key] = r
+
+    result_rows = list(deduped.values())
+
+    if fin.subtotal == 0.0:
+        fin.subtotal = round(sum(r.amount for r in result_rows), 2)
+
+    if fin.total_deduction > fin.subtotal and fin.subtotal > 0:
+        warnings.append("Deduction total appears larger than subtotal")
+
+    if rejected_count > 0:
+        warnings.append(f"semantic_filter: Rejected {rejected_count} metadata/header rows")
+
+    return result_rows, fin, summary_hours
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 
 def _validate_rows(rows: List[InvoiceRow], fin: InvoiceFinancials, warnings: List[str], summary_hours: Optional[float]) -> None:
     if not rows:
         return
+<<<<<<< HEAD
     repairs_applied = False
     for row in rows:
         # preserve originals if not already set
@@ -2249,11 +2585,16 @@ def _validate_rows(rows: List[InvoiceRow], fin: InvoiceFinancials, warnings: Lis
         if getattr(row, "original_amount", None) is None:
             row.original_amount = float(row.amount or 0.0)
 
+=======
+
+    for row in rows:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         calc_hours = row.calculated_hours if row.calculated_hours > 0 else (round(row.amount / row.rate, 2) if row.rate else 0.0)
         row.hours_match = abs(calc_hours - row.hours) <= 1.0
         if not row.hours_match:
             warnings.append(f"Hours mismatch detected for {row.trade}: row={row.hours} calc={calc_hours}")
 
+<<<<<<< HEAD
         # numeric sanity checks and repair
         if row.rate > 0 and row.hours > 0:
             expected_amount = round(row.hours * row.rate, 2)
@@ -2297,17 +2638,28 @@ def _validate_rows(rows: List[InvoiceRow], fin: InvoiceFinancials, warnings: Lis
                     log_event(logger, "NUMERIC_REPAIR_APPLIED", trade=row.trade, new_amount=row.amount, new_hours=row.hours)
                 else:
                     warnings.append(f"low_confidence_amount:{row.trade}")
+=======
+        if row.rate > 0 and row.hours > 0:
+            expected_amount = round(row.hours * row.rate, 2)
+            if abs(expected_amount - row.amount) > 1.0:
+                warnings.append(
+                    f"Amount mismatch for {row.trade}: amount={row.amount} expected={expected_amount}"
+                )
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         if row.deduction_total > 0 and row.deductions:
             ded_sum = round(sum(float(v) for v in row.deductions.values()), 2)
             if abs(ded_sum - row.deduction_total) > 0.5:
                 warnings.append(f"Deduction mismatch in {row.trade}")
 
+<<<<<<< HEAD
     # attach repair flag to warnings for downstream handling
     if repairs_applied:
         warnings.append("NUMERIC_SANITY_CHECK:REPAIRS_APPLIED")
     return repairs_applied
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if summary_hours is not None:
         sum_hours = round(sum(r.hours for r in rows), 2)
         if abs(sum_hours - summary_hours) > 1.0:
@@ -2321,6 +2673,7 @@ def _validate_rows(rows: List[InvoiceRow], fin: InvoiceFinancials, warnings: Lis
             )
 
 
+<<<<<<< HEAD
 def _hard_validate_rows(rows: Sequence[InvoiceRow], warnings: List[str]) -> List[InvoiceRow]:
     valid: List[InvoiceRow] = []
     metadata_terms = {
@@ -2384,6 +2737,8 @@ def _hard_validate_rows(rows: Sequence[InvoiceRow], warnings: List[str]) -> List
     return valid
 
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def _should_use_ocr_pipeline(total_chars: int, has_text_rows: bool, full_text: str, fmt: TimesheetFormat) -> bool:
     attendance_hits = len(_ATTENDANCE_TOKEN_RE.findall(full_text or ""))
     low_text = total_chars < 700
@@ -2399,6 +2754,7 @@ def _should_use_ocr_pipeline(total_chars: int, has_text_rows: bool, full_text: s
     return False
 
 
+<<<<<<< HEAD
 def _should_skip_ocr_post_pdfplumber(full_text: str, rows: Sequence[InvoiceRow], scanned_ratio: float) -> bool:
     if not full_text or not rows:
         return False
@@ -2407,6 +2763,8 @@ def _should_skip_ocr_post_pdfplumber(full_text: str, rows: Sequence[InvoiceRow],
     return printable_ratio >= 0.90 and float(scanned_ratio) <= 0.25
 
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def extract_text_pdf(
     pdf_path: str,
     fmt: TimesheetFormat,
@@ -2414,6 +2772,7 @@ def extract_text_pdf(
     config_overrides: Optional[Dict[str, Any]] = None,
     debug_mode: bool = False,
     run_id: Optional[str] = None,
+<<<<<<< HEAD
     request_cache: Optional[Dict[str, Any]] = None,
     retry_downstream_only: bool = False,
     retry_reason: Optional[str] = None,
@@ -2472,6 +2831,34 @@ def extract_text_pdf(
         t_text_start = time.time()
         with (current() or profiler).time_stage("pdf_load"):
             full_text, text_rows, text_fin, total_chars, scanned_ratio = _extract_pdf_text_tables(pdf_path)
+=======
+) -> ExtractionResult:
+    started = time.time()
+
+    rows: List[InvoiceRow] = []
+    fin = InvoiceFinancials()
+    warnings: List[str] = []
+    confidence = 0.5
+    used_ocr = False
+    full_text = ""
+    summary_hours: Optional[float] = None
+    timing: Dict[str, int] = {}
+    debug_payload: Dict[str, Any] = {}
+
+    cfg = load_extraction_config()
+    cfg = apply_runtime_overrides(cfg, config_overrides)
+    if debug_mode:
+        cfg.debug.enabled = True
+    debug = DebugExporter(enabled=cfg.debug.enabled, output_dir=cfg.debug.output_dir)
+
+    learning_root = Path(cfg.debug.output_dir or (Path(__file__).resolve().parents[1] / "storage" / "debug"))
+    learning_root.mkdir(parents=True, exist_ok=True)
+    profile_store = TemplateLearningStore(str(learning_root / "template_learning.json"))
+
+    try:
+        t_text_start = time.time()
+        full_text, text_rows, text_fin, total_chars = _extract_pdf_text_tables(pdf_path)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         timing["text_extract_ms"] = int((time.time() - t_text_start) * 1000)
         rows = text_rows
         fin = text_fin
@@ -2483,6 +2870,7 @@ def extract_text_pdf(
                 warnings.append("Applied learned template profile")
 
         route_to_ocr = _should_use_ocr_pipeline(total_chars, bool(rows), full_text, fmt)
+<<<<<<< HEAD
         if route_to_ocr and _should_skip_ocr_post_pdfplumber(full_text, rows, scanned_ratio):
             route_to_ocr = False
             warnings.append("ocr_skipped:pdf_text_quality_high")
@@ -2499,10 +2887,13 @@ def extract_text_pdf(
                 scanned_ratio=round(float(scanned_ratio), 4),
                 rows_detected=len(rows),
             )
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         if route_to_ocr:
             used_ocr = True
             t_ocr_start = time.time()
+<<<<<<< HEAD
             cached_tables = list((request_cache or {}).get("normalized_tables") or []) if request_cache else []
             cached_ocr_text = str((request_cache or {}).get("ocr_table_text") or "") if request_cache else ""
             cached_engine_debug = dict((request_cache or {}).get("table_engine_debug") or {}) if request_cache else {}
@@ -2598,12 +2989,22 @@ def extract_text_pdf(
                 tables_detected=len(tables or []),
                 warnings=len(table_warnings or []),
             )
+=======
+            tables, table_warnings, avg_conf, ocr_table_text, engine_debug = _extract_table_engine(
+                pdf_path,
+                fmt,
+                debug,
+                config_overrides=config_overrides,
+            )
+            timing["ocr_table_engine_ms"] = int((time.time() - t_ocr_start) * 1000)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             debug_payload["table_engine"] = engine_debug
             warnings.extend(table_warnings)
 
             if tables:
                 table_payloads = route_document_tables(tables=tables, layout=layout)
 
+<<<<<<< HEAD
                 attendance_payloads = []
                 summary_payloads = []
                 financial_payloads = []
@@ -2613,18 +3014,29 @@ def extract_text_pdf(
                     log_event(
                         logger,
                         "TABLE_CLASSIFIED",
+=======
+                for payload in table_payloads:
+                    log_event(
+                        logger,
+                        "table_classified",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                         table_index=payload.table_index,
                         table_type=payload.table_type.value,
                         confidence=payload.confidence,
                     )
                     log_event(
                         logger,
+<<<<<<< HEAD
                         "TABLE_PARSER_SELECTED",
+=======
+                        "table_parser_selected",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                         table_index=payload.table_index,
                         parser=payload.parser_name,
                         table_type=payload.table_type.value,
                     )
 
+<<<<<<< HEAD
                     if payload.table_type in {TableType.ATTENDANCE_TABLE, TableType.OVERTIME_TABLE}:
                         attendance_payloads.append(payload)
                     elif payload.table_type == TableType.PROJECT_SUMMARY_TABLE:
@@ -2638,6 +3050,8 @@ def extract_text_pdf(
                     elif payload.table_type == TableType.METADATA_TABLE:
                         metadata_payloads.append(payload)
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                     if payload.table_type in {
                         TableType.FINANCIAL_SUMMARY_TABLE,
                         TableType.DEDUCTION_SUMMARY_TABLE,
@@ -2682,6 +3096,7 @@ def extract_text_pdf(
                             },
                         )
 
+<<<<<<< HEAD
                 log_event(
                     logger,
                     "TABLE_ROUTING_SUMMARY",
@@ -2778,6 +3193,27 @@ def extract_text_pdf(
                     )
                     fin.subtotal = row_subtotal
 
+=======
+                labour_tables = [
+                    tables[p.table_index]
+                    for p in table_payloads
+                    if p.table_type in {TableType.ATTENDANCE_TABLE, TableType.PROJECT_SUMMARY_TABLE, TableType.OVERTIME_TABLE}
+                ]
+                labour_rows: List[InvoiceRow] = []
+                labour_fin = InvoiceFinancials()
+                if labour_tables:
+                    labour_rows, labour_fin, labour_summary_hours = _rows_from_normalized_tables(labour_tables, layout, warnings)
+                    summary_hours = labour_summary_hours
+
+                merge_result = merge_table_payloads(
+                    base_rows=labour_rows or rows,
+                    base_financials=labour_fin if (labour_fin.subtotal > 0 or labour_fin.total_deduction > 0) else fin,
+                    payloads=table_payloads,
+                )
+                rows = merge_result.rows or rows
+                fin = merge_result.financials
+
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 has_summary_table = merge_result.debug.get("selected_financial_summary_table") is not None
                 fin.summary_detected = bool(has_summary_table)
                 if has_summary_table:
@@ -2801,7 +3237,11 @@ def extract_text_pdf(
 
                 log_event(
                     logger,
+<<<<<<< HEAD
                     "TABLE_MERGE_COMPLETE",
+=======
+                    "table_merge_complete",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                     merged_rows=len(rows),
                     payload_count=merge_result.debug.get("payload_count", 0),
                     selected_financial_summary_table=merge_result.debug.get("selected_financial_summary_table"),
@@ -2809,6 +3249,7 @@ def extract_text_pdf(
                 debug_payload["table_merge"] = merge_result.debug
 
             if ocr_table_text:
+<<<<<<< HEAD
                 max_ocr_text_chars = max(1000, int(os.getenv("MAX_OCR_TEXT_CHARS", "45000")))
                 ocr_table_text, was_truncated = _truncate_ocr_text_prioritized(ocr_table_text, max_ocr_text_chars)
                 if was_truncated:
@@ -2913,13 +3354,33 @@ def extract_text_pdf(
                             fin = fallback_fin
                         warnings.extend(fallback_warnings)
                         warnings.append("structured_rows_replaced:full_page_ocr_text_better")
+=======
+                full_text = f"{full_text}\n{ocr_table_text}".strip()
+
+            if not rows:
+                ocr_text = _ocr_full_text(pdf_path)
+                if ocr_text:
+                    full_text = ocr_text
+                    rows = _parse_generic_rows(ocr_text)
+                    warnings.append("Fallback generic OCR parser used")
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
             confidence = max(0.58, min(0.92, avg_conf if avg_conf > 0 else 0.7))
         else:
             confidence = 0.98 if rows else 0.6
 
         if not rows and not used_ocr:
+<<<<<<< HEAD
             warnings.append("structured_rows_required:no_full_page_ocr_row_fallback")
+=======
+            ocr_text = _ocr_full_text(pdf_path)
+            if ocr_text:
+                used_ocr = True
+                rows = _parse_generic_rows(ocr_text)
+                full_text = ocr_text
+                confidence = 0.68
+                warnings.append("OCR extraction used")
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         meta = _extract_metadata(full_text)
         deduction_result = extract_deduction_total(
@@ -2936,7 +3397,11 @@ def extract_text_pdf(
             fin.deduction_breakdown = deduction_result.breakdown
         log_event(
             logger,
+<<<<<<< HEAD
             "FINANCIALS_EXTRACTED",
+=======
+            "deduction_extracted",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             run_id=run_id or "",
             pdf_path=pdf_path,
             source=deduction_result.source,
@@ -2947,10 +3412,14 @@ def extract_text_pdf(
         if deduction_result.source != "none":
             warnings.append(f"deduction_source:{deduction_result.source}")
 
+<<<<<<< HEAD
         repairs = _validate_rows(rows, fin, warnings, summary_hours)
         if repairs:
             # penalize confidence slightly when numeric repairs were applied
             confidence = max(0.0, confidence - 0.05)
+=======
+        _validate_rows(rows, fin, warnings, summary_hours)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         attendance_validation = [
             {
@@ -2989,6 +3458,7 @@ def extract_text_pdf(
             timings=timing,
         )
 
+<<<<<<< HEAD
         # Emit AI_PROFILE summary if enabled
         prof = current() or profiler
         if prof and getattr(prof, "enabled", False):
@@ -3004,11 +3474,17 @@ def extract_text_pdf(
         except Exception:
             pass
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         if profile_store and rows:
             fingerprint = build_template_fingerprint(full_text[:400])
             profile_store.learn_success(name=fmt.value, fingerprint=fingerprint, config_overrides=config_overrides or {})
 
+<<<<<<< HEAD
         if debug.enabled and debug.base_dir and should_sample_debug_artifacts():
+=======
+        if debug.enabled and debug.base_dir:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             debug_payload.update(
                 {
                     "timings": timing,
@@ -3019,6 +3495,7 @@ def extract_text_pdf(
             debug.json("extraction_debug_report", debug_payload)
             warnings.append(f"debug_report:{str(debug.base_dir / 'extraction_debug_report.json')}")
 
+<<<<<<< HEAD
         # Determine FINAL_ROW_SOURCE
         try:
             final_row_source = "ocr_table"
@@ -3039,6 +3516,8 @@ def extract_text_pdf(
 
         print(f"FINAL_ROW_SOURCE: {final_row_source}")
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         return ExtractionResult(
             success=len(rows) > 0,
             format=fmt,
@@ -3055,6 +3534,7 @@ def extract_text_pdf(
         )
 
     except Exception as exc:
+<<<<<<< HEAD
         stage_failure(
             logger,
             "table_extraction",
@@ -3069,6 +3549,10 @@ def extract_text_pdf(
             set_current(None)
         except Exception:
             pass
+=======
+        logger.exception("text_extractor failed: %s", exc)
+
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         return ExtractionResult(
             success=False,
             format=fmt,
@@ -3079,4 +3563,8 @@ def extract_text_pdf(
             confidence=0.0,
             error=str(exc),
             processing_time_ms=int((time.time() - started) * 1000),
+<<<<<<< HEAD
         )
+=======
+        )
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

@@ -10,6 +10,7 @@ const getMessageSummary = (messages = []) => {
     return { lastMessage: "No messages yet", timestamp: "Now" };
   }
 
+<<<<<<< HEAD
   const sorted = [...messages].sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
   const last = sorted[sorted.length - 1];
   return {
@@ -19,6 +20,10 @@ const getMessageSummary = (messages = []) => {
 };
 
 function ChatList({ selectedChat, onSelectChat, additionalChats = [], refreshKey = 0 }) {
+=======
+function ChatList({ selectedChat, onSelectChat, onBack, additionalChats = [] }) {
+  const [searchQuery, setSearchQuery] = useState("");
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -93,11 +98,35 @@ function ChatList({ selectedChat, onSelectChat, additionalChats = [], refreshKey
     };
   }, [additionalChats, refreshKey]);
 
+  const mergedChats = useMemo(() => {
+    const chatMap = new Map(mockChats.map((chat) => [String(chat.id), chat]));
+
+    additionalChats.forEach((chat) => {
+      if (!chat?.id) return;
+
+      chatMap.set(String(chat.id), {
+        lastMessage: "",
+        timestamp: "Now",
+        unread: 0,
+        ...chat,
+      });
+    });
+
+    return Array.from(chatMap.values());
+  }, [additionalChats]);
+
   const filteredChats = useMemo(() => {
+<<<<<<< HEAD
     const query = searchQuery.toLowerCase().trim();
     if (!query) return conversations;
     return conversations.filter((chat) => String(chat.name || "").toLowerCase().includes(query));
   }, [conversations, searchQuery]);
+=======
+    return mergedChats.filter((chat) =>
+      chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [mergedChats, searchQuery]);
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
   return (
     <Box

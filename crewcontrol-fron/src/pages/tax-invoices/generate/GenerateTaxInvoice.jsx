@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import { useEffect, useState, useRef } from "react";
+=======
+import { useEffect, useState, useRef } from "react";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -491,7 +495,11 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
           style={{
             width: "240px",
             minHeight: "110px",
+<<<<<<< HEAD
             background: "var(--bg-surface-secondary)",
+=======
+            background: "#F6F6F6",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             border: `1px solid ${BORDER}`,
             borderRadius: "8px",
             padding: "24px 20px",
@@ -513,7 +521,11 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
           style={{
             width: "240px",
             minHeight: "110px",
+<<<<<<< HEAD
             background: "var(--bg-surface-secondary)",
+=======
+            background: "#F6F6F6",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             border: `1px solid ${BORDER}`,
             borderRadius: "8px",
             padding: "24px 20px",
@@ -534,7 +546,11 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
           style={{
             width: "240px",
             minHeight: "140px",
+<<<<<<< HEAD
             background: "var(--bg-surface-secondary)",
+=======
+            background: "#F6F6F6",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             border: `1px solid ${BORDER}`,
             borderRadius: "8px",
             padding: "16px 16px 14px",
@@ -544,12 +560,20 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
             gap: "12px",
           }}
         >
+<<<<<<< HEAD
           <p style={{ fontSize: "16px", fontWeight: 400, color: "var(--text-secondary)", margin: 0, lineHeight: "26px" }}>
+=======
+          <p style={{ fontSize: "16px", fontWeight: 400, color: "#808080", margin: 0, lineHeight: "26px" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             Add
           </p>
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+<<<<<<< HEAD
             <span style={{ fontSize: "14px", fontWeight: 400, color: "var(--text-primary)", lineHeight: "26px" }}>Signature</span>
+=======
+            <span style={{ fontSize: "14px", fontWeight: 400, color: "#141414", lineHeight: "26px" }}>Signature</span>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             <button
               type="button"
               onClick={() => toggleField("includeSignature")}
@@ -558,7 +582,11 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
                 height: "18px",
                 borderRadius: "999px",
                 border: "none",
+<<<<<<< HEAD
                 background: data.includeSignature ? "var(--text-primary)" : "var(--text-disabled)",
+=======
+                background: data.includeSignature ? "#111827" : "#9CA3AF",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 position: "relative",
                 cursor: "pointer",
                 padding: 0,
@@ -580,7 +608,11 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+<<<<<<< HEAD
             <span style={{ fontSize: "14px", fontWeight: 400, color: "var(--text-primary)", lineHeight: "26px" }}>Stamp</span>
+=======
+            <span style={{ fontSize: "14px", fontWeight: 400, color: "#141414", lineHeight: "26px" }}>Stamp</span>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             <button
               type="button"
               onClick={() => toggleField("includeStamp")}
@@ -589,7 +621,11 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
                 height: "18px",
                 borderRadius: "999px",
                 border: "none",
+<<<<<<< HEAD
                 background: data.includeStamp ? "var(--text-primary)" : "var(--text-disabled)",
+=======
+                background: data.includeStamp ? "#111827" : "#9CA3AF",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 position: "relative",
                 cursor: "pointer",
                 padding: 0,
@@ -627,7 +663,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
         flexDirection: "column",
         height: "100%",
         minHeight: 0,
+<<<<<<< HEAD
         background: "var(--bg-surface-secondary)",
+=======
+        background: "#F3F4F6",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         fontFamily: "sans-serif",
         overflow: "hidden",
       }}
@@ -651,7 +691,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
               width: "282px",
               flexShrink: 0,
               height: "100%",
+<<<<<<< HEAD
               background: "var(--bg-surface)",
+=======
+              background: "#F9FAFB",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
               overflow: "hidden",

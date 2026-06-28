@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 ﻿"""Debug export helpers for table extraction pipeline."""
+=======
+"""Debug export helpers for table extraction pipeline."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Sequence
+<<<<<<< HEAD
 import logging
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 import cv2
 import numpy as np
@@ -74,6 +81,7 @@ class DebugExporter:
                 cv2.putText(canvas, txt[:24], (x, max(0, y - 3)), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 0), 1)
 
         self.image(name, canvas)
+<<<<<<< HEAD
 
 
 class NoOpDebug:
@@ -138,3 +146,5 @@ def ensure_debug(debug_obj: Any) -> Any:
     except Exception:
         pass
     return NoOpDebug()
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

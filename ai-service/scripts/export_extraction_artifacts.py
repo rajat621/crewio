@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""Export extraction artifacts to JSON/CSV/Excel.
+=======
+"""Export extraction artifacts to JSON/CSV/Excel.
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 Usage:
 python scripts/export_extraction_artifacts.py --pdf path/to/file.pdf --outdir storage/debug/exports

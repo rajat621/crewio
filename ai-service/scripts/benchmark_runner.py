@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""End-to-end production benchmark runner.
+=======
+"""End-to-end production benchmark runner.
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 Single-command benchmark execution with consolidated JSON report.
 

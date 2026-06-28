@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""Dynamic, template-safe invoice layout renderer with business normalization and pagination."""
+=======
+"""Dynamic, template-safe invoice layout renderer with business normalization and pagination."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""Benchmark attendance validation quality for UAE timesheet extraction."""
+=======
+"""Benchmark attendance validation quality for UAE timesheet extraction."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 

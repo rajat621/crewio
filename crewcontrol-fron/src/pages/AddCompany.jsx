@@ -534,7 +534,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
         flexDirection: "column",
         height: "100%",
         minHeight: 0,
+<<<<<<< HEAD
         background: "var(--bg-surface-secondary)",
+=======
+        background: "#F3F4F6",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         overflow: "hidden",
       }}
@@ -558,7 +562,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
               width: "282px",
               flexShrink: 0,
               height: "100%",
+<<<<<<< HEAD
               background: "var(--bg-surface)",
+=======
+              background: "#F9FAFB",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
               overflow: "hidden",

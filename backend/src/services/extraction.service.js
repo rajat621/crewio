@@ -9,6 +9,11 @@ const effectiveTimeoutMs = Number.isFinite(requestedTimeoutMs) && requestedTimeo
   ? Number(requestedTimeoutMs)
   : defaultTimeoutMs;
 
+const requestedTimeoutMs = Number(env.AI_SERVICE_TIMEOUT_MS || 0);
+const effectiveTimeoutMs = Number.isFinite(requestedTimeoutMs)
+  ? Math.max(requestedTimeoutMs, 90000)
+  : 90000;
+
 const aiClient = axios.create({
   baseURL: env.AI_SERVICE_URL,
   timeout: effectiveTimeoutMs,
@@ -198,7 +203,10 @@ export const generateInvoiceFromPdf = async ({
   include_signature = true,
   include_stamp = true,
   company_data = {},
+<<<<<<< HEAD
   traceContext = {},
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 }) => {
   // Resolve owner company data from database if owner_company_id provided
   let ownerTemplate = template_override;
@@ -232,7 +240,11 @@ export const generateInvoiceFromPdf = async ({
     include_signature: include_signature,
     include_stamp: include_stamp,
     company_data: company_data,
+<<<<<<< HEAD
   }, traceContext);
+=======
+  });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 };
 
 // Backward-compatible export.

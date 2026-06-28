@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""
+=======
+"""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 main.py
 
 Flask API for:
@@ -19,11 +23,47 @@ import logging
 import os
 import tempfile
 import uuid
+<<<<<<< HEAD
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from pathlib import Path
 
 from dotenv import load_dotenv
+<<<<<<< HEAD
+=======
+
+from flask import (
+    Flask,
+    jsonify,
+    request,
+    send_file,
+)
+
+from flask_cors import CORS
+
+from contracts import err, ok
+
+from pipeline import run_extraction
+import pipeline.run as _run_mod
+
+from generator import generate_invoice_pdf
+import pipeline.text_extractor as _text_extractor_mod
+import pipeline.deduction_parser as _deduction_parser_mod
+import generator.templates.compact_single_page_engine as _compact_engine_mod
+
+from schema import (
+    CompanyProfile,
+    validate_extraction,
+)
+
+from validation import score_extraction
+
+# ---------------------------------------------------------------------------
+# setup
+# ---------------------------------------------------------------------------
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 load_dotenv()
 
@@ -72,6 +112,7 @@ logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
+<<<<<<< HEAD
 _RENDER_EXECUTOR = ThreadPoolExecutor(max_workers=1, thread_name_prefix="pdf-render")
 
 logger.info("runtime_import module=text_extractor file=%s", getattr(_text_extractor_mod, "__file__", ""))
@@ -289,6 +330,96 @@ def health_ready():
             "ENABLE_SEMANTIC_EXTRACTION": CONFIG.feature_flags.enable_semantic_extraction,
             "ENABLE_PADDLE_OCR": CONFIG.feature_flags.enable_paddle_ocr,
         },
+=======
+logger.info("runtime_import module=text_extractor file=%s", getattr(_text_extractor_mod, "__file__", ""))
+logger.info("runtime_import module=deduction_parser file=%s", getattr(_deduction_parser_mod, "__file__", ""))
+logger.info("runtime_import module=compact_single_page_engine file=%s", getattr(_compact_engine_mod, "__file__", ""))
+logger.info("runtime_import module=run file=%s", getattr(_run_mod, "__file__", ""))
+
+_backend_renderer_path = (
+    Path(__file__).resolve().parent.parent
+    / "backend"
+    / "src"
+    / "services"
+    / "invoiceRenderer.service.js"
+)
+logger.info(
+    "runtime_import module=invoice_renderer_backend file=%s exists=%s",
+    str(_backend_renderer_path),
+    _backend_renderer_path.exists(),
+)
+
+_UPLOAD_DIR = (
+    Path(tempfile.gettempdir())
+    / "ai-invoice-uploads"
+)
+
+_OUTPUT_DIR = (
+    Path(tempfile.gettempdir())
+    / "ai-invoice-outputs"
+)
+
+_UPLOAD_DIR.mkdir(
+    parents=True,
+    exist_ok=True,
+)
+
+_OUTPUT_DIR.mkdir(
+    parents=True,
+    exist_ok=True,
+)
+
+# ---------------------------------------------------------------------------
+# helpers
+# ---------------------------------------------------------------------------
+
+def _parse_bool(value, default=True):
+
+    if isinstance(value, bool):
+        return value
+
+    if isinstance(value, str):
+
+        lowered = value.strip().lower()
+
+        if lowered == "true":
+            return True
+
+        if lowered == "false":
+            return False
+
+    if isinstance(value, (int, float)):
+
+        if value == 1:
+            return True
+
+        if value == 0:
+            return False
+
+    return default
+
+
+def _save_upload(file_obj):
+
+    name = file_obj.filename or "upload.pdf"
+
+    path = _UPLOAD_DIR / name
+
+    file_obj.save(str(path))
+
+    return str(path)
+
+
+# ---------------------------------------------------------------------------
+# health
+# ---------------------------------------------------------------------------
+
+@app.get("/health")
+def health():
+
+    return jsonify({
+        "status": "ok",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     }), 200
 
 
@@ -298,6 +429,7 @@ def health_ready():
 
 @app.get("/capabilities")
 def capabilities():
+<<<<<<< HEAD
     return jsonify({
         "status": "ok",
         "ocr": True,
@@ -306,6 +438,13 @@ def capabilities():
         "llm": "ollama",
         "model": CONFIG.providers.ollama_model,
         "paid_api_required": False,
+=======
+
+    return jsonify({
+        "status": "ok",
+        "ocr": True,
+        "opencv": True,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         "extraction": [
             "mcc",
             "bkc",
@@ -315,6 +454,7 @@ def capabilities():
             "project_based",
             "employee_based",
         ],
+<<<<<<< HEAD
         "feature_flags": {
             "ENABLE_ASYNC_AI": CONFIG.feature_flags.enable_async_ai,
             "ENABLE_OLLAMA": CONFIG.feature_flags.enable_ollama,
@@ -322,6 +462,8 @@ def capabilities():
             "ENABLE_SEMANTIC_EXTRACTION": CONFIG.feature_flags.enable_semantic_extraction,
             "ENABLE_PADDLE_OCR": CONFIG.feature_flags.enable_paddle_ocr,
         },
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     }), 200
 
 
@@ -333,18 +475,24 @@ def capabilities():
 def extract():
 
     temp_path = None
+<<<<<<< HEAD
     stage_started = stage_start(logger, "upload_ingestion", endpoint="/extract")
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     try:
 
         body = request.get_json(silent=True) or {}
         debug_mode = _parse_bool(body.get("debug_mode"), False)
         run_id = body.get("run_id") or str(uuid.uuid4())
+<<<<<<< HEAD
         set_trace_context(
             request_id=getattr(g, "request_id", ""),
             trace_id=getattr(g, "trace_id", ""),
             run_id=run_id,
         )
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         # ---------------------------------------------------------------
         # upload handling
@@ -393,13 +541,18 @@ def extract():
         # extraction
         # ---------------------------------------------------------------
 
+<<<<<<< HEAD
         result = _run_service_extraction(
+=======
+        result = run_extraction(
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             pdf_path=pdf_path,
             company_profile=profile,
             debug_mode=debug_mode,
             run_id=run_id,
         )
 
+<<<<<<< HEAD
         stage_complete(
             logger,
             "upload_ingestion",
@@ -410,6 +563,8 @@ def extract():
             success=bool(result.success),
         )
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         response = ok(
             result.to_dict(),
             run_id=run_id,
@@ -463,6 +618,7 @@ def extract():
         return jsonify(response), 200
 
     except Exception as exc:
+<<<<<<< HEAD
         try:
             stage_failure(
                 logger,
@@ -476,6 +632,8 @@ def extract():
             )
         except Exception:
             logger.exception("stage_failure logging failed for /extract")
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         logger.exception("extract failed")
 
@@ -490,6 +648,7 @@ def extract():
             os.remove(temp_path)
 
 
+<<<<<<< HEAD
 @app.post("/extract/invoice-summary")
 def extract_invoice_summary():
 
@@ -606,21 +765,33 @@ def extract_attendance():
 # generate invoice
 # ---------------------------------------------------------------------------
 
+=======
+# ---------------------------------------------------------------------------
+# generate invoice
+# ---------------------------------------------------------------------------
+
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 @app.post("/generate-invoice")
 def generate_invoice():
 
     temp_path = None
+<<<<<<< HEAD
     stage_started = stage_start(logger, "invoice_rendering", endpoint="/generate-invoice")
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     try:
 
         body = request.get_json(silent=True) or {}
         run_id = body.get("run_id") or str(uuid.uuid4())
+<<<<<<< HEAD
         set_trace_context(
             request_id=getattr(g, "request_id", ""),
             trace_id=getattr(g, "trace_id", ""),
             run_id=run_id,
         )
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         pdf_path = body.get("pdf_path")
 
@@ -638,6 +809,7 @@ def generate_invoice():
                     pdf_path,
                 )
             ), 400
+<<<<<<< HEAD
 
         # ---------------------------------------------------------------
         # profile
@@ -718,6 +890,57 @@ def generate_invoice():
             request_id=getattr(g, "request_id", ""),
             trace_id=getattr(g, "trace_id", ""),
             invoice_generated=bool(invoice_path),
+=======
+
+        # ---------------------------------------------------------------
+        # profile
+        # ---------------------------------------------------------------
+
+        profile = CompanyProfile.from_dict(
+            body.get("company_data") or {}
+        )
+
+        # ---------------------------------------------------------------
+        # extraction
+        # ---------------------------------------------------------------
+
+        result = run_extraction(
+            pdf_path=pdf_path,
+            company_profile=profile,
+            run_id=run_id,
+        )
+
+        if not validate_extraction(result):
+
+            return jsonify(
+                err(
+                    "Extraction failed or produced no valid rows",
+                    result.warnings,
+                )
+            ), 422
+
+        # ---------------------------------------------------------------
+        # invoice generation
+        # ---------------------------------------------------------------
+
+        invoice_path = generate_invoice_pdf(
+            output_dir=str(_OUTPUT_DIR),
+            result=result,
+            profile=profile,
+            template_path=body.get("template_path"),
+            signature_path=body.get("signature_path"),
+            stamp_path=body.get("stamp_path"),
+            include_signature=_parse_bool(
+                body.get("include_signature"),
+                True,
+            ),
+            include_stamp=_parse_bool(
+                body.get("include_stamp"),
+                True,
+            ),
+            run_id=run_id,
+            source_pdf_path=pdf_path,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         )
 
         return jsonify(
@@ -730,6 +953,7 @@ def generate_invoice():
         ), 201
 
     except Exception as exc:
+<<<<<<< HEAD
         try:
             stage_failure(
                 logger,
@@ -743,6 +967,8 @@ def generate_invoice():
             )
         except Exception:
             logger.exception("stage_failure logging failed for /generate-invoice")
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         logger.exception(
             "generate-invoice failed"
@@ -812,7 +1038,11 @@ def generate_invoice_upload():
         # extraction
         # ---------------------------------------------------------------
 
+<<<<<<< HEAD
         result = _run_service_extraction(
+=======
+        result = run_extraction(
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             pdf_path=pdf_path,
             company_profile=profile,
             run_id=run_id,
@@ -831,6 +1061,7 @@ def generate_invoice_upload():
         # generate invoice
         # ---------------------------------------------------------------
 
+<<<<<<< HEAD
         try:
             invoice_path = _render_pdf_isolated(
                 output_dir=str(_OUTPUT_DIR),
@@ -870,6 +1101,26 @@ def generate_invoice_upload():
                     )
                 ), 202
             raise
+=======
+        invoice_path = generate_invoice_pdf(
+            output_dir=str(_OUTPUT_DIR),
+            result=result,
+            profile=profile,
+            template_path=_save_opt("template", "tpl"),
+            signature_path=_save_opt("signature", "sig"),
+            stamp_path=_save_opt("stamp", "stmp"),
+            include_signature=request.form.get(
+                "include_signature",
+                "true",
+            ).lower() == "true",
+            include_stamp=request.form.get(
+                "include_stamp",
+                "true",
+            ).lower() == "true",
+            run_id=run_id,
+            source_pdf_path=pdf_path,
+        )
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         return jsonify(
             ok(
@@ -941,4 +1192,8 @@ if __name__ == "__main__":
         use_reloader=False,
         port=port,
         host="0.0.0.0",
+<<<<<<< HEAD
     )
+=======
+    )
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

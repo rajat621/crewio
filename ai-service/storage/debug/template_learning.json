@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 ﻿{
+=======
+{
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   "templates": [
     {
       "name": "mcc",
       "fingerprint": "office|#|452|,|4th|floor|,|al|fahad|building|4|,|al|qusais|industrial|area|2|,|dubai.|uae|mcc|on|demand|labors",
       "config_overrides": {},
+<<<<<<< HEAD
       "success_count": 74
+=======
+      "success_count": 67
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     },
     {
       "name": "bkc",
@@ -145,6 +153,7 @@
       "name": "bkc",
       "fingerprint": "bkc|intergrande|bkc|labour|supply|l.l.c|timesheetno:ts-011619-2026|timesheetforthemonthofapril2026|preparationdate:may22,2026|printdate|:may22,2026|issued|to:|alqaser|alsatea|tech|cont|s#|i.|d.|no|employeename|trade|rate",
       "config_overrides": {},
+<<<<<<< HEAD
       "success_count": 12
     },
     {
@@ -179,3 +188,9 @@
     }
   ]
 }
+=======
+      "success_count": 2
+    }
+  ]
+}
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

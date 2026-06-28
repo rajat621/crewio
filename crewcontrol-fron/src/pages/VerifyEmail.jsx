@@ -77,8 +77,10 @@ const VerifyEmail = () => {
     try {
       setLoading(true);
       const otpCode = otp.join("");
+      console.log('[auth-ui] otp.verify.request', { email, flow, otpLength: otpCode.length });
       const response = await authApi.verifyOtp(email, otpCode, rememberMe);
       const { token, user } = response.data;
+      console.log('[auth-ui] otp.verify.response.success', { email, userId: user?.id || user?._id || null });
       login(token, user);
       if (flow === "signin") {
         navigate("/");
@@ -86,6 +88,12 @@ const VerifyEmail = () => {
         navigate("/onboarding/company-profile");
       }
     } catch (err) {
+      console.error('[auth-ui] otp.verify.response.error', {
+        email,
+        status: err?.response?.status,
+        message: err?.response?.data?.message || err?.message,
+        error: err?.response?.data?.error,
+      });
       setError(err.response?.data?.message || "Invalid OTP. Please try again.");
     } finally {
       setLoading(false);
@@ -95,12 +103,20 @@ const VerifyEmail = () => {
   const handleResendOtp = async () => {
     try {
       setLoading(true);
+      console.log('[auth-ui] otp.resend.request', { email, flow });
       await authApi.resendOtp(email);
+      console.log('[auth-ui] otp.resend.response.success', { email });
       setOtp(Array(6).fill(""));
       setTimeLeft(240);
       setError(null);
     } catch (err) {
-      setError("Failed to resend OTP. Please try again.");
+      console.error('[auth-ui] otp.resend.response.error', {
+        email,
+        status: err?.response?.status,
+        message: err?.response?.data?.message || err?.message,
+        error: err?.response?.data?.error,
+      });
+      setError(err.response?.data?.message || err.response?.data?.error || "Failed to resend OTP. Please try again.");
     } finally {
       setLoading(false);
     }

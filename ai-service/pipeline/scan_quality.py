@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""Scan quality scoring and preprocessing tuning hints."""
+=======
+"""Scan quality scoring and preprocessing tuning hints."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 

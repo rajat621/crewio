@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿[
+=======
+[
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   {
     "case_id": "time_sheet-baseline_unknown",
     "source_pdf": "D:\\Crew_control\\time_sheet.pdf",
@@ -152,4 +156,8 @@
     },
     "preview_png": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation_quick\\previews\\successful\\time_sheet-low_dpi_scan.png"
   }
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

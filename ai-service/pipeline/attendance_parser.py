@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""
+=======
+"""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 pipeline/attendance_parser.py
 
 Parse BKC/employee-based attendance tables into structured daily records.

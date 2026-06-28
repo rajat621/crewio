@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿/**
+=======
+/**
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
  * Production confidence gating rules for invoice generation
  * Blocks automatic generation if extraction quality is insufficient
  */

@@ -141,7 +141,11 @@ function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
                 onClick={(event) => handleOpenMenu(event, row)}
                 sx={ACTION_ICON_BUTTON_SX}
               >
+<<<<<<< HEAD
                 <MoreVertIcon sx={{ fontSize: 16, color: "var(--text-secondary)" }} />
+=======
+                <MoreVertIcon sx={{ fontSize: 16, color: "#757575" }} />
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               </IconButton>
             </TableCell>
           </TableRow>

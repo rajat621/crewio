@@ -61,7 +61,6 @@
 // export default AssignedKpiRow;
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
-import HourglassBottomOutlinedIcon from "@mui/icons-material/HourglassBottomOutlined";
 
 import UniversalKpiRow from "../../kpi/UniversalKpiRow";
 
@@ -82,6 +81,7 @@ const KPI_ITEMS = [
     iconColor: "var(--color-error)",
     filterKey: "assignedStatus",
   },
+<<<<<<< HEAD
   {
     key: "site-over",
     label: "Worker Site-Over",
@@ -90,6 +90,8 @@ const KPI_ITEMS = [
     iconColor: "var(--text-secondary)",
     filterKey: "assignedStatus",
   },
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 ];
 
 function AssignedKpiRow({ data = [], activeStatus, onChange }) {

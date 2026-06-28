@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import bcrypt from 'bcryptjs';
+=======
+import bcrypt from 'bcryptjs';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import jwt from 'jsonwebtoken';
 import Employee from '../../models/Employee.js';
 import { env } from '../../config/env.js';
@@ -31,21 +35,33 @@ const buildIdentifierCandidates = (rawIdentifier = '') => {
   return Array.from(candidates);
 };
 
+<<<<<<< HEAD
 const findEmployeeByLoginId = async (loginId, ownerId) => {
   const trimmed = String(loginId || '').trim();
   const candidates = buildIdentifierCandidates(trimmed);
 
   const query = {
+=======
+const findEmployeeByLoginId = async (loginId) => {
+  const trimmed = String(loginId || '').trim();
+  const candidates = buildIdentifierCandidates(trimmed);
+
+  return Employee.findOne({
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     $or: [
       { appUserId: { $in: candidates } },
       { employeeId: { $in: candidates } },
       { appUserId: new RegExp(`^${escapeRegex(trimmed)}$`, 'i') },
       { employeeId: new RegExp(`^${escapeRegex(trimmed)}$`, 'i') },
     ],
+<<<<<<< HEAD
   };
   if (ownerId) query.ownerId = ownerId;
 
   return Employee.findOne(query).select('+appPassword');
+=======
+  }).select('+appPassword');
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 };
 
 const buildEmployeePayload = (employee) => ({
@@ -68,8 +84,11 @@ export const loginEmployee = async (req, res) => {
       return res.status(400).json({ message: 'appUserId (or employeeId) and password are required' });
     }
 
+<<<<<<< HEAD
     // Allow login without ownerId/companyId in the request. Resolve tenant ownership
     // from the Employee -> Company -> Owner relationship.
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const employee = await findEmployeeByLoginId(loginId);
     if (!employee) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -95,6 +114,7 @@ export const loginEmployee = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+<<<<<<< HEAD
     // Resolve tenant ownerId and companyId for the employee and include them in the token
     let resolvedOwnerId = employee.ownerId || employee.owner || null;
     let resolvedCompanyId = employee.company || null;
@@ -108,13 +128,18 @@ export const loginEmployee = async (req, res) => {
       }
     }
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const token = jwt.sign(
       {
         employeeId: employee._id,
         appUserId: employee.appUserId,
         role: 'employee',
+<<<<<<< HEAD
         ownerId: resolvedOwnerId,
         companyId: resolvedCompanyId,
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       },
       env.JWT_SECRET,
       { expiresIn: env.JWT_EXPIRE || '7d' }

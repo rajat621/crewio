@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿"""Route each detected table to specialized parsers and emit typed payloads."""
 
 from __future__ import annotations
@@ -5,17 +6,28 @@ from __future__ import annotations
 import logging
 import re
 from typing import Dict, List, Optional, Sequence, Tuple
+=======
+"""Route each detected table to specialized parsers and emit typed payloads."""
+
+from __future__ import annotations
+
+from typing import Dict, List, Sequence
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from schema import InvoiceLayout, InvoiceRow
 
 from pipeline.semantic_filter import classify_row, RowType
+<<<<<<< HEAD
 from pipeline.structured_logging import log_event
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from .financial_summary_parser import parse_financial_summary_table
 from .table_classifier import TableType, classify_table
 from .table_merger import ParsedTablePayload
 
 
+<<<<<<< HEAD
 logger = logging.getLogger(__name__)
 
 _FINANCIAL_EXACT = {
@@ -51,6 +63,8 @@ _HEADER_ALIASES = {
 }
 
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def _to_float(value: str) -> float:
     import re
 
@@ -63,6 +77,7 @@ def _to_float(value: str) -> float:
         return 0.0
 
 
+<<<<<<< HEAD
 def _clean_cell(v: object) -> str:
     return " ".join(str(v or "").split()).strip()
 
@@ -141,10 +156,22 @@ def _parse_attendance_rows(
             RowType.SUBTOTAL_ROW,
         }:
             log_event(logger, "ROW_REJECTED", reason=f"attendance:{row_type.value}", row=raw_row)
+=======
+def _rows_from_table(table: Sequence[Sequence[str]], layout: InvoiceLayout) -> List[InvoiceRow]:
+    rows: List[InvoiceRow] = []
+
+    for row in table:
+        cells = [" ".join(str(c or "").split()) for c in row]
+        if not any(cells):
+            continue
+
+        if classify_row(cells) != RowType.VALID_LABOUR_ROW:
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             continue
 
         nums = [_to_float(c) for c in cells if any(ch.isdigit() for ch in c)]
         nums = [n for n in nums if n > 0]
+<<<<<<< HEAD
 
         trade = ""
         if "trade" in mapping and mapping["trade"] < len(cells):
@@ -217,6 +244,29 @@ def _parse_attendance_rows(
             rate=round(rate, 2),
             amount=round(amount, 2),
         )
+=======
+        if len(nums) < 2:
+            continue
+
+        trade = (cells[0] or "").strip().upper()
+        if not trade:
+            continue
+
+        amount = nums[-1]
+        rate = nums[-2] if len(nums) >= 2 else 0.0
+        hours = nums[-3] if len(nums) >= 3 else (round(amount / rate, 2) if rate > 0 else 0.0)
+
+        project_id = None
+        employee_id = None
+        for c in cells:
+            uc = c.upper()
+            if uc.startswith("P") and any(ch.isdigit() for ch in uc):
+                project_id = uc
+                break
+
+        if layout == InvoiceLayout.EMPLOYEE_BASED and len(cells) > 1 and not project_id:
+            employee_id = cells[1]
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         rows.append(
             InvoiceRow(
@@ -232,6 +282,7 @@ def _parse_attendance_rows(
     return rows
 
 
+<<<<<<< HEAD
 def _parse_summary_rows(table: Sequence[Sequence[str]], table_index: int) -> List[InvoiceRow]:
     rows: List[InvoiceRow] = []
     header_idx, mapping = _find_column_mapping(table)
@@ -327,6 +378,8 @@ def _parse_summary_rows(table: Sequence[Sequence[str]], table_index: int) -> Lis
     return rows
 
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def route_document_tables(
     tables: Sequence[Sequence[Sequence[str]]],
     layout: InvoiceLayout,
@@ -349,12 +402,20 @@ def route_document_tables(
             parsed = parse_financial_summary_table(table)
             payload.financials = parsed.financials
             payload.confidence = max(payload.confidence, parsed.confidence)
+<<<<<<< HEAD
             payload.rows = []
             payload.parser_name = "financial_summary_parser"
 
         elif ttype in {TableType.ATTENDANCE_TABLE, TableType.PROJECT_SUMMARY_TABLE, TableType.OVERTIME_TABLE}:
             payload.rows = _parse_attendance_rows(table, layout, table_index=idx)
             payload.parser_name = "attendance_table_parser"
+=======
+            payload.parser_name = "financial_summary_parser"
+
+        elif ttype in {TableType.ATTENDANCE_TABLE, TableType.PROJECT_SUMMARY_TABLE, TableType.OVERTIME_TABLE}:
+            payload.rows = _rows_from_table(table, layout)
+            payload.parser_name = "labour_table_parser"
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         elif ttype == TableType.METADATA_TABLE:
             payload.parser_name = "metadata_table_parser"

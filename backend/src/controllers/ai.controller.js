@@ -189,7 +189,10 @@ export const generateInvoice = async (req, res) => {
       include_signature,
       include_stamp,
       company_data,
+<<<<<<< HEAD
       traceContext: trace,
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     });
 
     return res.status(201).json({ 

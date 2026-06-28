@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""Parser for financial summary/footer tables in UAE timesheets."""
+=======
+"""Parser for financial summary/footer tables in UAE timesheets."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 
@@ -21,6 +25,7 @@ class FinancialSummaryParseResult:
 
 
 def _to_float(value: str) -> float:
+<<<<<<< HEAD
     cleaned = re.sub(r"[^0-9.\-]", "", str(value or "").replace(",", ""))
     if cleaned.count(".") > 1:
         first = cleaned.find(".")
@@ -29,6 +34,10 @@ def _to_float(value: str) -> float:
         cleaned = "0" + cleaned
     try:
         return float(cleaned)
+=======
+    try:
+        return float(str(value).replace(",", "").strip())
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     except Exception:
         return 0.0
 
@@ -36,6 +45,7 @@ def _to_float(value: str) -> float:
 def _last_amount(cells: Sequence[str]) -> float:
     nums: List[float] = []
     for c in cells:
+<<<<<<< HEAD
         value = _to_float(str(c or ""))
         if value > 0:
             nums.append(value)
@@ -44,6 +54,10 @@ def _last_amount(cells: Sequence[str]) -> float:
             parsed = _to_float(n)
             if parsed > 0:
                 nums.append(parsed)
+=======
+        for n in _NUM_RE.findall(str(c or "")):
+            nums.append(_to_float(n))
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     return nums[-1] if nums else 0.0
 
 

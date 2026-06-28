@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""
+=======
+"""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 pipeline/vision_extractor.py
 
 Offline OCR extractor replacement.
@@ -100,4 +104,8 @@ def extract_vision_pdf(
             used_ocr=True,
             used_vision=False,
             error=str(exc),
+<<<<<<< HEAD
         )
+=======
+        )
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

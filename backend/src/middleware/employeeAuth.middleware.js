@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿/**
+=======
+/**
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
  * Employee Mobile Auth Middleware
  *
  * Validates JWT tokens issued specifically for employee mobile app sessions.
@@ -11,7 +15,10 @@
 
 import jwt from 'jsonwebtoken';
 import Employee from '../models/Employee.js';
+<<<<<<< HEAD
 import Company from '../models/Company.js';
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import { env } from '../config/env.js';
 
 export const authenticateEmployee = async (req, res, next) => {
@@ -41,6 +48,7 @@ export const authenticateEmployee = async (req, res, next) => {
       return res.status(401).json({ message: 'Employee not found' });
     }
 
+<<<<<<< HEAD
     // Validate ownerId in token (if present) matches employee's owner or company owner
     if (decoded.ownerId) {
       const empOwner = employee.ownerId || employee.owner || null;
@@ -55,6 +63,8 @@ export const authenticateEmployee = async (req, res, next) => {
       }
     }
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     // Attach to request – all downstream handlers use req.employee
     req.employee = employee;
     next();

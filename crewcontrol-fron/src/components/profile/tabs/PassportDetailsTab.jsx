@@ -221,7 +221,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
               color: 'var(--text-secondary)',
+=======
+              color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -240,7 +244,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
               color: 'var(--text-secondary)',
+=======
+              color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -259,7 +267,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
               color: 'var(--text-secondary)',
+=======
+              color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -278,7 +290,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
               color: 'var(--text-secondary)',
+=======
+              color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -297,7 +313,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
               color: 'var(--text-secondary)',
+=======
+              color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}

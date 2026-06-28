@@ -4,7 +4,11 @@ import { useState } from "react";
 import AttendanceHeader from "./AttendanceHeader";
 import AttendanceBarChart from "./AttendanceBarChart";
 
+<<<<<<< HEAD
 function AttendanceCard({ weeklyData = [], monthlyData = [], hasEmployees = true }) {
+=======
+function AttendanceCard({ weeklyData = [], monthlyData = [] }) {
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   const [view, setView] = useState("weekly"); // 🔑 state owner
 
   return (
@@ -31,7 +35,11 @@ function AttendanceCard({ weeklyData = [], monthlyData = [], hasEmployees = true
       >
         <AttendanceHeader value={view} onChange={setView} />
 
+<<<<<<< HEAD
         <AttendanceBarChart view={view} weeklyData={weeklyData} monthlyData={monthlyData} hasEmployees={hasEmployees} />
+=======
+        <AttendanceBarChart view={view} weeklyData={weeklyData} monthlyData={monthlyData} />
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       </Box>
     </Box>
   );

@@ -31,6 +31,7 @@ export const env = {
   BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:5000',
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || '',
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
+<<<<<<< HEAD
   
   SMTP_HOST: process.env.SMTP_HOST,
   SMTP_PORT: process.env.SMTP_PORT || 587,
@@ -154,6 +155,15 @@ export const runtimeConfig = {
     // Compatibility aliases for existing deployments.
     ollamaEnableSemanticEnv: process.env.OLLAMA_ENABLE_SEMANTIC,
   },
+=======
+  RESEND_API_KEY: process.env.RESEND_API_KEY || '',
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || '',
+  
+  // FRONTEND_URL: process.env.FRONTEND_URL || 'https://crewio-rust.vercel.app',
+  // VITE_API_URL: process.env.VITE_API_URL || 'https://crewio.onrender.com/api',
+  // AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'https://crewio-ai-services.onrender.com',
+  // AI_SERVICE_TIMEOUT_MS: process.env.AI_SERVICE_TIMEOUT_MS || 45000,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 };
 
 export default env;

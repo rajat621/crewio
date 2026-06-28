@@ -78,7 +78,11 @@ const actionMenuStyles = {
 /**
  * ThreeDotIcon - SVG icon for the three-dot menu button
  */
+<<<<<<< HEAD
 const ThreeDotIcon = ({ color = 'var(--text-secondary)', size = 16 }) => (
+=======
+const ThreeDotIcon = ({ color = '#6B7280', size = 16 }) => (
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   <svg
     width={size}
     height={size}
@@ -209,7 +213,11 @@ export const EmployeeActionMenu = ({ actions = [], employeeId }) => {
         aria-label="Employee actions"
         title="Employee actions"
       >
+<<<<<<< HEAD
         <ThreeDotIcon color={buttonHover ? 'var(--text-primary)' : 'var(--text-secondary)'} size={16} />
+=======
+        <ThreeDotIcon color={buttonHover ? '#111827' : '#6B7280'} size={16} />
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       </button>
 
       {isOpen && (

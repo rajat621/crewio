@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+=======
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { TableRow, TableCell, Chip } from "@mui/material";
 import { EmployeeActionMenu } from "../../profile/EmployeeActionMenu";

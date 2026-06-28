@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import { Box } from "@mui/material";
+=======
+import { Box } from "@mui/material";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ChatList from "../components/chat/ChatList";
@@ -14,11 +18,17 @@ function Chat() {
       unread: 0,
       timestamp: "Now",
       ...chat,
+<<<<<<< HEAD
       id: String(chat.id),
     };
   }, [location.state]);
   const [selectedChat, setSelectedChat] = useState(preselectedChat);
   const [refreshKey, setRefreshKey] = useState(0);
+=======
+    };
+  }, [location.state]);
+  const [selectedChat, setSelectedChat] = useState(preselectedChat);
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
   useEffect(() => {
     if (preselectedChat?.id) {
@@ -52,7 +62,10 @@ border: "1px solid var(--border-card)",
         selectedChat={selectedChat}
         onSelectChat={setSelectedChat}
         additionalChats={preselectedChat ? [preselectedChat] : []}
+<<<<<<< HEAD
         refreshKey={refreshKey}
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       />
 
       {/* CHAT DETAIL */}

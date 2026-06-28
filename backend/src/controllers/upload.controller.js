@@ -16,6 +16,7 @@ export const uploadFile = async (req, res) => {
 
     const folder = req.uploadFolder || 'timesheets';
     const relativePath = `/uploads/${folder}/${req.file.filename}`;
+<<<<<<< HEAD
 
     // Determine ownerId and companyId from req.user
     const ownerId = authUser.ownerId || authUser.userId;
@@ -32,6 +33,8 @@ export const uploadFile = async (req, res) => {
       path: relativePath,
       purpose: req.body?.purpose || req.query?.purpose || folder,
     });
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     res.status(201).json({
       message: 'File uploaded successfully',

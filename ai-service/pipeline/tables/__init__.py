@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""Table reconstruction pipeline components."""
+=======
+"""Table reconstruction pipeline components."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from .cell_extractor import CellExtractor, CellExtractorConfig, extract_cell_texts
 from .column_clusterer import ColumnCluster, ColumnClusterConfig, ColumnClusterer, cluster_columns

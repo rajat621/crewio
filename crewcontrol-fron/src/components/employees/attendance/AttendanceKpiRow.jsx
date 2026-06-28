@@ -90,6 +90,14 @@ const KPI_ITEMS = [
     filterKey: "attendanceStatus",
   },
   {
+    key: "absent",
+    label: "Absent Today",
+    icon: <HighlightOffOutlinedIcon sx={{ fontSize: 32 }} />,
+    iconBg: "#FECACA",
+    iconColor: "#DC2626",
+    filterKey: "attendanceStatus",
+  },
+  {
     key: "on-leave",
     label: "On Leave",
     icon: <PersonOffOutlinedIcon sx={{ fontSize: 32 }} />,

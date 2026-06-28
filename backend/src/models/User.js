@@ -4,15 +4,23 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
+<<<<<<< HEAD
       required: true,
       trim: true,
     },
 
+=======
+      trim: true,
+    },
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     lastName: {
       type: String,
       trim: true,
     },
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     email: {
       type: String,
       required: true,
@@ -41,6 +49,7 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
     },
+<<<<<<< HEAD
 
     mobileNumber: String,
 
@@ -55,6 +64,24 @@ const userSchema = new mongoose.Schema(
     isEmailVerified: {
       type: Boolean,
       default: false,
+=======
+    dateOfBirth: {
+      type: String,
+      trim: true,
+    },
+    gender: {
+      type: String,
+      trim: true,
+    },
+    avatar: {
+      type: String,
+    },
+    otp: {
+      type: String,
+    },
+    otpExpiry: {
+      type: Date,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     },
 
     isVerified: {

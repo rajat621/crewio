@@ -1,10 +1,17 @@
+<<<<<<< HEAD
 ﻿"""Template loading and normalization for dynamic owner-company invoice backgrounds."""
+=======
+"""Template loading and normalization for dynamic owner-company invoice backgrounds."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 
 import base64
 import os
+<<<<<<< HEAD
 import threading
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
@@ -17,10 +24,13 @@ except Exception:  # pragma: no cover
     convert_from_path = None
 
 
+<<<<<<< HEAD
 _TEMPLATE_ASSET_CACHE = {}
 _TEMPLATE_ASSET_CACHE_LOCK = threading.Lock()
 
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 @dataclass(frozen=True)
 class TemplateAsset:
     source_path: str
@@ -50,6 +60,7 @@ class TemplateLoader:
         if not template_path or not os.path.exists(template_path):
             return None
 
+<<<<<<< HEAD
         try:
             stat = os.stat(template_path)
             cache_key = f"{template_path}|{int(stat.st_mtime)}|{stat.st_size}|{self.dpi}"
@@ -61,6 +72,8 @@ class TemplateLoader:
             if cached is not None:
                 return cached
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         ext = Path(template_path).suffix.lower()
         is_pdf = ext == ".pdf"
 
@@ -82,7 +95,11 @@ class TemplateLoader:
         with Image.open(page_paths[0]) as im:
             w, h = im.size
 
+<<<<<<< HEAD
         asset = TemplateAsset(
+=======
+        return TemplateAsset(
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             source_path=template_path,
             page_images=page_paths,
             width_px=w,
@@ -90,9 +107,12 @@ class TemplateLoader:
             dpi=self.dpi,
             is_pdf=is_pdf,
         )
+<<<<<<< HEAD
         with _TEMPLATE_ASSET_CACHE_LOCK:
             _TEMPLATE_ASSET_CACHE[cache_key] = asset
         return asset
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     def _materialize(
         self,

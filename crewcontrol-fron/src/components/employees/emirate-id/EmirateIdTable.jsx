@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import UniversalTable from "../../table/UniversalTable";
+=======
+import UniversalTable from "../../table/UniversalTable";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import EmirateIdRow from "./EmirateIdRow";
 
 const COLUMNS = [
@@ -24,4 +28,8 @@ function EmirateIdTable({ rows = [], activeStatus }) {
   );
 }
 
+<<<<<<< HEAD
 export default EmirateIdTable;
+=======
+export default EmirateIdTable;
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

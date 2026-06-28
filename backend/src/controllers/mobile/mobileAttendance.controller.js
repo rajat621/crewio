@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿import Attendance from '../../models/Attendance.js';
 import WorkSession from '../../models/WorkSession.js';
+=======
+import Attendance from '../../models/Attendance.js';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 const getDayBounds = (value = new Date()) => {
   const start = new Date(value);
@@ -20,8 +24,12 @@ const getTimeString = (date = new Date()) => {
 export const getMyAttendance = async (req, res) => {
   try {
     const { from, to } = req.query;
+<<<<<<< HEAD
     const ownerId = req.employee.ownerId || null;
     const filter = { employee: req.employee._id, ownerId };
+=======
+    const filter = { employee: req.employee._id };
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     if (from || to) {
       filter.date = {};
@@ -40,7 +48,10 @@ export const getMyAttendance = async (req, res) => {
     const items = await Attendance.find(filter).sort({ date: -1 });
     return res.json({ message: 'Attendance retrieved', data: items });
   } catch (error) {
+<<<<<<< HEAD
     console.error('mobile.getMyAttendance error', error);
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     return res.status(500).json({ message: 'Failed to fetch attendance', error: error.message });
   }
 };
@@ -53,6 +64,7 @@ export const checkIn = async (req, res) => {
 
     const now = new Date();
     const { start, end } = getDayBounds(now);
+<<<<<<< HEAD
     const ownerId = req.employee.ownerId || null;
 
     let record = await Attendance.findOne({ employee: req.employee._id, date: { $gte: start, $lte: end } });
@@ -93,6 +105,30 @@ export const checkIn = async (req, res) => {
     return res.json({ message: 'Checked in successfully', data: record });
   } catch (error) {
     console.error('mobile.checkIn error', error);
+=======
+
+    const record = await Attendance.findOneAndUpdate(
+      {
+        employee: req.employee._id,
+        date: { $gte: start, $lte: end },
+      },
+      {
+        $set: {
+          company: req.employee.company,
+          checkIn: getTimeString(now),
+          status: 'present',
+        },
+        $setOnInsert: {
+          employee: req.employee._id,
+          date: start,
+        },
+      },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    return res.json({ message: 'Checked in successfully', data: record });
+  } catch (error) {
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     return res.status(500).json({ message: 'Failed to check in', error: error.message });
   }
 };
@@ -102,6 +138,7 @@ export const checkOut = async (req, res) => {
     const now = new Date();
     const { start, end } = getDayBounds(now);
 
+<<<<<<< HEAD
     const ownerId = req.employee.ownerId || null;
     let record = await Attendance.findOne({ employee: req.employee._id, date: { $gte: start, $lte: end } });
     if (!record) {
@@ -128,6 +165,27 @@ export const checkOut = async (req, res) => {
     return res.json({ message: 'Checked out successfully', data: record });
   } catch (error) {
     console.error('mobile.checkOut error', error);
+=======
+    const record = await Attendance.findOneAndUpdate(
+      {
+        employee: req.employee._id,
+        date: { $gte: start, $lte: end },
+      },
+      {
+        $set: {
+          checkOut: getTimeString(now),
+        },
+      },
+      { new: true }
+    );
+
+    if (!record) {
+      return res.status(404).json({ message: 'No attendance record found for today. Please check in first.' });
+    }
+
+    return res.json({ message: 'Checked out successfully', data: record });
+  } catch (error) {
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     return res.status(500).json({ message: 'Failed to check out', error: error.message });
   }
 };
@@ -135,16 +193,24 @@ export const checkOut = async (req, res) => {
 export const getTodayAttendance = async (req, res) => {
   try {
     const { start, end } = getDayBounds(new Date());
+<<<<<<< HEAD
     const ownerId = req.employee.ownerId || null;
     const record = await Attendance.findOne({
       employee: req.employee._id,
       ownerId,
+=======
+    const record = await Attendance.findOne({
+      employee: req.employee._id,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       date: { $gte: start, $lte: end },
     });
 
     return res.json({ message: 'Today attendance retrieved', data: record || null });
   } catch (error) {
+<<<<<<< HEAD
     console.error('mobile.getTodayAttendance error', error);
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     return res.status(500).json({ message: 'Failed to fetch today attendance', error: error.message });
   }
 };

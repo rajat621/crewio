@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 ﻿"""
+=======
+"""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 validation.py  –  Extraction quality scoring.
 """
 
 from __future__ import annotations
 
+<<<<<<< HEAD
 import json
 import logging
 from typing import Any, Dict
@@ -25,6 +30,23 @@ def _safe_ratio(part: float, whole: float) -> float:
     return _clamp01(part / whole)
 
 
+=======
+from typing import Any, Dict
+
+from schema import ExtractionResult
+
+
+def _clamp01(value: float) -> float:
+    return max(0.0, min(1.0, float(value)))
+
+
+def _safe_ratio(part: float, whole: float) -> float:
+    if whole <= 0:
+        return 0.0
+    return _clamp01(part / whole)
+
+
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def score_extraction_details(result: ExtractionResult) -> Dict[str, Any]:
     """Return weighted document-level confidence and component breakdown."""
     rows = list(result.rows or [])
@@ -119,6 +141,7 @@ def score_extraction_details(result: ExtractionResult) -> Dict[str, Any]:
 def score_extraction(result: ExtractionResult) -> float:
     """Return weighted quality score 0.0-1.0 for an ExtractionResult."""
     return float(score_extraction_details(result).get("score", 0.0))
+<<<<<<< HEAD
 
 
 def validate_strict_model_payload(raw_output: str) -> Dict[str, Any]:
@@ -169,3 +192,5 @@ def validate_strict_model_payload(raw_output: str) -> Dict[str, Any]:
             failure_category=classify_failure(exc),
         )
         raise
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

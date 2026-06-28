@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿{
   "table_engine": {
     "tables": [
@@ -1144,6 +1145,12 @@
       }
     ],
     "scan_quality_avg": 0.6731,
+=======
+{
+  "table_engine": {
+    "tables": [],
+    "scan_quality_avg": 0.4384,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     "config": {
       "morphology": {
         "horizontal_kernel_width": 40,
@@ -1183,6 +1190,7 @@
       }
     }
   },
+<<<<<<< HEAD
   "table_merge": {
     "payload_count": 4,
     "financial_summary_tables": [
@@ -1212,3 +1220,43 @@
   ],
   "file": "E:\\Download\\Alqaser_Alsatea_Tech_Apr_26.pdf.pdf"
 }
+=======
+  "attendance_validation": [
+    {
+      "trade": "TIAESLWETNO:T-017289-2025",
+      "hours": 17.0,
+      "calculated_hours": 0.0,
+      "hours_match": false,
+      "overtime_hours": 0.0
+    },
+    {
+      "trade": "TIMESHEEETFORTHEMONTHOFOCTOBER2825 PREPARATIONDATE: NOV22,2025",
+      "hours": 282.0,
+      "calculated_hours": 0.0,
+      "hours_match": false,
+      "overtime_hours": 0.0
+    }
+  ],
+  "confidence_breakdown": {
+    "route": "ocr",
+    "final_confidence": 0.7
+  },
+  "timings": {
+    "text_extract_ms": 2,
+    "ocr_table_engine_ms": 55022,
+    "total_ms": 67024
+  },
+  "warnings": [
+    "scan_quality:blur",
+    "scan_quality:low_contrast",
+    "scan_quality:missing_borders",
+    "No structured table reconstructed from OCR pipeline",
+    "Fallback generic OCR parser used",
+    "Hours mismatch detected for TIAESLWETNO:T-017289-2025: row=17.0 calc=0.7",
+    "Amount mismatch for TIAESLWETNO:T-017289-2025: amount=202.0 expected=4913.0",
+    "Hours mismatch detected for TIMESHEEETFORTHEMONTHOFOCTOBER2825 PREPARATIONDATE: NOV22,2025: row=282.0 calc=4440.4",
+    "Amount mismatch for TIMESHEEETFORTHEMONTHOFOCTOBER2825 PREPARATIONDATE: NOV22,2025: amount=22202.0 expected=1410.0"
+  ],
+  "file": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation_quick\\generated_dataset\\time_sheet-low_dpi_scan.pdf"
+}
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

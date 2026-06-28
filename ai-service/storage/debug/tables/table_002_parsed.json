@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 ﻿{
   "table_index": 2,
   "table_type": "attendance_table",
   "confidence": 0.7159574468085106,
   "parser": "attendance_table_parser",
+=======
+{
+  "table_index": 2,
+  "table_type": "financial_summary_table",
+  "confidence": 0.7437007874015749,
+  "parser": "financial_summary_parser",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   "rows_count": 0,
   "financials": {
     "subtotal": 0.0,
@@ -12,5 +20,10 @@
     "net_payable": 0.0,
     "deduction_breakdown": {}
   },
+<<<<<<< HEAD
   "source_text": "16 10.00 10.00 10.00 .00 10. 10 00' 00 00' 10. 0 10. 00 00' ++ 10 100° 10 10.00 10.00 10.00 10.00 10.00 10.00 00 10. 10. 10.00 00 00 00 00 10.00 10. 10. 12.00 12.00 12.00 Rate LE MASON E MASON .E MASON OS00285 : KRINDRA KUMAR MUKHIYA Empl.Namc QS00265IRAJESH MUKHIYA BIN QSO26G RaXeSH MuKHIYa BIn Epl. ID ON IS"
 }
+=======
+  "source_text": "   10  "
+}
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

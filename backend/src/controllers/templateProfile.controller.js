@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import {
+=======
+import {
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   getActiveTemplateProfile,
   getTemplateProfileById,
   listTemplateVersions,
@@ -15,6 +19,7 @@ import User from '../models/User.js';
 
 const getAuthContext = async (req) => {
   const userId = req.user?.userId || req.user?._id || req.user?.id;
+<<<<<<< HEAD
   const ownerId = req.user?.ownerId || null;
   if (!userId) return null;
   const user = await User.findById(userId).select('company');
@@ -26,6 +31,18 @@ const canAccessCompany = async ({ userId, ownerId, user }, companyId) => {
   if (!companyId) return false;
   if (user?.company && String(user.company) === String(companyId)) return true;
   const ownedCompany = await Company.findOne({ _id: companyId, ownerId: ownerId || userId }).select('_id');
+=======
+  if (!userId) return null;
+  const user = await User.findById(userId).select('company');
+  if (!user) return null;
+  return { userId, user };
+};
+
+const canAccessCompany = async ({ userId, user }, companyId) => {
+  if (!companyId) return false;
+  if (user?.company && String(user.company) === String(companyId)) return true;
+  const ownedCompany = await Company.findOne({ _id: companyId, owner: userId }).select('_id');
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   return Boolean(ownedCompany);
 };
 

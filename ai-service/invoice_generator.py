@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""
+=======
+"""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 invoice_generator.py  –  Universal tax invoice PDF generator.
 
 Takes the normalised extraction payload from extractor.py and the owner's
@@ -39,7 +43,10 @@ from __future__ import annotations
 
 import base64
 import io
+<<<<<<< HEAD
 import logging
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import os
 import re
 from datetime import datetime
@@ -55,8 +62,11 @@ try:
 except ImportError:
     _pdf2img = None  # type: ignore
 
+<<<<<<< HEAD
 logger = logging.getLogger(__name__)
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -394,12 +404,15 @@ def generate_invoice_pdf(
     totals: Dict[str, Any]       = extraction.get("totals", {})
     meta:   Dict[str, Any]       = extraction.get("timesheet_meta", {})
 
+<<<<<<< HEAD
     logger.info(
         "Row lifecycle | stage=renderer_input | count=%d | rows=%s",
         len(rows),
         rows,
     )
 
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     # Invoice layout: auto-detect from format, allow override
     fmt = extraction.get("format", "mcc")
     layout = company_data.get("invoice_layout") or fmt

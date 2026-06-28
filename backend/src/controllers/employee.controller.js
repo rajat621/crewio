@@ -1,10 +1,16 @@
 ﻿import Employee from '../models/Employee.js';
 import Attendance from '../models/Attendance.js';
 import Company from '../models/Company.js';
+<<<<<<< HEAD
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import EmployeeDocument from '../models/EmployeeDocument.js';
 import FileRecord from '../models/FileRecord.js';
+=======
+import User from '../models/User.js';
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 const buildEmployeeLookupQuery = (id) => {
   if (mongoose.Types.ObjectId.isValid(id)) {
@@ -14,22 +20,58 @@ const buildEmployeeLookupQuery = (id) => {
   return { employeeId: id };
 };
 
+<<<<<<< HEAD
 const buildOwnerFilter = (ownerId) => ({ ownerId });
 
 const buildScopedLookup = (id, ownerId) => ({
   $and: [
     buildEmployeeLookupQuery(id),
     buildOwnerFilter(ownerId),
+=======
+const getAccessibleCompanyIds = async (userId) => {
+  const ownedCompanies = await Company.find({ owner: userId }).select('_id');
+  return ownedCompanies.map((company) => company._id);
+};
+
+const buildAccessFilter = (userId, companyIds) => {
+  const companyConditions = Array.isArray(companyIds) && companyIds.length > 0
+    ? [{ company: { $in: companyIds } }]
+    : [];
+
+  return {
+    $or: [
+      { owner: userId },
+      ...companyConditions,
+    ],
+  };
+};
+
+const buildScopedLookup = (id, userId, companyIds) => ({
+  $and: [
+    buildEmployeeLookupQuery(id),
+    buildAccessFilter(userId, companyIds),
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   ],
 });
 
 export const getEmployees = async (req, res) => {
   try {
     const { status, page = 1, limit = 50, assignedCompanyId } = req.query;
+<<<<<<< HEAD
     const user = req.user;
     if (!user || !user.ownerId) return res.status(401).json({ message: 'User not authenticated' });
 
     const scopedClauses = [buildOwnerFilter(user.ownerId)];
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+    const scopedClauses = [buildAccessFilter(user._id, companyIds)];
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     if (status) {
       scopedClauses.push({ status });
@@ -37,8 +79,20 @@ export const getEmployees = async (req, res) => {
 
     if (assignedCompanyId) {
       if (assignedCompanyId === 'unassigned') {
+<<<<<<< HEAD
         scopedClauses.push({ $or: [{ company: null }, { company: { $exists: false } }] });
       } else if (mongoose.Types.ObjectId.isValid(assignedCompanyId)) {
+=======
+        scopedClauses.push({
+          $or: [{ company: null }, { company: { $exists: false } }],
+        });
+      } else if (mongoose.Types.ObjectId.isValid(assignedCompanyId)) {
+        const requestedCompany = String(assignedCompanyId);
+        const isAccessibleCompany = companyIds.some((companyId) => String(companyId) === requestedCompany);
+        if (!isAccessibleCompany) {
+          return res.status(403).json({ message: 'Company not accessible' });
+        }
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         scopedClauses.push({ company: assignedCompanyId });
       }
     }
@@ -53,6 +107,7 @@ export const getEmployees = async (req, res) => {
         .limit(Number(limit)),
       Employee.countDocuments(filter),
     ]);
+<<<<<<< HEAD
 
     // Map assignedStatus for frontend clarity without changing existing schema
     const mapped = items.map((it) => {
@@ -77,6 +132,12 @@ export const getEmployees = async (req, res) => {
       message: 'Employees retrieved',
       data: mapped,
       employees: mapped,
+=======
+    res.json({
+      message: 'Employees retrieved',
+      data: items,
+      employees: items,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       meta: { total, page: Number(page), limit: Number(limit) },
     });
   } catch (error) {
@@ -86,6 +147,7 @@ export const getEmployees = async (req, res) => {
 
 export const getEmployee = async (req, res) => {
   try {
+<<<<<<< HEAD
     const user = req.user;
     if (!user || !user.ownerId) return res.status(401).json({ message: 'User not authenticated' });
 
@@ -98,6 +160,20 @@ export const getEmployee = async (req, res) => {
     empObj.assignedStatus = empObj.company ? (empObj.status === 'active' ? 'on-site' : 'on-hold') : 'site-over';
 
     res.json({ data: empObj });
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+    const employee = await Employee.findOne(buildScopedLookup(req.params.id, user._id, companyIds));
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+    res.json({ data: employee });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch employee', error: error.message });
   }
@@ -105,9 +181,19 @@ export const getEmployee = async (req, res) => {
 
 export const createEmployee = async (req, res) => {
   try {
+<<<<<<< HEAD
     const user = req.user;
     if (!user || !user.ownerId) return res.status(401).json({ message: 'User not authenticated' });
 
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const payload = { ...req.body };
     payload.name = payload.name || `${payload.firstName || ''} ${payload.lastName || ''}`.trim();
     payload.employeeId = payload.employeeId || payload.emiratesId;
@@ -119,6 +205,7 @@ export const createEmployee = async (req, res) => {
     payload.joinDate = payload.joinDate || payload.joiningDate;
     if (!payload.appUserId) {
       payload.appUserId = payload.employeeId || `EMP${Date.now().toString().slice(-6)}`;
+<<<<<<< HEAD
     }
 
     const plainAppPassword = payload.appPassword || `${payload.appUserId}@123`;
@@ -152,6 +239,30 @@ if (payload.company != null) {
       payload.company = null;
     }
 
+=======
+    }
+
+    const plainAppPassword = payload.appPassword || `${payload.appUserId}@123`;
+
+    // Always store the password as a bcrypt hash
+    payload.appPassword = await bcrypt.hash(plainAppPassword, 12);
+
+    payload.owner = user._id;
+
+    if (payload.company != null) {
+      if (!mongoose.Types.ObjectId.isValid(payload.company)) {
+        return res.status(400).json({ message: 'Invalid company id' });
+      }
+
+      const isAccessibleCompany = companyIds.some((companyId) => String(companyId) === String(payload.company));
+      if (!isAccessibleCompany) {
+        return res.status(403).json({ message: 'Company not accessible' });
+      }
+    } else {
+      payload.company = null;
+    }
+
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!payload.name) {
       return res.status(400).json({ message: 'Employee name is required' });
     }
@@ -184,8 +295,18 @@ if (payload.company != null) {
 
 export const updateEmployee = async (req, res) => {
   try {
+<<<<<<< HEAD
     const user = req.user;
     if (!user || !user.ownerId) return res.status(401).json({ message: 'User not authenticated' });
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     const payload = { ...req.body };
 
@@ -203,7 +324,15 @@ export const updateEmployee = async (req, res) => {
       if (!mongoose.Types.ObjectId.isValid(payload.company)) {
         return res.status(400).json({ message: 'Invalid company id' });
       }
+<<<<<<< HEAD
       // Assume owner-level scoping; company must belong to same owner when enforced elsewhere
+=======
+
+      const isAccessibleCompany = companyIds.some((companyId) => String(companyId) === String(payload.company));
+      if (!isAccessibleCompany) {
+        return res.status(403).json({ message: 'Company not accessible' });
+      }
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     }
 
     // Hash new password if admin is updating app credentials
@@ -211,7 +340,15 @@ export const updateEmployee = async (req, res) => {
       payload.appPassword = await bcrypt.hash(payload.appPassword, 12);
     }
 
+<<<<<<< HEAD
     const updated = await Employee.findOneAndUpdate(buildScopedLookup(req.params.id, user.ownerId), payload, { new: true });
+=======
+    const updated = await Employee.findOneAndUpdate(
+      buildScopedLookup(req.params.id, user._id, companyIds),
+      payload,
+      { new: true }
+    );
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!updated) {
       return res.status(404).json({ message: 'Employee not found' });
     }
@@ -224,10 +361,22 @@ export const updateEmployee = async (req, res) => {
 
 export const deleteEmployee = async (req, res) => {
   try {
+<<<<<<< HEAD
     const user = req.user;
     if (!user || !user.ownerId) return res.status(401).json({ message: 'User not authenticated' });
 
     const deleted = await Employee.findOneAndDelete(buildScopedLookup(req.params.id, user.ownerId));
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+
+    const deleted = await Employee.findOneAndDelete(buildScopedLookup(req.params.id, user._id, companyIds));
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!deleted) {
       return res.status(404).json({ message: 'Employee not found' });
     }
@@ -240,6 +389,7 @@ export const deleteEmployee = async (req, res) => {
 
 export const assignEmployee = async (req, res) => {
   try {
+<<<<<<< HEAD
     const currentUser = req.currentUser;
     if (!currentUser) return res.status(401).json({ message: 'User not authenticated' });
 
@@ -250,18 +400,42 @@ export const assignEmployee = async (req, res) => {
 
     const user = req.user || {};
     const targetCompany = await Company.findOne({ _id: companyId, ownerId: user.ownerId || currentUser.ownerId }).select('_id companyRole isOwner');
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const { companyId } = req.body;
+    if (!companyId || !mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({ message: 'Valid companyId is required' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+    const targetCompany = await Company.findOne({ _id: companyId, owner: user._id }).select('_id companyRole isOwner');
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!targetCompany) {
       return res.status(403).json({ message: 'Company not accessible' });
     }
 
+<<<<<<< HEAD
     const employee = await Employee.findOne(buildScopedLookup(req.params.id, user.ownerId));
+=======
+    const employee = await Employee.findOne(buildScopedLookup(req.params.id, user._id, companyIds));
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!employee) {
       return res.status(404).json({ message: 'Employee not found' });
     }
 
     const updatePayload = { company: targetCompany._id };
+<<<<<<< HEAD
     if (!employee.ownerId) {
       updatePayload.ownerId = user.ownerId;
+=======
+    if (!employee.owner) {
+      updatePayload.owner = user._id;
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     }
 
     const updated = await Employee.findByIdAndUpdate(employee._id, updatePayload, { new: true });
@@ -278,6 +452,7 @@ export const assignEmployee = async (req, res) => {
 
 export const unassignEmployee = async (req, res) => {
   try {
+<<<<<<< HEAD
     const currentUser = req.currentUser;
     if (!currentUser) return res.status(401).json({ message: 'User not authenticated' });
 
@@ -285,13 +460,28 @@ export const unassignEmployee = async (req, res) => {
     if (!user || !user.ownerId) return res.status(401).json({ message: 'User not authenticated' });
 
     const employee = await Employee.findOne(buildScopedLookup(req.params.id, user.ownerId));
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+
+    const employee = await Employee.findOne(buildScopedLookup(req.params.id, user._id, companyIds));
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!employee) {
       return res.status(404).json({ message: 'Employee not found' });
     }
 
     const updatePayload = { company: null };
     if (!employee.owner) {
+<<<<<<< HEAD
       updatePayload.owner = currentUser._id;
+=======
+      updatePayload.owner = user._id;
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     }
 
     const updated = await Employee.findByIdAndUpdate(employee._id, updatePayload, { new: true });
@@ -308,6 +498,7 @@ export const unassignEmployee = async (req, res) => {
 
 export const getEmployeeAttendance = async (req, res) => {
   try {
+<<<<<<< HEAD
     const currentUser = req.currentUser;
     if (!currentUser) return res.status(401).json({ message: 'User not authenticated' });
 
@@ -327,12 +518,27 @@ export const getEmployeeAttendance = async (req, res) => {
     }
 
     const employee = await Employee.findOne(buildScopedLookup(req.params.id, currentUser.ownerId || currentUser._id, companyIds)).select('_id');
+=======
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const companyIds = await getAccessibleCompanyIds(user._id);
+
+    const employee = await Employee.findOne(buildScopedLookup(req.params.id, user._id, companyIds)).select('_id');
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!employee) {
       return res.status(404).json({ message: 'Employee not found' });
     }
 
+<<<<<<< HEAD
     const ownerId = currentUser.ownerId || currentUser._id || employee.ownerId || null;
     const items = await Attendance.find({ employee: employee._id, company: { $in: companyIds }, ownerId }).sort({ date: -1 });
+=======
+    const items = await Attendance.find({ employee: employee._id, company: { $in: companyIds } }).sort({ date: -1 });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     res.json({ data: items });
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch employee attendance', error: error.message });

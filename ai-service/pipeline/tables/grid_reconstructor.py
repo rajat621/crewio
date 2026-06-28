@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿"""
+=======
+"""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 Table grid reconstruction from line masks and OCR cells.
 
 Builds a matrix representation and supports merged cells by assigning
@@ -12,7 +16,10 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import cv2
 import numpy as np
+<<<<<<< HEAD
 from pipeline.profiler import current, new_request_collector
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 
 OCRCell = Dict[str, Any]
@@ -77,6 +84,7 @@ class GridReconstructor:
             GridReconstructionResult including matrix table[row][col].
         """
 
+<<<<<<< HEAD
         prof = current()
         with (prof or new_request_collector()).time_stage("grid_reconstructor.reconstruct"):
             if table_image is None or table_image.size == 0:
@@ -86,6 +94,15 @@ class GridReconstructor:
 
             if horizontal_mask is None or vertical_mask is None:
                 horizontal_mask, vertical_mask = self._infer_line_masks(table_image)
+=======
+        if table_image is None or table_image.size == 0:
+            raise ValueError("table_image is empty")
+
+        h, w = table_image.shape[:2]
+
+        if horizontal_mask is None or vertical_mask is None:
+            horizontal_mask, vertical_mask = self._infer_line_masks(table_image)
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         row_boundaries = self._infer_boundaries(horizontal_mask, axis=0, limit=h)
         col_boundaries = self._infer_boundaries(vertical_mask, axis=1, limit=w)
