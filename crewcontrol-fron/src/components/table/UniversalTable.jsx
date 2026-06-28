@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import {
   Box,
   Divider,
@@ -68,9 +68,9 @@ export default function UniversalTable({
     <TableContainer
       component={Box}
       sx={{
-        bgcolor: "#FFFFFF",
+        bgcolor: "var(--bg-surface)",
         border: "1px solid",
-        borderColor: "#DEDEDE",
+        borderColor: "var(--border-card)",
         borderRadius: 1,
         overflow: enableScroll ? "auto" : "hidden",
         maxHeight: enableScroll ? 420 : "unset",
@@ -93,7 +93,7 @@ export default function UniversalTable({
         navButtonSx={toolbarNavButtonSx}
       />
 
-      <Divider sx={{ borderColor: "#DEDEDE" }} />
+      <Divider sx={{ borderColor: "var(--border-card)" }} />
 
       <Table stickyHeader={enableScroll} sx={tableSx}>
         <TableHeader columns={columns} rowSx={headerRowSx} cellSx={headerCellSx} />
@@ -104,3 +104,4 @@ export default function UniversalTable({
     </TableContainer>
   );
 }
+

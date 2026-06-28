@@ -1,4 +1,4 @@
-import UniversalTable from "../../table/UniversalTable";
+﻿import UniversalTable from "../../table/UniversalTable";
 import PassportRow from "./PassportRow";
 
 const COLUMNS = [

@@ -1,12 +1,15 @@
-import Attendance from '../models/Attendance.js';
+﻿import Attendance from '../models/Attendance.js';
 
 export const getAttendance = async (req, res) => {
   try {
-    const { employee, company, from, to } = req.query;
-    const filter = {};
+    const user = req.user;
+    if (!user || !user.ownerId) return res.status(403).json({ message: 'User not authorized' });
+
+    const { employee, from, to } = req.query;
+    const filter = { ownerId: user.ownerId };
+    if (user.companyId) filter.company = user.companyId;
 
     if (employee) filter.employee = employee;
-    if (company) filter.company = company;
     if (from || to) {
       filter.date = {};
       if (from) filter.date.$gte = new Date(from);
@@ -25,7 +28,15 @@ export const getAttendance = async (req, res) => {
 
 export const createAttendance = async (req, res) => {
   try {
-    const record = await Attendance.create(req.body);
+    const currentUser = req.currentUser;
+    if (!currentUser || !currentUser.company) {
+      return res.status(403).json({ message: 'No company associated with user' });
+    }
+
+    const user = req.user;
+    if (!user || !user.ownerId) return res.status(403).json({ message: 'User not authorized' });
+
+    const record = await Attendance.create({ ...req.body, company: user.companyId || req.body.company, ownerId: user.ownerId });
     res.status(201).json({
       message: 'Attendance record created',
       data: record,
@@ -37,7 +48,10 @@ export const createAttendance = async (req, res) => {
 
 export const updateAttendance = async (req, res) => {
   try {
-    const updated = await Attendance.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const user = req.user;
+    if (!user || !user.ownerId) return res.status(403).json({ message: 'User not authorized' });
+
+    const updated = await Attendance.findOneAndUpdate({ _id: req.params.id, ownerId: user.ownerId }, { ...req.body, ownerId: user.ownerId }, { new: true });
     if (!updated) {
       return res.status(404).json({ message: 'Attendance record not found' });
     }
@@ -47,10 +61,29 @@ export const updateAttendance = async (req, res) => {
   }
 };
 
+export const deleteAttendance = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user || !user.ownerId) return res.status(403).json({ message: 'User not authorized' });
+
+    const deleted = await Attendance.findOneAndDelete({ _id: req.params.id, ownerId: user.ownerId });
+    if (!deleted) {
+      return res.status(404).json({ message: 'Attendance record not found' });
+    }
+
+    res.json({ message: 'Attendance deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete attendance', error: error.message });
+  }
+};
+
 export const getAttendanceSummary = async (req, res) => {
   try {
-    const { company } = req.query;
-    const filter = company ? { company } : {};
+    const user = req.user;
+    if (!user || !user.ownerId) return res.status(403).json({ message: 'User not authorized' });
+
+    const filter = { ownerId: user.ownerId };
+    if (user.companyId) filter.company = user.companyId;
     const [present, absent, leave] = await Promise.all([
       Attendance.countDocuments({ ...filter, status: 'present' }),
       Attendance.countDocuments({ ...filter, status: 'absent' }),

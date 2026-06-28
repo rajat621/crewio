@@ -1,4 +1,4 @@
-import {
+﻿import {
   Alert,
   Box,
   Button,
@@ -227,8 +227,8 @@ function AccountSecurity() {
     >
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #E5E7EB",
+          backgroundColor: "var(--bg-surface)",
+          border: "1px solid var(--border-input)",
           borderRadius: "10px",
           p: "24px",
         }}
@@ -237,7 +237,7 @@ function AccountSecurity() {
           sx={{
             fontSize: "18px",
             fontWeight: 600,
-            color: "#111827",
+            color: "var(--text-primary)",
             mb: 3,
           }}
         >
@@ -258,7 +258,7 @@ function AccountSecurity() {
 
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             borderRadius: "8px",
             p: "20px",
           }}
@@ -267,7 +267,7 @@ function AccountSecurity() {
             sx={{
               fontSize: "14px",
               fontWeight: 600,
-              color: "#141414",
+              color: "var(--text-primary)",
               mb: "18px",
             }}
           >
@@ -283,10 +283,10 @@ function AccountSecurity() {
             }}
           >
             <Box>
-              <Typography sx={{ fontSize: "14px", color: "#141414", fontWeight: 500 }}>
+              <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>
                 Google Authenticator (2FA)
               </Typography>
-              <Typography sx={{ fontSize: "14px", color: "#808080", mt: "6px" }}>
+              <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mt: "6px" }}>
                 Use the Authenticator to get verification codes for better security
               </Typography>
             </Box>
@@ -300,7 +300,7 @@ function AccountSecurity() {
                   onChange={handleTwoFactorToggle}
                   sx={{
                     "& .MuiSwitch-switchBase.Mui-checked": {
-                      color: "#1D4ED8",
+                      color: "var(--color-primary)",
                     },
                     "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
                       backgroundColor: "#C7D2FE",
@@ -316,14 +316,14 @@ function AccountSecurity() {
           {showTwoFactorSetup && (
             <Box
               sx={{
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border-input)",
                 borderRadius: "8px",
                 p: "16px",
                 mb: "20px",
-                backgroundColor: "#F9FAFB",
+                backgroundColor: "var(--bg-surface)",
               }}
             >
-              <Typography sx={{ fontSize: "14px", fontWeight: 600, color: "#141414", mb: "10px" }}>
+              <Typography sx={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", mb: "10px" }}>
                 Complete Google Authenticator Setup
               </Typography>
 
@@ -332,11 +332,11 @@ function AccountSecurity() {
                   component="img"
                   src={twoFactorSetup.qrCodeUrl}
                   alt="Google Authenticator QR"
-                  sx={{ width: 180, height: 180, borderRadius: "8px", border: "1px solid #E5E7EB", mb: "10px" }}
+                  sx={{ width: 180, height: 180, borderRadius: "8px", border: "1px solid var(--border-input)", mb: "10px" }}
                 />
               ) : null}
 
-              <Typography sx={{ fontSize: "12px", color: "#6B7280", mb: "6px" }}>
+              <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)", mb: "6px" }}>
                 If QR scan fails, enter this key manually in app:
               </Typography>
               <Typography sx={{ fontSize: "13px", color: "#1F2937", fontWeight: 600, mb: "12px", wordBreak: "break-all" }}>
@@ -357,10 +357,10 @@ function AccountSecurity() {
                   "& .MuiOutlinedInput-root": {
                     height: "44px",
                     fontSize: 14,
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: "var(--bg-surface)",
                     borderRadius: "8px",
-                    border: "1px solid #DEDEDE",
-                    color: "#141414",
+                    border: "1px solid var(--border-card)",
+                    color: "var(--text-primary)",
                   },
                 }}
               />
@@ -371,8 +371,8 @@ function AccountSecurity() {
                   disabled={is2faBusy}
                   sx={{
                     textTransform: "none",
-                    color: "#1D4ED8",
-                    border: "1px solid #D1D5DB",
+                    color: "var(--color-primary)",
+                    border: "1px solid var(--border-input-hover)",
                     borderRadius: "8px",
                     px: "20px",
                     height: "32px",
@@ -388,7 +388,7 @@ function AccountSecurity() {
                   variant="contained"
                   sx={{
                     textTransform: "none",
-                    backgroundColor: "#1D4ED8",
+                    backgroundColor: "var(--color-primary)",
                     borderRadius: "8px",
                     px: "20px",
                     height: "32px",
@@ -410,10 +410,10 @@ function AccountSecurity() {
             }}
           >
             <Box>
-              <Typography sx={{ fontSize: "14px", color: "#141414", fontWeight: 500 }}>
+              <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500 }}>
                 Password
               </Typography>
-              <Typography sx={{ fontSize: "14px", color: "#808080", mt: "6px" }}>
+              <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mt: "6px" }}>
                 Set a unique password for better protection
               </Typography>
             </Box>
@@ -423,7 +423,7 @@ function AccountSecurity() {
                 onClick={handlePasswordEditToggle}
                 sx={{
                   border: "1px solid #5B84FF",
-                  color: "#2563EB",
+                  color: "var(--color-primary)",
                   borderRadius: "10px",
                   textTransform: "none",
                   px: "18px",
@@ -441,7 +441,7 @@ function AccountSecurity() {
                   disabled={isSavingPassword}
                   sx={{
                     textTransform: "none",
-                    color: "#2563EB",
+                    color: "var(--color-primary)",
                     borderRadius: "8px",
                     px: "8px",
                     minWidth: "auto",
@@ -456,7 +456,7 @@ function AccountSecurity() {
                   variant="contained"
                   sx={{
                     textTransform: "none",
-                    backgroundColor: "#1D4ED8",
+                    backgroundColor: "var(--color-primary)",
                     borderRadius: "10px",
                     px: "24px",
                     height: "32px",
@@ -476,7 +476,7 @@ function AccountSecurity() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#141414",
+                      color: "var(--text-primary)",
                       mb: "8px",
                       fontWeight: 500,
                     }}
@@ -494,10 +494,10 @@ function AccountSecurity() {
                       "& .MuiOutlinedInput-root": {
                         height: "44px",
                         fontSize: 14,
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: "var(--bg-surface)",
                         borderRadius: "8px",
-                        border: "1px solid #DEDEDE",
-                        color: "#141414",
+                        border: "1px solid var(--border-card)",
+                        color: "var(--text-primary)",
                       },
                     }}
                     InputProps={{
@@ -509,9 +509,9 @@ function AccountSecurity() {
                             sx={{ p: 0.5 }}
                           >
                             {passwordVisibility[field.key] ? (
-                              <VisibilityOffOutlinedIcon sx={{ fontSize: 18, color: "#9CA3AF" }} />
+                              <VisibilityOffOutlinedIcon sx={{ fontSize: 18, color: "var(--text-disabled)" }} />
                             ) : (
-                              <VisibilityOutlinedIcon sx={{ fontSize: 18, color: "#9CA3AF" }} />
+                              <VisibilityOutlinedIcon sx={{ fontSize: 18, color: "var(--text-disabled)" }} />
                             )}
                           </IconButton>
                         </InputAdornment>
@@ -529,3 +529,4 @@ function AccountSecurity() {
 }
 
 export default AccountSecurity;
+

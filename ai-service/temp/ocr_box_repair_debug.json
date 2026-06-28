@@ -1,0 +1,454 @@
+{
+  "runs": [
+    {
+      "source": "sanity_check",
+      "page_index": null,
+      "image_width": 1000,
+      "image_height": 2000,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 21
+      },
+      "metrics": {
+        "total_tokens": 3,
+        "usable_tokens": 6,
+        "oversized_tokens": 1,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 1.0,
+        "median_token_height_before": 22.0,
+        "median_token_height_after": 21.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [
+        {
+          "event": "OCR_BOX_REJECTED",
+          "token": {
+            "text": "NET AMOUNT PAYABLE AED",
+            "x": 10,
+            "y": 80,
+            "w": 240,
+            "h": 500,
+            "reason": "oversized_geometry"
+          }
+        },
+        {
+          "event": "OCR_BOX_SPLIT_REQUIRED",
+          "token": {
+            "text": "NET AMOUNT PAYABLE AED",
+            "x": 10,
+            "y": 80,
+            "w": 240,
+            "h": 500
+          }
+        },
+        {
+          "event": "OCR_BOX_SPLIT_SUCCESS",
+          "token": {
+            "text": "NET AMOUNT PAYABLE AED",
+            "x": 10,
+            "y": 80,
+            "w": 240,
+            "h": 500
+          },
+          "children": 4
+        }
+      ],
+      "oversized_examples": [
+        {
+          "text": "NET AMOUNT PAYABLE AED",
+          "x": 10,
+          "y": 80,
+          "w": 240,
+          "h": 500
+        }
+      ]
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 532,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 12
+      },
+      "metrics": {
+        "total_tokens": 105,
+        "usable_tokens": 105,
+        "oversized_tokens": 1,
+        "reprocessed_tokens": 1,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 12.0,
+        "median_token_height_after": 12.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [
+        {
+          "event": "OCR_BOX_REJECTED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32,
+            "reason": "oversized_geometry"
+          }
+        },
+        {
+          "event": "OCR_BOX_REPROCESSED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32
+          },
+          "children": 1
+        }
+      ],
+      "oversized_examples": [
+        {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32
+        }
+      ]
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 532,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 12
+      },
+      "metrics": {
+        "total_tokens": 105,
+        "usable_tokens": 105,
+        "oversized_tokens": 1,
+        "reprocessed_tokens": 1,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 12.0,
+        "median_token_height_after": 12.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [
+        {
+          "event": "OCR_BOX_REJECTED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32,
+            "reason": "oversized_geometry"
+          }
+        },
+        {
+          "event": "OCR_BOX_REPROCESSED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32
+          },
+          "children": 1
+        }
+      ],
+      "oversized_examples": [
+        {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32
+        }
+      ]
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 532,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 12
+      },
+      "metrics": {
+        "total_tokens": 105,
+        "usable_tokens": 105,
+        "oversized_tokens": 1,
+        "reprocessed_tokens": 1,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 12.0,
+        "median_token_height_after": 12.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [
+        {
+          "event": "OCR_BOX_REJECTED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32,
+            "reason": "oversized_geometry"
+          }
+        },
+        {
+          "event": "OCR_BOX_REPROCESSED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32
+          },
+          "children": 1
+        }
+      ],
+      "oversized_examples": [
+        {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32
+        }
+      ]
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 532,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 12
+      },
+      "metrics": {
+        "total_tokens": 105,
+        "usable_tokens": 105,
+        "oversized_tokens": 1,
+        "reprocessed_tokens": 1,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 12.0,
+        "median_token_height_after": 12.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [
+        {
+          "event": "OCR_BOX_REJECTED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32,
+            "reason": "oversized_geometry"
+          }
+        },
+        {
+          "event": "OCR_BOX_REPROCESSED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32
+          },
+          "children": 1
+        }
+      ],
+      "oversized_examples": [
+        {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32
+        }
+      ]
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 532,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 12
+      },
+      "metrics": {
+        "total_tokens": 105,
+        "usable_tokens": 105,
+        "oversized_tokens": 1,
+        "reprocessed_tokens": 1,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 12.0,
+        "median_token_height_after": 12.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [
+        {
+          "event": "OCR_BOX_REJECTED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32,
+            "reason": "oversized_geometry"
+          }
+        },
+        {
+          "event": "OCR_BOX_REPROCESSED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32
+          },
+          "children": 1
+        }
+      ],
+      "oversized_examples": [
+        {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32
+        }
+      ]
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 532,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 12
+      },
+      "metrics": {
+        "total_tokens": 105,
+        "usable_tokens": 105,
+        "oversized_tokens": 1,
+        "reprocessed_tokens": 1,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 12.0,
+        "median_token_height_after": 12.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [
+        {
+          "event": "OCR_BOX_REJECTED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32,
+            "reason": "oversized_geometry"
+          }
+        },
+        {
+          "event": "OCR_BOX_REPROCESSED",
+          "token": {
+            "text": "DUBAI",
+            "x": 649,
+            "y": 460,
+            "w": 44,
+            "h": 32
+          },
+          "children": 1
+        }
+      ],
+      "oversized_examples": [
+        {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32
+        }
+      ]
+    }
+  ],
+  "latest": {
+    "source": "layout_ocr_fallback",
+    "page_index": 1,
+    "image_width": 1100,
+    "image_height": 532,
+    "thresholds": {
+      "median_multiplier": 2.5,
+      "image_height_ratio": 0.08,
+      "child_height_px": 12
+    },
+    "metrics": {
+      "total_tokens": 105,
+      "usable_tokens": 105,
+      "oversized_tokens": 1,
+      "reprocessed_tokens": 1,
+      "split_success_rate": 0.0,
+      "median_token_height_before": 12.0,
+      "median_token_height_after": 12.0,
+      "oversized_tokens_after": 0,
+      "unreliable_tokens": 0
+    },
+    "events": [
+      {
+        "event": "OCR_BOX_REJECTED",
+        "token": {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32,
+          "reason": "oversized_geometry"
+        }
+      },
+      {
+        "event": "OCR_BOX_REPROCESSED",
+        "token": {
+          "text": "DUBAI",
+          "x": 649,
+          "y": 460,
+          "w": 44,
+          "h": 32
+        },
+        "children": 1
+      }
+    ],
+    "oversized_examples": [
+      {
+        "text": "DUBAI",
+        "x": 649,
+        "y": 460,
+        "w": 44,
+        "h": 32
+      }
+    ]
+  }
+}

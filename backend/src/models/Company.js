@@ -4,7 +4,9 @@ const companySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: function requiredCompanyName() {
+        return !this.isOwner;
+      },
     },
     trn: {
       type: String,
@@ -24,8 +26,56 @@ const companySchema = new mongoose.Schema(
     invoiceTemplate: {
       type: String,
     },
+    isOwner: {
+      type: Boolean,
+      default: false,
+    },
+    companyRole: {
+      type: String,
+      enum: ['owner', 'client'],
+      default: 'client',
+      index: true,
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+      index: true,
+    },
+    poBox: {
+      type: String,
+    },
+    faxNumber: {
+      type: String,
+    },
+    telephoneNumber: {
+      type: String,
+    },
     signature: {
       type: String,
+    },
+    invoiceTemplateConfig: {
+      type: mongoose.Schema.Types.Mixed,
+      default: () => ({
+        templateId: 'branded-enterprise-v1',
+        headerBoundaryY: 120,
+        footerBoundaryY: 120,
+        tableStartY: 320,
+        safeContentLeft: 38,
+        safeContentRight: 38,
+        signatureAreaX: 48,
+        signatureAreaY: 55,
+        signatureAreaWidth: 150,
+        signatureAreaHeight: 90,
+        currencyCode: 'AED',
+        footerNotes: '',
+        safeZones: {},
+        coordinates: {},
+        columnLayout: {},
+        footerRules: {},
+        paginationRules: {},
+        renderRules: {},
+      }),
     },
     address: {
       type: String,
@@ -51,6 +101,32 @@ const companySchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
+    },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
+    },
+    onboardingCompleted: {
+      type: Boolean,
+      default: false,
+    },
+    logoFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FileRecord',
+    },
+    templateFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FileRecord',
+    },
+    signatureFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FileRecord',
     },
   },
   { timestamps: true }

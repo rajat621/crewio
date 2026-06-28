@@ -1,8 +1,13 @@
-import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+﻿import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
+import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +20,7 @@ function StatusChip({ status }) {
         height: 24,
         px: "12px",
         borderRadius: "16px",
-        bgcolor: active ? "#DCFCE7" : "#FECACA",
+        bgcolor: active ? "var(--bg-success-soft)" : "#FECACA",
         color: active ? "#166534" : "#991B1B",
         fontSize: 12,
         fontWeight: 500,
@@ -31,6 +36,8 @@ function StatusChip({ status }) {
 function CompanyCard({ company }) {
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const isActiveCompany = company?.status === "active";
 
   const handleMenuOpen = (event) => {
     event.stopPropagation();
@@ -42,15 +49,37 @@ function CompanyCard({ company }) {
     setMenuAnchor(null);
   };
 
-  const handleMenuAction = (action) => {
+  const handleMenuAction = (event, action) => {
+    event?.stopPropagation?.();
+    event?.preventDefault?.();
+
     if (action === "view") navigate(`/company/${company.id}`);
     if (action === "edit") navigate(`/company/${company.id}?mode=edit`);
-    if (action === "assign") navigate(`/employees?companyId=${company.id}`);
+    if (action === "assign") {
+      if (typeof company.onAssignEmployees === "function") {
+        company.onAssignEmployees(company.id);
+      } else {
+        navigate(`/employees?companyId=${company.id}`);
+      }
+    }
     if (action === "invoice") navigate(`/tax-invoices/generate?companyId=${company.id}`);
-    if (action === "deactivate" && typeof company.onDeactivate === "function") {
-      company.onDeactivate(company.id);
+    if (action === "toggle-status") {
+      setConfirmOpen(true);
     }
     setMenuAnchor(null);
+  };
+
+  const handleConfirmToggleStatus = (event) => {
+    event?.stopPropagation?.();
+    setConfirmOpen(false);
+    if (typeof company.onDeactivate === "function") {
+      company.onDeactivate(company.id, company.status);
+    }
+  };
+
+  const handleCloseConfirm = (event) => {
+    event?.stopPropagation?.();
+    setConfirmOpen(false);
   };
 
   const handleCardClick = () => {
@@ -61,10 +90,10 @@ function CompanyCard({ company }) {
     <Box
       onClick={handleCardClick}
       sx={{
-        border: "1px solid #DEDEDE",
+        border: "1px solid var(--border-card)",
         borderRadius: "8px",
         overflow: "hidden",
-        bgcolor: "#FFFFFF",
+        bgcolor: "var(--bg-surface)",
         cursor: "pointer",
         transition: "box-shadow 0.2s ease",
         "&:hover": {
@@ -83,10 +112,10 @@ function CompanyCard({ company }) {
           }}
         >
           <Box>
-            <Typography fontSize={18} fontWeight={600} color="#111827">
+            <Typography fontSize={18} fontWeight={600} color="var(--text-primary)">
               {company.name}
             </Typography>
-            <Typography fontSize={12} color="#757575">
+            <Typography fontSize={12} color="var(--text-secondary)">
               {company.dateRange}
             </Typography>
           </Box>
@@ -94,7 +123,7 @@ function CompanyCard({ company }) {
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }} onClick={(e) => e.stopPropagation()}>
             <StatusChip status={company.status} />
             <IconButton size="small" onClick={handleMenuOpen}>
-              <MoreVertIcon sx={{ fontSize: 18, color: "#6B7280" }} />
+              <MoreVertIcon sx={{ fontSize: 18, color: "var(--text-secondary)" }} />
             </IconButton>
           </Box>
         </Box>
@@ -113,21 +142,21 @@ function CompanyCard({ company }) {
               width: 44,
               height: 44,
               borderRadius: "50%",
-              bgcolor: "#1D4ED8",
+              bgcolor: "var(--color-primary)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#FFFFFF",
+              color: "var(--bg-surface)",
             }}
           >
             <GroupsOutlinedIcon fontSize="medium" />
           </Box>
 
           <Box sx={{ textAlign: "right" }}>
-            <Typography fontSize={12} color="#757575">
+            <Typography fontSize={12} color="var(--text-secondary)">
               Total worker assigned
             </Typography>
-            <Typography fontSize={18} fontWeight={450} color="#141414">
+            <Typography fontSize={18} fontWeight={450} color="var(--text-primary)">
               {company.totalWorkers}
             </Typography>
           </Box>
@@ -151,7 +180,7 @@ function CompanyCard({ company }) {
               mb: 0.75,
             }}
           >
-            <Typography fontSize={12} color="#757575">
+            <Typography fontSize={12} color="var(--text-secondary)">
               {item.label}
             </Typography>
             <Typography fontSize={12} fontWeight={500} color={item.color}>
@@ -176,44 +205,70 @@ function CompanyCard({ company }) {
           },
         }}
       >
-        <MenuItem onClick={() => handleMenuAction("view")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "view")}>
           <ListItemIcon>
             <VisibilityOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>View Company</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("edit")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "edit")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            <EditOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Edit Company</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("assign")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "assign")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            <GroupAddOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Assign Employees</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("invoice")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "invoice")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            <ReceiptLongOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Generate Invoice</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={() => handleMenuAction("deactivate")}>
+        <MenuItem onClick={(event) => handleMenuAction(event, "toggle-status")}>
           <ListItemIcon>
-            <DescriptionOutlinedIcon fontSize="small" />
+            {isActiveCompany ? (
+              <BlockOutlinedIcon fontSize="small" />
+            ) : (
+              <CheckCircleOutlineOutlinedIcon fontSize="small" />
+            )}
           </ListItemIcon>
-          <ListItemText>Deactivate Company</ListItemText>
+          <ListItemText>{isActiveCompany ? "Deactivate Company" : "Activate Company"}</ListItemText>
         </MenuItem>
       </Menu>
+
+      <Dialog open={confirmOpen} onClose={handleCloseConfirm} onClick={(event) => event.stopPropagation()}>
+        <DialogTitle>{isActiveCompany ? "Deactivate Company" : "Activate Company"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {isActiveCompany
+              ? "Are you sure you want to deactivate this company?"
+              : "Are you sure you want to activate this company?"}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirm}>Cancel</Button>
+          <Button
+            onClick={handleConfirmToggleStatus}
+            color={isActiveCompany ? "error" : "primary"}
+            variant="contained"
+          >
+            {isActiveCompany ? "Deactivate" : "Activate"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
 
 export default CompanyCard;
+
 

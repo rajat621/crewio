@@ -1,13 +1,14 @@
-.input {
+﻿.input {
   height: 44px;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--border-input);
   font-size: 14px;
-  color: #111827;
+  color: var(--text-primary);
   width: 260px;
 }
 
 .input::placeholder {
-  color: #9CA3AF;
+  color: var(--text-disabled);
 }
+

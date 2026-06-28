@@ -1,4 +1,4 @@
-@echo off
+﻿@echo off
 REM Backend startup script for Windows
 echo Starting Crew Control Backend...
 cd /d "%~dp0"

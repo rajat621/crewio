@@ -1,10 +1,10 @@
-//src\components\attendance\AttendanceCard.jsx
+﻿//src\components\attendance\AttendanceCard.jsx
 import { Box } from "@mui/material";
 import { useState } from "react";
 import AttendanceHeader from "./AttendanceHeader";
 import AttendanceBarChart from "./AttendanceBarChart";
 
-function AttendanceCard() {
+function AttendanceCard({ weeklyData = [], monthlyData = [], hasEmployees = true }) {
   const [view, setView] = useState("weekly"); // 🔑 state owner
 
   return (
@@ -14,10 +14,10 @@ function AttendanceCard() {
         height: 476,
         px: "16px",
         py: "20px",
-        backgroundColor: "#FFFFFF",
-        border: "1px solid #DEDEDE",
+        backgroundColor: "var(--bg-surface)",
+        border: "1px solid var(--border-card)",
         borderRadius: "8px",
-        boxShadow: "0px 0px 2px rgba(20, 20, 20, 0.12)",
+        boxShadow: "0px 0px 2px var(--shadow-soft)",
       }}
     >
       <Box
@@ -31,10 +31,11 @@ function AttendanceCard() {
       >
         <AttendanceHeader value={view} onChange={setView} />
 
-        <AttendanceBarChart view={view} />
+        <AttendanceBarChart view={view} weeklyData={weeklyData} monthlyData={monthlyData} hasEmployees={hasEmployees} />
       </Box>
     </Box>
   );
 }
 
 export default AttendanceCard;
+

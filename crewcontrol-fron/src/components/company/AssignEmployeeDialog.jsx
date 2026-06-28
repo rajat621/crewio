@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -22,6 +22,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { ACTION_CELL_SX, ACTION_ICON_BUTTON_SX } from "../table/tableUtils";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { useNavigate } from "react-router-dom";
 import { employeesApi } from "../../api/employees";
@@ -43,14 +44,29 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
     try {
       setLoading(true);
       const response = await employeesApi.getEmployees({ status: "active", page: 1, limit: 500 });
-      const rows = (response?.data?.employees || [])
-        .filter((employee) => !employee?.assignedCompanyId)
+      const rawEmployees = Array.isArray(response?.data?.employees)
+        ? response.data.employees
+        : Array.isArray(response?.data?.data)
+          ? response.data.data
+          : [];
+
+      const rows = rawEmployees
+        .filter((employee) => {
+          if (Object.prototype.hasOwnProperty.call(employee || {}, "company")) {
+            return !employee?.company;
+          }
+
+          return !employee?.assignedCompanyId && !employee?.companyId;
+        })
         .map((employee) => ({
           id: employee?._id,
-          employeeId: employee?.employeeId || "-",
-          name: `${employee?.firstName || ""} ${employee?.lastName || ""}`.trim() || "-",
-          trade: employee?.trade || "-",
-          rate: Number(employee?.ratePerHour || 0).toFixed(2),
+          employeeId: employee?.employeeId || employee?._id || "-",
+          name:
+            `${employee?.firstName || ""} ${employee?.lastName || ""}`.trim() ||
+            employee?.name ||
+            "-",
+          trade: employee?.trade || employee?.position || "-",
+          rate: Number(employee?.ratePerHour || employee?.salary || 0).toFixed(2),
         }));
 
       setEmployees(rows);
@@ -139,21 +155,21 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
       PaperProps={{
         sx: {
           borderRadius: "12px",
-          border: "1px solid #DEDEDE",
+          border: "1px solid var(--border-card)",
           overflow: "hidden",
         },
       }}
     >
-      <Box sx={{ p: "16px", borderBottom: "1px solid #DEDEDE", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <Typography sx={{ fontSize: "34px", fontWeight: 500, color: "#141414" }}>Unassigned Labor</Typography>
-        <IconButton onClick={onClose} size="small" sx={{ color: "#141414" }}>
+      <Box sx={{ px: "20px", pt:"20px",pb:"16px", borderBottom: "1px solid var(--border-card)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Typography sx={{ fontSize: "18px", fontWeight: 600, lineHeight: "20px", letterSpacing: "0.54px", color: "var(--text-primary)" }}>Unassigned Labor</Typography>
+        <IconButton onClick={onClose} size="small" sx={{ color: "var(--text-primary)" }}>
           <CloseIcon />
         </IconButton>
       </Box>
 
-      <Box sx={{ p: "16px" }}>
-        <Box sx={{ border: "1px solid #DEDEDE", borderRadius: "10px", overflow: "hidden" }}>
-          <Box sx={{ p: "10px 12px", borderBottom: "1px solid #DEDEDE", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+      <Box sx={{ py: "24px", px: "20px" }}>
+        <Box sx={{ border: "1px solid var(--border-card)", borderRadius: "10px", overflow: "hidden" }}>
+          <Box sx={{ p: "10px 12px", borderBottom: "1px solid var(--border-card)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
             <TextField
               placeholder="Search for application id, name..."
               value={query}
@@ -162,29 +178,45 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
               fullWidth
               sx={{
                 maxWidth: "420px",
+
                 "& .MuiOutlinedInput-root": {
                   height: "40px",
                   borderRadius: "8px",
+
+                  // Default border
+                  "& fieldset": {
+                    borderColor: "transparent",
+                  },
+
+                  // Hover border
+                  "&:hover fieldset": {
+                    borderColor: "transparent",
+                  },
+
+                  // Focus border
+                  "&.Mui-focused fieldset": {
+                    borderColor: "transparent",
+                  },
                 },
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ color: "#9CA3AF", fontSize: 18 }} />
+                    <SearchIcon sx={{ color: "var(--text-disabled)", fontSize: 18 }} />
                   </InputAdornment>
                 ),
               }}
             />
 
             <Box sx={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
-              <Typography sx={{ fontSize: "14px", color: "#6B7280" }}>
+              <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)" }}>
                 {total ? `${startIndex + 1}-${endIndex} of ${total}` : "0-0 of 0"}
               </Typography>
               <IconButton
                 size="small"
                 onClick={() => setPage((prev) => Math.max(1, prev - 1))}
                 disabled={page <= 1}
-                sx={{ border: "1px solid #DEDEDE", borderRadius: "8px", width: 30, height: 30 }}
+                sx={{ border: "1px solid var(--border-card)", borderRadius: "8px", width: 30, height: 30 }}
               >
                 <ChevronLeftIcon fontSize="small" />
               </IconButton>
@@ -192,7 +224,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
                 size="small"
                 onClick={() => setPage((prev) => Math.min(maxPage, prev + 1))}
                 disabled={page >= maxPage}
-                sx={{ border: "1px solid #DEDEDE", borderRadius: "8px", width: 30, height: 30 }}
+                sx={{ border: "1px solid var(--border-card)", borderRadius: "8px", width: 30, height: 30 }}
               >
                 <ChevronRightIcon fontSize="small" />
               </IconButton>
@@ -201,13 +233,13 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
 
           <Table size="small" sx={{ minWidth: 760 }}>
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#FAFAFA" }}>
-                <TableCell sx={{ width: 40, borderBottom: "1px solid #DEDEDE" }} />
-                <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Employee ID</TableCell>
-                <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Employee Name</TableCell>
-                <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Trade</TableCell>
-                <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Rate</TableCell>
-                <TableCell align="center" sx={{ width: 60, fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Action</TableCell>
+              <TableRow sx={{ backgroundColor: "var(--bg-surface)" }}>
+                <TableCell sx={{ width: 40, borderBottom: "1px solid var(--border-card)" }} />
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Employee ID</TableCell>
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Employee Name</TableCell>
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Trade</TableCell>
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Rate</TableCell>
+                <TableCell align="center" sx={{ width: 60, fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Action</TableCell>
               </TableRow>
             </TableHead>
 
@@ -221,19 +253,23 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
               ) : pageRows.length ? (
                 pageRows.map((row) => (
                   <TableRow key={row.id} hover>
-                    <TableCell sx={{ borderBottom: "1px solid #DEDEDE" }}>
+                    <TableCell sx={{ borderBottom: "1px solid var(--border-card)" }}>
                       <Checkbox
                         size="small"
                         checked={selectedIds.includes(row.id)}
                         onChange={() => toggleSelection(row.id)}
                       />
                     </TableCell>
-                    <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.employeeId}</TableCell>
-                    <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.name}</TableCell>
-                    <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.trade}</TableCell>
-                    <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.rate}</TableCell>
-                    <TableCell align="center" sx={{ borderBottom: "1px solid #DEDEDE" }}>
-                      <IconButton size="small" onClick={(event) => handleOpenMenu(event, row)}>
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.employeeId}</TableCell>
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.name}</TableCell>
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.trade}</TableCell>
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.rate}</TableCell>
+                    <TableCell align="center" sx={{ borderBottom: "1px solid var(--border-card)", ...ACTION_CELL_SX }}>
+                      <IconButton
+                        size="small"
+                        onClick={(event) => handleOpenMenu(event, row)}
+                        sx={ACTION_ICON_BUTTON_SX}
+                      >
                         <MoreVertIcon fontSize="small" />
                       </IconButton>
                     </TableCell>
@@ -241,7 +277,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 4, color: "#6B7280" }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 4, color: "var(--text-secondary)" , borderBottom: "none", fontSize: "12px" }}>
                     No unassigned employees found
                   </TableCell>
                 </TableRow>
@@ -251,7 +287,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
         </Box>
       </Box>
 
-      <Box sx={{ p: "12px 16px 16px", borderTop: "1px solid #DEDEDE", display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ p: "16px 20px 20px", borderTop: "1px solid var(--border-card)", display: "flex", justifyContent: "flex-end" }}>
         <Button
           onClick={handleAssign}
           disabled={!selectedIds.length || assigning}
@@ -261,10 +297,11 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
             minWidth: "78px",
             height: "32px",
             borderRadius: "8px",
+            fontSize: "12px",
             boxShadow: "none",
-            backgroundColor: "#2563EB",
+            backgroundColor: "var(--color-primary)",
             "&:hover": {
-              backgroundColor: "#1D4ED8",
+              backgroundColor: "var(--color-primary)",
               boxShadow: "none",
             },
           }}
@@ -289,8 +326,8 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
         }}
       >
         <MenuItem onClick={handleViewProfile}>
-          <VisibilityOutlinedIcon fontSize="small" sx={{ mr: 1, color: "#6B7280" }} />
-          <Typography sx={{ fontSize: "14px", color: "#6B7280" }}>View Profile</Typography>
+          <VisibilityOutlinedIcon fontSize="small" sx={{ mr: 1, color: "var(--text-secondary)" }} />
+          <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)" }}>View Profile</Typography>
         </MenuItem>
       </Menu>
     </Dialog>
@@ -298,3 +335,4 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
 }
 
 export default AssignEmployeeDialog;
+

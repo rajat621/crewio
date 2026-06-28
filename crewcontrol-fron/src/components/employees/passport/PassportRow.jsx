@@ -1,33 +1,43 @@
-import {
+﻿import {
   TableRow,
   TableCell,
   Chip,
-  IconButton,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useNavigate } from "react-router-dom";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 
-import { CELL_SX } from "../../table/tableUtils";
+import { ACTION_CELL_SX, CELL_SX } from "../../table/tableUtils";
+import { EmployeeActionMenu } from "../../profile/EmployeeActionMenu";
 
 const STATUS_CONFIG = {
   valid: {
     label: "Valid",
-    bg: "#DCFCE7",
+    bg: "var(--bg-success-soft)",
     color: "#15803D",
   },
   "expiring-soon": {
     label: "Expiring Soon",
-    bg: "#FEF3C7",
+    bg: "var(--bg-warning-soft)",
     color: "#92400E",
   },
   expired: {
     label: "Expired",
     bg: "#FECACA",
-    color: "#DC2626",
+    color: "var(--color-error)",
   },
 };
 
 function PassportRow({ row }) {
+  const navigate = useNavigate();
   const cfg = STATUS_CONFIG[row.passportStatus] || STATUS_CONFIG.expired;
+  const actions = [
+    {
+      id: "view",
+      label: "View Profile",
+      icon: <VisibilityOutlinedIcon fontSize="small" />,
+      onClick: () => navigate(`/employees/${row.id}`),
+    },
+  ];
 
   return (
     <TableRow sx={{ height: 44 }}>
@@ -49,13 +59,12 @@ function PassportRow({ row }) {
         />
       </TableCell>
 
-      <TableCell align="center" sx={CELL_SX}>
-        <IconButton size="small">
-          <MoreVertIcon fontSize="small" />
-        </IconButton>
+      <TableCell align="center" sx={ACTION_CELL_SX}>
+        <EmployeeActionMenu actions={actions} employeeId={row.id} />
       </TableCell>
     </TableRow>
   );
 }
 
 export default PassportRow;
+

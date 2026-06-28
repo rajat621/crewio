@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography, Avatar, IconButton, Select, MenuItem, Alert, CircularProgress, InputAdornment } from "@mui/material";
+﻿import { Box, Button, TextField, Typography, Avatar, IconButton, Select, MenuItem, Alert, CircularProgress, InputAdornment } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import ReactCountryFlag from "react-country-flag";
@@ -57,7 +57,7 @@ const getPreviewMimeType = (value) => {
   return "application/octet-stream";
 };
 
-const EditStrokeIcon = ({ color = '#6B7280' }) => (
+const EditStrokeIcon = ({ color = 'var(--text-secondary)' }) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -109,12 +109,12 @@ const UploadedPreview = ({ value, label, onOpen }) => {
             justifyContent: "center",
             fontSize: "12px",
             fontWeight: 600,
-            color: "#FFFFFF",
+            color: "var(--bg-surface)",
           }}
         >
           PDF
         </Box>
-        <Typography sx={{ fontSize: 14, color: "#808080" }}>{label}.pdf</Typography>
+        <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>{label}.pdf</Typography>
       </Box>
     );
   }
@@ -146,9 +146,9 @@ const UploadedPreview = ({ value, label, onOpen }) => {
             maxWidth: "200px",
             maxHeight: "100px",
             borderRadius: "8px",
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             padding: "8px",
-            backgroundColor: "#FFFFFF",
+            backgroundColor: "var(--bg-surface)",
           }}
         />
       </Box>
@@ -156,7 +156,7 @@ const UploadedPreview = ({ value, label, onOpen }) => {
   }
 
   return (
-    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
       {label}
     </Typography>
   );
@@ -755,8 +755,8 @@ function CompanyProfile() {
     >
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #E5E7EB",
+          backgroundColor: "var(--bg-surface)",
+          border: "1px solid var(--border-input)",
           borderRadius: "10px",
           p: "24px",
         }}
@@ -766,7 +766,7 @@ function CompanyProfile() {
           sx={{
             fontSize: "18px",
             fontWeight: 600,
-            color: "#111827",
+            color: "var(--text-primary)",
             mb: 3,
           }}
         >
@@ -789,7 +789,7 @@ function CompanyProfile() {
         {/* COMPANY HEADER CARD */}
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             borderRadius: "8px",
             py: "20px",
             px: "16px",
@@ -807,7 +807,7 @@ function CompanyProfile() {
                 sx={{
                   width: 92,
                   height: 92,
-                  bgcolor: "#D1D5DB",
+                  bgcolor: "var(--border-input-hover)",
                   fontSize: 30,
                   cursor: isEditingHeader ? "pointer" : "default",
                 }}
@@ -823,11 +823,11 @@ function CompanyProfile() {
                     position: "absolute",
                     bottom: 0,
                     right: 0,
-                    backgroundColor: "#1D4ED8",
-                    color: "#FFFFFF",
+                    backgroundColor: "var(--color-primary)",
+                    color: "var(--bg-surface)",
                     width: 36,
                     height: 36,
-                    "&:hover": { backgroundColor: "#1E40AF" },
+                    "&:hover": { backgroundColor: "var(--color-primary-hover)" },
                   }}
                 >
                   <AddAPhotoIcon sx={{ fontSize: 18 }} />
@@ -849,7 +849,7 @@ function CompanyProfile() {
                 sx={{
                   fontSize: "24px",
                   fontWeight: 600,
-                  color: "#141414",
+                  color: "var(--text-primary)",
                 }}
               >
                 {companyData.name}
@@ -879,7 +879,7 @@ function CompanyProfile() {
           {/* EDIT / SAVE / CANCEL */}
           {!isEditingHeader && !isEditingCompanyDetails && !isEditingAddress && !isEditingContact && !isEditingTemplate && !isEditingSignature ? (
             <Button
-              startIcon={<EditStrokeIcon color={editHeaderHover ? '#1D4ED8' : '#6B7280'} />}
+              startIcon={<EditStrokeIcon color={editHeaderHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />}
               onClick={handleEditHeader}
               onMouseEnter={() => setEditHeaderHover(true)}
               onMouseLeave={() => setEditHeaderHover(false)}
@@ -888,9 +888,9 @@ function CompanyProfile() {
               onBlur={() => setEditHeaderHover(false)}
               sx={{
                 alignSelf: "flex-start",
-                border: `1px solid ${editHeaderHover ? '#93C5FD' : '#D1D5DB'}`,
-                color: editHeaderHover ? "#1D4ED8" : "#6B7280",
-                backgroundColor: editHeaderHover ? "#EFF6FF" : "#FFFFFF",
+                border: `1px solid ${editHeaderHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                color: editHeaderHover ? "var(--color-primary)" : "var(--text-secondary)",
+                backgroundColor: editHeaderHover ? "#EFF6FF" : "var(--bg-surface)",
                 borderRadius: "8px",
                 textTransform: "none",
                 px: "16px",
@@ -911,7 +911,7 @@ function CompanyProfile() {
                   disabled={isSaving}
                   sx={{
                     textTransform: "none",
-                    color: "#DC2626",
+                    color: "var(--color-error)",
                     border: "1px solid #FECACA",
                     borderRadius: "8px",
                     px: "16px",
@@ -931,8 +931,8 @@ function CompanyProfile() {
                 disabled={isSaving}
                 sx={{
                   textTransform: "none",
-                  color: "#1D4ED8",
-                  // border: "1px solid #D1D5DB",
+                  color: "var(--color-primary)",
+                  // border: "1px solid var(--border-input-hover)",
                   borderRadius: "8px",
                   px: "20px",
                   height: "32px",
@@ -948,7 +948,7 @@ function CompanyProfile() {
                 variant="contained"
                 sx={{
                   textTransform: "none",
-                  backgroundColor: "#1D4ED8",
+                  backgroundColor: "var(--color-primary)",
                   borderRadius: "8px",
                   px: "20px",
                   height: "32px",
@@ -983,7 +983,7 @@ function CompanyProfile() {
                 fontSize: "14px",
                 borderRadius: "0",
                 fontWeight: activeTab === tab ? 600 : 400,
-                color: activeTab === tab ? "#1D4ED8" : "#6B7280",
+                color: activeTab === tab ? "var(--color-primary)" : "var(--text-secondary)",
                 pb: "8px",
                 borderBottom: "2px solid transparent",
                 "&:hover": {
@@ -998,7 +998,7 @@ function CompanyProfile() {
                   borderBottom: "2px solid transparent",
                 },
                 "&.active": {
-                  borderBottom: "2px solid #1D4ED8",
+                  borderBottom: "2px solid var(--color-primary)",
                 },
               }}
             >
@@ -1013,7 +1013,7 @@ function CompanyProfile() {
             {/* COMPANY DETAILS SECTION */}
             <Box
               sx={{
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border-input)",
                 borderRadius: "8px",
                 p: "20px",
                 mb: "16px",
@@ -1032,7 +1032,7 @@ function CompanyProfile() {
                   sx={{
                     fontSize: "14px",
                     fontWeight: 600,
-                    color: "#141414",
+                    color: "var(--text-primary)",
                   }}
                 >
                   Company Details
@@ -1040,7 +1040,7 @@ function CompanyProfile() {
 
                 {!isEditingHeader && !isEditingCompanyDetails && !isEditingAddress && !isEditingContact && !isEditingTemplate && !isEditingSignature ? (
                   <Button
-                    startIcon={<EditStrokeIcon color={editCompanyDetailsHover ? '#1D4ED8' : '#6B7280'} />}
+                    startIcon={<EditStrokeIcon color={editCompanyDetailsHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />}
                     onClick={handleEditCompanyDetails}
                     onMouseEnter={() => setEditCompanyDetailsHover(true)}
                     onMouseLeave={() => setEditCompanyDetailsHover(false)}
@@ -1048,9 +1048,9 @@ function CompanyProfile() {
                     onMouseUp={() => setEditCompanyDetailsHover(false)}
                     onBlur={() => setEditCompanyDetailsHover(false)}
                     sx={{
-                      border: `1px solid ${editCompanyDetailsHover ? '#93C5FD' : '#D1D5DB'}`,
-                      color: editCompanyDetailsHover ? "#1D4ED8" : "#6B7280",
-                      backgroundColor: editCompanyDetailsHover ? "#EFF6FF" : "#FFFFFF",
+                      border: `1px solid ${editCompanyDetailsHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                      color: editCompanyDetailsHover ? "var(--color-primary)" : "var(--text-secondary)",
+                      backgroundColor: editCompanyDetailsHover ? "#EFF6FF" : "var(--bg-surface)",
                       borderRadius: "8px",
                       textTransform: "none",
                       px: "16px",
@@ -1070,8 +1070,8 @@ function CompanyProfile() {
                       disabled={isSaving}
                       sx={{
                         textTransform: "none",
-                        color: "#1D4ED8",
-                        // border: "1px solid #D1D5DB",
+                        color: "var(--color-primary)",
+                        // border: "1px solid var(--border-input-hover)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -1087,7 +1087,7 @@ function CompanyProfile() {
                       variant="contained"
                       sx={{
                         textTransform: "none",
-                        backgroundColor: "#1D4ED8",
+                        backgroundColor: "var(--color-primary)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -1113,7 +1113,7 @@ function CompanyProfile() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       mb: "8px",
                       fontWeight: 400,
                     }}
@@ -1129,15 +1129,15 @@ function CompanyProfile() {
                         "& .MuiOutlinedInput-root": {
                           height: "44px",
                           fontSize: 14,
-                          backgroundColor: "#FFFFFF",
+                          backgroundColor: "var(--bg-surface)",
                           borderRadius: "8px",
-                          border: "1px solid #DEDEDE",
-                          color: "#141414",
+                          border: "1px solid var(--border-card)",
+                          color: "var(--text-primary)",
                         },
                       }}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {companyData.name || "-"}
                     </Typography>
                   )}
@@ -1148,7 +1148,7 @@ function CompanyProfile() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       mb: "8px",
                       fontWeight: 400,
                     }}
@@ -1164,15 +1164,15 @@ function CompanyProfile() {
                         "& .MuiOutlinedInput-root": {
                           height: "44px",
                           fontSize: 14,
-                          backgroundColor: "#FFFFFF",
+                          backgroundColor: "var(--bg-surface)",
                           borderRadius: "8px",
-                          border: "1px solid #DEDEDE",
-                          color: "#141414",
+                          border: "1px solid var(--border-card)",
+                          color: "var(--text-primary)",
                         },
                       }}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {companyData.companyLegalName || "-"}
                     </Typography>
                   )}
@@ -1183,7 +1183,7 @@ function CompanyProfile() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       mb: "8px",
                       fontWeight: 400,
                     }}
@@ -1199,15 +1199,15 @@ function CompanyProfile() {
                         "& .MuiOutlinedInput-root": {
                           height: "44px",
                           fontSize: 14,
-                          backgroundColor: "#FFFFFF",
+                          backgroundColor: "var(--bg-surface)",
                           borderRadius: "8px",
-                          border: "1px solid #DEDEDE",
-                          color: "#141414",
+                          border: "1px solid var(--border-card)",
+                          color: "var(--text-primary)",
                         },
                       }}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {companyData.trn || "-"}
                     </Typography>
                   )}
@@ -1218,7 +1218,7 @@ function CompanyProfile() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       mb: "8px",
                       fontWeight: 400,
                     }}
@@ -1234,15 +1234,15 @@ function CompanyProfile() {
                         "& .MuiOutlinedInput-root": {
                           height: "44px",
                           fontSize: 14,
-                          backgroundColor: "#FFFFFF",
+                          backgroundColor: "var(--bg-surface)",
                           borderRadius: "8px",
-                          border: "1px solid #DEDEDE",
-                          color: "#141414",
+                          border: "1px solid var(--border-card)",
+                          color: "var(--text-primary)",
                         },
                       }}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {companyData.websiteLink || "-"}
                     </Typography>
                   )}
@@ -1253,7 +1253,7 @@ function CompanyProfile() {
             {/* REGISTERED ADDRESS SECTION */}
             <Box
               sx={{
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border-input)",
                 borderRadius: "8px",
                 p: "20px",
                 width: '100%',
@@ -1271,7 +1271,7 @@ function CompanyProfile() {
                   sx={{
                     fontSize: "14px",
                     fontWeight: 600,
-                    color: "#141414",
+                    color: "var(--text-primary)",
                   }}
                 >
                   Registered Address
@@ -1279,7 +1279,7 @@ function CompanyProfile() {
 
                 {!isEditingHeader && !isEditingCompanyDetails && !isEditingAddress && !isEditingContact && !isEditingTemplate && !isEditingSignature ? (
                   <Button
-                    startIcon={<EditStrokeIcon color={editAddressHover ? '#1D4ED8' : '#6B7280'} />}
+                    startIcon={<EditStrokeIcon color={editAddressHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />}
                     onClick={handleEditAddress}
                     onMouseEnter={() => setEditAddressHover(true)}
                     onMouseLeave={() => setEditAddressHover(false)}
@@ -1287,9 +1287,9 @@ function CompanyProfile() {
                     onMouseUp={() => setEditAddressHover(false)}
                     onBlur={() => setEditAddressHover(false)}
                     sx={{
-                      border: `1px solid ${editAddressHover ? '#93C5FD' : '#D1D5DB'}`,
-                      color: editAddressHover ? "#1D4ED8" : "#6B7280",
-                      backgroundColor: editAddressHover ? "#EFF6FF" : "#FFFFFF",
+                      border: `1px solid ${editAddressHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                      color: editAddressHover ? "var(--color-primary)" : "var(--text-secondary)",
+                      backgroundColor: editAddressHover ? "#EFF6FF" : "var(--bg-surface)",
                       borderRadius: "8px",
                       textTransform: "none",
                       px: "16px",
@@ -1309,8 +1309,8 @@ function CompanyProfile() {
                       disabled={isSaving}
                       sx={{
                         textTransform: "none",
-                        color: "#1D4ED8",
-                        // border: "1px solid #D1D5DB",
+                        color: "var(--color-primary)",
+                        // border: "1px solid var(--border-input-hover)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -1326,7 +1326,7 @@ function CompanyProfile() {
                       variant="contained"
                       sx={{
                         textTransform: "none",
-                        backgroundColor: "#1D4ED8",
+                        backgroundColor: "var(--color-primary)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -1352,7 +1352,7 @@ function CompanyProfile() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       mb: "8px",
                       fontWeight: 400,
                     }}
@@ -1369,15 +1369,15 @@ function CompanyProfile() {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           fontSize: 14,
-                          backgroundColor: "#FFFFFF",
+                          backgroundColor: "var(--bg-surface)",
                           borderRadius: "8px",
-                          border: "1px solid #DEDEDE",
-                          color: "#141414",
+                          border: "1px solid var(--border-card)",
+                          color: "var(--text-primary)",
                         },
                       }}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {companyData.address || "-"}
                     </Typography>
                   )}
@@ -1388,7 +1388,7 @@ function CompanyProfile() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       mb: "8px",
                       fontWeight: 400,
                     }}
@@ -1404,15 +1404,15 @@ function CompanyProfile() {
                         "& .MuiOutlinedInput-root": {
                           height: "44px",
                           fontSize: 14,
-                          backgroundColor: "#FFFFFF",
+                          backgroundColor: "var(--bg-surface)",
                           borderRadius: "8px",
-                          border: "1px solid #DEDEDE",
-                          color: "#141414",
+                          border: "1px solid var(--border-card)",
+                          color: "var(--text-primary)",
                         },
                       }}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {companyData.city || "-"}
                     </Typography>
                   )}
@@ -1423,7 +1423,7 @@ function CompanyProfile() {
                   <Typography
                     sx={{
                       fontSize: 14,
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       mb: "8px",
                       fontWeight: 400,
                     }}
@@ -1438,10 +1438,10 @@ function CompanyProfile() {
                       sx={{
                         height: "44px",
                         fontSize: 14,
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: "var(--bg-surface)",
                         borderRadius: "8px",
-                        border: "1px solid #DEDEDE",
-                        color: "#141414",
+                        border: "1px solid var(--border-card)",
+                        color: "var(--text-primary)",
                       }}
                     >
                       <MenuItem value="">Select Nationality</MenuItem>
@@ -1452,7 +1452,7 @@ function CompanyProfile() {
                       ))}
                     </Select>
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {companyData.nationality || "-"}
                     </Typography>
                   )}
@@ -1466,7 +1466,7 @@ function CompanyProfile() {
         {activeTab === "Contact" && (
           <Box
             sx={{
-              border: "1px solid #E5E7EB",
+              border: "1px solid var(--border-input)",
               borderRadius: "8px",
               p: "20px",
             }}
@@ -1483,7 +1483,7 @@ function CompanyProfile() {
                 sx={{
                   fontSize: "14px",
                   fontWeight: 600,
-                  color: "#141414",
+                  color: "var(--text-primary)",
                 }}
               >
                 Contact Information
@@ -1491,7 +1491,7 @@ function CompanyProfile() {
 
               {!isEditingHeader && !isEditingCompanyDetails && !isEditingAddress && !isEditingContact && !isEditingTemplate && !isEditingSignature ? (
                 <Button
-                  startIcon={<EditStrokeIcon color={editContactHover ? '#1D4ED8' : '#6B7280'} />}
+                  startIcon={<EditStrokeIcon color={editContactHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />}
                   onClick={handleEditContact}
                   onMouseEnter={() => setEditContactHover(true)}
                   onMouseLeave={() => setEditContactHover(false)}
@@ -1499,9 +1499,9 @@ function CompanyProfile() {
                   onMouseUp={() => setEditContactHover(false)}
                   onBlur={() => setEditContactHover(false)}
                   sx={{
-                    border: `1px solid ${editContactHover ? '#93C5FD' : '#D1D5DB'}`,
-                    color: editContactHover ? "#1D4ED8" : "#6B7280",
-                    backgroundColor: editContactHover ? "#EFF6FF" : "#FFFFFF",
+                    border: `1px solid ${editContactHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                    color: editContactHover ? "var(--color-primary)" : "var(--text-secondary)",
+                    backgroundColor: editContactHover ? "#EFF6FF" : "var(--bg-surface)",
                     borderRadius: "8px",
                     textTransform: "none",
                     px: "16px",
@@ -1521,8 +1521,8 @@ function CompanyProfile() {
                     disabled={isSaving}
                     sx={{
                       textTransform: "none",
-                      color: "#1D4ED8",
-                      // border: "1px solid #D1D5DB",
+                      color: "var(--color-primary)",
+                      // border: "1px solid var(--border-input-hover)",
                       borderRadius: "8px",
                       px: "20px",
                       height: "32px",
@@ -1538,7 +1538,7 @@ function CompanyProfile() {
                     variant="contained"
                     sx={{
                       textTransform: "none",
-                      backgroundColor: "#1D4ED8",
+                      backgroundColor: "var(--color-primary)",
                       borderRadius: "8px",
                       px: "20px",
                       height: "32px",
@@ -1564,7 +1564,7 @@ function CompanyProfile() {
                 <Typography
                   sx={{
                     fontSize: 14,
-                    color: "#808080",
+                    color: "var(--text-secondary)",
                     mb: "8px",
                     fontWeight: 400,
                   }}
@@ -1581,15 +1581,15 @@ function CompanyProfile() {
                       "& .MuiOutlinedInput-root": {
                         height: "44px",
                         fontSize: 14,
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: "var(--bg-surface)",
                         borderRadius: "8px",
-                        border: "1px solid #DEDEDE",
-                        color: "#141414",
+                        border: "1px solid var(--border-card)",
+                        color: "var(--text-primary)",
                       },
                     }}
                   />
                 ) : (
-                  <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                  <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                     {companyData.contactEmail || "-"}
                   </Typography>
                 )}
@@ -1600,7 +1600,7 @@ function CompanyProfile() {
                 <Typography
                   sx={{
                     fontSize: 14,
-                    color: "#808080",
+                    color: "var(--text-secondary)",
                     mb: "8px",
                     fontWeight: 400,
                   }}
@@ -1614,9 +1614,9 @@ function CompanyProfile() {
                       gap: 0,
                       alignItems: "stretch",
                       height: "44px",
-                      border: "1px solid #D1D5DB",
+                      border: "1px solid var(--border-input-hover)",
                       borderRadius: "12px",
-                      backgroundColor: "#FFFFFF",
+                      backgroundColor: "var(--bg-surface)",
                       overflow: "hidden",
                       "&:focus-within": {
                         borderColor: "#2B4EFF",
@@ -1628,7 +1628,7 @@ function CompanyProfile() {
                         display: "flex",
                         alignItems: "center",
                         height: "100%",
-                        borderRight: "1px solid #E5E7EB",
+                        borderRight: "1px solid var(--border-input)",
                       }}
                     >
                       <Box
@@ -1701,7 +1701,7 @@ function CompanyProfile() {
                           borderRight: "none",
                           padding: "0 8px 0 4px",
                           fontSize: 14,
-                          color: "#141414",
+                          color: "var(--text-primary)",
                           height: "100%",
                           outline: "none",
                           background: "transparent",
@@ -1727,7 +1727,7 @@ function CompanyProfile() {
                         height: "100%",
                         outline: "none",
                         background: "transparent",
-                        color: "#141414",
+                        color: "var(--text-primary)",
                         boxShadow: "none",
                       }}
                     />
@@ -1741,7 +1741,7 @@ function CompanyProfile() {
                         style={{ width: "30px", height: "20px", borderRadius: "2px" }}
                       />
                     )}
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>
                       {formattedDisplayMobile}
                     </Typography>
                   </Box>
@@ -1757,7 +1757,7 @@ function CompanyProfile() {
             {/* COMPANY TEMPLATE SECTION */}
             <Box
               sx={{
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border-input)",
                 borderRadius: "8px",
                 p: "20px",
                 mb: "16px",
@@ -1775,7 +1775,7 @@ function CompanyProfile() {
                   sx={{
                     fontSize: "14px",
                     fontWeight: 600,
-                    color: "#141414",
+                    color: "var(--text-primary)",
                   }}
                 >
                   Company Template
@@ -1783,7 +1783,7 @@ function CompanyProfile() {
 
                 {!isEditingHeader && !isEditingCompanyDetails && !isEditingAddress && !isEditingContact && !isEditingTemplate && !isEditingSignature ? (
                   <Button
-                    startIcon={<EditStrokeIcon color={editTemplateHover ? '#1D4ED8' : '#6B7280'} />}
+                    startIcon={<EditStrokeIcon color={editTemplateHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />}
                     onClick={handleEditTemplate}
                     onMouseEnter={() => setEditTemplateHover(true)}
                     onMouseLeave={() => setEditTemplateHover(false)}
@@ -1791,9 +1791,9 @@ function CompanyProfile() {
                     onMouseUp={() => setEditTemplateHover(false)}
                     onBlur={() => setEditTemplateHover(false)}
                     sx={{
-                      border: `1px solid ${editTemplateHover ? '#93C5FD' : '#D1D5DB'}`,
-                      color: editTemplateHover ? "#1D4ED8" : "#6B7280",
-                      backgroundColor: editTemplateHover ? "#EFF6FF" : "#FFFFFF",
+                      border: `1px solid ${editTemplateHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                      color: editTemplateHover ? "var(--color-primary)" : "var(--text-secondary)",
+                      backgroundColor: editTemplateHover ? "#EFF6FF" : "var(--bg-surface)",
                       borderRadius: "8px",
                       textTransform: "none",
                       px: "16px",
@@ -1813,8 +1813,8 @@ function CompanyProfile() {
                       disabled={isSaving}
                       sx={{
                         textTransform: "none",
-                        color: "#1D4ED8",
-                        // border: "1px solid #D1D5DB",
+                        color: "var(--color-primary)",
+                        // border: "1px solid var(--border-input-hover)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -1830,7 +1830,7 @@ function CompanyProfile() {
                       variant="contained"
                       sx={{
                         textTransform: "none",
-                        backgroundColor: "#1D4ED8",
+                        backgroundColor: "var(--color-primary)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -1855,9 +1855,9 @@ function CompanyProfile() {
                         gap: "12px",
                         p: "12px",
                         mb: "12px",
-                        backgroundColor: "#F9FAFB",
+                        backgroundColor: "var(--bg-surface)",
                         borderRadius: "8px",
-                        border: "1px solid #E5E7EB",
+                        border: "1px solid var(--border-input)",
                       }}
                     >
                         <UploadedPreview
@@ -1871,7 +1871,7 @@ function CompanyProfile() {
                         disabled={isSaving}
                         sx={{
                           textTransform: "none",
-                          color: "#DC2626",
+                          color: "var(--color-error)",
                           border: "1px solid #FECACA",
                           borderRadius: "8px",
                           px: "14px",
@@ -1890,24 +1890,24 @@ function CompanyProfile() {
 
                   <Box
                     sx={{
-                      border: "2px dashed #D1D5DB",
+                      border: "2px dashed var(--border-input-hover)",
                       borderRadius: "8px",
                       p: "20px",
                       textAlign: "center",
                       cursor: "pointer",
-                      backgroundColor: "#F9FAFB",
+                      backgroundColor: "var(--bg-surface)",
                       "&:hover": {
-                        backgroundColor: "#F3F4F6",
+                        backgroundColor: "var(--bg-surface-secondary)",
                       },
                     }}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <Typography sx={{ fontSize: 14, color: "#6B7280", mb: "8px" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", mb: "8px" }}>
                       {companyData.invoiceTemplate
                         ? "Click to upload a different template"
                         : "Click to upload or drag and drop"}
                     </Typography>
-                    <Typography sx={{ fontSize: 12, color: "#9CA3AF" }}>
+                    <Typography sx={{ fontSize: 12, color: "var(--text-disabled)" }}>
                       PDF or image (max. 10MB for PDF, 5MB for images)
                     </Typography>
                     <input
@@ -1922,7 +1922,7 @@ function CompanyProfile() {
               ) : (
                 <Box>
                   {companyData.invoiceTemplate ? (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: "12px", p: "12px", backgroundColor: "#F9FAFB", borderRadius: "8px" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "12px", p: "12px", backgroundColor: "var(--bg-surface)", borderRadius: "8px" }}>
                       <UploadedPreview
                         value={companyData.invoiceTemplate}
                         label="Template"
@@ -1930,7 +1930,7 @@ function CompanyProfile() {
                       />
                     </Box>
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>-</Typography>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>-</Typography>
                   )}
                 </Box>
               )}
@@ -1938,7 +1938,7 @@ function CompanyProfile() {
             {/* Stamp SECTION */}
             <Box
               sx={{
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border-input)",
                 borderRadius: "8px",
                 p: "20px",
               }}
@@ -1955,7 +1955,7 @@ function CompanyProfile() {
                   sx={{
                     fontSize: "14px",
                     fontWeight: 600,
-                    color: "#141414",
+                    color: "var(--text-primary)",
                   }}
                 >
                   Stamp
@@ -1963,7 +1963,7 @@ function CompanyProfile() {
 
                 {!isEditingHeader && !isEditingCompanyDetails && !isEditingAddress && !isEditingContact && !isEditingTemplate && !isEditingSignature && !isEditingStamp ? (
                   <Button
-                    startIcon={<EditStrokeIcon color={editStampHover ? '#1D4ED8' : '#6B7280'} />}
+                    startIcon={<EditStrokeIcon color={editStampHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />}
                     onClick={handleEditStamp}
                     onMouseEnter={() => setEditStampHover(true)}
                     onMouseLeave={() => setEditStampHover(false)}
@@ -1971,9 +1971,9 @@ function CompanyProfile() {
                     onMouseUp={() => setEditStampHover(false)}
                     onBlur={() => setEditStampHover(false)}
                     sx={{
-                      border: `1px solid ${editStampHover ? '#93C5FD' : '#D1D5DB'}`,
-                      color: editStampHover ? "#1D4ED8" : "#6B7280",
-                      backgroundColor: editStampHover ? "#EFF6FF" : "#FFFFFF",
+                      border: `1px solid ${editStampHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                      color: editStampHover ? "var(--color-primary)" : "var(--text-secondary)",
+                      backgroundColor: editStampHover ? "#EFF6FF" : "var(--bg-surface)",
                       borderRadius: "8px",
                       textTransform: "none",
                       px: "16px",
@@ -1993,8 +1993,8 @@ function CompanyProfile() {
                       disabled={isSaving}
                       sx={{
                         textTransform: "none",
-                        color: "#1D4ED8",
-                        // border: "1px solid #D1D5DB",
+                        color: "var(--color-primary)",
+                        // border: "1px solid var(--border-input-hover)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -2010,7 +2010,7 @@ function CompanyProfile() {
                       variant="contained"
                       sx={{
                         textTransform: "none",
-                        backgroundColor: "#1D4ED8",
+                        backgroundColor: "var(--color-primary)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -2035,9 +2035,9 @@ function CompanyProfile() {
                         gap: "12px",
                         p: "12px",
                         mb: "12px",
-                        backgroundColor: "#F9FAFB",
+                        backgroundColor: "var(--bg-surface)",
                         borderRadius: "8px",
-                        border: "1px solid #E5E7EB",
+                        border: "1px solid var(--border-input)",
                       }}
                     >
                       <UploadedPreview
@@ -2051,7 +2051,7 @@ function CompanyProfile() {
                         disabled={isSaving}
                         sx={{
                           textTransform: "none",
-                          color: "#DC2626",
+                          color: "var(--color-error)",
                           border: "1px solid #FECACA",
                           borderRadius: "8px",
                           px: "14px",
@@ -2070,24 +2070,24 @@ function CompanyProfile() {
 
                   <Box
                     sx={{
-                      border: "2px dashed #D1D5DB",
+                      border: "2px dashed var(--border-input-hover)",
                       borderRadius: "8px",
                       p: "20px",
                       textAlign: "center",
                       cursor: "pointer",
-                      backgroundColor: "#F9FAFB",
+                      backgroundColor: "var(--bg-surface)",
                       "&:hover": {
-                        backgroundColor: "#F3F4F6",
+                        backgroundColor: "var(--bg-surface-secondary)",
                       },
                     }}
                     onClick={() => stampInputRef.current?.click()}
                   >
-                    <Typography sx={{ fontSize: 14, color: "#6B7280", mb: "8px" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", mb: "8px" }}>
                       {companyData.stamp
                         ? "Click to upload a different stamp"
                         : "Click to upload or drag and drop"}
                     </Typography>
-                    <Typography sx={{ fontSize: 12, color: "#9CA3AF" }}>
+                    <Typography sx={{ fontSize: 12, color: "var(--text-disabled)" }}>
                       PNG, JPG or PDF (max. 5MB for images, 10MB for PDF)
                     </Typography>
                     <input
@@ -2108,7 +2108,7 @@ function CompanyProfile() {
                       onOpen={() => openDocumentPreview(companyData.stamp)}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>-</Typography>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>-</Typography>
                   )}
                 </Box>
               )}
@@ -2117,7 +2117,7 @@ function CompanyProfile() {
             {/* SIGNATURE SECTION */}
             <Box
               sx={{
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border-input)",
                 borderRadius: "8px",
                 p: "20px",
                 mt: "16px",
@@ -2135,7 +2135,7 @@ function CompanyProfile() {
                   sx={{
                     fontSize: "14px",
                     fontWeight: 600,
-                    color: "#141414",
+                    color: "var(--text-primary)",
                   }}
                 >
                   Signature
@@ -2143,7 +2143,7 @@ function CompanyProfile() {
 
                 {!isEditingHeader && !isEditingCompanyDetails && !isEditingAddress && !isEditingContact && !isEditingTemplate && !isEditingStamp && !isEditingSignature ? (
                   <Button
-                    startIcon={<EditStrokeIcon color={editSignatureHover ? '#1D4ED8' : '#6B7280'} />}
+                    startIcon={<EditStrokeIcon color={editSignatureHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />}
                     onClick={handleEditSignature}
                     onMouseEnter={() => setEditSignatureHover(true)}
                     onMouseLeave={() => setEditSignatureHover(false)}
@@ -2151,9 +2151,9 @@ function CompanyProfile() {
                     onMouseUp={() => setEditSignatureHover(false)}
                     onBlur={() => setEditSignatureHover(false)}
                     sx={{
-                      border: `1px solid ${editSignatureHover ? '#93C5FD' : '#D1D5DB'}`,
-                      color: editSignatureHover ? "#1D4ED8" : "#6B7280",
-                      backgroundColor: editSignatureHover ? "#EFF6FF" : "#FFFFFF",
+                      border: `1px solid ${editSignatureHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                      color: editSignatureHover ? "var(--color-primary)" : "var(--text-secondary)",
+                      backgroundColor: editSignatureHover ? "#EFF6FF" : "var(--bg-surface)",
                       borderRadius: "8px",
                       textTransform: "none",
                       px: "16px",
@@ -2173,8 +2173,8 @@ function CompanyProfile() {
                       disabled={isSaving}
                       sx={{
                         textTransform: "none",
-                        color: "#1D4ED8",
-                        // border: "1px solid #D1D5DB",
+                        color: "var(--color-primary)",
+                        // border: "1px solid var(--border-input-hover)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -2190,7 +2190,7 @@ function CompanyProfile() {
                       variant="contained"
                       sx={{
                         textTransform: "none",
-                        backgroundColor: "#1D4ED8",
+                        backgroundColor: "var(--color-primary)",
                         borderRadius: "8px",
                         px: "20px",
                         height: "32px",
@@ -2215,9 +2215,9 @@ function CompanyProfile() {
                         gap: "12px",
                         p: "12px",
                         mb: "12px",
-                        backgroundColor: "#F9FAFB",
+                        backgroundColor: "var(--bg-surface)",
                         borderRadius: "8px",
-                        border: "1px solid #E5E7EB",
+                        border: "1px solid var(--border-input)",
                       }}
                     >
                       <UploadedPreview
@@ -2231,7 +2231,7 @@ function CompanyProfile() {
                         disabled={isSaving}
                         sx={{
                           textTransform: "none",
-                          color: "#DC2626",
+                          color: "var(--color-error)",
                           border: "1px solid #FECACA",
                           borderRadius: "8px",
                           px: "14px",
@@ -2250,24 +2250,24 @@ function CompanyProfile() {
 
                   <Box
                     sx={{
-                      border: "2px dashed #D1D5DB",
+                      border: "2px dashed var(--border-input-hover)",
                       borderRadius: "8px",
                       p: "20px",
                       textAlign: "center",
                       cursor: "pointer",
-                      backgroundColor: "#F9FAFB",
+                      backgroundColor: "var(--bg-surface)",
                       "&:hover": {
-                        backgroundColor: "#F3F4F6",
+                        backgroundColor: "var(--bg-surface-secondary)",
                       },
                     }}
                     onClick={() => signatureInputRef.current?.click()}
                   >
-                    <Typography sx={{ fontSize: 14, color: "#6B7280", mb: "8px" }}>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", mb: "8px" }}>
                       {companyData.signature
                         ? "Click to upload a different signature"
                         : "Click to upload or drag and drop"}
                     </Typography>
-                    <Typography sx={{ fontSize: 12, color: "#9CA3AF" }}>
+                    <Typography sx={{ fontSize: 12, color: "var(--text-disabled)" }}>
                       PNG, JPG, PDF (Image Max 5MB, PDF Max 10MB)
                     </Typography>
                     <input
@@ -2288,7 +2288,7 @@ function CompanyProfile() {
                       onOpen={() => openDocumentPreview(companyData.signature)}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: 14, color: "#808080" }}>-</Typography>
+                    <Typography sx={{ fontSize: 14, color: "var(--text-secondary)" }}>-</Typography>
                   )}
                 </Box>
               )}
@@ -2301,3 +2301,4 @@ function CompanyProfile() {
 }
 
 export default CompanyProfile;
+

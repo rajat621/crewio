@@ -1,4 +1,4 @@
-import { Avatar, Box, Typography } from "@mui/material";
+﻿import { Avatar, Box, Typography } from "@mui/material";
 
 const EmployeeCell = ({ name, employeeId, avatar }) => (
   <Box display="flex" alignItems="center" gap={1.5}>

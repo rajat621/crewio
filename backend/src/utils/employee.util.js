@@ -1,4 +1,4 @@
-export const createEmployeeCode = (name, timestamp) => {
+﻿export const createEmployeeCode = (name, timestamp) => {
   return `EMP-${name.slice(0, 3).toUpperCase()}-${timestamp}`;
 };
 

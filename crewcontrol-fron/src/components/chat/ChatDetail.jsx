@@ -1,45 +1,47 @@
-import { Box, Avatar, Typography, Popover, MenuItem } from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
-import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
+﻿import { Box, Typography, Popover, MenuItem, CircularProgress } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SendIcon from "@mui/icons-material/Send";
 import MicIcon from "@mui/icons-material/Mic";
 import AddIcon from "@mui/icons-material/Add";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { trackEmployees } from "../employees/track/trackEmployeeData";
+import { useAuth } from "../../context/AuthContext";
+import { chatApi } from "../../api/chat";
 
-// Mock messages for demo
-const mockMessages = {
-  1: [
-    { id: 1, sender: "other", text: "Hi, how are you?", timestamp: "10:30 AM" },
-    { id: 2, sender: "you", text: "I'm doing great! How about you?", timestamp: "10:32 AM" },
-    { id: 3, sender: "other", text: "All good here. Let's catch up tomorrow", timestamp: "10:33 AM" },
-    { id: 4, sender: "you", text: "Sure! What time works for you?", timestamp: "10:35 AM" },
-    { id: 5, sender: "other", text: "How about 2 PM?", timestamp: "10:36 AM" },
-    { id: 6, sender: "you", text: "Perfect! See you then", timestamp: "10:37 AM" },
-    { id: 7, sender: "other", text: "See you tomorrow", timestamp: "4:56 PM" },
-  ],
-  2: [
-    { id: 1, sender: "other", text: "Hi there!", timestamp: "2:00 PM" },
-    { id: 2, sender: "you", text: "Hey! How are things?", timestamp: "2:05 PM" },
-    { id: 3, sender: "other", text: "Thanks for the update", timestamp: "2:30 PM" },
-  ],
-  3: [
-    { id: 1, sender: "you", text: "Hi Mike, got a minute?", timestamp: "1:00 PM" },
-    { id: 2, sender: "other", text: "Sure, what's up?", timestamp: "1:05 PM" },
-    { id: 3, sender: "you", text: "Need to discuss the project timeline", timestamp: "1:07 PM" },
-    { id: 4, sender: "other", text: "Can we reschedule?", timestamp: "1:15 PM" },
-  ],
-};
+function formatTime(value) {
+  if (!value) return "Now";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Now";
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
 
-function ChatDetail({ chat, onBack }) {
-  const [messages, setMessages] = useState(mockMessages[chat.id] || []);
-  const [inputValue, setInputValue] = useState("");
+function normalizeMessage(message, currentUserIds = []) {
+  const fromId = String(message?.from || "");
+  const isMine = currentUserIds.some((id) => id && String(id) === fromId);
+  return {
+    id: String(message?._id || message?.id || `${fromId}-${message?.createdAt || Date.now()}`),
+    sender: isMine ? "you" : "other",
+    text: message?.text || "",
+    timestamp: formatTime(message?.createdAt),
+  };
+}
+
+function ChatDetail({ chat, onBack, onMessageSent }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const messagesEndRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const currentUserIds = useMemo(() => {
+    const ids = [user?._id, user?.userId, user?.employeeId, user?.ownerId].filter(Boolean);
+    return Array.from(new Set(ids.map((id) => String(id))));
+  }, [user]);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -51,7 +53,7 @@ function ChatDetail({ chat, onBack }) {
 
   const handleViewProfile = () => {
     handleMenuClose();
-    navigate(`/employee/${chat.id}/profile`);
+    navigate(`/employees/${chat.id}`);
   };
 
   const handleDeleteChat = () => {
@@ -67,20 +69,66 @@ function ChatDetail({ chat, onBack }) {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        sender: "you",
-        text: inputValue,
-        timestamp: new Date().toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        }),
-      };
-      setMessages([...messages, newMessage]);
+  useEffect(() => {
+    let active = true;
+
+    const loadMessages = async () => {
+      if (!chat?.id) {
+        setMessages([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError("");
+        const response = await chatApi.getMessages(chat.id);
+        const list = Array.isArray(response?.data?.data)
+          ? response.data.data
+          : Array.isArray(response?.data?.messages)
+            ? response.data.messages
+            : [];
+        const normalized = [...list]
+          .reverse()
+          .map((message) => normalizeMessage(message, currentUserIds));
+        if (active) setMessages(normalized);
+      } catch (err) {
+        if (active) {
+          setError(err?.response?.data?.message || "Failed to load chat messages");
+          setMessages([]);
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    loadMessages();
+    return () => {
+      active = false;
+    };
+  }, [chat?.id, currentUserIds]);
+
+  const handleSendMessage = async () => {
+    const text = inputValue.trim();
+    if (!text || !chat?.id) return;
+
+    try {
+      const response = await chatApi.sendMessage(chat.id, text);
+      const saved = response?.data?.data || response?.data?.message || {};
+      const nextMessage = normalizeMessage(
+        {
+          ...saved,
+          from: user?._id || user?.userId || user?.employeeId,
+          text,
+          createdAt: saved?.createdAt || new Date().toISOString(),
+        },
+        currentUserIds
+      );
+      setMessages((prev) => [...prev, nextMessage]);
       setInputValue("");
+      onMessageSent?.();
+    } catch (err) {
+      setError(err?.response?.data?.message || "Failed to send message");
     }
   };
 
@@ -97,7 +145,7 @@ function ChatDetail({ chat, onBack }) {
         display: "flex",
         flexDirection: "column",
         flex: 1,
-        backgroundColor: "#F6F6F6",
+        backgroundColor: "var(--bg-surface-secondary)",
         height: "100%",
         borderLeft: "none",
         borderRight: "none",
@@ -111,8 +159,8 @@ function ChatDetail({ chat, onBack }) {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "16px 32px",
-          backgroundColor: "#F6F6F6",
-          borderBottom: "1px solid #DEDEDE",
+          backgroundColor: "var(--bg-surface-secondary)",
+          borderBottom: "1px solid var(--border-card)",
         }}
       >
         {/* BACK BUTTON WITH PROFILE AND NAME */}
@@ -140,13 +188,13 @@ function ChatDetail({ chat, onBack }) {
             backgroundColor:"transparent",
           }}
           >
-          <ArrowBackIosOutlinedIcon sx={{ color: "#808080", fontSize: 14 }} />
+          <ArrowBackIosOutlinedIcon sx={{ color: "var(--text-secondary)", fontSize: 14 }} />
           </Box>
           <AccountCircleIcon
             sx={{
               width: 32,
               height: 32,
-              color: "#808080",
+              color: "var(--text-secondary)",
             }}
           >
           </AccountCircleIcon>
@@ -156,7 +204,7 @@ function ChatDetail({ chat, onBack }) {
               fontSize: 14,
               fontFamily: "Inter",
               fontWeight: 500,
-              color: "#1D1D1E",
+              color: "var(--text-primary)",
             }}
           >
             {chat.name}
@@ -175,11 +223,11 @@ function ChatDetail({ chat, onBack }) {
             borderRadius: "8px",
             transition: "background-color 0.15s ease",
             "&:hover": {
-              backgroundColor: "#F5F5F7",
+              backgroundColor: "var(--bg-surface-secondary)",
             },
           }}
         >
-          <MoreVertIcon sx={{ color: "#757575", fontSize: 24 }} />
+          <MoreVertIcon sx={{ color: "var(--text-secondary)", fontSize: 24 }} />
         </Box>
 
         {/* MENU POPOVER */}
@@ -197,9 +245,9 @@ function ChatDetail({ chat, onBack }) {
           }}
           PaperProps={{
             sx: {
-              boxShadow: "0px 0px 2px 0px rgba(80, 92, 95, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.04)",
+              boxShadow: "0px 0px 2px 0px rgba(80, 92, 95, 0.2), 0px 6px 10px 0px var(--shadow-overlay)",
               borderRadius: "8px",
-              border: "1px solid #DEDEDE",
+              border: "1px solid var(--border-card)",
             },
           }}
         >
@@ -208,10 +256,10 @@ function ChatDetail({ chat, onBack }) {
             sx={{
               fontSize: 14,
               fontFamily: "Inter",
-              color: "#1D1D1E",
+              color: "var(--text-primary)",
               padding: "12px 20px",
               "&:hover": {
-                backgroundColor: "#F5F5F7",
+                backgroundColor: "var(--bg-surface-secondary)",
               },
             }}
           >
@@ -222,10 +270,10 @@ function ChatDetail({ chat, onBack }) {
             sx={{
               fontSize: 14,
               fontFamily: "Inter",
-              color: "#FF3B30",
+              color: "var(--color-error)",
               padding: "12px 20px",
               "&:hover": {
-                backgroundColor: "#FFF5F5",
+                backgroundColor: "var(--bg-surface)5F5",
               },
             }}
           >
@@ -247,15 +295,15 @@ function ChatDetail({ chat, onBack }) {
           paddingLeft: "32px",
           paddingRight: "35px",
           gap: "12px",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           "&::-webkit-scrollbar": {
             width: "8px",
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(95, 95, 111, 0.32)",
+            backgroundColor: "var(--scrollbar-thumb)",
             borderRadius: "999px",
             "&:hover": {
-              backgroundColor: "rgba(95, 95, 111, 0.48)",
+              backgroundColor: "var(--scrollbar-thumb-hover)",
             },
           },
           "&::-webkit-scrollbar-track": {
@@ -263,51 +311,61 @@ function ChatDetail({ chat, onBack }) {
           },
         }}
       >
-        {messages.map((message) => (
-          <Box
-            key={message.id}
-            sx={{
-              display: "flex",
-              justifyContent: message.sender === "you" ? "flex-end" : "flex-start",
-            }}
-          >
+        {loading ? (
+          <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <CircularProgress size={24} />
+          </Box>
+        ) : error ? (
+          <Box sx={{ p: 2, color: "var(--color-error)", fontSize: 14 }}>{error}</Box>
+        ) : messages.length ? (
+          messages.map((message) => (
             <Box
+              key={message.id}
               sx={{
-                maxWidth: "60%",
                 display: "flex",
-                flexDirection: "column",
-                gap: "4px",
-                backgroundColor: "transparent"
+                justifyContent: message.sender === "you" ? "flex-end" : "flex-start",
               }}
             >
               <Box
                 sx={{
-                  backgroundColor: message.sender === "you" ? "#1D4ED8" : "#E8E8ED",
-                  color: message.sender === "you" ? "#FFFFFF" : "#1D1D1E",
-                  padding: "8px 12px",
-                  borderRadius: "8px",
-                  fontSize: 14,
-                  fontFamily: "Inter",
-                  lineHeight: "20px",
-                  wordWrap: "break-word",
+                  maxWidth: "60%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
+                  backgroundColor: "transparent"
                 }}
               >
-                {message.text}
+                <Box
+                  sx={{
+                    backgroundColor: message.sender === "you" ? "var(--color-primary)" : "var(--bg-surface-tertiary)",
+                    color: message.sender === "you" ? "var(--bg-surface)" : "var(--text-primary)",
+                    padding: "8px 12px",
+                    borderRadius: "8px",
+                    fontSize: 14,
+                    fontFamily: "Inter",
+                    lineHeight: "20px",
+                    wordWrap: "break-word",
+                  }}
+                >
+                  {message.text}
+                </Box>
+                <Typography
+                  sx={{
+                    fontSize: 12,
+                    color: "var(--text-placeholder)",
+                    fontFamily: "Inter",
+                    paddingX: "4px",
+                    textAlign: message.sender === "you" ? "right" : "left",
+                  }}
+                >
+                  {message.timestamp}
+                </Typography>
               </Box>
-              <Typography
-                sx={{
-                  fontSize: 12,
-                  color: "#A8A8AD",
-                  fontFamily: "Inter",
-                  paddingX: "4px",
-                  textAlign: message.sender === "you" ? "right" : "left",
-                }}
-              >
-                {message.timestamp}
-              </Typography>
             </Box>
-          </Box>
-        ))}
+          ))
+        ) : (
+          <Box sx={{ p: 2, color: "var(--text-secondary)", fontSize: 14 }}>No messages yet.</Box>
+        )}
         <div ref={messagesEndRef} />
       </Box>
 
@@ -321,7 +379,7 @@ function ChatDetail({ chat, onBack }) {
           paddingTop: 0,
           paddingBottom: "16px",
           height: 52,
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           position: "sticky",
           bottom: 0,
         }}
@@ -333,17 +391,17 @@ function ChatDetail({ chat, onBack }) {
             alignItems: "center",
             width: "100%",
             height: 52,
-            backgroundColor: "#F6F6F6",
-            border: "1px solid #DEDEDE",
+            backgroundColor: "var(--bg-surface-secondary)",
+            border: "1px solid var(--border-card)",
             borderRadius: "8px",
             paddingX: "12px",
             gap: "8px",
             transition: "border-color 0.15s ease",
             "&:focus-within": {
-              borderColor: "#1D4ED8",
+              borderColor: "var(--color-primary)",
             },
             "&:hover": {
-              borderColor: "#E8E8ED",
+              borderColor: "var(--bg-surface-tertiary)",
             },
           }}
         >
@@ -354,12 +412,12 @@ function ChatDetail({ chat, onBack }) {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              color: "#1D4ED8",
+              color: "var(--color-primary)",
               padding: "4px",
               borderRadius: "6px",
               transition: "background-color 0.15s ease",
               "&:hover": {
-                backgroundColor: "#F5F5F7",
+                backgroundColor: "var(--bg-surface-secondary)",
               },
             }}
           >
@@ -378,14 +436,14 @@ function ChatDetail({ chat, onBack }) {
               border: "none",
               outline: "none",
               backgroundColor: "transparent",
-              fontSize: 14,
-              fontFamily: "Inter",
-              color: "#1D1D1E",
-              height: "100%",
-              padding: 0,
-              margin: 0,
-            }}
-          />
+            fontSize: 14,
+            fontFamily: "Inter",
+            color: "var(--text-primary)",
+            height: "100%",
+            padding: 0,
+            margin: 0,
+          }}
+        />
 
           {/* MIC / SEND ICON INSIDE - DYNAMIC */}
           <Box
@@ -394,12 +452,12 @@ function ChatDetail({ chat, onBack }) {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              color: "#1D4ED8",
+              color: "var(--color-primary)",
               padding: "4px",
               borderRadius: "6px",
               transition: "background-color 0.15s ease",
               "&:hover": {
-                backgroundColor: "#F5F5F7",
+                backgroundColor: "var(--bg-surface-secondary)",
               },
             }}
             onClick={inputValue.trim() ? handleSendMessage : undefined}
@@ -417,3 +475,4 @@ function ChatDetail({ chat, onBack }) {
 }
 
 export default ChatDetail;
+

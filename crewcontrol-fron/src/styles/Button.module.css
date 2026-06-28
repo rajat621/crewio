@@ -1,4 +1,4 @@
-.button {
+﻿.button {
   height: 40px;
   padding: 0 16px;
   border-radius: 8px;
@@ -12,12 +12,13 @@
 }
 
 .primary {
-  background-color: #2F5BEA;
-  color: #FFFFFF;
+  background-color: var(--color-primary);
+  color: var(--bg-surface);
 }
 
 .secondary {
-  background-color: #FFFFFF;
-  color: #111827;
-  border-color: #E5E7EB;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-input);
 }
+

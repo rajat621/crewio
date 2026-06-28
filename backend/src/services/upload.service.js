@@ -1,4 +1,4 @@
-export const uploadFile = async (filePath) => {
+﻿export const uploadFile = async (filePath) => {
   // Service stub
   return { path: filePath };
 };

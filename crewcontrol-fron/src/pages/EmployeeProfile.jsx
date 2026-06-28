@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { EmployeeProfileHeader } from '../components/profile/EmployeeProfileHeader';
 import { ProfileTabs } from '../components/profile/ProfileTabs';
@@ -17,8 +17,8 @@ const profilePageStyles = {
     padding: '24px 40px',
   },
   pageCard: {
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E5E7EB',
+    backgroundColor: 'var(--bg-surface)',
+    border: '1px solid var(--border-input)',
     borderRadius: '12px',
     padding: '24px',
   },
@@ -27,19 +27,19 @@ const profilePageStyles = {
     letterSpacing: '0.54px',
     lineHeight: '20px',
     fontWeight: '600',
-    color: '#141414',
+    color: 'var(--text-primary)',
     margin: '0 0 20px 0',
   },
   loading: {
     textAlign: 'center',
     padding: '48px 24px',
     fontSize: '16px',
-    color: '#6B7280',
+    color: 'var(--text-secondary)',
   },
   error: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: 'var(--bg-error-soft)',
     border: '1px solid #FECACA',
-    color: '#DC2626',
+    color: 'var(--color-error)',
     padding: '16px',
     borderRadius: '6px',
     marginBottom: '24px',
@@ -48,7 +48,7 @@ const profilePageStyles = {
 
 const PROFILE_TABS = [
   { id: 'details', label: 'Employee Details' },
-  { id: 'passport', label: 'Passport Details' },
+  { id: 'passport', label: 'Document’s' },
   { id: 'expenses', label: 'Employee Expenses' },
   { id: 'work', label: 'Work Details' },
   { id: 'appAccess', label: 'App Access' },
@@ -71,7 +71,7 @@ const EmployeeProfile = () => {
         setLoading(true);
         setError(null);
         const response = await employeesApi.getEmployee(id);
-        setEmployee(response?.data?.employee || null);
+        setEmployee(response?.data?.employee || response?.data?.data || null);
       } catch (err) {
         setError(err.message || 'Failed to load employee profile');
         console.error('Error fetching employee:', err);
@@ -97,8 +97,9 @@ const EmployeeProfile = () => {
 
   const handleUpdateData = async (updatedData) => {
     try {
-      await employeesApi.updateEmployee(id, updatedData);
-      setEmployee((prev) => ({ ...prev, ...updatedData }));
+      const response = await employeesApi.updateEmployee(id, updatedData);
+      const updatedEmployee = response?.data?.data || updatedData;
+      setEmployee((prev) => ({ ...prev, ...updatedEmployee }));
       console.log('Employee updated successfully');
     } catch (err) {
       console.error('Error updating employee:', err);
@@ -149,7 +150,11 @@ const EmployeeProfile = () => {
           <PassportDetailsTab employee={employee} onUpdate={handleUpdateData} />
         )}
         {activeTab === 'expenses' && (
-          <EmployeeExpensesTab expenses={employee.expenses || {}} onUpdate={handleUpdateData} />
+          <EmployeeExpensesTab
+            employee={employee}
+            expenses={employee.expenses || {}}
+            onUpdate={handleUpdateData}
+          />
         )}
         {activeTab === 'work' && (
           <WorkDetailsTab employee={employee} onUpdate={handleUpdateData} />
@@ -161,3 +166,4 @@ const EmployeeProfile = () => {
 };
 
 export default EmployeeProfile;
+

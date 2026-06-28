@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   TableCell,
   TableRow,
@@ -11,9 +11,10 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useNavigate } from "react-router-dom";
 import UniversalTable from "../table/UniversalTable";
-import { ROW_SX } from "../table/tableUtils";
+import { ACTION_CELL_SX, ACTION_ICON_BUTTON_SX, ROW_SX } from "../table/tableUtils";
 
 const COLUMNS = [
   { key: "slNo", label: "Sl no." },
@@ -24,17 +25,17 @@ const COLUMNS = [
   { key: "action", label: "Action", align: "center" },
 ];
 
-function CompanyWorkersTable({ workers }) {
+function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
   const navigate = useNavigate();
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const cellSx = {
     fontSize: "10px",
-    color: "#757575",
+    color: "var(--text-secondary)",
     lineHeight: "20px",
     letterSpacing: "0.2px",
-    borderBottom: "1px solid #DEDEDE",
+    borderBottom: "1px solid var(--border-card)",
     py: "0px",
     height: "44px",
   };
@@ -52,7 +53,15 @@ function CompanyWorkersTable({ workers }) {
 
   const handleMenuAction = (action) => {
     if (action === "view" && selectedRow?.id) {
-      navigate(`/employees/${selectedRow.id}`);
+      if (typeof onViewProfile === "function") {
+        onViewProfile(selectedRow);
+      } else {
+        navigate(`/employees/${selectedRow.id}`);
+      }
+    }
+
+    if (action === "remove" && selectedRow?.id && typeof onRemoveWorker === "function") {
+      onRemoveWorker(selectedRow);
     }
 
     handleCloseMenu();
@@ -67,7 +76,7 @@ function CompanyWorkersTable({ workers }) {
         searchKeys={["name", "trade"]}
         searchPlaceholder="Search for application id, name..."
         containerSx={{
-          borderColor: "#DEDEDE",
+          borderColor: "var(--border-card)",
           borderRadius: "8px",
           boxShadow: "none",
         }}
@@ -80,24 +89,24 @@ function CompanyWorkersTable({ workers }) {
           width: "340px",
           "& .MuiInputBase-root": {
             fontSize: "14px",
-            color: "#9CA3AF",
+            color: "var(--text-disabled)",
           },
         }}
         toolbarPaginationTextSx={{
           fontSize: "12px",
-          color: "#6B7280",
+          color: "var(--text-secondary)",
         }}
         toolbarNavButtonSx={{
           width: 30,
           height: 30,
-          borderColor: "#DEDEDE",
+          borderColor: "var(--border-card)",
         }}
         headerRowSx={{ height: 32 }}
         headerCellSx={{
           fontSize: "10px",
           fontWeight: 600,
-          color: "#757575",
-          bgcolor: "#FFFFFF",
+          color: "var(--text-secondary)",
+          bgcolor: "var(--bg-surface)",
           borderBottom: "1px solid #E9E9EE",
           py: 0,
           lineHeight: "20px",
@@ -126,9 +135,13 @@ function CompanyWorkersTable({ workers }) {
               />
             </TableCell>
 
-            <TableCell align="center" sx={cellSx}>
-              <IconButton size="small" onClick={(event) => handleOpenMenu(event, row)} sx={{ p: "4px" }}>
-                <MoreVertIcon sx={{ fontSize: 16, color: "#757575" }} />
+            <TableCell align="center" sx={{ ...cellSx, ...ACTION_CELL_SX }}>
+              <IconButton
+                size="small"
+                onClick={(event) => handleOpenMenu(event, row)}
+                sx={ACTION_ICON_BUTTON_SX}
+              >
+                <MoreVertIcon sx={{ fontSize: 16, color: "var(--text-secondary)" }} />
               </IconButton>
             </TableCell>
           </TableRow>
@@ -156,9 +169,16 @@ function CompanyWorkersTable({ workers }) {
           </ListItemIcon>
           <ListItemText>View Profile</ListItemText>
         </MenuItem>
+        <MenuItem onClick={() => handleMenuAction("remove")}>
+          <ListItemIcon>
+            <DeleteOutlineOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Remove</ListItemText>
+        </MenuItem>
       </Menu>
     </>
   );
 }
 
 export default CompanyWorkersTable;
+

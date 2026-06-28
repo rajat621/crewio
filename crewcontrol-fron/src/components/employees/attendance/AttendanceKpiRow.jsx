@@ -1,4 +1,4 @@
-// import { Grid } from "@mui/material";
+﻿// import { Grid } from "@mui/material";
 // import KpiCard from "../../kpi/KpiCard";
 // import { ATTENDANCE_STATUS } from "./attendanceData";
 
@@ -13,8 +13,8 @@
 //       <Grid item xs={3}>
 //         <KpiCard
 //           icon={<GroupsOutlinedIcon sx={{ fontSize: 32 }} />}
-//           iconBg="#DCFCE7"
-//           iconColor="#16A34A"
+//           iconBg="var(--bg-success-soft)"
+//           iconColor="var(--color-success)"
 //           label="Present Today"
 //           value={`${counts.present}/${counts.total}`}
 //           isClickable
@@ -26,7 +26,7 @@
 //       <Grid item xs={3}>
 //         <KpiCard
 //           icon={<PersonOffOutlinedIcon sx={{ fontSize: 32 }} />}
-//           iconBg="#FEF3C7"
+//           iconBg="var(--bg-warning-soft)"
 //           iconColor="#D97706"
 //           label="On Leave"
 //           value={`${counts.onLeave}/${counts.total}`}
@@ -40,7 +40,7 @@
 //         <KpiCard
 //           icon={<ErrorOutlineOutlinedIcon sx={{ fontSize: 32 }} />}
 //           iconBg="#FECACA"
-//           iconColor="#DC2626"
+//           iconColor="var(--color-error)"
 //           label="Absent Today"
 //           value={`${counts.absent}/${counts.total}`}
 //           isClickable
@@ -52,7 +52,7 @@
 //       <Grid item xs={3}>
 //         <KpiCard
 //           icon={<AccessTimeOutlinedIcon sx={{ fontSize: 32 }} />}
-//           iconBg="#E5E7EB"
+//           iconBg="var(--border-input)"
 //           iconColor="#374151"
 //           label="Late Check-ins"
 //           value={`${counts.late}/${counts.total}`}
@@ -67,8 +67,8 @@
 
 // export default AttendanceKpiRow;
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 import UniversalKpiRow from "../../kpi/UniversalKpiRow";
 
@@ -77,24 +77,24 @@ const KPI_ITEMS = [
     key: "present",
     label: "Present Today",
     icon: <CheckCircleOutlineIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#DCFCE7",
-    iconColor: "#16A34A",
+    iconBg: "var(--bg-success-soft)",
+    iconColor: "var(--color-success)",
+    filterKey: "attendanceStatus",
+  },
+  {
+    key: "absent",
+    label: "Absent Today",
+    icon: <HighlightOffOutlinedIcon sx={{ fontSize: 32 }} />,
+    iconBg: "#FECACA",
+    iconColor: "var(--color-error)",
     filterKey: "attendanceStatus",
   },
   {
     key: "on-leave",
     label: "On Leave",
     icon: <PersonOffOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#FEF3C7",
+    iconBg: "var(--bg-warning-soft)",
     iconColor: "#92400E",
-    filterKey: "attendanceStatus",
-  },
-  {
-    key: "late",
-    label: "Late Check-ins",
-    icon: <AccessTimeOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#E5E7EB",
-    iconColor: "#374151",
     filterKey: "attendanceStatus",
   },
 ];
@@ -111,3 +111,4 @@ function AttendanceKpiRow({ data = [], activeStatus, onChange }) {
 }
 
 export default AttendanceKpiRow;
+

@@ -1,0 +1,181 @@
+﻿{
+  "templates": [
+    {
+      "name": "mcc",
+      "fingerprint": "office|#|452|,|4th|floor|,|al|fahad|building|4|,|al|qusais|industrial|area|2|,|dubai.|uae|mcc|on|demand|labors",
+      "config_overrides": {},
+      "success_count": 74
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "bkc|intergrande|bkc|labour|supply|l.l.c|timesheet|no:|ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|issued|to:|alqaser|alsatea|tech|cont|s#|os48567|i.|d..no",
+      "config_overrides": {},
+      "success_count": 73
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "bkc|intergrande|bkc|labour|supply|l.l.c|timesheet|no:ts-009098-2026|timesheetforthemonthofmarch2026|preparationdate:apr23,2026|print|date|:apr23,2026|issuedto:alqaseralsateatechcont|s#|i.|d.|no|employeename|trade|rate|net|total|month",
+      "config_overrides": {},
+      "success_count": 6
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "mcc|group|-|timesheet|invoice|invoice|no:|inv-2026-1001|timesheet|no:|ts-2026-1001|from:|01/05/2026|to:|10/05/2026|trn:|1326636435264|si|trade|project|no.|hours|unit|price",
+      "config_overrides": {},
+      "success_count": 2
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "aloaser|alsatea|tech|cont|together|we|build|tax|invoice|invoice|7|date.30.10.2025|m/s.|intergrande|bkc|labour|supply|llc|p.0.|box:|18773,|office|no.|304,",
+      "config_overrides": {},
+      "success_count": 2
+    },
+    {
+      "name": "mcc",
+      "fingerprint": "tax|invoice|invoice|no.08|date.|31.09.|2025|m/s.|mcc|on|demand|labors|supply|llc|po|box|25301|tel|no|065307879|fax|no|#|452",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "intergrande|bkc|labour|supply|l.l.c|bkc|timesheet|no:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|issued|to:|alqaser|alsatea|tech|cont|net|s#|1.d..o|employeenanie|trade",
+      "config_overrides": {},
+      "success_count": 4
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "intergrande|bkc|labour|supply|l.l.c|bkc|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|issued|to:|alqaser|alsatea|tech|cont|net|s#|i.|d..no|employeenanie|trade",
+      "config_overrides": {},
+      "success_count": 3
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "intergrande|bkc|labour|supply|l.l.c|bkc|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|issuedto:alqaseralsateatechcont|s#|i.|d..no|employeenanie|trade|rate|net|total|h.inoin|10|12",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "supply|l.l.c|intergrande|bkc|labour|timesheet|no:|ts-017289-2025|preparation|date|:|nov|22,|2025|bkc|timesheetforthemonthofoctober2025|:nov22,2025|print|date|total|absent|27|28|29",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "intergrande|bkc|labour|supply|l.l.c|bkc|timesheet|no:ts-017289-2025|timesheetforthemonthofoctober2025|preparation|date:nov|22,2025|print|date|:nov22,2025|issuedto:alqaseralsateatechcont|net|s#|i.d.no|employeenamie|trade|rate|total|month",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "intergrande|bkc|labour|supply|l.l.c|bkc|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|issuedto:alqaseralsateatechcont|sh|ld.no|employeename|trade|rate|net|month|tvlol|10|12|13",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "confidentialuaelabourcopy|oonfidentialuaelabouroepy|oonfidentialuaelaeouroopy|confidentialuaelaeguroepy|confidentialuaelabourcopy|confdentaluaelabourcopy|gonfidentaluaelabourgopy|intergrande|bkc|labour|supply|l.l.c|bkc|timesheet|no:|ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|confidential|uaelabourcopy|confidentialuaelabourcopy",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "bkc|intergrandebkclaboursupplyl.l.c|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|issuedto:alaseralsateatechcont|l|d.ne|employeenanie|trade|rate|net|total|month|12|13|14|15|16|17|18",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "bkc|intergrandebkclaboursupplyl.l.c|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|\uff1anov22,2025|issuedto:alqaseralsateatechcont|ld.ne|employeenanie|trade|rate|net|total|month|10|12|13|14|15|16|17|18",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "brc|intergrandebkclaboursupplyl.l.c|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date|:nov22,2025|issucdto:alqaseralsateatechcont|l.d.no|employeename|trade|rate|net|total|month|10|13|14|16|17|18|19|20",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "intergrande|bkc|labour|supply|l.l.c|timesheetna:ts-017289-2025|preparationdate:noy22,2025|bkc|timesheetfqrthemonthofoctober2025|print|date|\uff1anov22,2025|total|absent|sn|l|d.ne|os47109|rikesh|buitha|employeenanme|stelfixer|carpenter|trade",
+      "config_overrides": {
+        "preprocessing": {
+          "adaptive_block_size": 35,
+          "adaptive_c": 12,
+          "denoise_h": 14
+        },
+        "ocr": {
+          "min_confidence": 0.4
+        }
+      },
+      "success_count": 2
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "bkc|intergrandebkclaboursupplyl.l.c|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|printdate|:nov22,2025|issuedto:alqaseralsateatechcont|l|d.|no|os47009|os30933|rikesh|batha|sarojkumar|sah|ciagandev|sah|chandar|employeenanie|steelfixes|trade|95",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "bkc|intergrandebkclaboursupplyl.l.c|timesheetno:ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|printdate:nov22,2025|issuedto:alqaseralsateatechcont|l|d.|ne|os50933|os47009|rikeshbatha|sarojkumar|sah|ciaganievsahchandar|emfloyeenanie|steelfixer|carpenter|trade|93|95|rate|261",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "intergrandebkc|labour|supply|l.l.c|tiaeslwetno:t-017289-2025|timesheeetforthemonthofoctober2825|preparationdate:|nov22,2025|print|date|nov22,2025|lssued|to:alqaneralsates|tuchcorn|epandid|saransantheassasthingofalan|uranindmurledilaran|pape1",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "kumar|raj|together|we|build|tax|invoice|invoice|no.inv-1778328741991|date.|09.05.2026|m/s.|m/s|mcc|on|demand|labors|supply|llc|dehufhefh,wuerhuwhr,weiruweiruw|bengaluru|tel|no|9123442532",
+      "config_overrides": {},
+      "success_count": 1
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "110.00|100.00|80.00|98.00|98.00|40.00|40.00|totat|hrs|50.00|10.00|10.00|28|10.00|10.00|10.00|10.00|10.00|10.00|10.00|10.00|10.00|10.00|10.00",
+      "config_overrides": {},
+      "success_count": 3
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "bkc|intergrande|bkc|labour|supply|l.l.c|timesheetno:ts-011619-2026|timesheetforthemonthofapril2026|preparationdate:may22,2026|printdate|:may22,2026|issued|to:|alqaser|alsatea|tech|cont|s#|i.|d.|no|employeename|trade|rate",
+      "config_overrides": {},
+      "success_count": 12
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "net|total|absent|12|14|15|19|22|24|25|26|28|29|30|i.|d.|no|10|11|13|16|17|18|20",
+      "config_overrides": {},
+      "success_count": 10
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "net|total|26|absent|s#|i.|d.|no|15|19|23|24|25|27|29|rate|11|12|13|14|16|17|18|21",
+      "config_overrides": {},
+      "success_count": 5
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "110.00|100.00|80.00|98.00|98.00|40.00|40.00|totat|hrs|50.00|10.00|10.00|10.00|10.00|10.00|25|23|10.00|10.00|10.00|10.00|10.00|10.00|10.00",
+      "config_overrides": {},
+      "success_count": 2
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "total|hrs|110.00|100.00|00'08|00'86|00*86|00'0b|40.00|50.00|616.00|10.00|10.00|grans|total|hours|10.00|approved|by|10.00|10.00|23/05/2026|date|ahe",
+      "config_overrides": {},
+      "success_count": 2
+    },
+    {
+      "name": "bkc",
+      "fingerprint": "s#|rr|execu|1.|d.no|os47009|os50933|0s4x567|0s48567|live|name|:|n|employee|nani|rikesh|baitha|saroi|kumar|sah|gagandey|sah|chandar|sah",
+      "config_overrides": {},
+      "success_count": 2
+    }
+  ]
+}

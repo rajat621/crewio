@@ -1,4 +1,4 @@
-// import {
+﻿// import {
 //   Box,
 //   Divider,
 //   IconButton,
@@ -45,7 +45,7 @@
 //     <TableContainer
 //       component={Box}
 //       sx={{
-//         bgcolor: "#FFFFFF",
+//         bgcolor: "var(--bg-surface)",
 //         border: "1px solid",
 //         borderColor: "divider",
 //         borderRadius: 1,
@@ -183,3 +183,4 @@ export default function EmployeesTable({ rows }) {
     />
   );
 }
+

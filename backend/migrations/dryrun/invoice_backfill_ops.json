@@ -1,0 +1,160 @@
+﻿{
+  "generatedAt": "2026-06-19T11:44:00.935Z",
+  "operations": [
+    {
+      "filter": {
+        "_id": "6a0adf9f66c925b050dc9d72"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "createdBy",
+      "confidence": "MEDIUM",
+      "companyId": "6a0a82c766c925b050dc9bbf",
+      "companyOwner": null
+    },
+    {
+      "filter": {
+        "_id": "6a1684d5b08c93bf718d03e1"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ec02",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a182ffc6a81cfafcbb740e9"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ec01",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a1fceb1d6287d3884857aea"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ec02",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a2012d6afb412532712f31a"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ec01",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a241336945a76d44b960aba"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0f16cb10f047c221352150",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a24137c945a76d44b960b54"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0f16cb10f047c221352150",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a2413fb945a76d44b960bf0"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ebff",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a241443945a76d44b960c92"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ec02",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a325dcf205fca28867a9c5f"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ec01",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    },
+    {
+      "filter": {
+        "_id": "6a325ee4205fca28867a9ee3"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "company.owner|createdBy",
+      "confidence": "HIGH",
+      "companyId": "6a0da2086e8eed59ad31ec02",
+      "companyOwner": "6a0a810f66c925b050dc9b70"
+    }
+  ],
+  "sampleCount": 10
+}

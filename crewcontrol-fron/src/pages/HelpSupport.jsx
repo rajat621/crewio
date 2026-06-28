@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+﻿import { Box, Typography } from "@mui/material";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import { useNavigate } from "react-router-dom";
 
@@ -45,10 +45,10 @@ function HelpSupport() {
       </Box>
 
       <Box>
-        <Typography sx={{ fontSize: "16px", color: "#141414", fontWeight: 500, lineHeight: "26px" }}>
+        <Typography sx={{ fontSize: "16px", color: "var(--text-primary)", fontWeight: 500, lineHeight: "26px" }}>
           {title}
         </Typography>
-        <Typography sx={{ fontSize: "14px", color: "#808080", mt: "12px", fontWeight: 400, lineHeight: "100%" }}>
+        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mt: "12px", fontWeight: 400, lineHeight: "100%" }}>
           {description}
         </Typography>
       </Box>
@@ -67,8 +67,8 @@ function HelpSupport() {
     >
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #E5E7EB",
+          backgroundColor: "var(--bg-surface)",
+          border: "1px solid var(--border-input)",
           borderRadius: "10px",
           p: "24px",
         }}
@@ -77,26 +77,26 @@ function HelpSupport() {
           sx={{
             fontSize: "18px",
             fontWeight: 600,
-            color: "#111827",
+            color: "var(--text-primary)",
             mb: "16px",
           }}
         >
           Help & Support
         </Typography>
 
-        <Typography sx={{ fontSize: "14px", color: "#808080", mb: "16px" }}>
+        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "16px" }}>
           Use the Authenticator to get verification codes for better security
         </Typography>
 
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             borderRadius: "8px",
             p: "20px 16px",
             mb: "16px",
           }}
         >
-          <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", color: "#141414", mb: "16px" }}>
+          <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", color: "var(--text-primary)", mb: "16px" }}>
             Quick Help
           </Typography>
 
@@ -123,12 +123,12 @@ function HelpSupport() {
 
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             borderRadius: "8px",
             p: "20px 16px",
           }}
         >
-          <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", color: "#141414", mb: "16px" }}>
+          <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", color: "var(--text-primary)", mb: "16px" }}>
             Contact Support
           </Typography>
 
@@ -148,3 +148,4 @@ function HelpSupport() {
 }
 
 export default HelpSupport;
+

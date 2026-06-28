@@ -1,4 +1,4 @@
-import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
+﻿import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUserOutlined";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
@@ -9,15 +9,15 @@ const KPI_ITEMS = [
     key: "valid",
     label: "Valid Passports",
     icon: <VerifiedUserOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#DCFCE7",
-    iconColor: "#16A34A",
+    iconBg: "var(--bg-success-soft)",
+    iconColor: "var(--color-success)",
     filterKey: "passportStatus",
   },
   {
     key: "expiring-soon",
     label: "Expiring Soon",
     icon: <WarningAmberOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#FEF3C7",
+    iconBg: "var(--bg-warning-soft)",
     iconColor: "#92400E",
     filterKey: "passportStatus",
   },
@@ -25,8 +25,8 @@ const KPI_ITEMS = [
     key: "expired",
     label: "Expired",
     icon: <CancelOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#FEE2E2",
-    iconColor: "#DC2626",
+    iconBg: "var(--bg-error-soft)",
+    iconColor: "var(--color-error)",
     filterKey: "passportStatus",
   },
 ];
@@ -43,3 +43,4 @@ function PassportKpiRow({ data = [], activeStatus, onChange }) {
 }
 
 export default PassportKpiRow;
+

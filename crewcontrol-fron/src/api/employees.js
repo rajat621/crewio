@@ -1,4 +1,4 @@
-import api from './client'
+﻿import api from './client'
 
 export const employeesApi = {
   getEmployees: (params) =>
@@ -18,6 +18,9 @@ export const employeesApi = {
   
   assignEmployee: (id, companyId) =>
     api.post(`/api/employees/${id}/assign`, { companyId }),
+
+  unassignEmployee: (id) =>
+    api.post(`/api/employees/${id}/unassign`),
   
   getEmployeeAttendance: (id, params) =>
     api.get(`/api/employees/${id}/attendance`, { params })

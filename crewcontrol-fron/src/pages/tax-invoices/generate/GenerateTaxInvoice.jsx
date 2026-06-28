@@ -1,11 +1,14 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+﻿import { useEffect, useState, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import DomainVerificationOutlinedIcon from "@mui/icons-material/DomainVerificationOutlined";
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import { companiesApi } from "../../../api/companies";
-import { invoicesApi } from "../../../api/invoices";
+import { invoicesApi, aiJobsApi } from "../../../api/invoices";
 import { ReusableStepper } from "../../../components/ReusableStepper";
 import { Alert } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -17,20 +20,22 @@ import dayjs from "dayjs";
    CONSTANTS
 ═══════════════════════════════════════════════════════════════ */
 
-const BLUE   = "#2C5FEA";
-const DARK   = "#111827";
-const GRAY   = "#6B7280";
-const BORDER = "#DEDEDE";
-const LIGHT  = "#F9FAFB";
+const BLUE   = "var(--color-primary)";
+const DARK   = "var(--text-primary)";
+const GRAY   = "var(--text-secondary)";
+const BORDER = "var(--border-card)";
+const LIGHT  = "var(--bg-surface)";
 
 const baseInput = {
   width: "100%",
   height: "44px",
-  border: `1px solid ${BORDER}`,
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: BORDER,
   borderRadius: "8px",
   padding: "0 12px",
   fontSize: "14px",
-  color: "#141414",
+  color: "var(--text-primary)",
   background: "#fff",
   outline: "none",
   appearance: "none",
@@ -61,9 +66,9 @@ const backButtonStyle = {
 };
 
 const TAX_INVOICE_STEPS = [
-  { id: 1, label: "Select Company" },
-  { id: 2, label: "Confirm Company Details" },
-  { id: 3, label: "Invoice Details" },
+  { id: 1, label: "Select Company", icon: BusinessOutlinedIcon },
+  { id: 2, label: "Confirm Company Details", icon: DomainVerificationOutlinedIcon },
+  { id: 3, label: "Invoice Details", icon: ReceiptLongOutlinedIcon },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -120,7 +125,7 @@ function CancelBtn({ onClick }) {
         border: "none",
         borderRadius: "8px",
         background: h ? "#EFF4FF" : "#fff",
-        color: "#1D4ED8",
+        color: "var(--color-primary)",
         fontSize: "12px",
         fontWeight: 500,
         lineHeight: "20px",
@@ -146,7 +151,7 @@ function PrimaryBtn({ onClick, children, disabled }) {
         padding: "0 24px",
         border: "none",
         borderRadius: "8px",
-        background: disabled ? "#D1D5DB" : h ? "#1D4ED8" : BLUE,
+        background: disabled ? "var(--border-input-hover)" : h ? "var(--color-primary)" : BLUE,
         color: "#fff",
         fontSize: "12px",
         fontWeight: 500,
@@ -181,7 +186,7 @@ function FormHeading({ title, subtitle }) {
       <h2 style={{ fontSize: "18px", fontWeight: 600, color: DARK, lineHeight: "28px", letterSpacing: "0.72px", margin: "0 0 10px 0" }}>
         {title}
       </h2>
-      <p style={{ fontSize: "14px", color: "#808080", lineHeight: "22px", letterSpacing: "0.42px", margin: 0 }}>
+      <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: "22px", letterSpacing: "0.42px", margin: 0 }}>
         {subtitle}
       </p>
     </div>
@@ -189,7 +194,7 @@ function FormHeading({ title, subtitle }) {
 }
 
 const UploadCloudIconComponent = () => (
-  <CloudUploadIcon sx={{ fontSize: 48, color: "#9CA3AF" }} />
+  <CloudUploadIcon sx={{ fontSize: 48, color: "var(--text-disabled)" }} />
 );
 
 /* ═══════════════════════════════════════════════════════════════
@@ -234,19 +239,19 @@ function Step2({ data }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
         <Field label="Company Name" required>
-          <FInput type="text" value={data.name} readOnly style={{ background: "#F9FAFB", color: GRAY }} />
+          <FInput type="text" value={data.name} readOnly style={{ background: "var(--bg-surface)", color: GRAY }} />
         </Field>
 
         <Field label="Telephone Number" required>
-          <FInput type="text" value={data.phone} readOnly style={{ background: "#F9FAFB", color: GRAY }} />
+          <FInput type="text" value={data.phone} readOnly style={{ background: "var(--bg-surface)", color: GRAY }} />
         </Field>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <Field label="P.O. Box" required>
-            <FInput type="text" value={data.poBox} readOnly style={{ background: "#F9FAFB", color: GRAY }} />
+            <FInput type="text" value={data.poBox} readOnly style={{ background: "var(--bg-surface)", color: GRAY }} />
           </Field>
           <Field label="Fax Number" required>
-            <FInput type="text" value={data.fax} readOnly style={{ background: "#F9FAFB", color: GRAY }} />
+            <FInput type="text" value={data.fax} readOnly style={{ background: "var(--bg-surface)", color: GRAY }} />
           </Field>
         </div>
 
@@ -260,14 +265,14 @@ function Step2({ data }) {
               height: "84px",
               padding: "10px 12px",
               resize: "none",
-              background: "#F9FAFB",
+              background: "var(--bg-surface)",
               color: GRAY,
             }}
           />
         </Field>
 
         <Field label="Tax Registration Number (TRN)" required>
-          <FInput type="text" value={data.trn} readOnly style={{ background: "#F9FAFB", color: GRAY }} />
+          <FInput type="text" value={data.trn} readOnly style={{ background: "var(--bg-surface)", color: GRAY }} />
         </Field>
       </div>
     </div>
@@ -295,6 +300,10 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
     onChange({ ...data, vat: numValue });
   };
 
+  const toggleField = (field) => {
+    onChange({ ...data, [field]: !Boolean(data[field]) });
+  };
+
   return (
     <div style={{ display: "flex", gap: "40px", width: "100%", maxWidth: "100%" }}>
       {/* LEFT COLUMN - FORM */}
@@ -318,7 +327,7 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
                   width: "32px",
                   height: "32px",
                   border: `1px solid ${BORDER}`,
-                  background: "#F6F6F6",
+                  background: "var(--bg-surface-secondary)",
                   borderRadius: "4px",
                   fontSize: "18px",
                   cursor: "pointer",
@@ -340,7 +349,7 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
                   borderRadius: "8px",
                   textAlign: "center",
                   fontSize: "14px",
-                  color: "#141414",
+                  color: "var(--text-primary)",
                   background: "transparent",
                   outline: "none",
                   appearance: "textfield",
@@ -359,7 +368,7 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
                   width: "32px",
                   height: "32px",
                   border: `1px solid ${BORDER}`,
-                  background: "#F6F6F6",
+                  background: "var(--bg-surface-secondary)",
                   borderRadius: "4px",
                   fontSize: "18px",
                   cursor: "pointer",
@@ -375,7 +384,7 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 format="DD/MM/YYYY"
-                sx={{ color: "#808080" }}
+                sx={{ color: "var(--text-secondary)" }}
                 value={data.invoiceDate ? dayjs(data.invoiceDate) : null}
                 onChange={(newValue) => {
                   onChange({
@@ -388,18 +397,18 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
                     fullWidth: true,
                     placeholder: "DD/MM/YYYY",
                     sx: {
-                      color: "#808080",
+                      color: "var(--text-secondary)",
                       "& .MuiOutlinedInput-root": {
                       height: "44px",
                         borderRadius: "8px",
                         "& fieldset": {
-                          borderColor: "#DEDEDE",
+                          borderColor: "var(--border-card)",
                         },
                         "&:hover fieldset": {
-                          borderColor: "#DEDEDE",
+                          borderColor: "var(--border-card)",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#DEDEDE",
+                          borderColor: "var(--border-card)",
                         },
                       },
                     },
@@ -415,14 +424,14 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
               onDragLeave={() => setDragging(false)}
               onDrop={(e) => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]); }}
               style={{
-                border: `1.5px dashed ${dragging ? BLUE : "#D1D5DB"}`,
+                border: `1.5px dashed ${dragging ? BLUE : "var(--border-input-hover)"}`,
                 borderRadius: "10px",
                 padding: "40px 24px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 gap: "8px",
-                background: dragging ? "#EFF4FF" : "#FAFAFA",
+                background: dragging ? "#EFF4FF" : "var(--bg-surface)",
                 cursor: "pointer",
               }}
               onClick={() => fileRef.current.click()}
@@ -481,8 +490,8 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
         <div
           style={{
             width: "240px",
-            height: "110px",
-            background: "#F6F6F6",
+            minHeight: "110px",
+            background: "var(--bg-surface-secondary)",
             border: `1px solid ${BORDER}`,
             borderRadius: "8px",
             padding: "24px 20px",
@@ -491,10 +500,10 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
             justifyContent: "center",
           }}
         >
-          <p style={{ fontSize: "16px", color: "#808080", margin: 0, marginBottom: "18px", lineHeight: "26px", fontWeight: 400 }}>
+          <p style={{ fontSize: "16px", color: "var(--text-secondary)", margin: 0, marginBottom: "18px", lineHeight: "26px", fontWeight: 400 }}>
             Company Name
           </p>
-          <p style={{ fontSize: "32px", fontWeight: 500, color: "#141414", margin: 0, lineHeight: "26px" }}>
+          <p style={{ fontSize: "32px", fontWeight: 500, color: "var(--text-primary)", margin: 0, lineHeight: "26px" }}>
             {companyName}
           </p>
         </div>
@@ -503,8 +512,8 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
         <div
           style={{
             width: "240px",
-            height: "110px",
-            background: "#F6F6F6",
+            minHeight: "110px",
+            background: "var(--bg-surface-secondary)",
             border: `1px solid ${BORDER}`,
             borderRadius: "8px",
             padding: "24px 20px",
@@ -513,12 +522,93 @@ function Step3({ data, onChange, companyName, invoiceNumber }) {
             justifyContent: "center",
           }}
         >
-          <p style={{ fontSize: "16px", color: "#808080", margin: 0, marginBottom: "18px", lineHeight: "26px", fontWeight: 400 }}>
+          <p style={{ fontSize: "16px", color: "var(--text-secondary)", margin: 0, marginBottom: "18px", lineHeight: "26px", fontWeight: 400 }}>
             Invoice No.
           </p>
-          <p style={{ fontSize: "32px", fontWeight: 500, color: "#141414", margin: 0, lineHeight: "26px" }}>
+          <p style={{ fontSize: "32px", fontWeight: 500, color: "var(--text-primary)", margin: 0, lineHeight: "26px" }}>
             {invoiceNumber}
           </p>
+        </div>
+
+        <div
+          style={{
+            width: "240px",
+            minHeight: "140px",
+            background: "var(--bg-surface-secondary)",
+            border: `1px solid ${BORDER}`,
+            borderRadius: "8px",
+            padding: "16px 16px 14px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            gap: "12px",
+          }}
+        >
+          <p style={{ fontSize: "16px", fontWeight: 400, color: "var(--text-secondary)", margin: 0, lineHeight: "26px" }}>
+            Add
+          </p>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: "14px", fontWeight: 400, color: "var(--text-primary)", lineHeight: "26px" }}>Signature</span>
+            <button
+              type="button"
+              onClick={() => toggleField("includeSignature")}
+              style={{
+                width: "38px",
+                height: "18px",
+                borderRadius: "999px",
+                border: "none",
+                background: data.includeSignature ? "var(--text-primary)" : "var(--text-disabled)",
+                position: "relative",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  left: data.includeSignature ? "20px" : "2px",
+                  width: "14px",
+                  height: "14px",
+                  borderRadius: "999px",
+                  background: "#fff",
+                  transition: "left 0.15s ease",
+                }}
+              />
+            </button>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: "14px", fontWeight: 400, color: "var(--text-primary)", lineHeight: "26px" }}>Stamp</span>
+            <button
+              type="button"
+              onClick={() => toggleField("includeStamp")}
+              style={{
+                width: "38px",
+                height: "18px",
+                borderRadius: "999px",
+                border: "none",
+                background: data.includeStamp ? "var(--text-primary)" : "var(--text-disabled)",
+                position: "relative",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  left: data.includeStamp ? "20px" : "2px",
+                  width: "14px",
+                  height: "14px",
+                  borderRadius: "999px",
+                  background: "#fff",
+                  transition: "left 0.15s ease",
+                }}
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -535,9 +625,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
-        background: "#F3F4F6",
+        height: "100%",
+        minHeight: 0,
+        background: "var(--bg-surface-secondary)",
         fontFamily: "sans-serif",
+        overflow: "hidden",
       }}
     >
       {/* BODY */}
@@ -545,7 +637,8 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
         <div
           style={{
             display: "flex",
-            minHeight: "100%",
+            height: "100%",
+            minHeight: 0,
             background: "#fff",
             border: `1px solid ${BORDER}`,
             borderRadius: "12px",
@@ -557,19 +650,20 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
             style={{
               width: "282px",
               flexShrink: 0,
-              background: "#F9FAFB",
+              height: "100%",
+              background: "var(--bg-surface)",
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
-              overflow: "visible",
+              overflow: "hidden",
             }}
           >
             <ReusableStepper currentStep={currentStep} steps={TAX_INVOICE_STEPS} />
           </div>
 
           {/* MAIN */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100%" }}>
-            {/* Content area without scrolling */}
-            <div style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: "1 0 auto" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, height: "100%" }}>
+            {/* Content area with independent scrolling */}
+            <div className="thin-overlay-scroll" style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: 1, minHeight: 0 }}>
               {isSuccess ? (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
                   <button
@@ -589,7 +683,7 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
                       gap: "8px",
                       fontSize: "14px",
                       fontWeight: 500,
-                      color: "#6B7280",
+                      color: "var(--text-secondary)",
                       background: "#fff",
                       border: `1px solid ${BORDER}`,
                       borderRadius: "24px",
@@ -646,7 +740,7 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
 
 function SuccessScreen({ onPreview, onDownload }) {
   const SuccessCheckIcon = () => (
-    <CheckCircleIcon sx={{ fontSize: 80, color: "#2C5FEA" }} />
+    <CheckCircleIcon sx={{ fontSize: 80, color: "var(--color-primary)" }} />
   );
 
   return (
@@ -690,7 +784,7 @@ function SuccessScreen({ onPreview, onDownload }) {
             cursor: "pointer",
             fontFamily: "inherit",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#1E40AF")}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-primary-hover)")}
           onMouseLeave={(e) => (e.currentTarget.style.background = BLUE)}
         >
           Download PDF
@@ -722,7 +816,7 @@ function SuccessDialog({ onPreview, onDownload, onClose }) {
           maxWidth: "520px",
           background: "#fff",
           borderRadius: "20px",
-          boxShadow: "0 24px 80px rgba(17, 24, 39, 0.24)",
+          boxShadow: "0 24px 80px var(--shadow-popover)",
           padding: "32px",
           textAlign: "center",
         }}
@@ -739,10 +833,12 @@ function SuccessDialog({ onPreview, onDownload, onClose }) {
 
 export default function GenerateTaxInvoice() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedInvoice, setGeneratedInvoice] = useState(null);
+  const [invoiceNumberPreview, setInvoiceNumberPreview] = useState("--");
   const [companies, setCompanies] = useState([]);
   const [generateError, setGenerateError] = useState("");
 
@@ -760,19 +856,45 @@ export default function GenerateTaxInvoice() {
       vat: 5,
       invoiceDate: "",
       timesheetFile: null,
+      includeSignature: true,
+      includeStamp: true,
     },
   });
+
+  const preselectedCompanyId = searchParams.get("companyId") || "";
 
   useEffect(() => {
     let active = true;
 
     const loadCompanies = async () => {
       try {
-        const response = await companiesApi.getCompanies();
+        const response = await companiesApi.getClientCompanies();
         const nextCompanies = Array.isArray(response?.data?.data) ? response.data.data : [];
 
         if (active) {
           setCompanies(nextCompanies);
+
+          if (preselectedCompanyId) {
+            const preselectedCompany = nextCompanies.find(
+              (company) => String(company?._id || company?.id) === String(preselectedCompanyId)
+            );
+
+            if (preselectedCompany) {
+              setFormData((prev) => ({
+                ...prev,
+                companyId: String(preselectedCompany._id || preselectedCompany.id),
+                companyDetails: {
+                  name: preselectedCompany.name || preselectedCompany.companyLegalName || "",
+                  phone: preselectedCompany.telephoneNumber || preselectedCompany.phone || "",
+                  poBox: preselectedCompany.poBox || "",
+                  fax: preselectedCompany.faxNumber || preselectedCompany.fax || "",
+                  address: preselectedCompany.address || preselectedCompany.companyAddress || "",
+                  trn: preselectedCompany.trn || "",
+                },
+              }));
+              setCurrentStep(2);
+            }
+          }
         }
       } catch (error) {
         if (active) {
@@ -786,11 +908,39 @@ export default function GenerateTaxInvoice() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [preselectedCompanyId]);
 
   const getSelectedCompany = () => {
     return companies.find((c) => String(c._id || c.id) === String(formData.companyId));
   };
+
+  useEffect(() => {
+    let active = true;
+
+    const loadNextInvoiceNumber = async () => {
+      if (currentStep !== 3) {
+        return;
+      }
+
+      try {
+        const response = await invoicesApi.getNextInvoiceNumber();
+        const nextNumber = response?.data?.data?.invoiceNumber || "--";
+        if (active) {
+          setInvoiceNumberPreview(nextNumber);
+        }
+      } catch (_error) {
+        if (active) {
+          setInvoiceNumberPreview("--");
+        }
+      }
+    };
+
+    loadNextInvoiceNumber();
+
+    return () => {
+      active = false;
+    };
+  }, [currentStep]);
 
   const isStep1Valid = () => formData.companyId !== "";
 
@@ -808,12 +958,12 @@ export default function GenerateTaxInvoice() {
         setFormData((prev) => ({
           ...prev,
           companyDetails: {
-            name: company.name,
-            phone: company.phone,
-            poBox: company.poBox,
-            fax: company.fax,
-            address: company.address,
-            trn: company.trn,
+            name: company.name || company.companyLegalName || "",
+            phone: company.telephoneNumber || company.phone || "",
+            poBox: company.poBox || "",
+            fax: company.faxNumber || company.fax || "",
+            address: company.address || company.companyAddress || "",
+            trn: company.trn || "",
           },
         }));
       }
@@ -843,12 +993,50 @@ export default function GenerateTaxInvoice() {
         throw new Error("Timesheet upload failed");
       }
 
-      const parsedInvoiceDate = dayjs(formData.invoiceDetails.invoiceDate, "DD/MM/YYYY");
+      const parsedInvoiceDate = dayjs(formData.invoiceDetails.invoiceDate, "DD/MM/YYYY", true);
 
+      const enableAsync = String(import.meta.env.VITE_ENABLE_ASYNC_AI || '') === 'true';
+
+      if (enableAsync) {
+        // Queue a background job to generate the invoice
+        const payload = {
+          jobType: 'generate-invoice',
+          pdfPath: timesheetPath,
+          owner_company_id: undefined,
+          owner_template_id: undefined,
+          template_override: undefined,
+          signature_override: undefined,
+          stamp_override: undefined,
+          include_signature: Boolean(formData.invoiceDetails.includeSignature),
+          include_stamp: Boolean(formData.invoiceDetails.includeStamp),
+          company_data: {
+            companyId: formData.companyId,
+            userId: undefined,
+          },
+        };
+
+        const resp = await aiJobsApi.createJob(payload);
+        const jobId = resp.data?.data?.jobId || resp.data?.jobId || resp.data?.data?.jobId;
+
+        if (!jobId) throw new Error('Failed to queue async invoice job');
+
+        // persist job info to localStorage so refresh recovery works
+        const stored = { jobId, timesheetPath, createdAt: Date.now() };
+        try { localStorage.setItem('asyncInvoiceJob', JSON.stringify(stored)); } catch (e) {}
+
+        // open a modal/overlay to show progress and poll
+        openJobProgress(jobId, timesheetPath);
+        return;
+      }
+
+      // synchronous fallback
       const generatedResponse = await invoicesApi.generateInvoiceRecord({
         clientCompanyId: formData.companyId,
+        invoiceNumber: invoiceNumberPreview !== "--" ? invoiceNumberPreview : undefined,
         timesheetPath,
         vatRate: Number(formData.invoiceDetails.vat || 0) / 100,
+        includeSignature: Boolean(formData.invoiceDetails.includeSignature),
+        includeStamp: Boolean(formData.invoiceDetails.includeStamp),
         invoiceDate: parsedInvoiceDate.isValid() ? parsedInvoiceDate.toDate() : new Date(),
       });
 
@@ -864,6 +1052,84 @@ export default function GenerateTaxInvoice() {
       setIsSubmitting(false);
     }
   };
+
+  // ----------------- Async job UI + polling -----------------
+  const [activeJob, setActiveJob] = useState(null);
+  const pollRef = useRef(null);
+  const jobStartTsRef = useRef(null);
+
+  const clearPolling = () => {
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+    jobStartTsRef.current = null;
+  };
+
+  const openJobProgress = (jobId, timesheetPath) => {
+    setActiveJob({ jobId, status: 'queued', timesheetPath, elapsedMs: 0 });
+    jobStartTsRef.current = Date.now();
+    // start polling every 2 seconds
+    if (pollRef.current) clearPolling();
+    pollRef.current = setInterval(() => pollJob(jobId), 2000);
+    // immediate poll
+    pollJob(jobId);
+  };
+
+  const pollJob = async (jobId) => {
+    try {
+      const resp = await aiJobsApi.getJobStatus(jobId);
+      const job = resp.data?.data || resp.data;
+      const now = Date.now();
+      const elapsed = jobStartTsRef.current ? now - jobStartTs.current : now - (job.startedAt ? Date.parse(job.startedAt) : now);
+      const next = {
+        jobId,
+        status: job.status,
+        progress: job.progress,
+        attemptsMade: job.attemptsMade,
+        error: job.error,
+        decisionTrace: job.decisionTrace || {},
+        elapsedMs: elapsed,
+      };
+      setActiveJob(next);
+
+      if (['completed', 'failed'].includes((job.status || '').toLowerCase())) {
+        // done — fetch result and stop polling
+        clearPolling();
+        try { localStorage.removeItem('asyncInvoiceJob'); } catch (e) {}
+        if (job.status === 'completed') {
+          // fetch job result
+          const res = await aiJobsApi.getJobResult(jobId);
+          const result = res.data?.data || res.data;
+          // try to extract created invoice record from result
+          const createdInvoice = result?.result?.invoice || result?.invoice || result?.result || result;
+          if (createdInvoice) {
+            setGeneratedInvoice(createdInvoice);
+            setIsSuccess(true);
+            setActiveJob(null);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Job poll failed', error);
+      // network errors: keep polling but surface message
+      setActiveJob((prev) => ({ ...(prev || {}), error: error?.message || 'Network error' }));
+    }
+  };
+
+  // Resume job after refresh
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('asyncInvoiceJob');
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (parsed?.jobId) {
+        openJobProgress(parsed.jobId, parsed.timesheetPath);
+      }
+    } catch (e) {}
+    return () => clearPolling();
+  }, []);
+
 
   const handlePrevious = () => {
     if (currentStep > 1) {
@@ -890,13 +1156,43 @@ export default function GenerateTaxInvoice() {
     navigate("/tax-invoices");
   };
 
-  const handlePreview = () => {
+  const handlePreview = async () => {
     const invoiceId = generatedInvoice?._id;
     if (!invoiceId) return;
 
-    const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
-    const previewUrl = `${apiBase}/api/invoices/${invoiceId}/download?inline=1`;
-    window.open(previewUrl, "_blank", "noopener,noreferrer");
+    const previewWindow = window.open("", "_blank");
+    if (!previewWindow) {
+      setGenerateError("Popup blocked. Please allow popups and try again.");
+      return;
+    }
+
+    try {
+      previewWindow.opener = null;
+    } catch (error) {
+      // Ignore if browser disallows setting opener.
+    }
+
+    previewWindow.document.title = "Loading invoice...";
+    previewWindow.document.body.innerHTML = '<p style="font-family: Arial, sans-serif; padding: 16px;">Loading invoice preview...</p>';
+
+    try {
+      const response = await invoicesApi.downloadInvoice(invoiceId);
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      previewWindow.location.href = url;
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 60000);
+
+      setIsSuccess(false);
+      navigate("/tax-invoices");
+    } catch (error) {
+      previewWindow.close();
+      console.error("Invoice preview failed:", error);
+      setGenerateError("Failed to open invoice preview. Please try again.");
+    }
   };
 
   const handleDownload = async () => {
@@ -918,6 +1214,9 @@ export default function GenerateTaxInvoice() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Invoice download failed:", error);
+    } finally {
+      setIsSuccess(false);
+      navigate("/tax-invoices");
     }
   };
 
@@ -964,7 +1263,7 @@ export default function GenerateTaxInvoice() {
             }))
           }
           companyName={formData.companyDetails.name.split(" ")[0]}
-          invoiceNumber="01"
+          invoiceNumber={invoiceNumberPreview}
         />
       )}
 
@@ -978,3 +1277,4 @@ export default function GenerateTaxInvoice() {
     </Shell>
   );
 }
+

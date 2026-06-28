@@ -1,9 +1,13 @@
-import { useMemo, useState, useRef, useEffect } from "react";
+﻿import { useMemo, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth.css";
+import { useAuth } from "../context/AuthContext";
+import { companiesApi } from "../api/companies";
+import logo from "../assets/crewio_logo.png";
 import { clampMobileByCountry } from "../utils/phoneValidation";
 import { COUNTRIES_LIST } from "../utils/countriesData";
 import ReactCountryFlag from "react-country-flag";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const STEPS = {
   BUSINESS: 0,
@@ -20,8 +24,11 @@ const COUNTRY_CODES = COUNTRIES_LIST.map((country) => ({
 
 export default function OnboardingCompanyProfile() {
   const navigate = useNavigate();
+  const { user, updateUser } = useAuth();
   const [step, setStep] = useState(STEPS.BUSINESS);
   const [errors, setErrors] = useState({});
+  const [saveError, setSaveError] = useState("");
+  const [saving, setSaving] = useState(false);
   // Dropdown state for country code and nationality (matches AddEmployee behaviour)
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
@@ -42,6 +49,43 @@ export default function OnboardingCompanyProfile() {
     mobile: ""
   });
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadOwnerCompany = async () => {
+      try {
+        const response = await companiesApi.getOwnerCompany();
+        const company = response.data?.data;
+        if (!company || !isMounted) return;
+
+        setFormData((prev) => ({
+          ...prev,
+          companyName: company.companyLegalName || company.name || "",
+          trn: company.trn || "",
+          website: company.websiteLink || "",
+          address: company.address || "",
+          city: company.city || "",
+          nationality: company.nationality || "",
+          email: company.contactEmail || "",
+          countryCode: company.countryCode || prev.countryCode,
+          mobile: company.mobileNumber || "",
+        }));
+
+        if (company._id && user && user.companyId !== company._id) {
+          updateUser({ ...user, companyId: company._id, company });
+        }
+      } catch (_error) {
+        // No owner company yet is valid during first-time onboarding.
+      }
+    };
+
+    loadOwnerCompany();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [updateUser, user]);
+
   const totalSteps = useMemo(() => 3, []);
 
   const handleChange = (e) => {
@@ -57,6 +101,7 @@ export default function OnboardingCompanyProfile() {
       return { ...prev, [name]: value };
     });
     setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (saveError) setSaveError("");
   };
 
   useEffect(() => {
@@ -102,7 +147,7 @@ export default function OnboardingCompanyProfile() {
       setStep((prev) => prev + 1);
       return;
     }
-    navigate("/");
+    navigate("/onboarding/company-logo");
   };
 
   const handleSkip = () => {
@@ -122,12 +167,48 @@ export default function OnboardingCompanyProfile() {
   const handleNext = (e) => {
     e.preventDefault();
     if (!validateStep()) return;
-    goToNextStep();
+
+    if (step < totalSteps - 1) {
+      goToNextStep();
+      return;
+    }
+
+    const selectedCountry = COUNTRY_CODES.find((country) => country.code === formData.countryCode);
+    const payload = {
+      name: formData.companyName.trim(),
+      companyLegalName: formData.companyName.trim(),
+      trn: formData.trn.trim(),
+      websiteLink: formData.website.trim(),
+      address: formData.address.trim(),
+      city: formData.city.trim(),
+      nationality: formData.nationality,
+      contactEmail: formData.email.trim(),
+      countryCode: formData.countryCode,
+      countryIso: selectedCountry?.iso || "",
+      mobileNumber: formData.mobile.trim(),
+    };
+
+    setSaving(true);
+    setSaveError("");
+    companiesApi.updateOwnerCompany(payload)
+      .then((response) => {
+        const company = response.data?.data;
+        if (company && user) {
+          updateUser({ ...user, companyId: company._id, company });
+        }
+        navigate("/onboarding/company-logo");
+      })
+      .catch((error) => {
+        setSaveError(error.response?.data?.message || "Failed to save company profile. Please try again.");
+      })
+      .finally(() => {
+        setSaving(false);
+      });
   };
 
   return (
     <div className="auth-wrapper onboarding-wrapper">
-      <div className="brand"><img src={import.meta.env.BASE_URL + 'crewio_logo.png'} alt="CrewControl logo" /></div>
+      <div className="brand"><img src={logo} alt="CrewControl logo" /></div>
 
       <div className="auth-card onboarding-card">
         <h2 className="onboarding-title">Set Up Your Company Profile</h2>
@@ -136,6 +217,8 @@ export default function OnboardingCompanyProfile() {
           <br />
           Please ensure all details match your official records.
         </p>
+
+        {saveError && <p className="field-error">{saveError}</p>}
 
         <form onSubmit={handleNext} noValidate>
           <h3 className="onboarding-section-title">
@@ -225,7 +308,7 @@ export default function OnboardingCompanyProfile() {
                       alignItems: "center",
                       gap: "8px",
                       padding: "10px 12px",
-                      border: `1px solid #DEDEDE`,
+                      border: `1px solid var(--border-card)`,
                       borderRadius: "8px",
                       cursor: "pointer",
                       background: "#fff",
@@ -233,19 +316,19 @@ export default function OnboardingCompanyProfile() {
                     }}
                   >
                     <ReactCountryFlag countryCode={formData.nationality || "AE"} svg style={{ width: "18px", height: "12px" }} />
-                    <span style={{ color: formData.nationality ? "#141414" : "#808080" }}>
+                    <span style={{ color: formData.nationality ? "var(--text-primary)" : "var(--text-secondary)" }}>
                       {COUNTRY_CODES.find((c) => c.iso === formData.nationality)?.country || "Select"}
                     </span>
                   </div>
 
                   {showNationDropdown && (
-                    <div style={{ position: "absolute", top: "50px", left: 0, width: "320px", maxHeight: "260px", border: `1px solid #DEDEDE`, borderRadius: "8px", background: "#fff", zIndex: 1200 }}>
+                    <div style={{ position: "absolute", top: "50px", left: 0, width: "320px", maxHeight: "260px", border: `1px solid var(--border-card)`, borderRadius: "8px", background: "#fff", zIndex: 1200 }}>
                       <input
                         type="text"
                         placeholder="Search..."
                         value={nationSearch}
                         onChange={(e) => setNationSearch(e.target.value)}
-                        style={{ width: "100%", padding: "8px", border: "none", borderBottom: `1px solid #DEDEDE`, outline: "none" }}
+                        style={{ width: "100%", padding: "8px", border: "none", borderBottom: `1px solid var(--border-card)`, outline: "none" }}
                       />
                       <div style={{ maxHeight: "200px", overflowY: "auto" }}>
                         {COUNTRY_CODES.filter((c) => !nationSearch || c.country.toLowerCase().includes(nationSearch.toLowerCase())).map((c) => (
@@ -255,7 +338,7 @@ export default function OnboardingCompanyProfile() {
                             style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", cursor: "pointer" }}
                           >
                             <ReactCountryFlag countryCode={c.iso} svg style={{ width: "18px", height: "12px" }} />
-                            <span style={{ fontSize: "13px", color: "#141414" }}>{c.country}</span>
+                            <span style={{ fontSize: "13px", color: "var(--text-primary)" }}>{c.country}</span>
                           </div>
                         ))}
                       </div>
@@ -281,56 +364,212 @@ export default function OnboardingCompanyProfile() {
                 {errors.email && <p className="onboarding-field-error">{errors.email}</p>}
               </div>
 
-              <div className="form-group">
-                <label>Mobile Number <span>*</span></label>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <div style={{ position: "relative", width: "180px" }} ref={countryDropdownRef}>
-                    <div
-                      onClick={() => setShowCountryDropdown((s) => !s)}
-                      style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", border: `1px solid #DEDEDE`, borderRadius: "8px", cursor: "pointer", background: "#fff", height: "44px" }}
-                    >
-                      <ReactCountryFlag countryCode={COUNTRY_CODES.find((c) => c.code === formData.countryCode)?.iso || "AE"} svg style={{ width: "18px", height: "12px" }} />
-                      <span style={{ color: "#141414" }}>{formData.countryCode}</span>
-                    </div>
+<div className="form-group" style={{ width: "100%" }}>
+  <label >
+    Mobile Number <span style={{ color: "var(--color-error)" }}>*</span>
+  </label>
 
-                    {showCountryDropdown && (
-                      <div style={{ position: "absolute", top: "50px", left: 0, width: "240px", maxHeight: "260px", border: `1px solid #DEDEDE`, borderRadius: "8px", background: "#fff", zIndex: 1200 }}>
-                        <input
-                          type="text"
-                          placeholder="Search..."
-                          value={countrySearch}
-                          onChange={(e) => setCountrySearch(e.target.value)}
-                          style={{ width: "100%", padding: "8px", border: "none", borderBottom: `1px solid #DEDEDE`, outline: "none" }}
-                        />
-                        <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-                          {COUNTRY_CODES.filter((c) => !countrySearch || c.country.toLowerCase().includes(countrySearch.toLowerCase()) || c.code.includes(countrySearch)).map((c) => (
-                            <div
-                              key={c.iso}
-                              onClick={() => { setFormData((p) => ({ ...p, countryCode: c.code })); setShowCountryDropdown(false); setCountrySearch(""); }}
-                              style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", cursor: "pointer" }}
-                            >
-                              <ReactCountryFlag countryCode={c.iso} svg style={{ width: "18px", height: "12px" }} />
-                              <span>{c.code}</span>
-                              <span style={{ fontSize: "12px", color: "#888" }}>{c.country}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+  <div
+    style={{
+      width: "100%",
+      height: "44px",
+      border: "1px solid #D9D9D9",
+      borderRadius: "8px",
+      background: "var(--bg-surface)",
+      display: "flex",
+      alignItems: "center",
+      paddingLeft: "22px",
+      paddingRight: "22px",
+      position: "relative",
+      boxSizing: "border-box",
+    }}
+  >
+    {/* FLAG + CODE */}
+    <div
+      ref={countryDropdownRef}
+      style={{
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        flexShrink: 0,
+      }}
+    >
+      <div
+        onClick={() => setShowCountryDropdown((s) => !s)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "14px",
+          cursor: "pointer",
+          userSelect: "none",
+        }}
+      >
+        <ReactCountryFlag
+          countryCode={
+            COUNTRY_CODES.find((c) => c.code === formData.countryCode)?.iso ||
+            "AE"
+          }
+          svg
+          style={{
+            width: "32px",
+            height: "20px",
+            objectFit: "cover",
+            borderRadius: "2px",
+          }}
+        />
 
-                  <input
-                    type="tel"
-                    name="mobile"
-                    placeholder="_ _ _ _ _ _ _ _"
-                    value={formData.mobile}
-                    onChange={handleChange}
-                    className={`onboarding-phone-input ${errors.mobile ? "onboarding-input-error" : ""}`}
-                    style={{ flex: 1 }}
-                  />
-                </div>
-                {errors.mobile && <p className="onboarding-field-error">{errors.mobile}</p>}
+        {/* ARROW */}
+            <KeyboardArrowDownIcon
+              style={{
+                fontSize: "22px",
+                color: "#4A4A58",
+              }}
+            />
+
+        {/* COUNTRY CODE */}
+        <span
+          style={{
+            fontSize: "14px",
+            fontWeight: 400,
+            color: "#A7A7B3",
+            marginLeft: "0px",
+            letterSpacing: "0.2px",
+          }}
+        >
+          {formData.countryCode}
+        </span>
+      </div>
+
+      {/* DROPDOWN */}
+      {showCountryDropdown && (
+        <div
+          style={{
+            position: "absolute",
+            top: "72px",
+            left: 0,
+            width: "280px",
+            maxHeight: "300px",
+            overflow: "hidden",
+            background: "#fff",
+            border: "1px solid #E5E5EA",
+            borderRadius: "14px",
+            zIndex: 2000,
+            boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Search..."
+            value={countrySearch}
+            onChange={(e) => setCountrySearch(e.target.value)}
+            style={{
+              width: "100%",
+              height: "44px",
+              border: "none",
+              outline: "none",
+              padding: "0 16px",
+              borderBottom: "1px solid #ECECEC",
+              fontSize: "15px",
+              boxSizing: "border-box",
+            }}
+          />
+
+          <div
+            style={{
+              maxHeight: "240px",
+              overflowY: "auto",
+            }}
+          >
+            {COUNTRY_CODES.filter(
+              (c) =>
+                !countrySearch ||
+                c.country
+                  .toLowerCase()
+                  .includes(countrySearch.toLowerCase()) ||
+                c.code.includes(countrySearch)
+            ).map((c) => (
+              <div
+                key={c.iso}
+                onClick={() => {
+                  setFormData((p) => ({
+                    ...p,
+                    countryCode: c.code,
+                  }));
+                  setShowCountryDropdown(false);
+                  setCountrySearch("");
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "12px 16px",
+                  cursor: "pointer",
+                }}
+              >
+                <ReactCountryFlag
+                  countryCode={c.iso}
+                  svg
+                  style={{
+                    width: "24px",
+                    height: "16px",
+                  }}
+                />
+
+                <span
+                  style={{
+                    fontSize: "15px",
+                    color: "var(--text-primary)",
+                    minWidth: "54px",
+                  }}
+                >
+                  {c.code}
+                </span>
+
+                <span
+                  style={{
+                    fontSize: "13px",
+                    color: "#8A8A8A",
+                  }}
+                >
+                  {c.country}
+                </span>
               </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* PHONE INPUT */}
+    <input
+      type="tel"
+      name="mobile"
+      placeholder="_ _ _ _ _ _ _ _ _"
+      value={formData.mobile}
+      onChange={handleChange}
+      className={`onboarding-phone-input ${
+        errors.mobile ? "onboarding-input-error" : ""
+      }`}
+      style={{
+        flex: 1,
+        height: "100%",
+        border: "none",
+        outline: "none",
+        background: "transparent",
+        marginLeft: "16px",
+        fontSize: "14px",
+        fontWeight: 400,
+        color: "var(--text-primary)",
+        letterSpacing: "1px",
+        padding: 0,
+      }}
+    />
+  </div>
+
+  {errors.mobile && (
+    <p className="onboarding-field-error">{errors.mobile}</p>
+  )}
+</div>
             </>
           )}
 
@@ -343,7 +582,7 @@ export default function OnboardingCompanyProfile() {
                 Back
               </button>
               <button type="submit" className="btn-primary onboarding-next-btn">
-                Next
+                {saving ? "Saving..." : "Next"}
               </button>
             </div>
           </div>
@@ -352,3 +591,4 @@ export default function OnboardingCompanyProfile() {
     </div>
   );
 }
+

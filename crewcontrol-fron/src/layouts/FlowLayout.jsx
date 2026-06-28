@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+﻿import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import FlowTopbar from "../components/topbar/FlowTopbar";
 
@@ -8,7 +8,7 @@ function FlowLayout() {
       className="app-container"
       sx={{
         height: "100vh",
-        backgroundColor: "#F7F8FC",
+        backgroundColor: "var(--bg-canvas)",
         display: "flex",
         flexDirection: "column",
       }}
@@ -24,3 +24,4 @@ function FlowLayout() {
 }
 
 export default FlowLayout;
+

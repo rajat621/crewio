@@ -1,4 +1,4 @@
-import {
+﻿import {
   Box,
   Typography,
   Button,
@@ -16,7 +16,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 function KPI({ label, value, color }) {
   return (
     <Box sx={{ display: "flex", gap: 0.5 }}>
-      <Typography fontSize={12} color="#6B7280">
+      <Typography fontSize={12} color="var(--text-secondary)">
         {label}
       </Typography>
       <Typography fontSize={12} fontWeight={600} color={color}>
@@ -32,9 +32,9 @@ export default function CompanyDetails() {
     <Box sx={{ bgcolor: "#F5F6FB", minHeight: "100vh", p: 3 }}>
       <Box
         sx={{
-          bgcolor: "#FFFFFF",
+          bgcolor: "var(--bg-surface)",
           borderRadius: "16px",
-          border: "1px solid #E5E7EB",
+          border: "1px solid var(--border-input)",
           p: 3,
           display: "grid",
           gridTemplateColumns: "2.2fr 1fr",
@@ -44,7 +44,7 @@ export default function CompanyDetails() {
         {/* ================= LEFT ================= */}
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             borderRadius: "14px",
             overflow: "hidden",
           }}
@@ -59,7 +59,7 @@ export default function CompanyDetails() {
                 <Typography fontSize={22} fontWeight={600}>
                   MCC Group.
                 </Typography>
-                <Typography fontSize={14} color="#6B7280">
+                <Typography fontSize={14} color="var(--text-secondary)">
                   Aug 2025 - Aug 2026
                 </Typography>
               </Box>
@@ -78,18 +78,18 @@ export default function CompanyDetails() {
                   width: 48,
                   height: 48,
                   borderRadius: "50%",
-                  bgcolor: "#1D4ED8",
+                  bgcolor: "var(--color-primary)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#FFFFFF",
+                  color: "var(--bg-surface)",
                 }}
               >
                 <GroupsOutlinedIcon />
               </Box>
 
               <Box sx={{ textAlign: "right" }}>
-                <Typography fontSize={13} color="#6B7280">
+                <Typography fontSize={13} color="var(--text-secondary)">
                   Total worker assigned
                 </Typography>
                 <Typography fontSize={28} fontWeight={600}>
@@ -107,13 +107,13 @@ export default function CompanyDetails() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              borderBottom: "1px solid #E5E7EB",
+              borderBottom: "1px solid var(--border-input)",
             }}
           >
             <Box sx={{ display: "flex", gap: 3 }}>
-              <KPI label="Present workers" value={3} color="#2563EB" />
-              <KPI label="Absent workers" value={0} color="#DC2626" />
-              <KPI label="On leave workers" value={0} color="#16A34A" />
+              <KPI label="Present workers" value={3} color="var(--color-primary)" />
+              <KPI label="Absent workers" value={0} color="var(--color-error)" />
+              <KPI label="On leave workers" value={0} color="var(--color-success)" />
             </Box>
 
             <Button
@@ -147,7 +147,7 @@ export default function CompanyDetails() {
             <Box
               sx={{
                 mt: 2,
-                border: "1px solid #E5E7EB",
+                border: "1px solid var(--border-input)",
                 borderRadius: "12px",
                 overflow: "hidden",
               }}
@@ -158,9 +158,9 @@ export default function CompanyDetails() {
                   gridTemplateColumns: "80px 1.8fr 1fr 0.8fr 1fr 60px",
                   px: 2,
                   py: 1,
-                  bgcolor: "#F9FAFB",
+                  bgcolor: "var(--bg-surface)",
                   fontSize: 12,
-                  color: "#6B7280",
+                  color: "var(--text-secondary)",
                 }}
               >
                 <Box>Sl no.</Box>
@@ -179,7 +179,7 @@ export default function CompanyDetails() {
                     gridTemplateColumns: "80px 1.8fr 1fr 0.8fr 1fr 60px",
                     px: 2,
                     py: 1.5,
-                    borderTop: "1px solid #E5E7EB",
+                    borderTop: "1px solid var(--border-input)",
                     fontSize: 13,
                     alignItems: "center",
                   }}
@@ -215,7 +215,7 @@ export default function CompanyDetails() {
         {/* ================= RIGHT ================= */}
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             borderRadius: "14px",
             p: 3,
           }}
@@ -249,7 +249,7 @@ export default function CompanyDetails() {
             "Tax Registration Number ( TRN )",
           ].map((label) => (
             <Box key={label} sx={{ mb: 2 }}>
-              <Typography fontSize={12} color="#6B7280" mb={0.5}>
+              <Typography fontSize={12} color="var(--text-secondary)" mb={0.5}>
                 {label}
               </Typography>
               <TextField fullWidth size="small" />
@@ -263,7 +263,7 @@ export default function CompanyDetails() {
               p: 2,
               borderRadius: "10px",
               fontSize: 12,
-              color: "#2563EB",
+              color: "var(--color-primary)",
               textAlign: "center",
             }}
           >
@@ -274,3 +274,4 @@ export default function CompanyDetails() {
     </Box>
   );
 }
+

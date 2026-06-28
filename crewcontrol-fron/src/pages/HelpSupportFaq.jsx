@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+﻿import { Box, Button, Typography } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -59,8 +59,8 @@ function HelpSupportFaq() {
     >
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #E5E7EB",
+          backgroundColor: "var(--bg-surface)",
+          border: "1px solid var(--border-input)",
           borderRadius: "10px",
           p: "24px",
         }}
@@ -77,14 +77,14 @@ function HelpSupportFaq() {
             height: "32px",
             color: "#374151",
             background: "#fff",
-            border: `1px solid #DEDEDE`,
+            border: `1px solid var(--border-card)`,
             borderRadius: "8px",
             padding: "5px 12px",
             cursor: "pointer",
             marginBottom: "20px",
             fontFamily: "inherit",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#F9FAFB")}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg-surface)")}
           onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
         >
           <ArrowBackIosIcon sx={{ fontSize: 12, transform: "translateX(-1px)" }} />
@@ -95,7 +95,7 @@ function HelpSupportFaq() {
           sx={{
             fontSize: "18px",
             fontWeight: 600,
-            color: "#111827",
+            color: "var(--text-primary)",
             mb: "16px",
           }}
         >
@@ -105,7 +105,7 @@ function HelpSupportFaq() {
         <Typography
           sx={{
             fontSize: "14px",
-            color: "#808080",
+            color: "var(--text-secondary)",
             mb: "16px",
           }}
         >
@@ -114,7 +114,7 @@ function HelpSupportFaq() {
 
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
+            border: "1px solid var(--border-input)",
             borderRadius: "8px",
             p: "20px",
           }}
@@ -123,7 +123,7 @@ function HelpSupportFaq() {
             sx={{
               fontSize: "14px",
               fontWeight: 600,
-              color: "#141414",
+              color: "var(--text-primary)",
               mb: "10px",
             }}
           >
@@ -139,7 +139,7 @@ function HelpSupportFaq() {
                   borderRadius: "10px",
                   p: "10px 12px",
                   mb: "8px",
-                  backgroundColor: "#FFFFFF",
+                  backgroundColor: "var(--bg-surface)",
                   cursor: "pointer",
                 }}
                 onClick={() => toggleItem(item.id)}
@@ -193,3 +193,4 @@ function HelpSupportFaq() {
 }
 
 export default HelpSupportFaq;
+

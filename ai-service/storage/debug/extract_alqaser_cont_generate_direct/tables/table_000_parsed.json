@@ -1,0 +1,16 @@
+﻿{
+  "table_index": 0,
+  "table_type": "attendance_table",
+  "confidence": 0.6954545454545454,
+  "parser": "attendance_table_parser",
+  "rows_count": 0,
+  "financials": {
+    "subtotal": 0.0,
+    "total_vat": 0.0,
+    "total_deduction": 0.0,
+    "gross_total": 0.0,
+    "net_payable": 0.0,
+    "deduction_breakdown": {}
+  },
+  "source_text": " 10 10 10 10 10 10 10 10 10 10 A  10 10 10 9 10 10 10 10 10 10"
+}

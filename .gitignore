@@ -35,7 +35,7 @@ __pycache__/
 .idea/
 *.swp
 *.swo
-
+ai-service_consolidated_code.txt
 # Node
 node_modules/
 package-lock.json
@@ -44,11 +44,13 @@ build/
 frontend/dist/
 frontend/.vite/
 crewcontrol-fron/dist/
-
+/consolidated_texts/
+scripts/*
 # OS files
 .DS_Store
 Thumbs.db
-
+*.png
+code_dump_src.txt
 # Logs
 *.log
 logs/

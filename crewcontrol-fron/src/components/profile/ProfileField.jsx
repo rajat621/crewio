@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 
 const profileFieldStyles = {
   container: {
@@ -9,15 +9,15 @@ const profileFieldStyles = {
   label: {
     fontSize: '14px',
     fontWeight: '400',
-    color: '#6B7280',
+    color: 'var(--text-secondary)',
     textTransform: 'none',
   },
   readOnlyValue: {
     fontSize: '14px',
-    color: '#6B7280',
-    border: '1px solid #DEDEDE',
+    color: 'var(--text-secondary)',
+    border: '1px solid var(--border-card)',
     borderRadius: '6px',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'var(--bg-surface)',
     padding: '0 12px',
     minHeight: '44px',
     display: 'flex',
@@ -28,17 +28,17 @@ const profileFieldStyles = {
     height: '44px',
     padding: '0 12px',
     fontSize: '14px',
-    border: '1px solid #DEDEDE',
+    border: '1px solid var(--border-card)',
     borderRadius: '6px',
     fontFamily: 'inherit',
-    color: '#141414',
-    backgroundColor: '#FFFFFF',
+    color: 'var(--text-primary)',
+    backgroundColor: 'var(--bg-surface)',
     transition: 'all 0.2s ease',
     outline: 'none',
     boxSizing: 'border-box',
   },
   inputFocus: {
-    borderColor: '#1D4ED8',
+    borderColor: 'var(--color-primary)',
     boxShadow: '0 0 0 2px rgba(29, 78, 216, 0.12)',
   },
   inputSuffix: {
@@ -50,7 +50,7 @@ const profileFieldStyles = {
     top: '50%',
     transform: 'translateY(-50%)',
     fontSize: '13px',
-    color: '#6B7280',
+    color: 'var(--text-secondary)',
     pointerEvents: 'none',
   },
   select: {
@@ -58,12 +58,12 @@ const profileFieldStyles = {
     height: '44px',
     padding: '0 12px',
     fontSize: '14px',
-    border: '1px solid #DEDEDE',
+    border: '1px solid var(--border-card)',
     borderRadius: '6px',
     fontFamily: 'inherit',
     cursor: 'pointer',
-    backgroundColor: '#FFFFFF',
-    color: '#141414',
+    backgroundColor: 'var(--bg-surface)',
+    color: 'var(--text-primary)',
     transition: 'all 0.2s ease',
     appearance: 'none',
     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M1 4l5 4 5-4'/%3E%3C/svg%3E")`,
@@ -74,7 +74,7 @@ const profileFieldStyles = {
     boxSizing: 'border-box',
   },
   selectFocus: {
-    borderColor: '#1D4ED8',
+    borderColor: 'var(--color-primary)',
     boxShadow: '0 0 0 2px rgba(29, 78, 216, 0.12)',
   },
   date: {
@@ -82,17 +82,17 @@ const profileFieldStyles = {
     height: '44px',
     padding: '0 12px',
     fontSize: '14px',
-    border: '1px solid #DEDEDE',
+    border: '1px solid var(--border-card)',
     borderRadius: '6px',
     fontFamily: 'inherit',
-    color: '#141414',
-    backgroundColor: '#FFFFFF',
+    color: 'var(--text-primary)',
+    backgroundColor: 'var(--bg-surface)',
     cursor: 'pointer',
     outline: 'none',
     boxSizing: 'border-box',
   },
   dateFocus: {
-    borderColor: '#1D4ED8',
+    borderColor: 'var(--color-primary)',
     boxShadow: '0 0 0 2px rgba(29, 78, 216, 0.12)',
   },
 };
@@ -196,3 +196,4 @@ export const ProfileField = ({
 };
 
 export default ProfileField;
+

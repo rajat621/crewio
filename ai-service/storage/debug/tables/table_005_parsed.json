@@ -1,0 +1,16 @@
+﻿{
+  "table_index": 5,
+  "table_type": "unknown_table",
+  "confidence": 0.3,
+  "parser": "unknown_table_parser",
+  "rows_count": 0,
+  "financials": {
+    "subtotal": 0.0,
+    "total_vat": 0.0,
+    "total_deduction": 0.0,
+    "gross_total": 0.0,
+    "net_payable": 0.0,
+    "deduction_breakdown": {}
+  },
+  "source_text": " sh Buhe           9.5 "
+}

@@ -1,12 +1,19 @@
-import { useState, useRef, useMemo ,useEffect } from "react";
+﻿import { useState, useRef, useMemo ,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { employeesApi } from "../api/employees";
+import { companiesApi } from "../api/companies";
 import ReactCountryFlag from "react-country-flag";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
+import EditIcon from "@mui/icons-material/Edit";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -28,7 +35,7 @@ import dayjs from "dayjs";
 ═══════════════════════════════════════════════════════════════ */
 
 const GENDERS       = ["Male", "Female", "Other"];
-const TRADES        = ["Mason", "Carpenter", "Electrician", "Plumber", "Welder", "Helper"];
+// const TRADES        = ["Mason", "Carpenter", "Electrician", "Plumber", "Welder", "Helper"];
 const EMP_TYPES     = ["Full Time", "Part Time", "Contract", "Daily Wage"];
 
 const EMPLOYMENT_TYPE_MAP = {
@@ -41,8 +48,10 @@ const EMPLOYMENT_TYPE_MAP = {
 const EXPENSE_KEY_MAP = {
   "Offer Letter": "offerLetter",
   "Entry Permit": "entryPermit",
+  "Tawjeeh Payment": "recruitment",
   "Visa Stamping": "stampingFee",
   "Emirates ID": "emiratesId",
+  ILOE: "icn",
   "Emigration Card Cancellation": "emigrationCancellation",
   Insurance: "insurance",
   "Medical (MOH)": "medical",
@@ -50,7 +59,19 @@ const EXPENSE_KEY_MAP = {
   "Workman Compensation": "workersCompensation",
   "Labor Payment (Category 2)": "laborPaymentCategory2",
   "Labor Advance": "laborAdvance",
+  "Labor PPE": "laborPRE",
+  "Labor Mattress": "laborWPS",
+  "Labor Utensils": "laborPayment",
+  "Other equipment": "otherExpenses",
 };
+
+const readFileAsDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 
 const toIsoDate = (value) => {
   if (!value) return null;
@@ -80,24 +101,36 @@ const mapExpensesForApi = (expenses) => {
   }, {});
 };
 
+const mapExpenseReceiptsForApi = (expenseReceipts) => {
+  return Object.entries(expenseReceipts || {}).reduce((acc, [label, fileData]) => {
+    const mappedKey = EXPENSE_KEY_MAP[label];
+    if (mappedKey && fileData) {
+      acc[mappedKey] = fileData;
+    }
+    return acc;
+  }, {});
+};
+
 /* ═══════════════════════════════════════════════════════════════
    SHARED STYLE TOKENS
 ═══════════════════════════════════════════════════════════════ */
 
-const BLUE   = "#2C5FEA";
-const DARK   = "#111827";
-const GRAY   = "#6B7280";
-const BORDER = "#DEDEDE";
-const LIGHT  = "#F9FAFB";
+const BLUE   = "var(--color-primary)";
+const DARK   = "var(--text-primary)";
+const GRAY   = "var(--text-secondary)";
+const BORDER = "var(--border-card)";
+const LIGHT  = "var(--bg-surface)";
 
 const baseInput = {
   width: "100%",
   height: "44px",
-  border: `1px solid ${BORDER}`,
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: BORDER,
   borderRadius: "8px",
   padding: "0 12px",
   fontSize: "14px",
-  color: "#141414",
+  color: "var(--text-primary)",
   background: "#fff",
   outline: "none",
   appearance: "none",
@@ -113,11 +146,11 @@ const COUNTRY_OPTIONS = getCountries();
 const DEFAULT_COUNTRY = getCountryByIso("AE") || COUNTRY_OPTIONS[0] || { isoCode: "AE", phoneCode: "+971", name: "United Arab Emirates" };
 
 const MAIN_STEPS = [
-  { id: 1, label: "Employee Details" },
-  { id: 2, label: "Passport Details" },
-  { id: 3, label: "Expenses" },
-  { id: 4, label: "Work Details" },
-  { id: 5, label: "App Access" },
+  { id: 1, label: "Employee Details", icon: PersonOutlineIcon },
+  { id: 2, label: "Upload Documents", icon: BadgeOutlinedIcon },
+  { id: 3, label: "Expenses", icon: PaymentsOutlinedIcon },
+  { id: 4, label: "Work Details", icon: WorkOutlineIcon },
+  { id: 5, label: "App Access", icon: AppRegistrationOutlinedIcon },
 ];
 
 const EXPENSE_SECTIONS = [
@@ -156,7 +189,7 @@ function Field({ label, required, children }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       {label && (
-        <label style={{ fontSize: "14px", color: "#141414", display: "flex", gap: "2px", alignItems: "center" }}>
+        <label style={{ fontSize: "14px", color: "var(--text-primary)", display: "flex", gap: "2px", alignItems: "center" }}>
           {label}
           {required && <span style={{ color: "#F00" }}>*</span>}
         </label>
@@ -209,9 +242,7 @@ function FSelect({ style, children, ...p }) {
    SVG ICONS
 ═══════════════════════════════════════════════════════════════ */
 
-const DocIcon = ({ color = "#9CA3AF", size = 15 }) => (
-  <DescriptionOutlinedIcon sx={{ fontSize: size, color }} />
-);
+const DocIcon = DescriptionOutlinedIcon;
 
 const CheckIcon = () => (
   <DoneIcon sx={{ color: "#fff", fontSize: 18, fontWeight: "bold" }} />
@@ -226,7 +257,7 @@ const UserIcon = () => (
 );
 
 const UploadCloudIconComponent = () => (
-  <CloudUploadIcon sx={{ fontSize: 48, color: "#9CA3AF" }} />
+  <CloudUploadIcon sx={{ fontSize: 48, color: "var(--text-disabled)" }} />
 );
 
 const CalIconComponent = () => (
@@ -242,7 +273,7 @@ const KeyIconComponent = () => (
 );
 
 const SuccessCheckIcon = () => (
-  <CheckCircleIcon sx={{ fontSize: 80, color: "#2C5FEA" }} />
+  <CheckCircleIcon sx={{ fontSize: 80, color: "var(--color-primary)" }} />
 );
 
 /* ═══════════════════════════════════════════════════════════════
@@ -256,6 +287,7 @@ function Stepper({ currentStep, expenseSubStep }) {
         const isCompleted = step.id < currentStep || (step.id === 3 && currentStep > 3);
         const isActive    = step.id === currentStep;
         const isLast      = idx === MAIN_STEPS.length - 1;
+        const StepIcon = step.icon || DocIcon;
 
         // Show expense sub-steps only while step 3 is active or completed
         const showSubSteps = step.id === 3 && (isActive || currentStep > 3);
@@ -263,12 +295,12 @@ function Stepper({ currentStep, expenseSubStep }) {
         return (
           <div key={step.id} style={{ position: "relative" }}>
             <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
-              <StepCircle completed={isCompleted} active={isActive} />
+              <StepCircle completed={isCompleted} active={isActive} icon={StepIcon} />
               <div>
-                <div style={{ fontSize: "8px", color: "#141414", lineHeight: "14px", letterSpacing: "0.24px", textTransform: "uppercase" }}>
+                <div style={{ fontSize: "8px", color: "var(--text-primary)", lineHeight: "14px", letterSpacing: "0.24px", textTransform: "uppercase" }}>
                   STEP {step.id}
                 </div>
-                <div style={{ fontSize: "14px", fontWeight: 500, lineHeight: "22px", letterSpacing: "0.42px", color: isActive || isCompleted ? DARK : "#141414", marginTop: "0px" }}>
+                <div style={{ fontSize: "14px", fontWeight: 500, lineHeight: "22px", letterSpacing: "0.42px", color: isActive || isCompleted ? DARK : "var(--text-primary)", marginTop: "0px" }}>
                   {step.label}
                 </div>
               </div>
@@ -290,7 +322,7 @@ function Stepper({ currentStep, expenseSubStep }) {
                               <div style={{ width: "1px", flex: 1, minHeight: "8px", background: BORDER }} />
                             )}
                           </div>
-                          <div style={{ fontSize: "12px", fontWeight: subActive || subCompleted ? 600 : 400, color: subActive || subCompleted ? DARK : "#9CA3AF", paddingTop: "8px", whiteSpace: "nowrap" }}>
+                          <div style={{ fontSize: "12px", fontWeight: subActive || subCompleted ? 600 : 400, color: subActive || subCompleted ? DARK : "var(--text-disabled)", paddingTop: "8px", whiteSpace: "nowrap" }}>
                             {sec.label}
                           </div>
                         </div>
@@ -310,10 +342,10 @@ function Stepper({ currentStep, expenseSubStep }) {
   );
 }
 
-function StepCircle({ completed, active }) {
+function StepCircle({ completed, active, icon: IconComponent = DocIcon }) {
   const DARK_LOCAL = "#111111";
-  const GREY = "#9CA3AF";
-  const LIGHT_BORDER = "#D1D5DB";
+  const GREY = "var(--text-disabled)";
+  const LIGHT_BORDER = "var(--border-input-hover)";
 
   if (completed) {
     return (
@@ -327,7 +359,7 @@ function StepCircle({ completed, active }) {
     return (
       <div style={{ width: 44, height: 44, borderRadius: "50%", border: `2px solid ${DARK_LOCAL}`, padding: 5, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "#fff" }}>
         <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: DARK_LOCAL, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <DocIcon color="#fff" size={18} />
+          <IconComponent sx={{ fontSize: 18, color: "#fff" }} />
         </div>
       </div>
     );
@@ -335,8 +367,8 @@ function StepCircle({ completed, active }) {
 
   return (
     <div style={{ width: 44, height: 44, borderRadius: "50%", border: `2px solid ${LIGHT_BORDER}`, padding: 5, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "#fff" }}>
-      <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <DocIcon color={GREY} size={18} />
+      <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "var(--bg-surface-secondary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <IconComponent sx={{ fontSize: 18, color: GREY }} />
       </div>
     </div>
   );
@@ -344,7 +376,7 @@ function StepCircle({ completed, active }) {
 
 function SubCircle({ completed, active }) {
   const DARK = "#111111";
-  const LIGHT_BORDER = "#D1D5DB";
+  const LIGHT_BORDER = "var(--border-input-hover)";
   // COMPLETED
   if (completed) {
     return (
@@ -392,7 +424,7 @@ function SubCircle({ completed, active }) {
         height: 14,
         borderRadius: "50%",
         border: `2px solid ${LIGHT_BORDER}`,
-        background: "#F3F4F6",
+        background: "var(--bg-surface-secondary)",
       }}
     />
   );
@@ -408,9 +440,11 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
       style={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
-        background: "#F3F4F6",
+        height: "100%",
+        minHeight: 0,
+        background: "var(--bg-surface-secondary)",
         fontFamily: "sans-serif",
+        overflow: "hidden",
       }}
     >
       {/* BODY */}
@@ -418,9 +452,10 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
         <div
           style={{
             display: "flex",
-            minHeight: "100%",
+            height: "100%",
+            minHeight: 0,
             background: "#fff",
-            border: `1px solid #DEDEDE`,
+            border: `1px solid var(--border-card)`,
             borderRadius: "12px",
             overflow: "hidden",
           }}
@@ -430,19 +465,20 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
             style={{
               width: "282px",
               flexShrink: 0,
-              background: "#F9FAFB",
+              height: "100%",
+              background: "var(--bg-surface)",
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
-              overflow: "visible",
+              overflow: "hidden",
             }}
           >
             <Stepper currentStep={currentStep} expenseSubStep={expenseSubStep} />
           </div>
 
           {/* MAIN */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100%" }}>
-            {/* Content area without scrolling */}
-            <div style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: "1 0 auto" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, height: "100%" }}>
+            {/* Content area with independent scrolling */}
+            <div className="thin-overlay-scroll" style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: 1, minHeight: 0 }}>
               {isSuccess ? null : (
                 <button
                   onClick={onBack}
@@ -456,7 +492,7 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
                     height: "32px",
                     color: "#374151",
                     background: "#fff",
-                    border: `1px solid #DEDEDE`,
+                    border: `1px solid var(--border-card)`,
                     borderRadius: "8px",
                     padding: "5px 12px",
                     cursor: "pointer",
@@ -508,7 +544,7 @@ function CancelBtn({ onClick }) {
         border: "none",
         borderRadius: "8px",
         background: h ? "#EFF4FF" : "#fff",
-        color: "#1D4ED8",
+        color: "var(--color-primary)",
         fontSize: "12px",
         fontWeight: 500,
         lineHeight: "20px",
@@ -534,7 +570,7 @@ function PrimaryBtn({ onClick, children, disabled }) {
         padding: "0 24px",
         border: "none",
         borderRadius: "8px",
-        background: disabled ? "#D1D5DB" : h ? "#1D4ED8" : BLUE,
+        background: disabled ? "var(--border-input-hover)" : h ? "var(--color-primary)" : BLUE,
         color: "#fff",
         fontSize: "12px",
         fontWeight: 500,
@@ -553,8 +589,8 @@ function PrimaryBtn({ onClick, children, disabled }) {
 function FormHeading({ title, subtitle }) {
   return (
     <div style={{ marginBottom: "32px" }}>
-      <h2 style={{ fontSize: "18px", fontWeight: 600, color: "#141414", lineHeight: "28px", letterSpacing: "0.72px", margin: "0 0 10px 0" }}>{title}</h2>
-      <p style={{ fontSize: "14px", color: "#808080", lineHeight: "22px",letterSpacing:"0.42px", margin: 0 }}>{subtitle}</p>
+      <h2 style={{ fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", lineHeight: "28px", letterSpacing: "0.72px", margin: "0 0 10px 0" }}>{title}</h2>
+      <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: "22px",letterSpacing:"0.42px", margin: 0 }}>{subtitle}</p>
     </div>
   );
 }
@@ -642,10 +678,10 @@ useEffect(() => {
         subtitle="Enter the employee's basic personal information."
       />
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        <Field label="Employee ID" required >
+        <Field label="Emirates ID" required >
           <FInput
             type="text"
-            placeholder="Enter Employee ID"
+            placeholder="Enter Emirates ID"
             value={data.employeeId}
             onChange={set("employeeId")}
           />
@@ -670,7 +706,7 @@ useEffect(() => {
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <DatePicker
       format="DD/MM/YYYY"
-      sx={{color:"#808080"}}
+      sx={{color:"var(--text-secondary)"}}
       value={data.dateOfBirth ? dayjs(data.dateOfBirth) : null}
       onChange={(newValue) => {
         onChange({
@@ -683,18 +719,18 @@ useEffect(() => {
           fullWidth: true,
           placeholder: "DD/MM/YYYY",
           sx: {
-            color: "#808080",
+            color: "var(--text-secondary)",
             "& .MuiOutlinedInput-root": {
               height: "44px",
               borderRadius: "8px",
               "& fieldset": {
-                borderColor: "#DEDEDE", // default border
+                borderColor: "var(--border-card)", // default border
               },
               "&:hover fieldset": {
-                borderColor: "#DEDEDE",
+                borderColor: "var(--border-card)",
               },
               "&.Mui-focused fieldset": {
-                borderColor: "#DEDEDE", // no blue on focus
+                borderColor: "var(--border-card)", // no blue on focus
               },
             },
           },
@@ -814,7 +850,7 @@ useEffect(() => {
       onChange={set("mobile")}
       style={{
         borderRadius: "0 8px 8px 0",
-        borderLeft: `1px solid #E5E7EB`,
+        borderLeft: `1px solid var(--border-input)`,
       }}
     />
   </div>
@@ -893,18 +929,100 @@ useEffect(() => {
 
 function Step2({ data, onChange }) {
   const set = (k) => (e) => onChange({ ...data, [k]: e.target.value });
-  const fileRef = useRef();
-  const [fileName, setFileName] = useState("");
+  const passportRef = useRef();
+  const emiratesRef = useRef();
+  const laborRef = useRef();
+  const medicalRef = useRef();
+  const residenceRef = useRef();
+  const contractRef = useRef();
   const [dragging, setDragging] = useState(false);
 
-  const handleFile = (file) => {
-    if (file) setFileName(file.name);
+  const handleFile = async (field, file) => {
+    if (!file) return;
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      onChange({ ...data, [field]: dataUrl || file.name });
+    } catch (error) {
+      onChange({ ...data, [field]: file.name });
+    }
   };
+
+  const getUploadText = (value, fallback) => {
+    if (!value) return fallback;
+    if (typeof value === "string" && value.startsWith("data:")) return "Uploaded file";
+    return value;
+  };
+
+  const renderDropZone = (label, field, inputRef, placeholder) => (
+    <Field label={label}>
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          handleFile(field, e.dataTransfer.files[0]);
+        }}
+        style={{
+          border: `1.5px dashed ${dragging ? BLUE : "var(--border-input-hover)"}`,
+          borderRadius: "10px",
+          padding: "40px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "8px",
+          background: dragging ? "#EFF4FF" : "var(--bg-surface)",
+          cursor: "pointer",
+        }}
+        onClick={() => inputRef.current.click()}
+      >
+        <UploadCloudIconComponent />
+        <p style={{ fontSize: "14px", color: DARK, margin: 0 }}>
+          {getUploadText(data[field], placeholder)}
+        </p>
+        <p style={{ fontSize: "12px", color: GRAY, margin: 0, fontStyle: "italic" }}>
+          Accepted formats: PDF, JPG, PNG (Max 5MB)
+        </p>
+        <p style={{ fontSize: "13px", color: GRAY, margin: "4px 0" }}>- OR -</p>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            inputRef.current.click();
+          }}
+          style={{
+            height: "34px",
+            padding: "0 24px",
+            background: BLUE,
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            fontSize: "14px",
+            fontWeight: 500,
+            cursor: "pointer",
+            fontFamily: "inherit",
+          }}
+        >
+          Browse
+        </button>
+      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf,.jpg,.jpeg,.png"
+        style={{ display: "none" }}
+        onChange={(e) => handleFile(field, e.target.files[0])}
+      />
+    </Field>
+  );
 
   return (
     <div style={{ maxWidth: "560px" }}>
       <FormHeading
-        title="Passport Details"
+        title="Upload Documents"
         subtitle="Provide passport and identity information for verification and compliance."
       />
 
@@ -917,7 +1035,7 @@ function Step2({ data, onChange }) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               format="DD/MM/YYYY"
-              sx={{color:"#808080"}}
+              sx={{color:"var(--text-secondary)"}}
               value={data.passportExpiry ? dayjs(data.passportExpiry) : null}
               onChange={(newValue) => {
                 onChange({
@@ -930,18 +1048,18 @@ function Step2({ data, onChange }) {
                   fullWidth: true,
                   placeholder: "DD/MM/YYYY",
                   sx: {
-                    color: "#808080",
+                    color: "var(--text-secondary)",
                     "& .MuiOutlinedInput-root": {
                       height: "44px",
                       borderRadius: "8px",
                       "& fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&:hover fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                     },
                   },
@@ -951,58 +1069,55 @@ function Step2({ data, onChange }) {
           </LocalizationProvider>
         </Field>
 
-        <Field label="Upload Passport Copy">
-          <div
-            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(e) => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]); }}
-            style={{
-              border: `1.5px dashed ${dragging ? BLUE : "#D1D5DB"}`,
-              borderRadius: "10px",
-              padding: "40px 24px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "8px",
-              background: dragging ? "#EFF4FF" : "#FAFAFA",
-              cursor: "pointer",
-            }}
-            onClick={() => fileRef.current.click()}
-          >
-            <UploadCloudIconComponent />
-            <p style={{ fontSize: "14px", color: DARK, margin: 0 }}>
-              {fileName || "Drag & drop passport copy here"}
-            </p>
-            <p style={{ fontSize: "12px", color: GRAY, margin: 0, fontStyle: "italic" }}>
-              Accepted formats: PDF, JPG, PNG (Max 5MB)
-            </p>
-            <p style={{ fontSize: "13px", color: GRAY, margin: "4px 0" }}>- OR -</p>
-            <button
-              onClick={(e) => { e.stopPropagation(); fileRef.current.click(); }}
-              style={{
-                height: "34px",
-                padding: "0 24px",
-                background: BLUE,
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                fontSize: "14px",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontFamily: "inherit",
-              }}
-            >
-              Browse
-            </button>
-          </div>
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".pdf,.jpg,.jpeg,.png"
-            style={{ display: "none" }}
-            onChange={(e) => handleFile(e.target.files[0])}
-          />
+        {renderDropZone("Upload Passport Copy", "passportCopy", passportRef, "Drag & drop passport copy here")}
+
+        <Field label="Emirates ID">
+          <FInput type="text" placeholder="Enter Emirates ID" value={data.emiratesId} onChange={set("emiratesId")} />
         </Field>
+
+        <Field label="Emirates ID Expiry Date">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              format="DD/MM/YYYY"
+              sx={{ color: "var(--text-secondary)" }}
+              value={data.emiratesIdExpiry ? dayjs(data.emiratesIdExpiry) : null}
+              onChange={(newValue) => {
+                onChange({
+                  ...data,
+                  emiratesIdExpiry: newValue ? newValue.format("DD/MM/YYYY") : "",
+                });
+              }}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  placeholder: "DD/MM/YYYY",
+                  sx: {
+                    color: "var(--text-secondary)",
+                    "& .MuiOutlinedInput-root": {
+                      height: "44px",
+                      borderRadius: "8px",
+                      "& fieldset": {
+                        borderColor: "var(--border-card)",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "var(--border-card)",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "var(--border-card)",
+                      },
+                    },
+                  },
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Field>
+
+        {renderDropZone("Upload Emirates Card Copy", "emiratesIdCopy", emiratesRef, "Drag & drop Emirates card copy here")}
+        {renderDropZone("Upload Labor Card Copy", "laborCardCopy", laborRef, "Drag & drop labor card copy here")}
+        {renderDropZone("Upload Medical Certificate Copy", "medicalCertificateCopy", medicalRef, "Drag & drop medical certificate copy here")}
+        {renderDropZone("Upload Residence ID Copy", "residenceIdCopy", residenceRef, "Drag & drop residence ID copy here")}
+        {renderDropZone("Upload Contract Paper Copy", "contractPaperCopy", contractRef, "Drag & drop contract paper copy here")}
       </div>
     </div>
   );
@@ -1012,8 +1127,17 @@ function Step2({ data, onChange }) {
    STEP 3: EXPENSES (sub-step table)
 ═══════════════════════════════════════════════════════════════ */
 
-function ExpenseRow({ label, value, onChange }) {
+function ExpenseRow({ label, value, onChange, receiptValue, onUpload }) {
   const [f, setF] = useState(false);
+  const uploadRef = useRef(null);
+
+  const uploadLabel =
+    receiptValue && typeof receiptValue === "string"
+      ? receiptValue.startsWith("data:")
+        ? "Uploaded"
+        : receiptValue
+      : "Upload";
+
   return (
     <tr>
       <td style={{ padding: "10px 0", fontSize: "14px", color: DARK }}>{label}</td>
@@ -1069,6 +1193,8 @@ function ExpenseRow({ label, value, onChange }) {
       </td>
       <td style={{ padding: "10px 0" }}>
         <button
+          type="button"
+          onClick={() => uploadRef.current?.click()}
           style={{
             background: "none",
             border: "none",
@@ -1080,18 +1206,35 @@ function ExpenseRow({ label, value, onChange }) {
             fontFamily: "inherit",
           }}
         >
-          Upload
+          {uploadLabel}
         </button>
+        <input
+          ref={uploadRef}
+          type="file"
+          accept=".pdf,.jpg,.jpeg,.png"
+          style={{ display: "none" }}
+          onChange={(e) => onUpload?.(e.target.files?.[0])}
+        />
       </td>
     </tr>
   );
 }
 
-function Step3({ expenseSubStep, data, onChange }) {
+function Step3({ expenseSubStep, data, onChange, expenseReceipts, onReceiptChange }) {
   const section = EXPENSE_SECTIONS[expenseSubStep];
   const total   = Object.values(data).reduce((s, v) => s + (parseFloat(v) || 0), 0);
 
   const setVal = (item) => (e) => onChange({ ...data, [item]: e.target.value });
+  const setReceipt = (item) => async (file) => {
+    if (!file) return;
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      onReceiptChange({ ...expenseReceipts, [item]: dataUrl || file.name });
+    } catch (error) {
+      onReceiptChange({ ...expenseReceipts, [item]: file.name });
+    }
+  };
 
   return (
     <div>
@@ -1103,9 +1246,9 @@ function Step3({ expenseSubStep, data, onChange }) {
         {/* Total Expenses Card */}
         <div
           style={{
-            border: `1px solid #DEDEDE`,
+            border: `1px solid var(--border-card)`,
             borderRadius: "8px",
-            background: "#F6F6F6",
+            background: "var(--bg-surface-secondary)",
             padding: "24px 59px 24px 20px",
             height:"110px",
             width: "240px",
@@ -1114,7 +1257,7 @@ function Step3({ expenseSubStep, data, onChange }) {
             marginLeft: "24px",
           }}
         >
-          <div style={{ fontSize: "16px",lineHeight: "26px" ,color: "#808080" , marginBottom: "4px" }}>Total Expenses (AED)</div>
+          <div style={{ fontSize: "16px",lineHeight: "26px" ,color: "var(--text-secondary)" , marginBottom: "4px" }}>Total Expenses (AED)</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
             <span style={{ fontSize: "28px", fontWeight: 700, color: DARK }}>{total.toFixed(2)}</span>
             <span style={{ fontSize: "13px", color: GRAY }}>/ employee</span>
@@ -1146,6 +1289,8 @@ function Step3({ expenseSubStep, data, onChange }) {
               label={item}
               value={data[item] ?? "0.00"}
               onChange={setVal(item)}
+              receiptValue={expenseReceipts?.[item]}
+              onUpload={setReceipt(item)}
             />
           ))}
         </tbody>
@@ -1166,18 +1311,20 @@ function Step4({ data, onChange }) {
       <FormHeading title="Work Details" subtitle="Define the employee's role and compensation details." />
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-        <Field label="Trade">
-          <FSelect value={data.trade} onChange={set("trade")}>
-            <option value="">Select trade</option>
-            {TRADES.map((t) => <option key={t}>{t}</option>)}
-          </FSelect>
-        </Field>
+<Field label="Trade">
+  <FInput
+    type="text"
+    placeholder="Enter trade"
+    value={data.trade}
+    onChange={set("trade")}
+  />
+</Field>
 
         <Field label="Joining Date">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               format="DD/MM/YYYY"
-              sx={{color:"#808080"}}
+              sx={{color:"var(--text-secondary)"}}
               value={data.joiningDate ? dayjs(data.joiningDate) : null}
               onChange={(newValue) => {
                 onChange({
@@ -1190,18 +1337,18 @@ function Step4({ data, onChange }) {
                   fullWidth: true,
                   placeholder: "DD/MM/YYYY",
                   sx: {
-                    color: "#808080",
+                    color: "var(--text-secondary)",
                     "& .MuiOutlinedInput-root": {
                       height: "44px",
                       borderRadius: "8px",
                       "& fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&:hover fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                     },
                   },
@@ -1406,25 +1553,92 @@ function Step5({ userId, password }) {
    SUCCESS SCREEN
 ═══════════════════════════════════════════════════════════════ */
 
-function SuccessScreen({ navigate }) {
+function SuccessScreen({ onOpenAssign, onBackHome, onEdit }) {
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
         minHeight: "600px",
-        gap: "20px",
       }}
     >
-      <SuccessCheckIcon />
-      <h2 style={{ margin: 0, fontSize: "28px", fontWeight: 600, color: DARK, textAlign: "center" }}>
-        Employee Added Successfully!
-      </h2>
-      <p style={{ margin: 0, fontSize: "14px", color: GRAY, textAlign: "center", maxWidth: "400px" }}>
-        The employee profile has been created and is ready for assignment.
-      </p>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "36px" }}>
+        <button
+          type="button"
+          onClick={onBackHome}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "4px",
+            fontSize: "14px",
+            width: "130px",
+            height: "32px",
+            color: "var(--text-secondary)",
+            background: "#fff",
+            border: `1px solid var(--border-card)`,
+            borderRadius: "8px",
+            padding: "5px 12px",
+            cursor: "pointer",
+            fontFamily: "inherit",
+          }}
+        >
+          <ArrowBackIosIcon sx={{ fontSize: 12, transform: "translateX(-1px)" }} />
+          Back to home
+        </button>
+        <button
+          type="button"
+          onClick={onEdit}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "6px",
+            fontSize: "14px",
+            height: "32px",
+            color: "var(--text-secondary)",
+            background: "#fff",
+            border: `1px solid var(--border-card)`,
+            borderRadius: "8px",
+            padding: "0 14px",
+            cursor: "pointer",
+            fontFamily: "inherit",
+          }}
+        >
+          <EditIcon sx={{ fontSize: 14 }} />
+          Edit
+        </button>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px", minHeight: "420px" }}>
+        <SuccessCheckIcon />
+        <h2 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: DARK, textAlign: "center" }}>
+          Employee Added Successfully!
+        </h2>
+        <p style={{ margin: 0, fontSize: "14px", color: "var(--text-secondary)", textAlign: "center", maxWidth: "740px", fontWeight: 400 }}>
+          The employee profile has been created and is ready for assignment.
+        </p>
+        <button
+          type="button"
+          onClick={onOpenAssign}
+          style={{
+            marginTop: "18px",
+            minWidth: "180px",
+            height: "32px",
+            borderRadius: "8px",
+            border: "none",
+            background: BLUE,
+            color: "#fff",
+            fontSize: "12px",
+            fontWeight: 500,
+            cursor: "pointer",
+            fontFamily: "inherit",
+            padding: "0 22px",
+          }}
+        >
+          Assign to company
+        </button>
+      </div>
     </div>
   );
 }
@@ -1457,17 +1671,122 @@ function AddEmployee() {
     address: "",
   });
 
-  const [step2Data, setStep2Data] = useState({ passportNo: "", passportExpiry: "", file: null });
+  const [step2Data, setStep2Data] = useState({
+    passportNo: "",
+    passportExpiry: "",
+    passportCopy: "",
+    emiratesId: "",
+    emiratesIdExpiry: "",
+    emiratesIdCopy: "",
+    laborCardCopy: "",
+    medicalCertificateCopy: "",
+    residenceIdCopy: "",
+    contractPaperCopy: "",
+  });
 
   const [expenseData, setExpenseData] = useState({});
+  const [expenseReceipts, setExpenseReceipts] = useState({});
 
   const [step4Data, setStep4Data] = useState({
     trade: "", joiningDate: "", ratePerHour: "", employmentType: "", overtimeRate: "",
   });
 
   const [generatedCredentials, setGeneratedCredentials] = useState({ userId: "", password: "" });
+  const [createdEmployeeId, setCreatedEmployeeId] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [companyOptions, setCompanyOptions] = useState([]);
+  const [selectedCompanyId, setSelectedCompanyId] = useState("");
+  const [companyLoading, setCompanyLoading] = useState(false);
+  const [assigningCompany, setAssigningCompany] = useState(false);
+  const [assignError, setAssignError] = useState("");
+
+  const handleStep1Change = (nextStep1) => {
+    setStep1Data(nextStep1);
+    setStep2Data((prev) => ({ ...prev, emiratesId: nextStep1.employeeId || "" }));
+  };
+
+  const handleStep2Change = (nextStep2) => {
+    setStep2Data(nextStep2);
+    setStep1Data((prev) => ({ ...prev, employeeId: nextStep2.emiratesId || "" }));
+  };
+
+  const loadClientCompanies = async () => {
+    try {
+      setCompanyLoading(true);
+      setAssignError("");
+      let rawRows = [];
+
+      try {
+        const response = await companiesApi.getClientCompanies({ page: 1, limit: 500 });
+        rawRows = Array.isArray(response?.data?.data)
+          ? response.data.data
+          : Array.isArray(response?.data?.companies)
+            ? response.data.companies
+            : [];
+      } catch (error) {
+        const fallbackResponse = await companiesApi.getCompanies({ page: 1, limit: 500 });
+        rawRows = Array.isArray(fallbackResponse?.data?.data)
+          ? fallbackResponse.data.data
+          : Array.isArray(fallbackResponse?.data?.companies)
+            ? fallbackResponse.data.companies
+            : [];
+      }
+
+      const clients = rawRows
+        .filter(
+          (company) =>
+            (company?.companyRole || "client") === "client" &&
+            String(company?.status || "active").toLowerCase() === "active"
+        )
+        .map((company) => ({
+          id: company?._id,
+          name: company?.name || "Unnamed company",
+        }))
+        .filter((company) => company.id);
+
+      setCompanyOptions(clients);
+      setSelectedCompanyId(clients[0]?.id || "");
+    } catch (error) {
+      setAssignError("Unable to load client companies. Please try again.");
+    } finally {
+      setCompanyLoading(false);
+    }
+  };
+
+  const handleOpenAssignModal = async () => {
+    setAssignModalOpen(true);
+    if (!createdEmployeeId) {
+      setAssignError("Employee ID missing. Please add the employee again.");
+      return;
+    }
+    await loadClientCompanies();
+  };
+
+  const handleCloseAssignModal = () => {
+    setAssignModalOpen(false);
+    setAssignError("");
+  };
+
+  const handleAssignCompany = async () => {
+    if (!createdEmployeeId || !selectedCompanyId) {
+      setAssignError("Please select a company.");
+      return;
+    }
+
+    try {
+      setAssigningCompany(true);
+      setAssignError("");
+      await employeesApi.assignEmployee(createdEmployeeId, selectedCompanyId);
+      handleCloseAssignModal();
+      navigate("/employees");
+    } catch (error) {
+      setAssignError(error?.response?.data?.message || "Unable to assign company. Please try again.");
+    } finally {
+      setAssigningCompany(false);
+    }
+  };
 
   /* ── Navigation handlers ── */
   const handleNext = async () => {
@@ -1486,13 +1805,19 @@ function AddEmployee() {
         setIsSubmitting(true);
         const payload = {
           employeeId: step1Data.employeeId,
+          emiratesId: step2Data.emiratesId || step1Data.employeeId,
           firstName: step1Data.firstName,
           lastName: step1Data.lastName,
           gender: step1Data.gender,
           dateOfBirth: toIsoDate(step1Data.dateOfBirth),
+          phoneCountryIso: step1Data.phoneCountryIso,
+          countryCode: step1Data.countryCode,
           mobile: `${step1Data.countryCode} ${step1Data.mobile}`.trim(),
+          mobileNumber: `${step1Data.countryCode} ${step1Data.mobile}`.trim(),
           email: step1Data.email || null,
           nationality: step1Data.nationality,
+          state: step1Data.state || null,
+          city: step1Data.city || null,
           address: step1Data.address || null,
           trade: step4Data.trade || null,
           joiningDate: toIsoDate(step4Data.joiningDate),
@@ -1501,20 +1826,37 @@ function AddEmployee() {
           overtimeRate: parseFloat(step4Data.overtimeRate) || 0,
           passportNo: step2Data.passportNo || null,
           passportExpiry: toIsoDate(step2Data.passportExpiry),
+          passportCopy: step2Data.passportCopy || null,
+          emiratesIdExpiry: toIsoDate(step2Data.emiratesIdExpiry),
+          emiratesIdCopy: step2Data.emiratesIdCopy || null,
+          laborCardCopy: step2Data.laborCardCopy || null,
+          medicalCertificateCopy: step2Data.medicalCertificateCopy || null,
+          residenceIdCopy: step2Data.residenceIdCopy || null,
+          contractPaperCopy: step2Data.contractPaperCopy || null,
           expenses: mapExpensesForApi(expenseData),
+          expenseReceipts: mapExpenseReceiptsForApi(expenseReceipts),
         };
 
         const response = await employeesApi.createEmployee(payload);
-        const creds = response?.data?.employee || {};
+        const creds = response?.data?.employee || response?.data?.data || {};
+        setCreatedEmployeeId(creds?._id || "");
+
+        const nextUserId = creds.appUserId || creds.userId || creds.employeeId || "";
+        const isHashedPassword = /^\$2[aby]\$\d{2}\$/.test(String(creds.appPassword || ""));
+        const nextPassword = creds.password || (!isHashedPassword ? creds.appPassword : `${nextUserId}@123`);
 
         setGeneratedCredentials({
-          userId: creds.userId || "",
-          password: creds.appPassword || "",
+          userId: nextUserId,
+          password: nextPassword,
         });
         setSubmitError("");
         setCurrentStep(5);
       } catch (error) {
-        setSubmitError(error?.response?.data?.message || "Unable to create employee. Please try again.");
+        setSubmitError(
+          error?.response?.data?.message ||
+          error?.response?.data?.error ||
+          "Unable to create employee. Please try again."
+        );
       } finally {
         setIsSubmitting(false);
       }
@@ -1571,8 +1913,24 @@ function AddEmployee() {
   };
 
   const handlePrimary = async () => {
-    if (currentStep === 6) { navigate("/employees"); return; }
+    if (currentStep === 6) {
+      await handleOpenAssignModal();
+      return;
+    }
     await handleNext();
+  };
+
+  const handleBackToEmployees = () => {
+    navigate("/employees");
+  };
+
+  const handleEditCreatedEmployee = () => {
+    if (!createdEmployeeId) {
+      navigate("/employees");
+      return;
+    }
+
+    navigate(`/employees/${createdEmployeeId}?edit=true`);
   };
 
   const isSuccess = currentStep === 6;
@@ -1585,10 +1943,7 @@ function AddEmployee() {
       isSuccess={isSuccess}
       footerContent={
         isSuccess ? (
-          <>
-            <CancelBtn onClick={handleCancel} />
-            <PrimaryBtn onClick={handlePrimary}>Back to home</PrimaryBtn>
-          </>
+          null
         ) : (
           <>
             <CancelBtn onClick={handleCancel} />
@@ -1599,13 +1954,15 @@ function AddEmployee() {
         )
       }
     >
-      {currentStep === 1 && <Step1 data={step1Data} onChange={setStep1Data} />}
-      {currentStep === 2 && <Step2 data={step2Data} onChange={setStep2Data} />}
+      {currentStep === 1 && <Step1 data={step1Data} onChange={handleStep1Change} />}
+      {currentStep === 2 && <Step2 data={step2Data} onChange={handleStep2Change} />}
       {currentStep === 3 && (
         <Step3
           expenseSubStep={expenseSubStep}
           data={expenseData}
           onChange={setExpenseData}
+          expenseReceipts={expenseReceipts}
+          onReceiptChange={setExpenseReceipts}
         />
       )}
       {currentStep === 4 && <Step4 data={step4Data} onChange={setStep4Data} />}
@@ -1615,9 +1972,158 @@ function AddEmployee() {
         </div>
       )}
       {currentStep === 5 && <Step5 userId={generatedCredentials.userId} password={generatedCredentials.password} />}
-      {currentStep === 6 && <SuccessScreen navigate={navigate} />}
+      {currentStep === 6 && (
+        <SuccessScreen
+          onOpenAssign={handleOpenAssignModal}
+          onBackHome={handleBackToEmployees}
+          onEdit={handleEditCreatedEmployee}
+        />
+      )}
+
+      {assignModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15, 23, 42, 0.20)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: "24px",
+          }}
+          onClick={handleCloseAssignModal}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "808px",
+              minHeight: "500px",
+              background: "#fff",
+              border: "1px solid var(--border-card)",
+              borderRadius: "8px",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+            }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div
+              style={{
+                height: "64px",
+                borderBottom: "1px solid var(--border-card)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0 18px",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "0.54px",lineHeight: "20px" }}>
+                Assign to Company
+              </h3>
+              <button
+                type="button"
+                onClick={handleCloseAssignModal}
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  color: "#374151",
+                  fontSize: "28px",
+                  lineHeight: 1,
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ padding: "24px 20px", flex: 1 }}>
+              <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
+                Select a company
+              </label>
+              <select
+                className="assign-company-select"
+                value={selectedCompanyId}
+                onChange={(event) => setSelectedCompanyId(event.target.value)}
+                disabled={companyLoading || assigningCompany}
+                style={{
+                  width: "100%",
+                  maxWidth: "560px",
+                  height: "44px",
+                  borderRadius: "8px",
+                  padding: "0 40px 0 14px",
+                  fontSize: "14px",
+                  color: "var(--text-primary)",
+                  background: "#fff",
+                  fontFamily: "inherit",
+                  appearance: "none",
+                  WebkitAppearance: "none",
+                  MozAppearance: "none",
+
+                  backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='none'><path d='M5 7L10 12L15 7' stroke='%23141414' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>")`,
+                  backgroundRepeat: "no-repeat",
+
+                  // exact caret position from right
+                  backgroundPosition: "right 12px center",
+
+                  backgroundSize: "12px",
+                }}
+              >
+                {!companyLoading && !companyOptions.length && <option value="">No client companies found</option>}
+                {companyLoading && <option value="">Loading companies...</option>}
+                {companyOptions.map((company) => (
+                  <option key={company.id} value={company.id}>
+                    {company.name}
+                  </option>
+                ))}
+              </select>
+
+              {assignError && (
+                <p style={{ color: "#B91C1C", fontSize: "13px", margin: "14px 0 0" }}>
+                  {assignError}
+                </p>
+              )}
+            </div>
+{/* div for button */}
+            <div
+              style={{
+                borderTop: "1px solid var(--border-card)",
+                height: "68px",
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                padding: "0 20px",
+              }}
+            >
+              <button
+                type="button"
+                onClick={handleAssignCompany}
+                disabled={assigningCompany || companyLoading || !selectedCompanyId}
+                style={{
+                  minWidth: "71px",
+                  height: "32px",
+                  borderRadius: "8px",
+                  border: "none",
+                  padding: "0 16px",
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  color: "#fff",
+                  background: assigningCompany || companyLoading || !selectedCompanyId ? "var(--text-disabled)" : BLUE,
+                  cursor: assigningCompany || companyLoading || !selectedCompanyId ? "not-allowed" : "pointer",
+                  fontFamily: "inherit",
+                }}
+              >
+                {assigningCompany ? "Assigning..." : "Assign"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Shell>
   );
 }
 
 export default AddEmployee;
+

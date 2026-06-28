@@ -1,4 +1,4 @@
-.home-container {
+﻿.home-container {
   padding: 24px;
   background: #f7f8fc;
   min-height: 100%;
@@ -17,7 +17,7 @@
 
 .greeting-name {
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 /* ─── KPI GRID ──────────────────────────────────────────── */
@@ -129,3 +129,4 @@
   padding: 2px 10px;
   border-radius: 20px;
 }
+

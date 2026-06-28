@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+﻿import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -10,17 +10,23 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 const actionMenuStyles = {
   container: {
     position: 'relative',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    padding: '6px 8px',
+    padding: 0,
+    width: '28px',
+    height: '28px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'all 0.2s ease',
-    color: '#6B7280',
+    color: 'var(--text-secondary)',
     outline: 'none',
     boxShadow: 'none',
     borderRadius: '0',
@@ -28,14 +34,14 @@ const actionMenuStyles = {
     appearance: 'none',
   },
   buttonHover: {
-    color: '#111827',
+    color: 'var(--text-primary)',
     outline: 'none',
     boxShadow: 'none',
   },
   popup: {
     position: 'fixed',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E5E7EB',
+    backgroundColor: 'var(--bg-surface)',
+    border: '1px solid var(--border-input)',
     borderRadius: '8px',
     boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
     minWidth: '200px',
@@ -48,8 +54,8 @@ const actionMenuStyles = {
     gap: '12px',
     padding: '12px 16px',
     fontSize: '14px',
-    color: '#111827',
-    backgroundColor: '#FFFFFF',
+    color: 'var(--text-primary)',
+    backgroundColor: 'var(--bg-surface)',
     border: 'none',
     cursor: 'pointer',
     width: '100%',
@@ -57,14 +63,14 @@ const actionMenuStyles = {
     transition: 'all 0.2s ease',
   },
   menuItemHover: {
-    backgroundColor: '#F9FAFB',
-    color: '#2C5FEA',
+    backgroundColor: 'var(--bg-surface)',
+    color: 'var(--color-primary)',
   },
   menuItemDanger: {
-    color: '#DC2626',
+    color: 'var(--color-error)',
   },
   menuItemDangerHover: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: 'var(--bg-error-soft)',
     color: '#991B1B',
   },
 };
@@ -72,7 +78,7 @@ const actionMenuStyles = {
 /**
  * ThreeDotIcon - SVG icon for the three-dot menu button
  */
-const ThreeDotIcon = ({ color = '#6B7280', size = 20 }) => (
+const ThreeDotIcon = ({ color = 'var(--text-secondary)', size = 16 }) => (
   <svg
     width={size}
     height={size}
@@ -203,7 +209,7 @@ export const EmployeeActionMenu = ({ actions = [], employeeId }) => {
         aria-label="Employee actions"
         title="Employee actions"
       >
-        <ThreeDotIcon color={buttonHover ? '#111827' : '#6B7280'} size={20} />
+        <ThreeDotIcon color={buttonHover ? 'var(--text-primary)' : 'var(--text-secondary)'} size={16} />
       </button>
 
       {isOpen && (
@@ -241,3 +247,4 @@ export const EmployeeActionMenu = ({ actions = [], employeeId }) => {
 };
 
 export default EmployeeActionMenu;
+

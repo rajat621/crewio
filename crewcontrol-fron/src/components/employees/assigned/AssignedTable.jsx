@@ -1,4 +1,4 @@
-// import { useState, useMemo } from "react";
+﻿// import { useState, useMemo } from "react";
 // import {
 //   Box,
 //   Divider,
@@ -29,9 +29,9 @@
 
 // /* ===== STATUS CONFIG ===== */
 // const STATUS_CONFIG = {
-//   assigned: { label: "Assigned", bg: "#DCFCE7", color: "#15803D" },
-//   "ending-soon": { label: "Ending Soon", bg: "#E5E7EB", color: "#374151" },
-//   unassigned: { label: "Unassigned", bg: "#FECACA", color: "#DC2626" },
+//   assigned: { label: "Assigned", bg: "var(--bg-success-soft)", color: "#15803D" },
+//   "ending-soon": { label: "Ending Soon", bg: "var(--border-input)", color: "#374151" },
+//   unassigned: { label: "Unassigned", bg: "#FECACA", color: "var(--color-error)" },
 // };
 
 // /* ===== CONSTANTS ===== */
@@ -174,7 +174,7 @@
 //     <TableContainer
 //       component={Box}
 //       sx={{
-//         bgcolor: "#FFFFFF",
+//         bgcolor: "var(--bg-surface)",
 //         border: "1px solid",
 //         borderColor: "divider",
 //         borderRadius: 1,
@@ -268,7 +268,6 @@ const COLUMNS = [
   { key: "id", label: "Employee ID" },
   { key: "name", label: "Employee Name" },
   { key: "company", label: "Assigned Company" },
-  { key: "project", label: "Project No." },
   { key: "trade", label: "Trade" },
   { key: "startDate", label: "Start Date" },
   { key: "rate", label: "Rate" },
@@ -276,7 +275,13 @@ const COLUMNS = [
   { key: "action", label: "Action", align: "center" },
 ];
 
-export default function AssignedTable({ rows = [], activeStatus }) {
+export default function AssignedTable({
+  rows = [],
+  activeStatus,
+  onViewProfile,
+  onAssign,
+  onUnassign,
+}) {
   return (
     <UniversalTable
       columns={COLUMNS}
@@ -285,7 +290,16 @@ export default function AssignedTable({ rows = [], activeStatus }) {
       kpiFilterKey={activeStatus}
       filterKey="assignedStatus"
       searchKeys={["id", "name", "trade"]}
-      renderRow={(row) => <AssignedRow key={row.id} row={row} />}
+      renderRow={(row) => (
+        <AssignedRow
+          key={row.id}
+          row={row}
+          onViewProfile={onViewProfile}
+          onAssign={onAssign}
+          onUnassign={onUnassign}
+        />
+      )}
     />
   );
 }
+

@@ -1,0 +1,25 @@
+﻿{
+  "files": [
+    {
+      "pdf_path": "samples/mcc_001.pdf",
+      "rows": [
+        {
+          "trade": "SCAFFOLDER",
+          "project_id": "P12345",
+          "employee_id": "EMP1234",
+          "attendance_total": 244.5
+        }
+      ],
+      "financials": {
+        "deductions": 150.0,
+        "vat": 320.5,
+        "net_payable": 6420.0
+      },
+      "company_data": {
+        "name": "Benchmark Company",
+        "trn": "-",
+        "vatRate": 0.05
+      }
+    }
+  ]
+}

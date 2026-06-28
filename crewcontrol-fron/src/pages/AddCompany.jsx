@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { companiesApi } from "../api/companies";
@@ -6,6 +6,9 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import EditIcon from "@mui/icons-material/Edit";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import FactCheckOutlinedIcon from "@mui/icons-material/FactCheckOutlined";
 import { ReusableStepper } from "../components/ReusableStepper";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -16,20 +19,22 @@ import dayjs from "dayjs";
    CONSTANTS
 ═══════════════════════════════════════════════════════════════ */
 
-const BLUE   = "#2C5FEA";
-const DARK   = "#111827";
-const GRAY   = "#6B7280";
-const BORDER = "#DEDEDE";
-const LIGHT  = "#F9FAFB";
+const BLUE   = "var(--color-primary)";
+const DARK   = "var(--text-primary)";
+const GRAY   = "var(--text-secondary)";
+const BORDER = "var(--border-card)";
+const LIGHT  = "var(--bg-surface)";
 
 const baseInput = {
   width: "100%",
   height: "44px",
-  border: `1px solid ${BORDER}`,
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: BORDER,
   borderRadius: "8px",
   padding: "0 12px",
   fontSize: "14px",
-  color: "#141414",
+  color: "var(--text-primary)",
   background: "#fff",
   outline: "none",
   appearance: "none",
@@ -47,7 +52,7 @@ const backButtonStyle = {
   gap: "8px",
   fontSize: "14px",
   fontWeight: 500,
-  color: "#6B7280",
+  color: "var(--text-secondary)",
   background: "#fff",
   border: `1px solid ${BORDER}`,
   borderRadius: "24px",
@@ -57,9 +62,9 @@ const backButtonStyle = {
 };
 
 const COMPANY_STEPS = [
-  { id: 1, label: "Company Information" },
-  { id: 2, label: "Contract Details" },
-  { id: 3, label: "Review & Save" },
+  { id: 1, label: "Company Information", icon: BusinessOutlinedIcon },
+  { id: 2, label: "Contract Details", icon: AssignmentOutlinedIcon },
+  { id: 3, label: "Review & Save", icon: FactCheckOutlinedIcon },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -107,7 +112,7 @@ function CancelBtn({ onClick }) {
         border: "none",
         borderRadius: "8px",
         background: h ? "#EFF4FF" : "#fff",
-        color: "#1D4ED8",
+        color: "var(--color-primary)",
         fontSize: "12px",
         fontWeight: 500,
         lineHeight: "20px",
@@ -133,7 +138,7 @@ function PrimaryBtn({ onClick, children, disabled }) {
         padding: "0 24px",
         border: "none",
         borderRadius: "8px",
-        background: disabled ? "#D1D5DB" : h ? "#1D4ED8" : BLUE,
+        background: disabled ? "var(--border-input-hover)" : h ? "var(--color-primary)" : BLUE,
         color: "#fff",
         fontSize: "12px",
         fontWeight: 500,
@@ -154,7 +159,7 @@ function FormHeading({ title, subtitle }) {
       <h2 style={{ fontSize: "18px", fontWeight: 600, color: DARK, lineHeight: "28px", letterSpacing: "0.72px", margin: "0 0 10px 0" }}>
         {title}
       </h2>
-      <p style={{ fontSize: "14px", color: "#808080", lineHeight: "22px", letterSpacing: "0.42px", margin: 0 }}>
+      <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: "22px", letterSpacing: "0.42px", margin: 0 }}>
         {subtitle}
       </p>
     </div>
@@ -257,85 +262,185 @@ function Step1({ data, onChange }) {
    STEP 2: CONTRACT DETAILS
 ═══════════════════════════════════════════════════════════════ */
 
+// function Step2({ data, onChange }) {
+//   const set = (k) => (e) => onChange({ ...data, [k]: e.target.value });
+
+//   return (
+//     <div style={{ maxWidth: "560px" }}>
+//       <FormHeading
+//         title="Contract Period"
+//         subtitle="Define the active contract duration."
+//       />
+
+//       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+//         <Field label="Contract Start Date" required>
+//           <LocalizationProvider dateAdapter={AdapterDayjs}>
+//             <DatePicker
+//               format="DD/MM/YYYY"
+//               sx={{color:"var(--text-secondary)"}}
+//               value={data.contractStartDate ? dayjs(data.contractStartDate) : null}
+//               onChange={(newValue) => {
+//                 onChange({
+//                   ...data,
+//                   contractStartDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+//                 });
+//               }}
+//               slotProps={{
+//                 textField: {
+//                   fullWidth: true,
+//                   placeholder: "DD/MM/YYYY",
+//                   sx: {
+//                     color: "var(--text-secondary)",
+//                     "& .MuiOutlinedInput-root": {
+//                       height: "44px",
+//                       borderRadius: "8px",
+//                       "& fieldset": {
+//                         borderColor: "var(--border-card)",
+//                       },
+//                       "&:hover fieldset": {
+//                         borderColor: "var(--border-card)",
+//                       },
+//                       "&.Mui-focused fieldset": {
+//                         borderColor: "var(--border-card)",
+//                       },
+//                     },
+//                   },
+//                 },
+//               }}
+//             />
+//           </LocalizationProvider>
+//         </Field>
+
+//         <Field label="Contract End Date" required>
+//           <LocalizationProvider dateAdapter={AdapterDayjs}>
+//             <DatePicker
+//               format="DD/MM/YYYY"
+//               sx={{color:"var(--text-secondary)"}}
+//               value={data.contractEndDate ? dayjs(data.contractEndDate) : null}
+//               onChange={(newValue) => {
+//                 onChange({
+//                   ...data,
+//                   contractEndDate: newValue ? newValue.format("DD/MM/YYYY") : "",
+//                 });
+//               }}
+//               slotProps={{
+//                 textField: {
+//                   fullWidth: true,
+//                   placeholder: "DD/MM/YYYY",
+//                   sx: {
+//                     color: "var(--text-secondary)",
+//                     "& .MuiOutlinedInput-root": {
+//                       height: "44px",
+//                       borderRadius: "8px",
+//                       "& fieldset": {
+//                         borderColor: "var(--border-card)",
+//                       },
+//                       "&:hover fieldset": {
+//                         borderColor: "var(--border-card)",
+//                       },
+//                       "&.Mui-focused fieldset": {
+//                         borderColor: "var(--border-card)",
+//                       },
+//                     },
+//                   },
+//                 },
+//               }}
+//             />
+//           </LocalizationProvider>
+//         </Field>
+//       </div>
+//     </div>
+//   );
+// }
+
 function Step2({ data, onChange }) {
-  const set = (k) => (e) => onChange({ ...data, [k]: e.target.value });
+  const updateDate = (key, value) => {
+    onChange({
+      ...data,
+      [key]: value ? value.format("DD/MM/YYYY") : "",
+    });
+  };
 
   return (
-    <div style={{ maxWidth: "560px" }}>
+    <div style={{ maxWidth: "540px" }}>
       <FormHeading
         title="Contract Period"
         subtitle="Define the active contract duration."
       />
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-        <Field label="Contract Start Date" required>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              format="DD/MM/YYYY"
-              sx={{color:"#808080"}}
-              value={data.contractStartDate ? dayjs(data.contractStartDate) : null}
-              onChange={(newValue) => {
-                onChange({
-                  ...data,
-                  contractStartDate: newValue ? newValue.format("DD/MM/YYYY") : "",
-                });
-              }}
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  placeholder: "DD/MM/YYYY",
-                  sx: {
-                    color: "#808080",
-                    "& .MuiOutlinedInput-root": {
-                      height: "44px",
-                      borderRadius: "8px",
-                      "& fieldset": {
-                        borderColor: "#DEDEDE",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#DEDEDE",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#DEDEDE",
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "18px",
+        }}
+      >
+        {/* Start + End Date Row */}
+        <div
+        >
+          <Field label="Start Date">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                format="DD/MM/YYYY"
+                value={
+                  data.contractStartDate
+                    ? dayjs(data.contractStartDate, "DD/MM/YYYY")
+                    : null
+                }
+                onChange={(value) =>
+                  updateDate("contractStartDate", value)
+                }
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    sx: {
+                      "& .MuiOutlinedInput-root": {
+                        height: "42px",
+                        borderRadius: "8px",
                       },
                     },
                   },
-                },
-              }}
-            />
-          </LocalizationProvider>
-        </Field>
+                }}
+              />
+            </LocalizationProvider>
+          </Field>
+        </div>
 
-        <Field label="Contract End Date" required>
+        {/* Tax Invoice Alert Date */}
+        <Field
+          label={
+            <>
+              Generate Tax Invoice Alert Date
+              <span
+                style={{
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  marginLeft: "6px",
+                }}
+              >
+                ( Every After 3 Month )
+              </span>
+            </>
+          }
+        >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               format="DD/MM/YYYY"
-              sx={{color:"#808080"}}
-              value={data.contractEndDate ? dayjs(data.contractEndDate) : null}
-              onChange={(newValue) => {
-                onChange({
-                  ...data,
-                  contractEndDate: newValue ? newValue.format("DD/MM/YYYY") : "",
-                });
-              }}
+              value={
+                data.taxInvoiceAlertDate
+                  ? dayjs(data.taxInvoiceAlertDate, "DD/MM/YYYY")
+                  : null
+              }
+              onChange={(value) =>
+                updateDate("taxInvoiceAlertDate", value)
+              }
               slotProps={{
                 textField: {
                   fullWidth: true,
-                  placeholder: "DD/MM/YYYY",
                   sx: {
-                    color: "#808080",
                     "& .MuiOutlinedInput-root": {
-                      height: "44px",
+                      height: "42px",
                       borderRadius: "8px",
-                      "& fieldset": {
-                        borderColor: "#DEDEDE",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#DEDEDE",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#DEDEDE",
-                      },
                     },
                   },
                 },
@@ -403,12 +508,12 @@ function Step3({ data }) {
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <div>
-              <p style={{ fontSize: "12px", color: GRAY, margin: 0 }}>Contract Start Date</p>
+              <p style={{ fontSize: "12px", color: GRAY, margin: 0 }}> Start Date</p>
               <p style={{ fontSize: "14px", color: DARK, margin: "3px 0 0 0", fontWeight: 500 }}>{data.contractStartDate}</p>
             </div>
-            <div>
-              <p style={{ fontSize: "12px", color: GRAY, margin: 0 }}>Contract Start Date</p>
-              <p style={{ fontSize: "14px", color: DARK, margin: "3px 0 0 0", fontWeight: 500 }}>{data.contractEndDate}</p>
+              <div>
+              <p style={{ fontSize: "12px", color: GRAY, margin: 0 }}> Tax Invoice Alert Date</p>
+              <p style={{ fontSize: "14px", color: DARK, margin: "3px 0 0 0", fontWeight: 500 }}>{data.taxInvoiceAlertDate}</p>
             </div>
           </div>
         </div>
@@ -427,9 +532,11 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
       style={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
-        background: "#F3F4F6",
+        height: "100%",
+        minHeight: 0,
+        background: "var(--bg-surface-secondary)",
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        overflow: "hidden",
       }}
     >
       {/* BODY */}
@@ -437,7 +544,8 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
         <div
           style={{
             display: "flex",
-            minHeight: "100%",
+            height: "100%",
+            minHeight: 0,
             background: "#fff",
             border: `1px solid ${BORDER}`,
             borderRadius: "12px",
@@ -449,19 +557,20 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
             style={{
               width: "282px",
               flexShrink: 0,
-              background: "#F9FAFB",
+              height: "100%",
+              background: "var(--bg-surface)",
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
-              overflow: "visible",
+              overflow: "hidden",
             }}
           >
             <ReusableStepper currentStep={currentStep} steps={COMPANY_STEPS} />
           </div>
 
           {/* MAIN */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100%" }}>
-            {/* Content area without scrolling */}
-            <div style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: "1 0 auto" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, height: "100%" }}>
+            {/* Content area with independent scrolling */}
+            <div className="thin-overlay-scroll" style={{ display: "flex", flexDirection: "column", padding: "32px 24px", position: "relative", flex: 1, minHeight: 0 }}>
               {isSuccess ? (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
                   <button
@@ -481,7 +590,7 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
                       gap: "8px",
                       fontSize: "14px",
                       fontWeight: 500,
-                      color: "#6B7280",
+                      color: "var(--text-secondary)",
                       background: "#fff",
                       border: `1px solid ${BORDER}`,
                       borderRadius: "24px",
@@ -509,7 +618,7 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
                     height: "32px",
                     color: "#374151",
                     background: "#fff",
-                    border: `1px solid #DEDEDE`,
+                    border: `1px solid var(--border-card)`,
                     borderRadius: "8px",
                     padding: "5px 12px",
                     cursor: "pointer",
@@ -554,7 +663,7 @@ function Shell({ currentStep, children, footerContent, onBack, isSuccess, onEdit
 
 function SuccessScreen({ onAssign }) {
   const SuccessCheckIcon = () => (
-    <CheckCircleIcon sx={{ fontSize: 80, color: "#2C5FEA" }} />
+    <CheckCircleIcon sx={{ fontSize: 80, color: "var(--color-primary)" }} />
   );
 
   return (
@@ -580,7 +689,7 @@ function SuccessScreen({ onAssign }) {
           fontFamily: "inherit",
           marginTop: "16px",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "#1E40AF")}
+        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-primary-hover)")}
         onMouseLeave={(e) => (e.currentTarget.style.background = BLUE)}
       >
         Assign employees
@@ -610,6 +719,7 @@ export default function AddCompany() {
     trn: "",
     contractStartDate: "",
     contractEndDate: "",
+    taxInvoiceAlertDate: "",
   });
 
   const handleDataChange = (newData) => {
@@ -635,7 +745,6 @@ export default function AddCompany() {
         faxNumber: formData.faxNumber.trim(),
         trn: formData.trn.trim(),
         contractStartDate: formData.contractStartDate,
-        contractEndDate: formData.contractEndDate,
         companyRole: "client",
       });
 
@@ -681,13 +790,11 @@ export default function AddCompany() {
     );
   };
 
-  const isStep2Valid = () => {
-    return formData.contractStartDate && formData.contractEndDate;
-  };
+const isStep2Valid = () => true;
 
   const getNextButtonDisabled = () => {
     if (currentStep === 1) return !isStep1Valid();
-    if (currentStep === 2) return !isStep2Valid();
+    // if (currentStep === 2) return !isStep2Valid();
     return false;
   };
 
@@ -723,3 +830,4 @@ export default function AddCompany() {
     </Shell>
   );
 }
+

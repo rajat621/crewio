@@ -1,0 +1,16 @@
+{
+  "templates": [
+    {
+      "name": "bkc",
+      "fingerprint": "intergrandebkclaboursupplyl.l.c|timesheet|no:|ts-017289-2025|timesheetforthemonthofoctober2025|preparationdate:nov22,2025|print|date:nov|22,2025|issued|to:alqaser|alsatea|tech|cont|i.d.|ne|employee|name|trade|rate|total|net|month|29",
+      "config_overrides": {},
+      "success_count": 4
+    },
+    {
+      "name": "generic",
+      "fingerprint": "ioneluno|0'6|10.0|10.0|10.0|10.0|m|10.0|10.0|10.0|10.0|10.0|m|10.0|10.0|10.0|10.0|10.0|10.0|w|10.0|10.0|aibcll|tile",
+      "config_overrides": {},
+      "success_count": 9
+    }
+  ]
+}

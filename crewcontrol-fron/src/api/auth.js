@@ -1,4 +1,4 @@
-import api from './client'
+﻿import api from './client'
 
 export const authApi = {
   signup: (data) => api.post('/api/auth/signup', data),

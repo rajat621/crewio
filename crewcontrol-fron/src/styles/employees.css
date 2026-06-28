@@ -1,4 +1,4 @@
-/* Employees Page */
+﻿/* Employees Page */
 .employees-page {
   padding-left: 40px;
   padding-right: 40px;
@@ -18,7 +18,7 @@
 .btn-add-employee {
   height: 32px;
   padding: 0 16px;
-  background-color: #1976d2;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   border-radius: 4px;
@@ -33,7 +33,7 @@
 }
 
 .btn-add-employee:hover {
-  background-color: #1565c0;
+  background-color: var(--color-primary-hover);
 }
 
 .btn-add-employee:disabled {
@@ -87,3 +87,4 @@
     padding-right: 20px;
   }
 }
+

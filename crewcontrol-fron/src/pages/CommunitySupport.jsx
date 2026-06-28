@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const SUPPORT_EMAIL = "support@crewcontrol.com";
 const PAGE_BG = "#F7F5FF";
-const CARD_BORDER = "#E5E7EB";
+const CARD_BORDER = "var(--border-input)";
 
 const ISSUE_TYPES = [
   "Login or access issue",
@@ -68,7 +68,7 @@ function CommunitySupport() {
     >
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           border: `1px solid ${CARD_BORDER}`,
           borderRadius: "10px",
           p: "24px",
@@ -86,25 +86,25 @@ function CommunitySupport() {
             height: "32px",
             color: "#374151",
             background: "#fff",
-            border: `1px solid #DEDEDE`,
+            border: `1px solid var(--border-card)`,
             borderRadius: "8px",
             padding: "5px 12px",
             cursor: "pointer",
             marginBottom: "20px",
             fontFamily: "inherit",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#F9FAFB")}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg-surface)")}
           onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
         >
           <ArrowBackIosIcon sx={{ fontSize: 12, transform: "translateX(-1px)" }} />
           Back
         </button>
       
-        <Typography sx={{ fontSize: "18px", fontWeight: 600, color: "#111827", mb: "8px" }}>
+        <Typography sx={{ fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", mb: "8px" }}>
           Help & Support
         </Typography>
 
-        <Typography sx={{ fontSize: "14px", color: "#808080", mb: "24px" }}>
+        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "24px" }}>
           Tell us what went wrong and our team will investigate.
         </Typography>
 
@@ -118,11 +118,11 @@ function CommunitySupport() {
             maxWidth: "560px",
           }}
         >
-          <Typography sx={{ fontSize: "14px", fontWeight: 600, color: "#141414", mb: "8px" }}>
+          <Typography sx={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", mb: "8px" }}>
             Report an Issue
           </Typography>
 
-          <Typography sx={{ fontSize: "14px", color: "#808080", mb: "24px" }}>
+          <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "24px" }}>
             Choose the issue type, describe what happened, and send it directly to our support team.
           </Typography>
 
@@ -134,14 +134,14 @@ function CommunitySupport() {
                 selected ? (
                   selected
                 ) : (
-                  <Box component="span" sx={{ color: "#6B7280" }}>
+                  <Box component="span" sx={{ color: "var(--text-secondary)" }}>
                     Issue Type
                   </Box>
                 )
               }
               onChange={(event) => setIssueType(event.target.value)}
               sx={{
-                backgroundColor: "#FFFFFF",
+                backgroundColor: "var(--bg-surface)",
                 borderRadius: "8px",
                 height: "44px",
                 "& .MuiSelect-select": {
@@ -177,14 +177,14 @@ function CommunitySupport() {
               mb: "20px",
               "& .MuiInputBase-root": {
                 alignItems: "flex-start",
-                backgroundColor: "#FFFFFF",
+                backgroundColor: "var(--bg-surface)",
                 borderRadius: "8px",
               },
             }}
           />
 
           <Box sx={{ mb: "20px" }}>
-            <Typography sx={{ fontSize: "14px", color: "#141414", fontWeight: 500, mb: "8px" }}>
+            <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 500, mb: "8px" }}>
               Attachment
             </Typography>
             <Box
@@ -195,19 +195,19 @@ function CommunitySupport() {
                 borderRadius: "8px",
                 borderColor: CARD_BORDER,
                 overflow: "hidden",
-                border: "1px solid #D1D5DB",
-                backgroundColor: "#FFFFFF",
+                border: "1px solid var(--border-input-hover)",
+                backgroundColor: "var(--bg-surface)",
               }}
             >
               <Button
                 component="label"
                 variant="contained"
-                startIcon={<AttachmentOutlinedIcon sx={{ fontSize: 18, color: "#FFFFFF" }} />}
+                startIcon={<AttachmentOutlinedIcon sx={{ fontSize: 18, color: "var(--bg-surface)" }} />}
                 sx={{
                   minWidth: "104px",
                   borderRadius: 0,
                   backgroundColor: "#2F5AE0",
-                  color: "#FFFFFF",
+                  color: "var(--bg-surface)",
                   textTransform: "none",
                   fontSize: "14px",
                   fontWeight: 500,
@@ -230,7 +230,7 @@ function CommunitySupport() {
                   alignItems: "center",
                   minHeight: "40px",
                   px: "12px",
-                  color: attachmentName ? "#141414" : "#A3A3A3",
+                  color: attachmentName ? "var(--text-primary)" : "#A3A3A3",
                   fontSize: "14px",
                 }}
               >
@@ -247,7 +247,7 @@ function CommunitySupport() {
                 height: "32px",
                 borderRadius: "6px",
                 backgroundColor: "#2F5AE0",
-                color: "#FFFFFF",
+                color: "var(--bg-surface)",
                 textTransform: "none",
                 fontSize: "13px",
                 fontWeight: 500,
@@ -267,3 +267,4 @@ function CommunitySupport() {
 }
 
 export default CommunitySupport;
+

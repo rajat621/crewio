@@ -1,19 +1,23 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Box,
   Typography,
   IconButton,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SettingsIcon from "@mui/icons-material/Settings";
+import SearchIcon from "@mui/icons-material/Search";
 
 import NotificationPopover from "../notification/NotificationPopover";
 import ProfilePopover from "../profile/ProfilePopover";
 import routesConfig from "../../routes/routesConfig";
+import crewioLogo from "../../assets/crewio_logo.png";
 
 function Topbar({ onAddNew }) {
   const location = useLocation();
@@ -32,22 +36,26 @@ function Topbar({ onAddNew }) {
 
   const isProfileOpen = Boolean(profileAnchor);
 
-  const currentRoute = routesConfig.find(
-    (route) => route.path === location.pathname
-  );
+  const currentRoute =
+    routesConfig.find((route) => route.path === location.pathname) ||
+    routesConfig.find(
+      (route) => route.path !== "/" && location.pathname.startsWith(`${route.path}/`)
+    );
 
   const TitleIcon = currentRoute?.icon;
   const title = currentRoute?.title || "";
+  const showSearch = Boolean(currentRoute?.topbar?.showSearch);
+  const showAddNew = Boolean(currentRoute?.topbar?.showAddNew);
 
   return (
     <>
       <Box
         sx={{
           height: 72,
-          borderBottom: "1px solid #DEDEDE",
+          borderBottom: "1px solid var(--border-card)",
           px: "40px",
           py: "20px",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           display: "flex",
           alignItems: "center",
         }}
@@ -64,13 +72,16 @@ function Topbar({ onAddNew }) {
           {/* LEFT: TITLE / LOGO / CONTEXT */}
           <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
             {isChatPage ? (
-              <Typography fontSize={16} fontWeight={600} color="#1D1D1E">
-                CrewControl
-              </Typography>
+              <Box
+                component="img"
+                src={crewioLogo}
+                alt="Crewio logo"
+                sx={{ height: 30, width: "auto", display: "block" }}
+              />
             ) : isProfilePopupPage ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <SettingsIcon sx={{ fontSize: 20, color: "#141414" }} />
-                <Typography fontSize={14} fontWeight={500} color="#141414">
+                <SettingsIcon sx={{ fontSize: 20, color: "var(--text-primary)" }} />
+                <Typography fontSize={14} fontWeight={500} color="var(--text-primary)">
                   Setting
                 </Typography>
               </Box>
@@ -84,8 +95,31 @@ function Topbar({ onAddNew }) {
             )}
           </Box>
 
+                  
+          
           {/* RIGHT: ACTIONS */}
           <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            {showAddNew ? (
+              <Box
+                onClick={onAddNew}
+                sx={{
+                  height: 32,
+                  px: "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  backgroundColor: "var(--color-primary)",
+                  color: "var(--bg-surface)",
+                  fontSize: 14,
+                  fontWeight: 400,
+                  boxShadow: "0px 2px 8px var(--shadow-floating)",
+                }}
+              >
+                Quick Actions
+              </Box>
+            ) : null}
+
             {/* 🔔 NOTIFICATION */}
             <IconButton
               onClick={(e) => setNotificationAnchor(e.currentTarget)}
@@ -110,11 +144,11 @@ function Topbar({ onAddNew }) {
                 borderRadius: "16px",
                 cursor: "pointer",
                 backgroundColor: isProfileOpen
-                  ? "#DBE2F9"
-                  : "#FFFFFF",
+                  ? "var(--bg-info-soft)"
+                  : "var(--bg-surface)",
                 "&:hover": {
                   backgroundColor: isProfileOpen
-                    ? "#DBE2F9"
+                    ? "var(--bg-info-soft)"
                     : "#EDF1FC",
                 },
               }}
@@ -123,7 +157,7 @@ function Topbar({ onAddNew }) {
                 sx={{
                   width: 32,
                   height: 32,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                 }}
               />
 
@@ -153,4 +187,5 @@ function Topbar({ onAddNew }) {
 }
 
 export default Topbar;
+
 

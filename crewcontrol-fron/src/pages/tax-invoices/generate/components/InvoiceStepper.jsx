@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+﻿import { Box, Typography } from "@mui/material";
 
 const steps = [
   "Select Company",
@@ -18,14 +18,14 @@ function StepCircle({ index, activeStep }) {
         height: 36,
         borderRadius: "50%",
         border: "2px solid",
-        borderColor: isActive || isCompleted ? "#141414" : "#C7C7C7",
-        backgroundColor: "#FFFFFF",
+        borderColor: isActive || isCompleted ? "var(--text-primary)" : "#C7C7C7",
+        backgroundColor: "var(--bg-surface)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         fontSize: 14,
         fontWeight: 500,
-        color: isActive ? "#FFFFFF" : "#141414",
+        color: isActive ? "var(--bg-surface)" : "var(--text-primary)",
         zIndex: 1,
 
         ...(isActive && {
@@ -34,7 +34,7 @@ function StepCircle({ index, activeStep }) {
             position: "absolute",
             // inset: "-1px",
             borderRadius: "50%",
-            backgroundColor: "rgba(20,20,20,0.04)",
+            backgroundColor: "var(--bg-surface-secondary)",
             zIndex: -2,
           },
         }),
@@ -44,7 +44,7 @@ function StepCircle({ index, activeStep }) {
           position: "absolute",
           inset: "3px", // 2px border + 3px gap
           borderRadius: "50%",
-          backgroundColor: isActive ? "#141414" : "#E6E6E6",
+          backgroundColor: isActive ? "var(--text-primary)" : "#E6E6E6",
           zIndex: -1,
         },
       }}
@@ -94,8 +94,8 @@ function InvoiceStepper({ activeStep = 0 }) {
                     height: 82,
                     marginTop: "6px",
                     backgroundColor: isCompleted
-                      ? "#141414"
-                      : "#E5E7EB",
+                      ? "var(--text-primary)"
+                      : "var(--border-input)",
                     opacity: isCompleted ? 1 : 0.5,
                   }}
                 />
@@ -113,7 +113,7 @@ function InvoiceStepper({ activeStep = 0 }) {
               <Typography
                 fontSize={14}
                 fontWeight={isActive ? 600 : 400}
-                color={isActive ? "#141414" : "#9CA3AF"}
+                color={isActive ? "var(--text-primary)" : "var(--text-disabled)"}
               >
                 {title}
               </Typography>
@@ -126,3 +126,4 @@ function InvoiceStepper({ activeStep = 0 }) {
 }
 
 export default InvoiceStepper;
+

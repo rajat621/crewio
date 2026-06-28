@@ -1,0 +1,318 @@
+﻿{
+  "generatedAt": "2026-06-19T11:33:47.456Z",
+  "operations": [
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec03"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec04"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec05"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec06"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec07"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec08"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec09"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec0a"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec0b"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec0c"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec0d"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec0e"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec0f"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec10"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec11"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec12"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec13"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec14"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec15"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0da2086e8eed59ad31ec16"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a0f3f6e10f047c2213530d7"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a103994686bce18974ed961"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a1fac18e986687c1e8a2603"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a2009b929d5cc5cff750684"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a1fee33fc463fa0b13c307c"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a325e63205fca28867a9dff"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    },
+    {
+      "filter": {
+        "_id": "6a32a49c7d9f3bfbfc7f85f1"
+      },
+      "update": {
+        "$set": {
+          "ownerId": "6a0a810f66c925b050dc9b70"
+        }
+      },
+      "derivedFrom": "owner",
+      "confidence": "HIGH"
+    }
+  ],
+  "sampleCount": 10
+}

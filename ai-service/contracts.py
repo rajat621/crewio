@@ -1,18 +1,21 @@
-from typing import Any, Dict
+﻿"""
+contracts.py  –  Standardised API response envelopes.
+validation.py –  Extraction quality scoring.
+"""
+
+# ============================================================================
+# contracts.py
+# ============================================================================
+
+from typing import Any, Dict, Optional
 
 
-def extraction_response(payload: Dict[str, Any]) -> Dict[str, Any]:
-    return {
-        "success": True,
-        "data": payload,
-    }
+def ok(data: Dict[str, Any], **extra) -> Dict[str, Any]:
+    return {"success": True, "data": data, **extra}
 
 
-def error_response(message: str, details: Any = None) -> Dict[str, Any]:
-    body = {
-        "success": False,
-        "error": message,
-    }
+def err(message: str, details: Any = None) -> Dict[str, Any]:
+    body: Dict[str, Any] = {"success": False, "error": message}
     if details is not None:
         body["details"] = details
     return body

@@ -1,13 +1,37 @@
-import { Box } from "@mui/material";
-import { useState } from "react";
+﻿import { Box } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ChatList from "../components/chat/ChatList";
 import ChatDetail from "../components/chat/ChatDetail";
 
 function Chat() {
-  const [selectedChat, setSelectedChat] = useState(null);
+  const location = useLocation();
+  const preselectedChat = useMemo(() => {
+    const chat = location.state?.selectedChat;
+    if (!chat?.id) return null;
+
+    return {
+      unread: 0,
+      timestamp: "Now",
+      ...chat,
+      id: String(chat.id),
+    };
+  }, [location.state]);
+  const [selectedChat, setSelectedChat] = useState(preselectedChat);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    if (preselectedChat?.id) {
+      setSelectedChat(preselectedChat);
+    }
+  }, [preselectedChat]);
 
   const handleBackToChat = () => {
     setSelectedChat(null);
+  };
+
+  const handleMessageSent = () => {
+    setRefreshKey((prev) => prev + 1);
   };
 
   return (
@@ -16,8 +40,8 @@ function Chat() {
         display: "flex",
         height: "100%",
         width: "100%",
-backgroundColor: "#FFFFFF",
-border: "1px solid #DEDEDE",
+backgroundColor: "var(--bg-surface)",
+border: "1px solid var(--border-card)",
         borderRadius: "12px",
         overflow: "hidden",
         gap: "0px",
@@ -27,6 +51,8 @@ border: "1px solid #DEDEDE",
       <ChatList
         selectedChat={selectedChat}
         onSelectChat={setSelectedChat}
+        additionalChats={preselectedChat ? [preselectedChat] : []}
+        refreshKey={refreshKey}
       />
 
       {/* CHAT DETAIL */}
@@ -34,6 +60,7 @@ border: "1px solid #DEDEDE",
         <ChatDetail
           chat={selectedChat}
           onBack={handleBackToChat}
+          onMessageSent={handleMessageSent}
         />
       ) : (
         <Box
@@ -42,9 +69,9 @@ border: "1px solid #DEDEDE",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#767680",
+            color: "var(--text-secondary)",
             fontSize: 16,
-            backgroundColor: "#FFFFFF",
+            backgroundColor: "var(--bg-surface)",
           }}
         >
           Select a chat to start messaging
@@ -55,3 +82,4 @@ border: "1px solid #DEDEDE",
 }
 
 export default Chat;
+

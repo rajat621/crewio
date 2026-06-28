@@ -1,0 +1,14 @@
+{
+  "baseline": {
+    "resize": {
+      "calls": 218,
+      "total": 24.32537078857422
+    },
+    "detect_tables": {
+      "calls": 1,
+      "total": 3264.2815113067627
+    }
+  },
+  "optimized": {},
+  "fallbacks": 0
+}

@@ -1,10 +1,10 @@
-// import { TableRow, TableCell, Chip } from "@mui/material";
+﻿// import { TableRow, TableCell, Chip } from "@mui/material";
 // import { CELL_SX } from "../../table/tableUtils";
 
 // const STATUS = {
-//   present: { label: "Present", bg: "#DCFCE7", color: "#15803D" },
-//   "on-leave": { label: "On Leave", bg: "#FEF3C7", color: "#92400E" },
-//   absent: { label: "Absent", bg: "#FECACA", color: "#DC2626" },
+//   present: { label: "Present", bg: "var(--bg-success-soft)", color: "#15803D" },
+//   "on-leave": { label: "On Leave", bg: "var(--bg-warning-soft)", color: "#92400E" },
+//   absent: { label: "Absent", bg: "#FECACA", color: "var(--color-error)" },
 // };
 
 // export default function TrackEmployeeRow({ row }) {
@@ -35,3 +35,4 @@ function TrackEmployeeRow() {
 }
 
 export default TrackEmployeeRow;
+

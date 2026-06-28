@@ -1,0 +1,22 @@
+================= AI Extraction Profile =================
+Stage                     | Count | Total(ms) | Avg(ms) | Max(ms)
+---------------------------------------------------------
+pdf_load                  |     0 |         0 |       0 |       0
+rasterization             |     0 |         0 |       0 |       0
+orientation_detection     |     0 |         0 |       0 |       0
+rotation                  |     0 |         0 |       0 |       0
+deskew                    |     0 |         0 |       0 |       0
+margin_removal            |     0 |         0 |       0 |       0
+content_detection         |     0 |         0 |       0 |       0
+preprocessing             |     0 |         0 |       0 |       0
+google_vision             |     0 |         0 |       0 |       0
+ocr_request               |     0 |         0 |       0 |       0
+ocr_parsing               |     0 |         0 |       0 |       0
+table_detection           |     0 |         0 |       0 |       0
+table_reconstruction      |     0 |         0 |       0 |       0
+row_extraction            |     0 |         0 |       0 |       0
+validation                |     0 |         0 |       0 |       0
+semantic_processing       |     0 |         0 |       0 |       0
+---------------------------------------------------------
+Total                     |      |         0 ms
+=========================================================

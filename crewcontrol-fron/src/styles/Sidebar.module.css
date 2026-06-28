@@ -1,6 +1,6 @@
-.sidebar {
+﻿.sidebar {
   width: 240px;
-  background-color: #FFFFFF;
+  background-color: var(--bg-surface);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -20,13 +20,14 @@
 
 .item {
   font-size: 14px;
-  color: #6B7280;
+  color: var(--text-secondary);
   padding: 8px 12px;
   border-radius: 8px;
 }
 
 .active {
-  background-color: #EEF2FF;
-  color: #2F5BEA;
+  background-color: var(--bg-info-soft);
+  color: var(--color-primary);
   font-weight: 500;
 }
+

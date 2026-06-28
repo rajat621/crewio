@@ -1,0 +1,50 @@
+{
+  "success": false,
+  "format": "generic",
+  "layout": "project_based",
+  "confidence": 0.7,
+  "used_ocr": true,
+  "used_vision": false,
+  "warnings": [
+    "scan_quality:low_contrast",
+    "scan_quality:missing_borders",
+    "small_table_fragments_skipped:8",
+    "ocr_budget_exhausted:table_loop",
+    "No structured table reconstructed from OCR pipeline",
+    "structured_rows_required:no_generic_ocr_row_fallback",
+    "deduction_source:ocr_fallback"
+  ],
+  "error": null,
+  "processing_time_ms": 150886,
+  "metadata": {
+    "source_invoice_no": null,
+    "timesheet_no": null,
+    "period_from": null,
+    "period_to": null,
+    "period_month": "MAY 2026",
+    "client_name": null,
+    "client_trn": null,
+    "client_address": null,
+    "client_po_box": null,
+    "client_tel": null,
+    "client_fax": null,
+    "sub_contractor": null,
+    "currency": "AED"
+  },
+  "rows": [],
+  "financials": {
+    "subtotal": 0,
+    "total_vat": 0.0,
+    "gross_total": -103.8,
+    "total_deduction": 103.8,
+    "deduction_vat": 0.0,
+    "deduction_total_with_vat": 0.0,
+    "adjusted_subtotal": 0.0,
+    "net_payable": -103.8,
+    "deduction_source": "ocr_fallback",
+    "summary_detected": false,
+    "deduction_breakdown": {
+      "deduction": 103.8
+    }
+  }
+}

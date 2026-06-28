@@ -1,12 +1,11 @@
-import { useState, useRef } from "react";
+﻿import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { companiesApi } from "../api/companies";
+import logo from "../assets/crewio_logo.png";
 import "../styles/auth.css";
 
 export default function OnboardingAuthorizedSignature() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const fileInputRef = useRef(null);
   
   const [signature, setSignature] = useState(null);
@@ -78,16 +77,11 @@ export default function OnboardingAuthorizedSignature() {
       return;
     }
 
-    if (!user?.companyId) {
-      setError("No company is associated with this account yet.");
-      return;
-    }
-
     try {
       setSaving(true);
       setError("");
       const signatureDataUrl = await readAsDataUrl(signature);
-      const response = await companiesApi.updateCompany(user.companyId, { signature: signatureDataUrl });
+      const response = await companiesApi.updateOwnerCompany({ signature: signatureDataUrl });
       if (!response.data?.data) {
         throw new Error("Signature save failed");
       }
@@ -101,7 +95,7 @@ export default function OnboardingAuthorizedSignature() {
 
   return (
     <div className="auth-wrapper onboarding-wrapper">
-      <div className="brand"><img src={import.meta.env.BASE_URL + 'crewio_logo.png'} alt="CrewControl logo" /></div>
+      <div className="brand"><img src={logo} alt="CrewControl logo" /></div>
 
       <div className="auth-card onboarding-card">
         <h2 className="onboarding-title">Set Up Your Company Profile</h2>

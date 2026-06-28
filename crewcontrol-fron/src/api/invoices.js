@@ -1,6 +1,9 @@
-import api from './client'
+﻿import api from './client'
 
 export const invoicesApi = {
+  getNextInvoiceNumber: () =>
+    api.get('/api/invoices/next-number'),
+
   uploadTimesheet: (file) => {
     const formData = new FormData()
     formData.append('file', file)
@@ -18,8 +21,10 @@ export const invoicesApi = {
   getInvoice: (id) =>
     api.get(`/api/invoices/${id}`),
   
-  generateInvoiceRecord: (data) =>
-    api.post('/api/invoices/generate', data),
+  generateInvoiceRecord: (data) => {
+    const timeoutMs = Number(import.meta.env.VITE_API_TIMEOUT_MS || 300000);
+    return api.post('/api/invoices/generate', data, { timeout: timeoutMs });
+  },
 
   generateInvoice: (data) =>
     api.post('/api/invoices', data),
@@ -34,3 +39,15 @@ export const invoicesApi = {
   ,
   deleteInvoice: (id) => api.delete(`/api/invoices/${id}`)
 }
+
+// Async AI job endpoints
+export const aiJobsApi = {
+  createJob: (data) => {
+    const timeoutMs = Number(import.meta.env.VITE_API_TIMEOUT_MS || 300000);
+    return api.post('/api/ai/jobs', data, { timeout: timeoutMs });
+  },
+  getJobStatus: (jobId) => api.get(`/api/ai/jobs/${jobId}`),
+  getJobResult: (jobId) => api.get(`/api/ai/jobs/${jobId}/result`),
+};
+
+export default invoicesApi;

@@ -1,0 +1,112 @@
+{
+  "table_engine": {
+    "tables": [
+      {
+        "layout_ocr_fallback": {
+          "layout_ocr_pages": [
+            {
+              "page": 1,
+              "reason": "layout_ocr_table_reconstructed",
+              "columns": [
+                "employee",
+                "trade",
+                "rate",
+                "amount"
+              ],
+              "rows": 9
+            }
+          ]
+        }
+      }
+    ],
+    "scan_quality_avg": 0.7889,
+    "config": {
+      "morphology": {
+        "horizontal_kernel_width": 40,
+        "vertical_kernel_height": 40,
+        "open_iterations": 2
+      },
+      "ocr": {
+        "min_confidence": 0.45,
+        "dpi": 300
+      },
+      "row_cluster": {
+        "y_tolerance_px": 14.0,
+        "y_tolerance_ratio": 0.45
+      },
+      "column_cluster": {
+        "x_tolerance_px": 16.0,
+        "x_tolerance_ratio": 0.45
+      },
+      "skew": {
+        "enabled": true,
+        "max_angle_deg": 8.0
+      },
+      "preprocessing": {
+        "adaptive_block_size": 31,
+        "adaptive_c": 15,
+        "denoise_h": 10,
+        "clahe_clip_limit": 3.2
+      },
+      "debug": {
+        "enabled": false,
+        "output_dir": "D:\\Crew_control\\ai-service\\storage\\debug"
+      },
+      "template": {
+        "attendance_row_min_tokens": 5,
+        "attendance_row_min_markers": 1,
+        "low_text_threshold_chars": 1000
+      }
+    },
+    "downscaled_pages": 0
+  },
+  "table_merge": {
+    "payload_count": 1,
+    "financial_summary_tables": [],
+    "selected_financial_summary_table": null,
+    "merged_row_count": 0
+  },
+  "attendance_validation": [
+    {
+      "trade": "CARPENTER",
+      "hours": 255.0,
+      "calculated_hours": 0.0,
+      "hours_match": true,
+      "overtime_hours": 0.0
+    },
+    {
+      "trade": "STEELFIXER",
+      "hours": 261.0,
+      "calculated_hours": 0.0,
+      "hours_match": true,
+      "overtime_hours": 0.0
+    },
+    {
+      "trade": "TILE MASON",
+      "hours": 161.0,
+      "calculated_hours": 0.0,
+      "hours_match": true,
+      "overtime_hours": 0.0
+    }
+  ],
+  "confidence_breakdown": {
+    "route": "ocr",
+    "final_confidence": 0.92
+  },
+  "timings": {
+    "text_extract_ms": 2,
+    "ocr_table_engine_ms": 15278,
+    "total_ms": 30717
+  },
+  "warnings": [
+    "scan_quality:low_contrast",
+    "small_table_fragments_skipped:5",
+    "layout_ocr_table_reconstructed:page_1:rows_9",
+    "summary_validation_corrections:0",
+    "hard_validation_rows:0",
+    "full_page_ocr_summary_rows:3",
+    "full_page_ocr_attendance_rows_seen:1",
+    "structured_rows_required:full_page_ocr_text_fallback"
+  ],
+  "file": "D:\\Crew_control\\time_sheet.pdf"
+}

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+﻿import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
 
 import { useAuth } from "../context/AuthContext";
@@ -28,8 +28,11 @@ import Subscription from "../pages/Subscription";
 // tax invoices
 import TaxInvoiceList from "../pages/tax-invoices/TaxInvoiceList";
 import GenerateTaxInvoice from "../pages/tax-invoices/generate/GenerateTaxInvoice";
+import SalarySlip from "../pages/SalarySlip";
+import GenerateSalarySlip from "../pages/salary-slip/GenerateSalarySlip";
 import AddEmployee from "../pages/AddEmployee";
 import AddCompany from "../pages/AddCompany";
+import Expenses from "../pages/Expenses";
 
 // misc
 import SignIn from "../pages/SignIn";
@@ -95,6 +98,8 @@ function App() {
           <Route path="company" element={<Company />} />
           <Route path="company/:id" element={<CompanyDetail />} />
           <Route path="tax-invoices" element={<TaxInvoiceList />} />
+          <Route path="salary-slip" element={<SalarySlip />} />
+          <Route path="expenses" element={<Expenses />} />
           <Route path="chat" element={<Chat />} />
           <Route path="user-profile" element={<UserProfile />} />
           <Route path="company-profile" element={<CompanyProfile />} />
@@ -103,8 +108,10 @@ function App() {
           <Route path="help-support/faqs" element={<HelpSupportFaq />} />
           <Route path="email-support" element={<EmailSupport />} />
           <Route path="community-support" element={<CommunitySupport />} />
-          <Route path="subscription" element={<Subscription />} />
+          <Route path="salary-slip/generate" element={<GenerateSalarySlip />} />
+
         </Route>
+        <Route path="/subscription" element={<Subscription />} />
 
         {/* FLOW */}
         <Route
@@ -114,10 +121,8 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route
-            path="tax-invoices/generate"
-            element={<GenerateTaxInvoice />}
-          />
+          <Route path="tax-invoices/generate" element={<GenerateTaxInvoice />} />
+          <Route path="salary-slip/generate" element={<GenerateSalarySlip />} />
           <Route path="add-employee" element={<AddEmployee />} />
           <Route path="add-company" element={<AddCompany />} />
           <Route path="employees/generate" element={<GenerateFlowPlaceholder />} />

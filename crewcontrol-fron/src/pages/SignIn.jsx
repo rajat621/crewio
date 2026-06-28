@@ -1,18 +1,26 @@
-
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+﻿
+import { useEffect, useState } from 'react'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { authApi } from '../api/auth'
 import '../styles/auth.css'
 import logo from '../assets/crewio_logo.png'
 
 export default function SignIn() {
 	const navigate = useNavigate()
+	const [searchParams] = useSearchParams()
 
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [rememberMe, setRememberMe] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState(null)
+
+	useEffect(() => {
+		const incomingError = searchParams.get('error')
+		if (incomingError) {
+			setError(incomingError)
+		}
+	}, [searchParams])
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -105,7 +113,9 @@ export default function SignIn() {
 						className="btn-google"
 						disabled={loading}
 						onClick={() => {
-							window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/google`
+							const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+							const frontend = encodeURIComponent(window.location.origin)
+							window.location.href = `${apiBase}/api/auth/google?flow=signin&frontend=${frontend}`
 						}}
 					>
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none">

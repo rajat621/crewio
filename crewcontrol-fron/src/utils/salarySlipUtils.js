@@ -1,0 +1,1 @@
+export { buildSlipPreviewHtml, generateSalarySlipPdf } from "../pages/salary-slip/GenerateSalarySlip";

@@ -1,4 +1,4 @@
-import {
+﻿import {
   TableRow,
   TableCell,
   IconButton,
@@ -12,8 +12,6 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
@@ -22,12 +20,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { invoicesApi } from "../../api/invoices";
 import { useState } from "react";
+import { ACTION_CELL_SX, ACTION_ICON_BUTTON_SX } from "../table/tableUtils";
 
-export default function TaxInvoiceRow({ row }) {
+export default function TaxInvoiceRow({ row, onDeleteSuccess, onNotify }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   function handleOpen(e) {
     setAnchorEl(e.currentTarget);
@@ -37,24 +35,46 @@ export default function TaxInvoiceRow({ row }) {
     setAnchorEl(null);
   }
 
-  function showSnackbar(message, severity = 'success') {
-    setSnackbar({ open: true, message, severity });
-  }
-
-  function closeSnackbar() {
-    setSnackbar({ ...snackbar, open: false });
+  function notify(message, severity = 'success') {
+    onNotify?.(message, severity);
   }
 
   async function handleView() {
     handleClose();
+    const previewWindow = window.open('', '_blank');
+    const canOpenNewTab = Boolean(previewWindow);
+
+    if (!canOpenNewTab) {
+      notify('Popup blocked. Please allow popups and try again.', 'error');
+      return;
+    }
+
     try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const previewUrl = `${apiBase}/api/invoices/${row.id}/download?inline=1`;
-      window.open(previewUrl, '_blank', 'noopener,noreferrer');
-      showSnackbar('Opening invoice in new tab...', 'success');
+      previewWindow.opener = null;
+    } catch (error) {
+      // Ignore if browser disallows setting opener.
+    }
+
+    previewWindow.document.title = 'Loading invoice...';
+    previewWindow.document.body.innerHTML = '<p style="font-family: Arial, sans-serif; padding: 16px;">Loading invoice preview...</p>';
+
+    try {
+      const resp = await invoicesApi.downloadInvoice(row.id);
+      const blob = new Blob([resp.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+
+      previewWindow.location.href = url;
+
+      // Keep the blob alive long enough for the new tab to load it.
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 60000);
+
+      notify('Opening invoice in new tab...', 'success');
     } catch (err) {
+      previewWindow.close();
       console.error('Preview failed', err);
-      showSnackbar('Failed to open preview', 'error');
+      notify('Failed to open preview', 'error');
     }
   }
 
@@ -71,10 +91,10 @@ export default function TaxInvoiceRow({ row }) {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      showSnackbar('Invoice downloaded successfully', 'success');
+      notify('Invoice downloaded successfully', 'success');
     } catch (err) {
       console.error('Download failed', err);
-      showSnackbar('Failed to download', 'error');
+      notify('Failed to download', 'error');
     }
   }
 
@@ -87,11 +107,13 @@ export default function TaxInvoiceRow({ row }) {
     setDeleteDialogOpen(false);
     try {
       await invoicesApi.deleteInvoice(row.id);
-      showSnackbar('Invoice deleted successfully', 'success');
-      setTimeout(() => window.location.reload(), 1500);
+      if (typeof onDeleteSuccess === "function") {
+        onDeleteSuccess(row.id);
+      }
+      notify('Invoice deleted successfully', 'success');
     } catch (err) {
       console.error('Delete failed', err);
-      showSnackbar('Failed to delete invoice', 'error');
+      notify('Failed to delete invoice', 'error');
     }
   }
 
@@ -109,7 +131,7 @@ export default function TaxInvoiceRow({ row }) {
         <TableCell>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <PictureAsPdfOutlinedIcon
-              sx={{ fontSize: 16, color: "#EF4444" }}
+              sx={{ fontSize: 16, color: "var(--color-error)" }}
             />
             <Typography fontSize={13}>{row.timesheet}</Typography>
           </Box>
@@ -119,8 +141,8 @@ export default function TaxInvoiceRow({ row }) {
         <TableCell>{row.vat.toFixed(2)}</TableCell>
         <TableCell>{row.netAmount.toFixed(2)}</TableCell>
 
-        <TableCell align="right">
-          <IconButton size="small" onClick={handleOpen}>
+        <TableCell align="center" sx={ACTION_CELL_SX}>
+          <IconButton size="small" onClick={handleOpen} sx={ACTION_ICON_BUTTON_SX}>
             <MoreVertIcon fontSize="small" />
           </IconButton>
           <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
@@ -160,22 +182,7 @@ export default function TaxInvoiceRow({ row }) {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Snackbar for Notifications */}
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={4000} 
-        onClose={closeSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert 
-          onClose={closeSnackbar} 
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </>
   );
 }
+

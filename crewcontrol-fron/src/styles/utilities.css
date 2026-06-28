@@ -1,0 +1,10 @@
+﻿.bg-surface { background-color: var(--bg-surface); }
+.bg-canvas { background-color: var(--bg-canvas); }
+.bg-success { background-color: var(--color-success); }
+.bg-warning { background-color: var(--color-warning); }
+.bg-error { background-color: var(--color-error); }
+.bg-info { background-color: var(--color-info); }
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.border-card { border-color: var(--border-card); }
+.border-input { border-color: var(--border-input); }

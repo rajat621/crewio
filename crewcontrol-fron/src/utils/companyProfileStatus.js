@@ -1,22 +1,22 @@
-const hasValue = (value) => {
+﻿const hasValue = (value) => {
   if (value === null || value === undefined) return false;
   if (typeof value === "string") return value.trim().length > 0;
   return true;
 };
 
-const REQUIRED_COMPANY_FIELDS = [
+// Use a core set of required fields for completeness. Some optional fields
+// (like websiteLink or nationality) are not mandatory for showing the
+// "complete" state in the UI.
+const CORE_REQUIRED_FIELDS = [
   "name",
-  "companyLegalName",
   "trn",
-  "websiteLink",
   "address",
   "city",
-  "nationality",
   "contactEmail",
   "mobileNumber",
 ];
 
 export const isCompanyProfileComplete = (company) => {
   if (!company) return false;
-  return REQUIRED_COMPANY_FIELDS.every((field) => hasValue(company[field]));
+  return CORE_REQUIRED_FIELDS.every((field) => hasValue(company[field]));
 };

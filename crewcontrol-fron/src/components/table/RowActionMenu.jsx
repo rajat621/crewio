@@ -1,10 +1,11 @@
-import { IconButton, Menu, MenuItem, ListItemIcon, Typography } from "@mui/material";
+﻿import { IconButton, Menu, MenuItem, ListItemIcon, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import { useState } from "react";
+import { ACTION_ICON_BUTTON_SX } from "./tableUtils";
 
 function RowActionMenu({ onView, onEdit, onAssign, onDeactivate }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -20,7 +21,7 @@ function RowActionMenu({ onView, onEdit, onAssign, onDeactivate }) {
 
   return (
     <>
-      <IconButton size="small" onClick={handleOpen}>
+      <IconButton size="small" onClick={handleOpen} sx={ACTION_ICON_BUTTON_SX}>
         <MoreVertIcon fontSize="small" />
       </IconButton>
 

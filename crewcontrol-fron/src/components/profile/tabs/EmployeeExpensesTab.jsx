@@ -1,6 +1,19 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { ProfileSection } from '../ProfileSection';
-import { Height } from '@mui/icons-material';
+
+const readFileAsDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+const getUploadLabel = (value) => {
+  if (!value) return 'Upload';
+  if (typeof value !== 'string') return 'Uploaded';
+  return value.startsWith('data:') ? 'Uploaded' : value;
+};
 
 const S = {
   /* ── Layout ─────────────────────────────────────────────── */
@@ -36,7 +49,7 @@ const S = {
   categoryTitle: {
     fontSize: '14px',
     fontWeight: '500',
-    color: '#141414',
+    color: 'var(--text-primary)',
     marginBottom: '8px',
     lineHeight:"28px",
     letterSpacing: '0.56px',
@@ -53,11 +66,11 @@ const S = {
   th: {
     fontSize: '10px',
     fontWeight: '600',
-    color: '#9CA3AF',
+    color: 'var(--text-disabled)',
     textAlign: 'left',
     padding: '0 0 5px 0',
     lineHeight: '20px',
-    borderBottom: '1px solid #DEDEDE',
+    borderBottom: '1px solid var(--border-card)',
     letterSpacing: '0.2px',
     textTransform: 'uppercase',
   },
@@ -77,7 +90,7 @@ const S = {
     width: '280px',
     wordBreak: 'break-word',
     fontWeight: '400',
-    color: '#111827',
+    color: 'var(--text-primary)',
     paddingRight: '12px',
   },
   tdAmount: { width: '160px' },
@@ -93,14 +106,14 @@ const S = {
     justifyContent: 'space-between',
     width: '130px',
     height: '44px',           // slightly shorter than row but visually balanced
-    border: '1px solid #DEDEDE',
+    border: '1px solid var(--border-card)',
     borderRadius: '6px',
     padding: '0 10px',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'var(--bg-surface)',
     boxSizing: 'border-box',
   },
   amountBoxFocused: {
-    borderColor: '#2563EB',
+    borderColor: 'var(--color-primary)',
   },
   amountValue: {
     fontSize: '14px',
@@ -115,7 +128,7 @@ const S = {
     outline: 'none',
     backgroundColor: 'transparent',
     fontSize: '14px',
-    color: '#141414',
+    color: 'var(--text-primary)',
     padding: 0,
     textAlign: 'left',
     fontFamily: 'inherit',
@@ -133,7 +146,7 @@ const S = {
   uploadLink: {
     fontSize: '12px',
     fontWeight: '500',
-    color: '#1D4ED8',
+    color: 'var(--color-primary)',
     lineHeight: '20px',
     cursor: 'pointer',
     textDecoration: 'none',
@@ -144,8 +157,8 @@ const S = {
   summaryCard: {
     width: '240px',
     // Height: '110px',
-    backgroundColor: '#F6F6F6',
-    border: '1px solid #DEDEDE',
+    backgroundColor: 'var(--bg-surface-secondary)',
+    border: '1px solid var(--border-card)',
     borderRadius: '8px',
     padding: '24px 20px',
     boxSizing: 'border-box',
@@ -156,7 +169,7 @@ const S = {
   summaryLabel: {
     fontSize: '14px',
     lineHeight: 1.4,
-    color: '#808080',
+    color: 'var(--text-secondary)',
     fontWeight: '400',
   },
   summaryValueRow: {
@@ -167,13 +180,13 @@ const S = {
   summaryValue: {
     fontSize: '28px',
     fontWeight: '700',
-    color: '#111827',
+    color: 'var(--text-primary)',
     lineHeight: 1,
     letterSpacing: '-0.5px',
   },
   summaryUnit: {
     fontSize: '12px',
-    color: '#9CA3AF',
+    color: 'var(--text-disabled)',
     fontWeight: '400',
   },
 };
@@ -250,14 +263,16 @@ const AmountCell = ({ value, isEditing, onChange }) => {
 /**
  * EmployeeExpensesTab — pixel-perfect implementation matching design spec
  */
-export const EmployeeExpensesTab = ({ expenses = {}, onUpdate = () => {} }) => {
+export const EmployeeExpensesTab = ({ employee = {}, expenses = {}, onUpdate = () => {} }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(expenses || {});
+  const [receipts, setReceipts] = useState(employee.expenseReceipts || {});
 
   useEffect(() => {
     setFormData(expenses || {});
+    setReceipts(employee.expenseReceipts || {});
     setIsEditing(false);
-  }, [expenses]);
+  }, [employee, expenses]);
 
   const totalExpenses = Object.values(formData).reduce(
     (sum, val) => sum + (parseFloat(val) || 0),
@@ -269,13 +284,25 @@ export const EmployeeExpensesTab = ({ expenses = {}, onUpdate = () => {} }) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handleReceiptUpload = async (key, file) => {
+    if (!file) return;
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      setReceipts((prev) => ({ ...prev, [key]: dataUrl || file.name }));
+    } catch (error) {
+      setReceipts((prev) => ({ ...prev, [key]: file.name }));
+    }
+  };
+
   const handleSave = () => {
-    onUpdate({ expenses: formData });
+    onUpdate({ expenses: formData, expenseReceipts: receipts });
     setIsEditing(false);
   };
 
   const handleCancel = () => {
     setFormData(expenses || {});
+    setReceipts(employee.expenseReceipts || {});
     setIsEditing(false);
   };
 
@@ -319,7 +346,16 @@ export const EmployeeExpensesTab = ({ expenses = {}, onUpdate = () => {} }) => {
                           />
                         </td>
                         <td style={{ ...S.td, ...S.tdReceipt }}>
-                          <span style={S.uploadLink}>Upload</span>
+                          <label style={S.uploadLink}>
+                            {getUploadLabel(receipts[item.key])}
+                            <input
+                              type="file"
+                              style={{ display: 'none' }}
+                              disabled={!isEditing}
+                              accept=".pdf,.png,.jpg,.jpeg"
+                              onChange={(e) => handleReceiptUpload(item.key, e.target.files?.[0])}
+                            />
+                          </label>
                         </td>
                       </tr>
                     ))}

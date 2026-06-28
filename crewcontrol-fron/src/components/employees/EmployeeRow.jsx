@@ -1,4 +1,4 @@
-// import {
+﻿// import {
 //   IconButton,
 //   TableCell,
 //   TableRow,
@@ -96,50 +96,17 @@ import { useNavigate } from "react-router-dom";
 import { EmployeeActionMenu } from "../profile/EmployeeActionMenu";
 import { CELL_SX } from "../table/tableUtils";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 export default function EmployeeRow({ row }) {
   const navigate = useNavigate();
 
-  // Define actions for the 3-dot menu
+  // Keep only profile navigation in employee list action menu.
   const actions = [
     {
       id: 'view',
       label: 'View Profile',
       icon: <VisibilityOutlinedIcon fontSize="small" />,
       onClick: () => navigate(`/employees/${row.id}`),
-    },
-    {
-      id: 'edit',
-      label: 'Edit',
-      icon: <EditOutlinedIcon fontSize="small" />,
-      onClick: () => navigate(`/employees/${row.id}?edit=true`),
-    },
-    {
-      id: 'assign',
-      label: 'Assign',
-      icon: <AssignmentOutlinedIcon fontSize="small" />,
-      onClick: () => console.log('Assign', row.id),
-    },
-    {
-      id: 'invoice',
-      label: 'Generate Invoice',
-      icon: <DescriptionOutlinedIcon fontSize="small" />,
-      onClick: () => navigate(`/tax-invoices/generate?employeeId=${row.id}`),
-    },
-    {
-      id: 'delete',
-      label: 'Delete',
-      icon: <DeleteOutlineOutlinedIcon fontSize="small" />,
-      onClick: () => {
-        if (window.confirm(`Are you sure you want to delete ${row.name}?`)) {
-          console.log('Delete', row.id);
-        }
-      },
-      isDanger: true,
     },
   ];
 

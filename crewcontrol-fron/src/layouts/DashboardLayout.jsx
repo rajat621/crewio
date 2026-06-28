@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+﻿import { Box } from "@mui/material";
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
@@ -30,7 +30,7 @@ function DashboardLayout() {
           height: "100vh",
           minHeight: "100vh",
           width: "100%",
-          backgroundColor: "#F7F8FC",
+          backgroundColor: "var(--bg-canvas)",
         }}
       >
         {/* SIDEBAR - HIDDEN ON CHAT PAGE */}
@@ -66,7 +66,7 @@ function DashboardLayout() {
                     display: "flex",
                     padding: "24px 40px",
                     gap: "24px",
-                    backgroundColor: "#F7F8FC",
+                    backgroundColor: "var(--bg-canvas)",
                   }
                 : {
                     backgroundColor: "transparent",
@@ -91,3 +91,4 @@ function DashboardLayout() {
 }
 
 export default DashboardLayout;
+

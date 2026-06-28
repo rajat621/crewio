@@ -1,9 +1,8 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Box,
   IconButton,
   Avatar,
-  Typography,
 } from "@mui/material";
 
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -12,6 +11,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import NotificationPopover from "../notification/NotificationPopover";
 import ProfilePopover from "../profile/ProfilePopover";
+import crewioLogo from "../../assets/crewio_logo.png";
 
 // OPTIONAL logo import
 // If this path is wrong, text will still render
@@ -28,10 +28,10 @@ function FlowTopbar() {
       <Box
         sx={{
           height: 72,
-          borderBottom: "1px solid #DEDEDE",
+          borderBottom: "1px solid var(--border-card)",
           px: "40px",
           py: "20px",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           display: "flex",
           alignItems: "center",
         }}
@@ -45,7 +45,7 @@ function FlowTopbar() {
             justifyContent: "space-between",
           }}
         >
-          {/* LEFT: BRAND (LOGO + NAME) */}
+          {/* LEFT: BRAND */}
           <Box
             sx={{
               display: "flex",
@@ -53,31 +53,12 @@ function FlowTopbar() {
               gap: "8px",
             }}
           >
-            {/* Logo (optional, safe) */}
-            {/* {Logo && (
-              <Box
-                component="img"
-                src={Logo}
-                alt="CrewControl"
-                sx={{
-                  height: 24,
-                  width: "auto",
-                }}
-                onError={(e) => {
-                  // hide broken image, keep text
-                  e.currentTarget.style.display = "none";
-                }}
-              />
-            )} */}
-
-            {/* Brand text (ALWAYS visible) */}
-            <Typography
-              fontSize={20}
-              fontWeight={600}
-              sx={{ lineHeight: 1 }}
-            >
-              CrewControl
-            </Typography>
+            <Box
+              component="img"
+              src={crewioLogo}
+              alt="Crewio logo"
+              sx={{ height: 30, width: "auto", display: "block" }}
+            />
           </Box>
 
           {/* RIGHT: ACTIONS */}
@@ -116,11 +97,11 @@ function FlowTopbar() {
                 borderRadius: "16px",
                 cursor: "pointer",
                 backgroundColor: isProfileOpen
-                  ? "#DBE2F9"
-                  : "#FFFFFF",
+                  ? "var(--bg-info-soft)"
+                  : "var(--bg-surface)",
                 "&:hover": {
                   backgroundColor: isProfileOpen
-                    ? "#DBE2F9"
+                    ? "var(--bg-info-soft)"
                     : "#EDF1FC",
                 },
               }}
@@ -153,3 +134,4 @@ function FlowTopbar() {
 }
 
 export default FlowTopbar;
+

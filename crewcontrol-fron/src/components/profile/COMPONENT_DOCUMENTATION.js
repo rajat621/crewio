@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Profile Components - Production-Ready Reusable Components
  * 
  * This file documents all reusable profile components created for the
@@ -311,13 +311,13 @@
 
 /**
  * Colors:
- *   - Primary Blue: #2C5FEA
- *   - Dark Text: #111827
- *   - Gray Text: #6B7280
- *   - Light Background: #F9FAFB
- *   - Border: #E5E7EB
- *   - Danger Red: #DC2626
- *   - Light Red: #FEE2E2
+ *   - Primary Blue: var(--color-primary)
+ *   - Dark Text: var(--text-primary)
+ *   - Gray Text: var(--text-secondary)
+ *   - Light Background: var(--bg-surface)
+ *   - Border: var(--border-input)
+ *   - Danger Red: var(--color-error)
+ *   - Light Red: var(--bg-error-soft)
  * 
  * Typography:
  *   - Headers: 16px-24px, font-weight 600-700
@@ -365,3 +365,4 @@
  */
 
 export default {};
+

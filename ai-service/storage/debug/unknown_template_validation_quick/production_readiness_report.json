@@ -1,0 +1,14 @@
+﻿{
+  "unknown_template_success_rate": 1.0,
+  "financial_accuracy": 0.3176,
+  "deduction_accuracy": 0.64,
+  "vat_accuracy": 0.3176,
+  "footer_parsing_accuracy": 0.6667,
+  "projectno_visibility_correctness": 1.0,
+  "invoice_generation_success_rate": 1.0,
+  "average_confidence": 0.798,
+  "critical_failures": [],
+  "total_cases": 3,
+  "successful_cases": 3,
+  "failed_cases": 0
+}

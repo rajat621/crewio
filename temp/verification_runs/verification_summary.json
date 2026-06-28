@@ -1,0 +1,62 @@
+{
+  "scenario1": {
+    "engine": "optimized",
+    "debug_impl": "DebugExporter",
+    "runtime_s": 25.627,
+    "tables_count": 0,
+    "warnings": [
+      "scan_quality:low_contrast",
+      "scan_quality:missing_borders",
+      "small_table_fragments_skipped:8",
+      "table_skipped:too_many_cells:1:1:100",
+      "No structured table reconstructed from OCR pipeline"
+    ],
+    "avg_conf": 0.0,
+    "exception": null,
+    "debug_files": 2
+  },
+  "scenario2": {
+    "engine": "optimized->fallback",
+    "debug_impl": "NoOpDebug",
+    "runtime_s": 11.554,
+    "tables_count": 0,
+    "warnings": [
+      "forced detect failure for test"
+    ],
+    "avg_conf": 0.0,
+    "exception": "RuntimeError('forced detect failure for test')",
+    "debug_files": 0
+  },
+  "scenario3_enabled": {
+    "engine": "legacy",
+    "debug_impl": "DebugExporter",
+    "runtime_s": 23.841,
+    "tables_count": 0,
+    "warnings": [
+      "scan_quality:low_contrast",
+      "scan_quality:missing_borders",
+      "small_table_fragments_skipped:8",
+      "table_skipped:too_many_cells:1:1:100",
+      "No structured table reconstructed from OCR pipeline"
+    ],
+    "avg_conf": 0.0,
+    "exception": null,
+    "debug_files": 2
+  },
+  "scenario3_disabled": {
+    "engine": "legacy",
+    "debug_impl": "NoOpDebug",
+    "runtime_s": 24.276,
+    "tables_count": 0,
+    "warnings": [
+      "scan_quality:low_contrast",
+      "scan_quality:missing_borders",
+      "small_table_fragments_skipped:8",
+      "table_skipped:too_many_cells:1:1:100",
+      "No structured table reconstructed from OCR pipeline"
+    ],
+    "avg_conf": 0.0,
+    "exception": null,
+    "debug_files": 0
+  }
+}

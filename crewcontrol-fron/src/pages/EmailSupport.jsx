@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+﻿import { Box, Button, Typography } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
@@ -19,7 +19,7 @@ function EmailSupport() {
         gap: "16px",
         paddingBottom: "20px",
         paddingTop: "20px",
-        borderBottom: "1px solid #E5E7EB",
+        borderBottom: "1px solid var(--border-input)",
         "&:last-child": {
           borderBottom: "none",
           paddingBottom: "16px",
@@ -42,17 +42,17 @@ function EmailSupport() {
       </Box>
 
       <Box sx={{ flex: 1 }}>
-        <Typography sx={{ fontSize: "14px", color: "#141414", fontWeight: 600, mb: "6px" }}>
+        <Typography sx={{ fontSize: "14px", color: "var(--text-primary)", fontWeight: 600, mb: "6px" }}>
           {title}
         </Typography>
-        <Typography sx={{ fontSize: "13px", color: "#808080", fontWeight: 400, lineHeight: "20px" }}>
+        <Typography sx={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: 400, lineHeight: "20px" }}>
           {content}
           {email ? (
             <Box
               component="a"
               href={`mailto:${email}`}
               sx={{
-                color: "#1D4ED8",
+                color: "var(--color-primary)",
                 fontWeight: 500,
                 textDecoration: "none",
                 ml: "4px",
@@ -84,8 +84,8 @@ function EmailSupport() {
       {/* Main Content Card */}
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #E5E7EB",
+          backgroundColor: "var(--bg-surface)",
+          border: "1px solid var(--border-input)",
           borderRadius: "10px",
           p: "24px",
         }}
@@ -102,14 +102,14 @@ function EmailSupport() {
             height: "32px",
             color: "#374151",
             background: "#fff",
-            border: `1px solid #DEDEDE`,
+            border: `1px solid var(--border-card)`,
             borderRadius: "8px",
             padding: "5px 12px",
             cursor: "pointer",
             marginBottom: "20px",
             fontFamily: "inherit",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#F9FAFB")}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg-surface)")}
           onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
         >
           <ArrowBackIosIcon sx={{ fontSize: 12, transform: "translateX(-1px)" }} />
@@ -120,14 +120,14 @@ function EmailSupport() {
           sx={{
             fontSize: "18px",
             fontWeight: 600,
-            color: "#111827",
+            color: "var(--text-primary)",
             mb: "8px",
           }}
         >
           Still need help?
         </Typography>
 
-        <Typography sx={{ fontSize: "14px", color: "#808080", mb: "24px" }}>
+        <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)", mb: "24px" }}>
           Reach out to our support team using any of the channels below. We're here to help!
         </Typography>
 
@@ -141,7 +141,7 @@ function EmailSupport() {
             py: "20px",
           }}
         >
-          <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", color: "#141414", mb: "16px" }}>
+          <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", color: "var(--text-primary)", mb: "16px" }}>
             Contact Support
           </Typography>
 
@@ -170,3 +170,4 @@ function EmailSupport() {
 }
 
 export default EmailSupport;
+

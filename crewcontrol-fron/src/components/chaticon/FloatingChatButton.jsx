@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+﻿import { Box } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useNavigate } from "react-router-dom";
 
@@ -14,22 +14,22 @@ function FloatingChatButton({ onClick }) {
         width: 56,
         height: 56,
         borderRadius: "50%",
-        backgroundColor: "#1D4ED8",
+        backgroundColor: "var(--color-primary)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
         boxShadow:
-          "0px 0px 2px 0px rgba(80, 92, 95, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.04)",
+          "0px 0px 2px 0px rgba(80, 92, 95, 0.2), 0px 6px 10px 0px var(--shadow-overlay)",
         zIndex: 1300, // above everything
         "&:hover": {
-          backgroundColor: "#1E40AF",
+          backgroundColor: "var(--color-primary-hover)",
         },
       }}
     >
       <ChatBubbleOutlineIcon
         sx={{
-          color: "#FFFFFF",
+          color: "var(--bg-surface)",
           fontSize: 26,
         }}
       />
@@ -38,3 +38,4 @@ function FloatingChatButton({ onClick }) {
 }
 
 export default FloatingChatButton;
+

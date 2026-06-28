@@ -1,0 +1,29 @@
+﻿{
+  "case_id": "time_sheet-skewed_scan",
+  "failure_reason": "critical_failures:financials_impossible",
+  "failed_stage": "financial_reconciliation",
+  "confidence_breakdown": {
+    "ocr_confidence": 0.7,
+    "table_detection_confidence": 0.4,
+    "financial_consistency": 1.0,
+    "semantic_header_confidence": 0.3,
+    "row_consistency": 0.0,
+    "subtotal_reconciliation": 1.0,
+    "vat_reconciliation": 1.0
+  },
+  "ocr_quality_score": 0.7,
+  "missing_fields": [
+    "vat",
+    "net_payable"
+  ],
+  "table_classification_summary": {
+    "format": "bkc",
+    "layout": "employee_based",
+    "rows_detected": 4,
+    "warnings": [
+      "No structured table reconstructed from OCR pipeline"
+    ]
+  },
+  "source_pdf": "D:\\Crew_control\\time_sheet.pdf",
+  "variant_pdf": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation\\generated_dataset\\time_sheet-skewed_scan.pdf"
+}

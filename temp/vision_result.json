@@ -1,0 +1,17 @@
+{
+  "success": false,
+  "used_vision": true,
+  "confidence": 0.0,
+  "warnings": [
+    "extraction_source:vision",
+    "vision_failed:HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=90)"
+  ],
+  "processing_time_ms": 98537,
+  "financials": {
+    "subtotal": 0.0,
+    "total_deduction": 0.0,
+    "total_vat": 0.0,
+    "net_payable": 0.0
+  },
+  "rows": []
+}

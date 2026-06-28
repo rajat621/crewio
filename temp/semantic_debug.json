@@ -1,0 +1,4903 @@
+{
+  "tokens": [
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_REGIONS_DETECTED",
+        "regions": [
+          [
+            0,
+            275
+          ],
+          [
+            275,
+            550
+          ],
+          [
+            550,
+            825
+          ],
+          [
+            825,
+            1100
+          ]
+        ]
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 0,
+        "x0": 0,
+        "x1": 275
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 0,
+        "count": 4
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 0,
+        "mapped": 4
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 1,
+        "x0": 275,
+        "x1": 550
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 1,
+        "count": 6
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 1,
+        "mapped": 6
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 2,
+        "x0": 550,
+        "x1": 825
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 2,
+        "count": 6
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 2,
+        "mapped": 6
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 3,
+        "x0": 825,
+        "x1": 1100
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 3,
+        "count": 3
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 3,
+        "mapped": 3
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_MERGED_TOKEN_DETECTED",
+        "examples": [
+          "NET AMOUNT PAYABLE AED",
+          "GROSS TOTALAED",
+          "TOTAL DEDUCTION AED",
+          "Mess Deduction",
+          "Other Deduction",
+          "Absent Penalty",
+          "DEDUCTIONS"
+        ]
+      },
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 27,
+      "y": 9,
+      "w": 107,
+      "h": 1119,
+      "text": "NET AMOUNT PAYABLE AED",
+      "confidence": 0.9,
+      "bbox": [
+        27,
+        9,
+        134,
+        1128
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 148,
+      "y": 9,
+      "w": 98,
+      "h": 371,
+      "text": "VAT@5%",
+      "confidence": 0.9,
+      "bbox": [
+        148,
+        9,
+        246,
+        380
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 7,
+      "y": 1292,
+      "w": 122,
+      "h": 445,
+      "text": "10,790.01",
+      "confidence": 0.9,
+      "bbox": [
+        7,
+        1292,
+        129,
+        1737
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 151,
+      "y": 1486,
+      "w": 83,
+      "h": 242,
+      "text": "513.81",
+      "confidence": 0.9,
+      "bbox": [
+        151,
+        1486,
+        234,
+        1728
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 275,
+      "y": 20,
+      "w": 71,
+      "h": 629,
+      "text": "GROSS TOTALAED",
+      "confidence": 0.9,
+      "bbox": [
+        275,
+        20,
+        346,
+        649
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 370,
+      "y": 16,
+      "w": 86,
+      "h": 818,
+      "text": "TOTAL DEDUCTION AED",
+      "confidence": 0.9,
+      "bbox": [
+        370,
+        16,
+        456,
+        834
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 477,
+      "y": 18,
+      "w": 72,
+      "h": 509,
+      "text": "Mess Deduction",
+      "confidence": 0.9,
+      "bbox": [
+        477,
+        18,
+        549,
+        527
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 275,
+      "y": 1394,
+      "w": 58,
+      "h": 328,
+      "text": "10.380.00",
+      "confidence": 0.9,
+      "bbox": [
+        275,
+        1394,
+        333,
+        1722
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 369,
+      "y": 1492,
+      "w": 74,
+      "h": 234,
+      "text": "103.80",
+      "confidence": 0.9,
+      "bbox": [
+        369,
+        1492,
+        443,
+        1726
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 477,
+      "y": 1584,
+      "w": 67,
+      "h": 141,
+      "text": "0.00",
+      "confidence": 0.9,
+      "bbox": [
+        477,
+        1584,
+        544,
+        1725
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 576,
+      "y": 19,
+      "w": 78,
+      "h": 462,
+      "text": "Gas Deduction",
+      "confidence": 0.9,
+      "bbox": [
+        576,
+        19,
+        654,
+        481
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 679,
+      "y": 20,
+      "w": 74,
+      "h": 527,
+      "text": "Other Deduction",
+      "confidence": 0.9,
+      "bbox": [
+        679,
+        20,
+        753,
+        547
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 789,
+      "y": 245,
+      "w": 35,
+      "h": 159,
+      "text": "tems",
+      "confidence": 0.9,
+      "bbox": [
+        789,
+        245,
+        824,
+        404
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 575,
+      "y": 1509,
+      "w": 72,
+      "h": 220,
+      "text": "103.80",
+      "confidence": 0.9,
+      "bbox": [
+        575,
+        1509,
+        647,
+        1729
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 676,
+      "y": 1584,
+      "w": 68,
+      "h": 143,
+      "text": "0.00",
+      "confidence": 0.9,
+      "bbox": [
+        676,
+        1584,
+        744,
+        1727
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 782,
+      "y": 1592,
+      "w": 42,
+      "h": 125,
+      "text": "0.00",
+      "confidence": 0.9,
+      "bbox": [
+        782,
+        1592,
+        824,
+        1717
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 864,
+      "y": 14,
+      "w": 100,
+      "h": 491,
+      "text": "Absent Penalty",
+      "confidence": 0.9,
+      "bbox": [
+        864,
+        14,
+        964,
+        505
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 975,
+      "y": 585,
+      "w": 112,
+      "h": 593,
+      "text": "DEDUCTIONS",
+      "confidence": 0.9,
+      "bbox": [
+        975,
+        585,
+        1087,
+        1178
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "x": 875,
+      "y": 1583,
+      "w": 69,
+      "h": 148,
+      "text": "0.00",
+      "confidence": 0.9,
+      "bbox": [
+        875,
+        1583,
+        944,
+        1731
+      ],
+      "source_crop": "crop_00_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_REGIONS_DETECTED",
+        "regions": [
+          [
+            0,
+            248
+          ],
+          [
+            248,
+            496
+          ],
+          [
+            496,
+            744
+          ],
+          [
+            744,
+            992
+          ]
+        ]
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 0,
+        "x0": 0,
+        "x1": 248
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 0,
+        "count": 29
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 0,
+        "mapped": 29
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 1,
+        "x0": 248,
+        "x1": 496
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 1,
+        "count": 105
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 1,
+        "mapped": 105
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 2,
+        "x0": 496,
+        "x1": 744
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 2,
+        "count": 35
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 2,
+        "mapped": 35
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_CROP_CREATED",
+        "crop_index": 3,
+        "x0": 744,
+        "x1": 992
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COLUMN_TOKEN_COUNT",
+        "crop_index": 3,
+        "count": 26
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_COORDINATE_REMAP",
+        "crop_index": 3,
+        "mapped": 26
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "__diag_event": {
+        "event": "OCR_MERGED_TOKEN_DETECTED",
+        "examples": [
+          "Grand Total",
+          "Shekh Maniph",
+          "ViiayMukhiva",
+          "Laxman Mukhiya",
+          "AIBCLL",
+          "AIBCLL",
+          "AIBCLL",
+          "Employee",
+          "Profession",
+          "Project Name"
+        ]
+      },
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 16,
+      "y": 8,
+      "w": 89,
+      "h": 393,
+      "text": "Grand Total",
+      "confidence": 0.9,
+      "bbox": [
+        16,
+        8,
+        105,
+        401
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 125,
+      "y": 164,
+      "w": 59,
+      "h": 245,
+      "text": "OSAA0014",
+      "confidence": 0.9,
+      "bbox": [
+        125,
+        164,
+        184,
+        409
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 120,
+      "y": 500,
+      "w": 68,
+      "h": 328,
+      "text": "Shekh Maniph",
+      "confidence": 0.9,
+      "bbox": [
+        120,
+        500,
+        188,
+        828
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 126,
+      "y": 1165,
+      "w": 56,
+      "h": 229,
+      "text": "Steel Fixer",
+      "confidence": 0.9,
+      "bbox": [
+        126,
+        1165,
+        182,
+        1394
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 121,
+      "y": 1739,
+      "w": 64,
+      "h": 145,
+      "text": "SH(M)",
+      "confidence": 0.9,
+      "bbox": [
+        121,
+        1739,
+        185,
+        1884
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 128,
+      "y": 2706,
+      "w": 68,
+      "h": 80,
+      "text": "S",
+      "confidence": 0.9,
+      "bbox": [
+        128,
+        2706,
+        196,
+        2786
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 126,
+      "y": 4254,
+      "w": 67,
+      "h": 77,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        126,
+        4254,
+        193,
+        4331
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 122,
+      "y": 4429,
+      "w": 78,
+      "h": 161,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        122,
+        4429,
+        200,
+        4590
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 119,
+      "y": 4645,
+      "w": 84,
+      "h": 171,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        119,
+        4645,
+        203,
+        4816
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 119,
+      "y": 4870,
+      "w": 85,
+      "h": 173,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        119,
+        4870,
+        204,
+        5043
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 121,
+      "y": 5097,
+      "w": 81,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        121,
+        5097,
+        202,
+        5261
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 124,
+      "y": 5339,
+      "w": 76,
+      "h": 126,
+      "text": "9.0",
+      "confidence": 0.9,
+      "bbox": [
+        124,
+        5339,
+        200,
+        5465
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 119,
+      "y": 5538,
+      "w": 84,
+      "h": 168,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        119,
+        5538,
+        203,
+        5706
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 129,
+      "y": 5803,
+      "w": 64,
+      "h": 76,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        129,
+        5803,
+        193,
+        5879
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 121,
+      "y": 5982,
+      "w": 80,
+      "h": 159,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        121,
+        5982,
+        201,
+        6141
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 123,
+      "y": 6196,
+      "w": 78,
+      "h": 165,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        123,
+        6196,
+        201,
+        6361
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 121,
+      "y": 6422,
+      "w": 82,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        121,
+        6422,
+        203,
+        6586
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 121,
+      "y": 6643,
+      "w": 82,
+      "h": 166,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        121,
+        6643,
+        203,
+        6809
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 125,
+      "y": 6888,
+      "w": 79,
+      "h": 123,
+      "text": "9.0",
+      "confidence": 0.9,
+      "bbox": [
+        125,
+        6888,
+        204,
+        7011
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 124,
+      "y": 7089,
+      "w": 81,
+      "h": 166,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        124,
+        7089,
+        205,
+        7255
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 130,
+      "y": 7352,
+      "w": 65,
+      "h": 74,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        130,
+        7352,
+        195,
+        7426
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 124,
+      "y": 7528,
+      "w": 81,
+      "h": 169,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        124,
+        7528,
+        205,
+        7697
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 23,
+      "y": 9097,
+      "w": 69,
+      "h": 210,
+      "text": "1038.0",
+      "confidence": 0.9,
+      "bbox": [
+        23,
+        9097,
+        92,
+        9307
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 122,
+      "y": 9115,
+      "w": 69,
+      "h": 174,
+      "text": "128.0",
+      "confidence": 0.9,
+      "bbox": [
+        122,
+        9115,
+        191,
+        9289
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 130,
+      "y": 9449,
+      "w": 51,
+      "h": 44,
+      "text": "o",
+      "confidence": 0.9,
+      "bbox": [
+        130,
+        9449,
+        181,
+        9493
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 29,
+      "y": 9738,
+      "w": 53,
+      "h": 46,
+      "text": "0",
+      "confidence": 0.9,
+      "bbox": [
+        29,
+        9738,
+        82,
+        9784
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 120,
+      "y": 9968,
+      "w": 70,
+      "h": 173,
+      "text": "10.00",
+      "confidence": 0.9,
+      "bbox": [
+        120,
+        9968,
+        190,
+        10141
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 12,
+      "y": 10206,
+      "w": 80,
+      "h": 300,
+      "text": "10,380.00",
+      "confidence": 0.9,
+      "bbox": [
+        12,
+        10206,
+        92,
+        10506
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 113,
+      "y": 10223,
+      "w": 79,
+      "h": 264,
+      "text": "1,280.00",
+      "confidence": 0.9,
+      "bbox": [
+        113,
+        10223,
+        192,
+        10487
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 258,
+      "y": 134,
+      "w": 13,
+      "h": 16,
+      "text": "a",
+      "confidence": 0.9,
+      "bbox": [
+        258,
+        134,
+        271,
+        150
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 453,
+      "y": 125,
+      "w": 36,
+      "h": 27,
+      "text": "N",
+      "confidence": 0.9,
+      "bbox": [
+        453,
+        125,
+        489,
+        152
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 155,
+      "w": 37,
+      "h": 254,
+      "text": "IOSAA0013",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        155,
+        285,
+        409
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 335,
+      "y": 167,
+      "w": 62,
+      "h": 245,
+      "text": "OSAA0012",
+      "confidence": 0.9,
+      "bbox": [
+        335,
+        167,
+        397,
+        412
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 447,
+      "y": 168,
+      "w": 48,
+      "h": 238,
+      "text": "OSAA0011",
+      "confidence": 0.9,
+      "bbox": [
+        447,
+        168,
+        495,
+        406
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 502,
+      "w": 39,
+      "h": 316,
+      "text": "ViiayMukhiva",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        502,
+        287,
+        818
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 503,
+      "w": 60,
+      "h": 210,
+      "text": "Rajaram",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        503,
+        393,
+        713
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 439,
+      "y": 502,
+      "w": 56,
+      "h": 383,
+      "text": "Laxman Mukhiya",
+      "confidence": 0.9,
+      "bbox": [
+        439,
+        502,
+        495,
+        885
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 330,
+      "y": 681,
+      "w": 72,
+      "h": 217,
+      "text": "Mukhiya",
+      "confidence": 0.9,
+      "bbox": [
+        330,
+        681,
+        402,
+        898
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 1168,
+      "w": 39,
+      "h": 238,
+      "text": "Tile Mason",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        1168,
+        287,
+        1406
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 336,
+      "y": 1165,
+      "w": 61,
+      "h": 246,
+      "text": "Tile Mason",
+      "confidence": 0.9,
+      "bbox": [
+        336,
+        1165,
+        397,
+        1411
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 444,
+      "y": 1169,
+      "w": 51,
+      "h": 242,
+      "text": "Tile Mason",
+      "confidence": 0.9,
+      "bbox": [
+        444,
+        1169,
+        495,
+        1411
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 336,
+      "y": 1741,
+      "w": 61,
+      "h": 161,
+      "text": "AIBCLL",
+      "confidence": 0.9,
+      "bbox": [
+        336,
+        1741,
+        397,
+        1902
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 251,
+      "y": 1753,
+      "w": 29,
+      "h": 134,
+      "text": "ABCL",
+      "confidence": 0.9,
+      "bbox": [
+        251,
+        1753,
+        280,
+        1887
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 449,
+      "y": 1746,
+      "w": 46,
+      "h": 156,
+      "text": "AIBCLL",
+      "confidence": 0.9,
+      "bbox": [
+        449,
+        1746,
+        495,
+        1902
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 2220,
+      "w": 57,
+      "h": 162,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        2220,
+        305,
+        2382
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 2216,
+      "w": 82,
+      "h": 170,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        2216,
+        416,
+        2386
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 451,
+      "y": 2231,
+      "w": 41,
+      "h": 139,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        451,
+        2231,
+        492,
+        2370
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 2450,
+      "w": 56,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        2450,
+        304,
+        2608
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 2446,
+      "w": 83,
+      "h": 166,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        2446,
+        417,
+        2612
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 453,
+      "y": 2465,
+      "w": 39,
+      "h": 131,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        453,
+        2465,
+        492,
+        2596
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 249,
+      "y": 2710,
+      "w": 49,
+      "h": 74,
+      "text": "W",
+      "confidence": 0.9,
+      "bbox": [
+        249,
+        2710,
+        298,
+        2784
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 341,
+      "y": 2711,
+      "w": 66,
+      "h": 77,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        341,
+        2711,
+        407,
+        2788
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 2889,
+      "w": 56,
+      "h": 154,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        2889,
+        304,
+        3043
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 335,
+      "y": 2885,
+      "w": 79,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        335,
+        2885,
+        414,
+        3049
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 452,
+      "y": 2901,
+      "w": 39,
+      "h": 111,
+      "text": "10.",
+      "confidence": 0.9,
+      "bbox": [
+        452,
+        2901,
+        491,
+        3012
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 3110,
+      "w": 57,
+      "h": 156,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        3110,
+        305,
+        3266
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 3106,
+      "w": 81,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        3106,
+        415,
+        3270
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 450,
+      "y": 3123,
+      "w": 44,
+      "h": 135,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        450,
+        3123,
+        494,
+        3258
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 3329,
+      "w": 56,
+      "h": 154,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        3329,
+        304,
+        3483
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 3326,
+      "w": 80,
+      "h": 163,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        3326,
+        414,
+        3489
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 452,
+      "y": 3341,
+      "w": 39,
+      "h": 109,
+      "text": "'OT",
+      "confidence": 0.9,
+      "bbox": [
+        452,
+        3341,
+        491,
+        3450
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 457,
+      "y": 3436,
+      "w": 26,
+      "h": 33,
+      "text": "c",
+      "confidence": 0.9,
+      "bbox": [
+        457,
+        3436,
+        483,
+        3469
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 3548,
+      "w": 56,
+      "h": 159,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        3548,
+        304,
+        3707
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 451,
+      "y": 3560,
+      "w": 42,
+      "h": 141,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        451,
+        3560,
+        493,
+        3701
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 341,
+      "y": 3602,
+      "w": 57,
+      "h": 50,
+      "text": "P",
+      "confidence": 0.9,
+      "bbox": [
+        341,
+        3602,
+        398,
+        3652
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 3773,
+      "w": 55,
+      "h": 161,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        3773,
+        303,
+        3934
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 331,
+      "y": 3768,
+      "w": 85,
+      "h": 169,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        331,
+        3768,
+        416,
+        3937
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 450,
+      "y": 3784,
+      "w": 43,
+      "h": 139,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        450,
+        3784,
+        493,
+        3923
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 3997,
+      "w": 56,
+      "h": 155,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        3997,
+        304,
+        4152
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 335,
+      "y": 3995,
+      "w": 78,
+      "h": 160,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        335,
+        3995,
+        413,
+        4155
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 4253,
+      "w": 49,
+      "h": 76,
+      "text": "W",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        4253,
+        297,
+        4329
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 4435,
+      "w": 56,
+      "h": 153,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        4435,
+        304,
+        4588
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 4430,
+      "w": 80,
+      "h": 160,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        4430,
+        413,
+        4590
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 449,
+      "y": 4447,
+      "w": 43,
+      "h": 130,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        449,
+        4447,
+        492,
+        4577
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 4653,
+      "w": 55,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        4653,
+        303,
+        4811
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 4649,
+      "w": 79,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        4649,
+        413,
+        4813
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 448,
+      "y": 4661,
+      "w": 46,
+      "h": 140,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        448,
+        4661,
+        494,
+        4801
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 4877,
+      "w": 58,
+      "h": 160,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        4877,
+        306,
+        5037
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 4873,
+      "w": 82,
+      "h": 168,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        4873,
+        415,
+        5041
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 450,
+      "y": 4891,
+      "w": 44,
+      "h": 139,
+      "text": "O'OT",
+      "confidence": 0.9,
+      "bbox": [
+        450,
+        4891,
+        494,
+        5030
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 5103,
+      "w": 55,
+      "h": 157,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        5103,
+        303,
+        5260
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 5099,
+      "w": 79,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        5099,
+        413,
+        5263
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 449,
+      "y": 5113,
+      "w": 44,
+      "h": 137,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        449,
+        5113,
+        493,
+        5250
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 5324,
+      "w": 56,
+      "h": 155,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        5324,
+        304,
+        5479
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 5321,
+      "w": 81,
+      "h": 160,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        5321,
+        414,
+        5481
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 451,
+      "y": 5335,
+      "w": 40,
+      "h": 111,
+      "text": "10.",
+      "confidence": 0.9,
+      "bbox": [
+        451,
+        5335,
+        491,
+        5446
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 5546,
+      "w": 56,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        5546,
+        304,
+        5704
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 330,
+      "y": 5540,
+      "w": 86,
+      "h": 167,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        330,
+        5540,
+        416,
+        5707
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 447,
+      "y": 5554,
+      "w": 47,
+      "h": 142,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        447,
+        5554,
+        494,
+        5696
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 339,
+      "y": 5805,
+      "w": 67,
+      "h": 78,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        339,
+        5805,
+        406,
+        5883
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 5984,
+      "w": 55,
+      "h": 155,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        5984,
+        303,
+        6139
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 335,
+      "y": 5982,
+      "w": 78,
+      "h": 159,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        335,
+        5982,
+        413,
+        6141
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 6202,
+      "w": 55,
+      "h": 157,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        6202,
+        303,
+        6359
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 332,
+      "y": 6196,
+      "w": 82,
+      "h": 168,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        332,
+        6196,
+        414,
+        6364
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 452,
+      "y": 6214,
+      "w": 37,
+      "h": 126,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        452,
+        6214,
+        489,
+        6340
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 6426,
+      "w": 55,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        6426,
+        303,
+        6584
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 6422,
+      "w": 79,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        6422,
+        413,
+        6586
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 452,
+      "y": 6440,
+      "w": 39,
+      "h": 131,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        452,
+        6440,
+        491,
+        6571
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 6650,
+      "w": 57,
+      "h": 156,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        6650,
+        305,
+        6806
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 332,
+      "y": 6645,
+      "w": 85,
+      "h": 167,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        332,
+        6645,
+        417,
+        6812
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 451,
+      "y": 6661,
+      "w": 41,
+      "h": 134,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        451,
+        6661,
+        492,
+        6795
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 6872,
+      "w": 56,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        6872,
+        304,
+        7030
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 6866,
+      "w": 85,
+      "h": 169,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        6866,
+        418,
+        7035
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 450,
+      "y": 6883,
+      "w": 44,
+      "h": 140,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        450,
+        6883,
+        494,
+        7023
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 7095,
+      "w": 58,
+      "h": 155,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        7095,
+        306,
+        7250
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 336,
+      "y": 7091,
+      "w": 80,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        336,
+        7091,
+        416,
+        7255
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 454,
+      "y": 7110,
+      "w": 38,
+      "h": 130,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        454,
+        7110,
+        492,
+        7240
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 249,
+      "y": 7354,
+      "w": 49,
+      "h": 73,
+      "text": "W",
+      "confidence": 0.9,
+      "bbox": [
+        249,
+        7354,
+        298,
+        7427
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 342,
+      "y": 7352,
+      "w": 67,
+      "h": 73,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        342,
+        7352,
+        409,
+        7425
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 7534,
+      "w": 59,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        7534,
+        307,
+        7692
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 7530,
+      "w": 85,
+      "h": 165,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        7530,
+        418,
+        7695
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 453,
+      "y": 7546,
+      "w": 40,
+      "h": 136,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        453,
+        7546,
+        493,
+        7682
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 7755,
+      "w": 57,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        7755,
+        305,
+        7913
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 334,
+      "y": 7751,
+      "w": 82,
+      "h": 166,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        334,
+        7751,
+        416,
+        7917
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 343,
+      "y": 8031,
+      "w": 60,
+      "h": 53,
+      "text": "工",
+      "confidence": 0.9,
+      "bbox": [
+        343,
+        8031,
+        403,
+        8084
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 455,
+      "y": 8040,
+      "w": 28,
+      "h": 37,
+      "text": "S",
+      "confidence": 0.9,
+      "bbox": [
+        455,
+        8040,
+        483,
+        8077
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 8646,
+      "w": 54,
+      "h": 158,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        8646,
+        302,
+        8804
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 8643,
+      "w": 81,
+      "h": 162,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        8643,
+        414,
+        8805
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 449,
+      "y": 8656,
+      "w": 44,
+      "h": 139,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        449,
+        8656,
+        493,
+        8795
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 8899,
+      "w": 49,
+      "h": 88,
+      "text": "W",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        8899,
+        297,
+        8987
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 340,
+      "y": 8908,
+      "w": 65,
+      "h": 81,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        340,
+        8908,
+        405,
+        8989
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 9120,
+      "w": 45,
+      "h": 165,
+      "text": "230.0",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        9120,
+        293,
+        9285
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 333,
+      "y": 9115,
+      "w": 71,
+      "h": 174,
+      "text": "220.0",
+      "confidence": 0.9,
+      "bbox": [
+        333,
+        9115,
+        404,
+        9289
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 448,
+      "y": 9125,
+      "w": 47,
+      "h": 149,
+      "text": "230.0",
+      "confidence": 0.9,
+      "bbox": [
+        448,
+        9125,
+        495,
+        9274
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 451,
+      "y": 9455,
+      "w": 40,
+      "h": 36,
+      "text": "0",
+      "confidence": 0.9,
+      "bbox": [
+        451,
+        9455,
+        491,
+        9491
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 251,
+      "y": 9741,
+      "w": 33,
+      "h": 40,
+      "text": "D",
+      "confidence": 0.9,
+      "bbox": [
+        251,
+        9741,
+        284,
+        9781
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 341,
+      "y": 9742,
+      "w": 52,
+      "h": 41,
+      "text": "o",
+      "confidence": 0.9,
+      "bbox": [
+        341,
+        9742,
+        393,
+        9783
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 449,
+      "y": 9743,
+      "w": 42,
+      "h": 39,
+      "text": "0",
+      "confidence": 0.9,
+      "bbox": [
+        449,
+        9743,
+        491,
+        9782
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 9976,
+      "w": 41,
+      "h": 162,
+      "text": "10.00",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        9976,
+        289,
+        10138
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 331,
+      "y": 9971,
+      "w": 72,
+      "h": 171,
+      "text": "10.00",
+      "confidence": 0.9,
+      "bbox": [
+        331,
+        9971,
+        403,
+        10142
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 442,
+      "y": 9974,
+      "w": 53,
+      "h": 168,
+      "text": "10.00",
+      "confidence": 0.9,
+      "bbox": [
+        442,
+        9974,
+        495,
+        10142
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 248,
+      "y": 10229,
+      "w": 41,
+      "h": 253,
+      "text": "2.300.00",
+      "confidence": 0.9,
+      "bbox": [
+        248,
+        10229,
+        289,
+        10482
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 323,
+      "y": 10223,
+      "w": 81,
+      "h": 265,
+      "text": "2,200.00",
+      "confidence": 0.9,
+      "bbox": [
+        323,
+        10223,
+        404,
+        10488
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 433,
+      "y": 10226,
+      "w": 62,
+      "h": 260,
+      "text": "2,300.00",
+      "confidence": 0.9,
+      "bbox": [
+        433,
+        10226,
+        495,
+        10486
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 552,
+      "y": 166,
+      "w": 57,
+      "h": 246,
+      "text": "OSAA0010",
+      "confidence": 0.9,
+      "bbox": [
+        552,
+        166,
+        609,
+        412
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 552,
+      "y": 505,
+      "w": 59,
+      "h": 166,
+      "text": "Sonalal",
+      "confidence": 0.9,
+      "bbox": [
+        552,
+        505,
+        611,
+        671
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 550,
+      "y": 1165,
+      "w": 62,
+      "h": 246,
+      "text": "Tile Mason",
+      "confidence": 0.9,
+      "bbox": [
+        550,
+        1165,
+        612,
+        1411
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 553,
+      "y": 1743,
+      "w": 54,
+      "h": 158,
+      "text": "AIBCLL",
+      "confidence": 0.9,
+      "bbox": [
+        553,
+        1743,
+        607,
+        1901
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 551,
+      "y": 2218,
+      "w": 78,
+      "h": 170,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        551,
+        2218,
+        629,
+        2388
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 550,
+      "y": 2446,
+      "w": 78,
+      "h": 167,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        550,
+        2446,
+        628,
+        2613
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 550,
+      "y": 2886,
+      "w": 78,
+      "h": 165,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        550,
+        2886,
+        628,
+        3051
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 550,
+      "y": 3108,
+      "w": 78,
+      "h": 162,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        550,
+        3108,
+        628,
+        3270
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 3328,
+      "w": 79,
+      "h": 161,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        3328,
+        628,
+        3489
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 548,
+      "y": 3546,
+      "w": 82,
+      "h": 167,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        548,
+        3546,
+        630,
+        3713
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 548,
+      "y": 3770,
+      "w": 81,
+      "h": 169,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        548,
+        3770,
+        629,
+        3939
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 546,
+      "y": 3994,
+      "w": 84,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        546,
+        3994,
+        630,
+        4158
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 554,
+      "y": 4256,
+      "w": 65,
+      "h": 80,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        554,
+        4256,
+        619,
+        4336
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 547,
+      "y": 4430,
+      "w": 80,
+      "h": 163,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        547,
+        4430,
+        627,
+        4593
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 547,
+      "y": 4648,
+      "w": 82,
+      "h": 169,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        547,
+        4648,
+        629,
+        4817
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 4874,
+      "w": 80,
+      "h": 167,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        4874,
+        629,
+        5041
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 5100,
+      "w": 78,
+      "h": 166,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        5100,
+        627,
+        5266
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 548,
+      "y": 5321,
+      "w": 81,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        548,
+        5321,
+        629,
+        5485
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 545,
+      "y": 5535,
+      "w": 83,
+      "h": 174,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        545,
+        5535,
+        628,
+        5709
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 552,
+      "y": 5805,
+      "w": 70,
+      "h": 79,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        552,
+        5805,
+        622,
+        5884
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 547,
+      "y": 5980,
+      "w": 81,
+      "h": 168,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        547,
+        5980,
+        628,
+        6148
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 6197,
+      "w": 78,
+      "h": 165,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        6197,
+        627,
+        6362
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 548,
+      "y": 6422,
+      "w": 79,
+      "h": 165,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        548,
+        6422,
+        627,
+        6587
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 6645,
+      "w": 79,
+      "h": 166,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        6645,
+        628,
+        6811
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 6866,
+      "w": 82,
+      "h": 169,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        6866,
+        631,
+        7035
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 552,
+      "y": 7091,
+      "w": 79,
+      "h": 165,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        552,
+        7091,
+        631,
+        7256
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 558,
+      "y": 7353,
+      "w": 66,
+      "h": 73,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        558,
+        7353,
+        624,
+        7426
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 7530,
+      "w": 83,
+      "h": 167,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        7530,
+        632,
+        7697
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 550,
+      "y": 7749,
+      "w": 78,
+      "h": 169,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        550,
+        7749,
+        628,
+        7918
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 549,
+      "y": 8643,
+      "w": 78,
+      "h": 164,
+      "text": "10.0",
+      "confidence": 0.9,
+      "bbox": [
+        549,
+        8643,
+        627,
+        8807
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 551,
+      "y": 8907,
+      "w": 70,
+      "h": 83,
+      "text": "M",
+      "confidence": 0.9,
+      "bbox": [
+        551,
+        8907,
+        621,
+        8990
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 545,
+      "y": 9115,
+      "w": 75,
+      "h": 176,
+      "text": "230.0",
+      "confidence": 0.9,
+      "bbox": [
+        545,
+        9115,
+        620,
+        9291
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 685,
+      "y": 9640,
+      "w": 58,
+      "h": 239,
+      "text": "Amount",
+      "confidence": 0.9,
+      "bbox": [
+        685,
+        9640,
+        743,
+        9879
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 544,
+      "y": 9970,
+      "w": 74,
+      "h": 175,
+      "text": "10.00",
+      "confidence": 0.9,
+      "bbox": [
+        544,
+        9970,
+        618,
+        10145
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 539,
+      "y": 10226,
+      "w": 78,
+      "h": 262,
+      "text": "2,300.00",
+      "confidence": 0.9,
+      "bbox": [
+        539,
+        10226,
+        617,
+        10488
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 779,
+      "y": 15,
+      "w": 71,
+      "h": 149,
+      "text": "S.No",
+      "confidence": 0.9,
+      "bbox": [
+        779,
+        15,
+        850,
+        164
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 811,
+      "y": 184,
+      "w": 87,
+      "h": 302,
+      "text": "Employee",
+      "confidence": 0.9,
+      "bbox": [
+        811,
+        184,
+        898,
+        486
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 744,
+      "y": 261,
+      "w": 60,
+      "h": 153,
+      "text": "Code",
+      "confidence": 0.9,
+      "bbox": [
+        744,
+        261,
+        804,
+        414
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 762,
+      "y": 579,
+      "w": 95,
+      "h": 348,
+      "text": "Employee",
+      "confidence": 0.9,
+      "bbox": [
+        762,
+        579,
+        857,
+        927
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 777,
+      "y": 887,
+      "w": 74,
+      "h": 191,
+      "text": "Name",
+      "confidence": 0.9,
+      "bbox": [
+        777,
+        887,
+        851,
+        1078
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 774,
+      "y": 1295,
+      "w": 78,
+      "h": 317,
+      "text": "Profession",
+      "confidence": 0.9,
+      "bbox": [
+        774,
+        1295,
+        852,
+        1612
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 767,
+      "y": 1756,
+      "w": 87,
+      "h": 415,
+      "text": "Project Name",
+      "confidence": 0.9,
+      "bbox": [
+        767,
+        1756,
+        854,
+        2171
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 773,
+      "y": 2500,
+      "w": 78,
+      "h": 58,
+      "text": "Z",
+      "confidence": 0.9,
+      "bbox": [
+        773,
+        2500,
+        851,
+        2558
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 776,
+      "y": 2721,
+      "w": 78,
+      "h": 53,
+      "text": "w",
+      "confidence": 0.9,
+      "bbox": [
+        776,
+        2721,
+        854,
+        2774
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 773,
+      "y": 3156,
+      "w": 80,
+      "h": 59,
+      "text": "S",
+      "confidence": 0.9,
+      "bbox": [
+        773,
+        3156,
+        853,
+        3215
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 775,
+      "y": 3382,
+      "w": 75,
+      "h": 53,
+      "text": "9",
+      "confidence": 0.9,
+      "bbox": [
+        775,
+        3382,
+        850,
+        3435
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 775,
+      "y": 4047,
+      "w": 75,
+      "h": 56,
+      "text": "6",
+      "confidence": 0.9,
+      "bbox": [
+        775,
+        4047,
+        850,
+        4103
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 763,
+      "y": 4669,
+      "w": 94,
+      "h": 121,
+      "text": "E",
+      "confidence": 0.9,
+      "bbox": [
+        763,
+        4669,
+        857,
+        4790
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 766,
+      "y": 6665,
+      "w": 93,
+      "h": 124,
+      "text": "Z",
+      "confidence": 0.9,
+      "bbox": [
+        766,
+        6665,
+        859,
+        6789
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 767,
+      "y": 6889,
+      "w": 92,
+      "h": 119,
+      "text": "Z",
+      "confidence": 0.9,
+      "bbox": [
+        767,
+        6889,
+        859,
+        7008
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 767,
+      "y": 7112,
+      "w": 93,
+      "h": 117,
+      "text": "3",
+      "confidence": 0.9,
+      "bbox": [
+        767,
+        7112,
+        860,
+        7229
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 767,
+      "y": 7549,
+      "w": 94,
+      "h": 121,
+      "text": "5",
+      "confidence": 0.9,
+      "bbox": [
+        767,
+        7549,
+        861,
+        7670
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 766,
+      "y": 7995,
+      "w": 93,
+      "h": 119,
+      "text": "Z",
+      "confidence": 0.9,
+      "bbox": [
+        766,
+        7995,
+        859,
+        8114
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 744,
+      "y": 9109,
+      "w": 59,
+      "h": 186,
+      "text": "Hours",
+      "confidence": 0.9,
+      "bbox": [
+        744,
+        9109,
+        803,
+        9295
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 819,
+      "y": 9117,
+      "w": 73,
+      "h": 166,
+      "text": "Total",
+      "confidence": 0.9,
+      "bbox": [
+        819,
+        9117,
+        892,
+        9283
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 744,
+      "y": 9371,
+      "w": 57,
+      "h": 209,
+      "text": "Absent",
+      "confidence": 0.9,
+      "bbox": [
+        744,
+        9371,
+        801,
+        9580
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 818,
+      "y": 9388,
+      "w": 72,
+      "h": 165,
+      "text": "Total",
+      "confidence": 0.9,
+      "bbox": [
+        818,
+        9388,
+        890,
+        9553
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 768,
+      "y": 9604,
+      "w": 85,
+      "h": 312,
+      "text": "Deduction",
+      "confidence": 0.9,
+      "bbox": [
+        768,
+        9604,
+        853,
+        9916
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 862,
+      "y": 9653,
+      "w": 76,
+      "h": 215,
+      "text": "Absent",
+      "confidence": 0.9,
+      "bbox": [
+        862,
+        9653,
+        938,
+        9868
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 773,
+      "y": 9979,
+      "w": 72,
+      "h": 150,
+      "text": "Rate",
+      "confidence": 0.9,
+      "bbox": [
+        773,
+        9979,
+        845,
+        10129
+      ],
+      "source_crop": "crop_01_full.png"
+    },
+    {
+      "x": 766,
+      "y": 10229,
+      "w": 78,
+      "h": 258,
+      "text": "Amount",
+      "confidence": 0.9,
+      "bbox": [
+        766,
+        10229,
+        844,
+        10487
+      ],
+      "source_crop": "crop_01_full.png"
+    }
+  ],
+  "clusters": [
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      ""
+    ],
+    [
+      "NET AMOUNT PAYABLE AED",
+      "VAT@5%",
+      "GROSS TOTALAED",
+      "TOTAL DEDUCTION AED",
+      "Mess Deduction",
+      "Gas Deduction",
+      "Other Deduction",
+      "tems",
+      "Absent Penalty",
+      "DEDUCTIONS",
+      "Grand Total",
+      "OSAA0014",
+      "Shekh Maniph",
+      "a",
+      "N",
+      "IOSAA0013",
+      "OSAA0012",
+      "OSAA0011",
+      "ViiayMukhiva",
+      "Rajaram",
+      "Laxman Mukhiya",
+      "Mukhiya",
+      "OSAA0010",
+      "Sonalal",
+      "S.No",
+      "Employee",
+      "Code",
+      "Employee",
+      "Name"
+    ],
+    [
+      "10,790.01",
+      "513.81",
+      "10.380.00",
+      "103.80",
+      "0.00",
+      "103.80",
+      "0.00",
+      "0.00",
+      "0.00",
+      "Steel Fixer",
+      "Tile Mason",
+      "Tile Mason",
+      "Tile Mason",
+      "Tile Mason",
+      "Profession"
+    ],
+    [
+      "SH(M)",
+      "AIBCLL",
+      "ABCL",
+      "AIBCLL",
+      "AIBCLL",
+      "Project Name"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "Z"
+    ],
+    [
+      "S",
+      "W",
+      "M",
+      "w"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "S"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "'OT",
+      "c",
+      "10.0",
+      "9"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "P",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "6"
+    ],
+    [
+      "M",
+      "W",
+      "M"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "E"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "O'OT",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "9.0",
+      "10.0",
+      "10.0",
+      "10.",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "M",
+      "M",
+      "M"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "Z"
+    ],
+    [
+      "9.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "Z"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "3"
+    ],
+    [
+      "M",
+      "W",
+      "M",
+      "M"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0",
+      "5"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "工",
+      "S",
+      "Z"
+    ],
+    [
+      "10.0",
+      "10.0",
+      "10.0",
+      "10.0"
+    ],
+    [
+      "W",
+      "M",
+      "M"
+    ],
+    [
+      "1038.0",
+      "128.0",
+      "230.0",
+      "220.0",
+      "230.0",
+      "230.0",
+      "Hours",
+      "Total"
+    ],
+    [
+      "o",
+      "0",
+      "Absent",
+      "Total"
+    ],
+    [
+      "0",
+      "D",
+      "o",
+      "0",
+      "Amount",
+      "Deduction",
+      "Absent"
+    ],
+    [
+      "10.00",
+      "10.00",
+      "10.00",
+      "10.00",
+      "10.00",
+      "Rate"
+    ],
+    [
+      "10,380.00",
+      "1,280.00",
+      "2.300.00",
+      "2,200.00",
+      "2,300.00",
+      "2,300.00",
+      "Amount"
+    ]
+  ],
+  "accepted_rows": [],
+  "rejected_rows": [
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          ""
+        ]
+      }
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "NET AMOUNT PAYABLE AED",
+        "VAT@5%",
+        "GROSS TOTALAED",
+        "TOTAL DEDUCTION AED",
+        "Mess Deduction",
+        "Gas Deduction",
+        "Other Deduction",
+        "tems",
+        "Absent Penalty",
+        "DEDUCTIONS",
+        "Grand Total",
+        "OSAA0014",
+        "Shekh Maniph",
+        "a",
+        "N",
+        "IOSAA0013",
+        "OSAA0012",
+        "OSAA0011",
+        "ViiayMukhiva",
+        "Rajaram",
+        "Laxman Mukhiya",
+        "Mukhiya",
+        "OSAA0010",
+        "Sonalal",
+        "S.No",
+        "Employee",
+        "Code",
+        "Employee",
+        "Name"
+      ]
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "10,790.01",
+        "513.81",
+        "10.380.00",
+        "103.80",
+        "0.00",
+        "103.80",
+        "0.00",
+        "0.00",
+        "0.00",
+        "Steel Fixer",
+        "Tile Mason",
+        "Tile Mason",
+        "Tile Mason",
+        "Tile Mason",
+        "Profession"
+      ]
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "SH(M)",
+        "AIBCLL",
+        "ABCL",
+        "AIBCLL",
+        "AIBCLL",
+        "Project Name"
+      ]
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "Z"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          "S",
+          "W",
+          "M",
+          "w"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "S"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "c",
+          "'OT",
+          "10.0",
+          "9"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "P",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "6"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          "M",
+          "W",
+          "M"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "E"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "O'OT",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 9.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "9.0",
+          "10.0",
+          "10.0",
+          "10.",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          "M",
+          "M",
+          "M"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "Z"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 9.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "9.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "Z"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "3"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          "M",
+          "W",
+          "M",
+          "M"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0",
+          "5"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          "工",
+          "S",
+          "Z"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 10.0,
+        "rate": 10.0,
+        "amount": 10.0,
+        "tokens": [
+          "10.0",
+          "10.0",
+          "10.0",
+          "10.0"
+        ]
+      }
+    },
+    {
+      "reason": "missing_fields",
+      "row": {
+        "employee_id": "",
+        "employee_name": "",
+        "trade": "",
+        "hours": 0.0,
+        "rate": 0.0,
+        "amount": 0.0,
+        "tokens": [
+          "W",
+          "M",
+          "M"
+        ]
+      }
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "1038.0",
+        "128.0",
+        "230.0",
+        "220.0",
+        "230.0",
+        "230.0",
+        "Hours",
+        "Total"
+      ]
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "o",
+        "0",
+        "Absent",
+        "Total"
+      ]
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "0",
+        "D",
+        "o",
+        "0",
+        "Amount",
+        "Deduction",
+        "Absent"
+      ]
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "10.00",
+        "10.00",
+        "10.00",
+        "10.00",
+        "10.00",
+        "Rate"
+      ]
+    },
+    {
+      "reason": "header",
+      "tokens": [
+        "10,380.00",
+        "1,280.00",
+        "2.300.00",
+        "2,200.00",
+        "2,300.00",
+        "2,300.00",
+        "Amount"
+      ]
+    }
+  ],
+  "reasons": [],
+  "diagnostics": {
+    "tokens_classified": 242,
+    "logical_rows_created": 65,
+    "rows_assembled": 57,
+    "rows_accepted": 0,
+    "rows_rejected": 65
+  }
+}

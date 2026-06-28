@@ -1,0 +1,16 @@
+﻿{
+  "table_index": 0,
+  "table_type": "financial_summary_table",
+  "confidence": 0.7745283018867924,
+  "parser": "financial_summary_parser",
+  "rows_count": 0,
+  "financials": {
+    "subtotal": 110.0,
+    "total_vat": 0.0,
+    "total_deduction": 0.0,
+    "gross_total": 0.0,
+    "net_payable": 0.0,
+    "deduction_breakdown": {}
+  },
+  "source_text": " Total Hrs 110.00       0.00 0.00 .0.00       00' 00        10.00 00' 10.00 10.00       10.00 10.00 10. 10.00 10. 10.00 10.00       00'0 10.00 10.00 10. 10.00      10.00   10.00 00'    "
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 const profileHeaderStyles = {
@@ -8,8 +8,8 @@ const profileHeaderStyles = {
     alignItems: 'center',
     gap: '20px',
     padding: '20px 16px',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #E5E7EB',
+    backgroundColor: 'var(--bg-surface)',
+    border: '1px solid var(--border-input)',
     borderRadius: '8px',
     marginBottom: '16px',
   },
@@ -30,11 +30,11 @@ const profileHeaderStyles = {
     width: '100%',
     height: '100%',
     borderRadius: '50%',
-    backgroundColor: '#D1D5DB',
+    backgroundColor: 'var(--border-input-hover)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#6B7280',
+    color: 'var(--text-secondary)',
     fontSize: '32px',
     fontWeight: '600',
     overflow: 'hidden',
@@ -52,9 +52,9 @@ const profileHeaderStyles = {
     width: '34px',
     height: '34px',
     borderRadius: '50%',
-    border: '2px solid #FFFFFF',
-    backgroundColor: '#1D4ED8',
-    color: '#FFFFFF',
+    border: '2px solid var(--bg-surface)',
+    backgroundColor: 'var(--color-primary)',
+    color: 'var(--bg-surface)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -70,23 +70,23 @@ const profileHeaderStyles = {
   name: {
     fontSize: '24px',
     fontWeight: '600',
-    color: '#141414',
+    color: 'var(--text-primary)',
     margin: '0',
   },
   meta: {
     fontSize: '14px',
     lineHeight: '14px',
     letterSpacing: '0.28px',
-    color: '#6B7280',
+    color: 'var(--text-secondary)',
     margin: '0',
   },
   editButton: {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #D1D5DB',
-    color: '#808080',
+    backgroundColor: 'var(--bg-surface)',
+    border: '1px solid var(--border-input-hover)',
+    color: 'var(--text-secondary)',
     cursor: 'pointer',
     fontSize: '13px',
     fontWeight: '500',
@@ -98,21 +98,21 @@ const profileHeaderStyles = {
     boxShadow: 'none',
   },
   editButtonHover: {
-    color: '#1D4ED8',
+    color: 'var(--color-primary)',
     borderColor: '#93C5FD',
     backgroundColor: '#EFF6FF',
     outline: 'none',
     boxShadow: 'none',
   },
   cancelButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'var(--bg-surface)',
     border: '1px solid transparent',
-    color: '#808080',
+    color: 'var(--text-secondary)',
   },
   saveButton: {
-    backgroundColor: '#1D4ED8',
-    border: '1px solid #1D4ED8',
-    color: '#FFFFFF',
+    backgroundColor: 'var(--color-primary)',
+    border: '1px solid var(--color-primary)',
+    color: 'var(--bg-surface)',
   },
   icon: {
     width: '14px',
@@ -128,7 +128,7 @@ const profileHeaderStyles = {
   },
 };
 
-const EditStrokeIcon = ({ color = '#6B7280' }) => (
+const EditStrokeIcon = ({ color = 'var(--text-secondary)' }) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -272,13 +272,13 @@ export const EmployeeProfileHeader = ({ employee, onEdit, onAvatarChange }) => {
           onBlur={() => setEditButtonHover(false)}
           style={{
             ...profileHeaderStyles.editButton,
-            border: `1px solid ${editButtonHover ? '#93C5FD' : '#D1D5DB'}`,
-            color: editButtonHover ? '#1D4ED8' : profileHeaderStyles.editButton.color,
+            border: `1px solid ${editButtonHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+            color: editButtonHover ? 'var(--color-primary)' : profileHeaderStyles.editButton.color,
             backgroundColor: editButtonHover ? '#EFF6FF' : profileHeaderStyles.editButton.backgroundColor,
           }}
           aria-label="Edit employee profile"
         >
-          <EditStrokeIcon color={editButtonHover ? '#1D4ED8' : '#6B7280'} />
+          <EditStrokeIcon color={editButtonHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />
           <span>Edit</span>
         </button>
       ) : (
@@ -312,3 +312,4 @@ export const EmployeeProfileHeader = ({ employee, onEdit, onAvatarChange }) => {
 };
 
 export default EmployeeProfileHeader;
+

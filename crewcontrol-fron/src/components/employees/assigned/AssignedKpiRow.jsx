@@ -1,4 +1,4 @@
-// import { Grid } from "@mui/material";
+﻿// import { Grid } from "@mui/material";
 // import KpiCard from "../../kpi/KpiCard";
 
 // import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
@@ -11,24 +11,24 @@
 //     label: "Total Assigned",
 //     value: "17 /20",
 //     icon: <GroupsOutlinedIcon sx={{ fontSize: 32 }} />,
-//     iconBg: "#DCFCE7",
-//     iconColor: "#16A34A",
+//     iconBg: "var(--bg-success-soft)",
+//     iconColor: "var(--color-success)",
 //   },
 //   {
 //     key: "unassigned",
 //     label: "Unassigned",
 //     value: "03 /20",
 //     icon: <PersonOffOutlinedIcon sx={{ fontSize: 32 }} />,
-//     iconBg: "#FEE2E2",
-//     iconColor: "#DC2626",
+//     iconBg: "var(--bg-error-soft)",
+//     iconColor: "var(--color-error)",
 //   },
 //   {
 //     key: "ending-soon",
 //     label: "Ending Soon",
 //     value: "02 /20",
 //     icon: <HourglassBottomOutlinedIcon sx={{ fontSize: 32 }} />,
-//     iconBg: "#E5E7EB",
-//     iconColor: "#6B7280",
+//     iconBg: "var(--border-input)",
+//     iconColor: "var(--text-secondary)",
 //   },
 // ];
 
@@ -67,27 +67,27 @@ import UniversalKpiRow from "../../kpi/UniversalKpiRow";
 
 const KPI_ITEMS = [
   {
-    key: "assigned",
-    label: "Total Assigned",
+    key: "on-site",
+    label: "Worker On-Site",
     icon: <GroupsOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#DCFCE7",
-    iconColor: "#16A34A",
+    iconBg: "var(--bg-success-soft)",
+    iconColor: "var(--color-success)",
     filterKey: "assignedStatus",
   },
   {
-    key: "unassigned",
-    label: "Unassigned",
+    key: "on-hold",
+    label: "Worker On-Hold",
     icon: <PersonOffOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#FEE2E2",
-    iconColor: "#DC2626",
+    iconBg: "var(--bg-error-soft)",
+    iconColor: "var(--color-error)",
     filterKey: "assignedStatus",
   },
   {
-    key: "ending-soon",
-    label: "Ending Soon",
+    key: "site-over",
+    label: "Worker Site-Over",
     icon: <HourglassBottomOutlinedIcon sx={{ fontSize: 32 }} />,
-    iconBg: "#E5E7EB",
-    iconColor: "#6B7280",
+    iconBg: "var(--border-input)",
+    iconColor: "var(--text-secondary)",
     filterKey: "assignedStatus",
   },
 ];
@@ -104,3 +104,4 @@ function AssignedKpiRow({ data = [], activeStatus, onChange }) {
 }
 
 export default AssignedKpiRow;
+

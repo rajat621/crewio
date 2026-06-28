@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+﻿import { Box, Typography } from "@mui/material";
 
 function KpiCard({
   icon,
@@ -20,18 +20,18 @@ function KpiCard({
         width: "100%",
         px: "16px",
         py: "20px",
-        backgroundColor: isActive ? "#F5F7FF" : "#FFFFFF",
+        backgroundColor: isActive ? "var(--bg-info-soft)" : "var(--bg-surface)",
         border: isActive
-          ? "1px solid #1D4ED8"
-          : "1px solid #DEDEDE",
+          ? "1px solid var(--color-primary)"
+          : "1px solid var(--border-card)",
         borderRadius: "8px",
-        boxShadow: "0px 0px 2px rgba(20, 20, 20, 0.12)",
+        boxShadow: "0px 0px 2px var(--shadow-soft)",
         cursor: isClickable ? "pointer" : "default",
         transition: "all 0.2s ease",
 
         "&:hover": isClickable
           ? {
-              backgroundColor: "#F5F7FF",
+              backgroundColor: "var(--bg-info-soft)",
             }
           : {},
       }}
@@ -74,7 +74,7 @@ function KpiCard({
         >
           <Typography
             fontSize={16}
-            color="#757575"
+            color="var(--text-secondary)"
             textAlign="right"
             lineHeight="11px"
           >
@@ -84,7 +84,7 @@ function KpiCard({
           <Typography
             fontSize={32}
             fontWeight={600}
-            color="#141414"
+            color="var(--text-primary)"
             textAlign="right"
             lineHeight="32px"
           >
@@ -97,3 +97,4 @@ function KpiCard({
 }
 
 export default KpiCard;
+

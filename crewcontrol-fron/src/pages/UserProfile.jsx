@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography, Avatar, IconButton, Select, MenuItem, Alert, CircularProgress, InputAdornment } from "@mui/material";
+﻿import { Box, Button, TextField, Typography, Avatar, IconButton, Select, MenuItem, Alert, CircularProgress, InputAdornment } from "@mui/material";
 import { useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import ReactCountryFlag from "react-country-flag";
@@ -289,8 +289,8 @@ return (
   >
     <Box
       sx={{
-        backgroundColor: "#FFFFFF",
-        border: "1px solid #E5E7EB",
+        backgroundColor: "var(--bg-surface)",
+        border: "1px solid var(--border-input)",
         borderRadius: "10px",
         p: "24px",
       }}
@@ -300,7 +300,7 @@ return (
         sx={{
           fontSize: "18px",
           fontWeight: 600,
-          color: "#111827",
+          color: "var(--text-primary)",
           mb: 3,
         }}
       >
@@ -323,7 +323,7 @@ return (
       {/* PROFILE HEADER CARD */}
       <Box
         sx={{
-          border: "1px solid #E5E7EB",
+          border: "1px solid var(--border-input)",
           borderRadius: "8px",
           p: "20px",
           mb: "16px",
@@ -340,7 +340,7 @@ return (
               sx={{
                 width: 92,
                 height: 92,
-                bgcolor: "#D1D5DB",
+                bgcolor: "var(--border-input-hover)",
                 fontSize: 30,
                 cursor: isEditingCard ? "pointer" : "default",
               }}
@@ -357,11 +357,11 @@ return (
                   position: "absolute",
                   bottom: 0,
                   right: 0,
-                  backgroundColor: "#1D4ED8",
-                  color: "#FFFFFF",
+                  backgroundColor: "var(--color-primary)",
+                  color: "var(--bg-surface)",
                   width: 36,
                   height: 36,
-                  "&:hover": { backgroundColor: "#1E40AF" },
+                  "&:hover": { backgroundColor: "var(--color-primary-hover)" },
                 }}
               >
                 <AddAPhotoIcon sx={{ fontSize: 18 }} />
@@ -383,7 +383,7 @@ return (
               sx={{
                 fontSize: "24px",
                 fontWeight: 600,
-                color: "#141414",
+                color: "var(--text-primary)",
               }}
             >
               {formData.firstName} {formData.lastName}
@@ -408,8 +408,8 @@ return (
             onClick={handleEditCard}
             sx={{
               alignSelf: "flex-start",
-              border: "1px solid #D1D5DB",
-              color: "#6B7280",
+              border: "1px solid var(--border-input-hover)",
+              color: "var(--text-secondary)",
               borderRadius: "8px",
               textTransform: "none",
               px: "16px",
@@ -429,8 +429,8 @@ return (
               disabled={isLoading}
               sx={{
                 textTransform: "none",
-                color: "#1D4ED8",
-                border: "1px solid #D1D5DB",
+                color: "var(--color-primary)",
+                border: "1px solid var(--border-input-hover)",
                 borderRadius: "8px",
                 px: "20px",
                 height: "32px",
@@ -446,7 +446,7 @@ return (
               variant="contained"
               sx={{
                 textTransform: "none",
-                backgroundColor: "#1D4ED8",
+                backgroundColor: "var(--color-primary)",
                 borderRadius: "8px",
                 px: "20px",
                 height: "32px",
@@ -466,7 +466,7 @@ return (
       {/* PERSONAL INFORMATION CARD */}
       <Box
         sx={{
-          border: "1px solid #E5E7EB",
+          border: "1px solid var(--border-input)",
           borderRadius: "8px",
           p: "20px",
         }}
@@ -483,7 +483,7 @@ return (
             sx={{
               fontSize: "14px",
               fontWeight: 600,
-              color: "#141414",
+              color: "var(--text-primary)",
             }}
           >
             Personal Information
@@ -494,8 +494,8 @@ return (
               startIcon={<EditIcon sx={{ fontSize: 14 }} />}
               onClick={handleEditInfo}
               sx={{
-                border: "1px solid #D1D5DB",
-                color: "#6B7280",
+                border: "1px solid var(--border-input-hover)",
+                color: "var(--text-secondary)",
                 borderRadius: "8px",
                 textTransform: "none",
                 px: "16px",
@@ -515,8 +515,8 @@ return (
                 disabled={isLoading}
                 sx={{
                   textTransform: "none",
-                  color: "#1D4ED8",
-                  border: "1px solid #D1D5DB",
+                  color: "var(--color-primary)",
+                  border: "1px solid var(--border-input-hover)",
                   borderRadius: "8px",
                   px: "20px",
                   height: "32px",
@@ -532,7 +532,7 @@ return (
                 variant="contained"
                 sx={{
                   textTransform: "none",
-                  backgroundColor: "#1D4ED8",
+                  backgroundColor: "var(--color-primary)",
                   borderRadius: "8px",
                   px: "20px",
                   height: "32px",
@@ -563,7 +563,7 @@ return (
               <Typography
                 sx={{
                   fontSize: 14,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                   fontFamily: "Inter",
                   mb: "8px",
                   fontWeight: 400,
@@ -581,15 +581,15 @@ return (
                       height: "44px",
                       fontSize: 14,
                       fontFamily: "Inter",
-                      backgroundColor: "#FFFFFF",
+                      backgroundColor: "var(--bg-surface)",
                       borderRadius: "8px",
-                      border: "1px solid #DEDEDE",
-                      color:"#141414"
+                      border: "1px solid var(--border-card)",
+                      color:"var(--text-primary)"
                     },
                   }}
                 />
               ) : (
-                <Typography sx={{ fontSize: 14, color: "#808080", fontFamily: "Inter" }}>
+                <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "Inter" }}>
                   {formData.firstName}
                 </Typography>
               )}
@@ -600,7 +600,7 @@ return (
               <Typography
                 sx={{
                   fontSize: 14,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                   fontFamily: "Inter",
                   mb: "8px",
                   fontWeight: 400,
@@ -618,15 +618,15 @@ return (
                       height: "44px",
                       fontSize: 14,
                       fontFamily: "Inter",
-                      backgroundColor: "#FFFFFF",
+                      backgroundColor: "var(--bg-surface)",
                       borderRadius: "8px",
-                      border: "1px solid #DEDEDE",
-                      color:"#141414"
+                      border: "1px solid var(--border-card)",
+                      color:"var(--text-primary)"
                     },
                   }}
                 />
               ) : (
-                <Typography sx={{ fontSize: 14, color: "#808080", fontFamily: "Inter" }}>
+                <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "Inter" }}>
                   {formData.lastName}
                 </Typography>
               )}
@@ -637,7 +637,7 @@ return (
               <Typography
                 sx={{
                   fontSize: 14,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                   fontFamily: "Inter",
                   mb: "8px",
                   fontWeight: 400,
@@ -658,10 +658,10 @@ return (
                         height: "44px",
                         fontSize: 14,
                         fontFamily: "Inter",
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: "var(--bg-surface)",
                         borderRadius: "8px",
-                        border: "1px solid #DEDEDE",
-                        color:"#141414"
+                        border: "1px solid var(--border-card)",
+                        color:"var(--text-primary)"
                         // pr: "12px",
                       },
                     }}
@@ -669,7 +669,7 @@ return (
                       endAdornment: (
                         <InputAdornment position="end" sx={{ pr: "12px" }}>
                           <IconButton onClick={openDobPicker} edge="end" sx={{ p: 0 }}>
-                            <CalendarTodayOutlinedIcon sx={{ fontSize: 18, color: "#9CA3AF" }} />
+                            <CalendarTodayOutlinedIcon sx={{ fontSize: 18, color: "var(--text-disabled)" }} />
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -691,7 +691,7 @@ return (
                   />
                 </>
               ) : (
-                <Typography sx={{ fontSize: 14, color: "#808080", fontFamily: "Inter" }}>
+                <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "Inter" }}>
                   {formData.dateOfBirth || "-"}
                 </Typography>
               )}
@@ -702,7 +702,7 @@ return (
               <Typography
                 sx={{
                   fontSize: 14,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                   fontFamily: "Inter",
                   mb: "8px",
                   fontWeight: 400,
@@ -719,10 +719,10 @@ return (
                     height: "44px",
                     fontSize: 14,
                     fontFamily: "Inter",
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: "var(--bg-surface)",
                     borderRadius: "8px",
-                    border: "1px solid #DEDEDE",
-                    color:"#141414",
+                    border: "1px solid var(--border-card)",
+                    color:"var(--text-primary)",
                   }}
                 >
                   <MenuItem value="Male">Male</MenuItem>
@@ -730,7 +730,7 @@ return (
                   <MenuItem value="Other">Other</MenuItem>
                 </Select>
               ) : (
-                <Typography sx={{ fontSize: 14, color: "#808080", fontFamily: "Inter" }}>
+                <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "Inter" }}>
                   {formData.gender}
                 </Typography>
               )}
@@ -741,7 +741,7 @@ return (
               <Typography
                 sx={{
                   fontSize: 14,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                   fontFamily: "Inter",
                   mb: "8px",
                   fontWeight: 400,
@@ -760,15 +760,15 @@ return (
                       height: "44px",
                       fontSize: 14,
                       fontFamily: "Inter",
-                      backgroundColor: "#FFFFFF",
+                      backgroundColor: "var(--bg-surface)",
                       borderRadius: "8px",
-                      border: "1px solid #DEDEDE",
-                      color:"#141414"
+                      border: "1px solid var(--border-card)",
+                      color:"var(--text-primary)"
                     },
                   }}
                 />
               ) : (
-                <Typography sx={{ fontSize: 14, color: "#808080", fontFamily: "Inter" }}>
+                <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "Inter" }}>
                   {formData.email}
                 </Typography>
               )}
@@ -779,7 +779,7 @@ return (
               <Typography
                 sx={{
                   fontSize: 14,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                   fontFamily: "Inter",
                   mb: "8px",
                   fontWeight: 400,
@@ -794,9 +794,9 @@ return (
                     gap: 0,
                     alignItems: "stretch",
                     height: "44px",
-                    border: "1px solid #D1D5DB",
+                    border: "1px solid var(--border-input-hover)",
                     borderRadius: "12px",
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: "var(--bg-surface)",
                     overflow: "hidden",
                     
                     "&:focus-within": {
@@ -810,7 +810,7 @@ return (
                       display: "flex",
                       alignItems: "center",
                       height: "100%",
-                      borderRight: "1px solid #E5E7EB",
+                      borderRight: "1px solid var(--border-input)",
                     }}
                   >
                     <Box
@@ -883,7 +883,7 @@ return (
                         borderRight: "none",
                         padding: "0 8px 0 4px",
                         fontSize: 14,
-                        color: "#141414",
+                        color: "var(--text-primary)",
                         height: "100%",
                         outline: "none",
                         background: "transparent",
@@ -909,7 +909,7 @@ return (
                       height: "100%",
                       outline: "none",
                       background: "transparent",
-                      color: "#141414",
+                      color: "var(--text-primary)",
                       boxShadow: "none",
                     }}
                   />
@@ -923,7 +923,7 @@ return (
                         style={{ width: "30px", height: "20px", borderRadius: "2px" }}
                       />
                   )}
-                  <Typography sx={{ fontSize: 14, color: "#808080", fontFamily: "Inter" }}>
+                  <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", fontFamily: "Inter" }}>
                     {formattedDisplayMobile}
                   </Typography>
                 </Box>
@@ -943,3 +943,4 @@ return (
 }
 
 export default UserProfile;
+

@@ -1,4 +1,4 @@
-//src\components\attendance\AttendanceChartPlaceholder.jsx
+﻿//src\components\attendance\AttendanceChartPlaceholder.jsx
 import { Box, Typography } from "@mui/material";
 
 function AttendanceChartPlaceholder() {
@@ -7,14 +7,14 @@ function AttendanceChartPlaceholder() {
       sx={{
         height: 260,
         borderRadius: 2,
-        backgroundColor: "#FFFFFF",
-        border: "1px solid #DEDEDE",
+        backgroundColor: "var(--bg-surface)",
+        border: "1px solid var(--border-card)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <Typography fontSize={13} color="#757575">
+      <Typography fontSize={13} color="var(--text-secondary)">
         Attendance chart will render here
       </Typography>
     </Box>
@@ -22,3 +22,4 @@ function AttendanceChartPlaceholder() {
 }
 
 export default AttendanceChartPlaceholder;
+
