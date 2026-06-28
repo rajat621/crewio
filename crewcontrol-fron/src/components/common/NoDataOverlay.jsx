@@ -1,7 +1,9 @@
-import { Box, Button, Typography } from "@mui/material";
+﻿import { Box, Button, Typography } from "@mui/material";
 import MoveToInboxOutlinedIcon from "@mui/icons-material/MoveToInboxOutlined";
+import { useNavigate } from "react-router-dom";
 
 function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -14,7 +16,7 @@ function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) 
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundColor: "rgba(20, 20, 20, 0.22)",
+          backgroundColor: "var(--overlay-scrim)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -25,10 +27,10 @@ function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) 
           sx={{
             width: 418,
             height: 310,
-            backgroundColor: "#FFFFFF",
+            backgroundColor: "var(--bg-surface)",
             border: "1px solid rgba(95, 95, 111, 0.50)",
             borderRadius: "12px",
-            boxShadow: "0px 10px 28px rgba(0, 0, 0, 0.04)",
+            boxShadow: "0px 10px 28px var(--shadow-overlay)",
             pt: "40px",
             px: "32px",
             textAlign: "center",
@@ -54,7 +56,7 @@ function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) 
               fontSize: "18px",
               lineHeight: "24px",
               fontWeight: 600,
-              color: "#141414",
+              color: "var(--text-primary)",
               mb: "12px",
             }}
           >
@@ -66,7 +68,7 @@ function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) 
               fontSize: "14px",
               lineHeight: "20px",
               fontWeight: 400,
-              color: "#757575",
+              color: "var(--text-secondary)",
               maxWidth: 354,
               mx: "auto",
               mb: "32px",
@@ -84,12 +86,12 @@ function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) 
                 height: 32,
                 textTransform: "none",
                 borderRadius: "8px",
-                borderColor: "#2C5FEA",
-                color: "#2C5FEA",
+                borderColor: "var(--color-primary)",
+                color: "var(--color-primary)",
                 fontSize: 14,
                 fontWeight: 500,
                 "&:hover": {
-                  borderColor: "#1D4ED8",
+                  borderColor: "var(--color-primary)",
                   backgroundColor: "#EFF4FF",
                 },
               }}
@@ -99,17 +101,22 @@ function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) 
 
             <Button
               variant="contained"
-              onClick={onAction}
+              onClick={() => {
+                if (typeof onAction === "function") return onAction();
+                if (actionLabel === "Add Expense") {
+                  navigate("/expenses", { state: { openAddModal: true } });
+                }
+              }}
               sx={{
                 minWidth: 178,
                 height: 32,
                 textTransform: "none",
                 borderRadius: "8px",
-                backgroundColor: "#2C5FEA",
+                backgroundColor: "var(--color-primary)",
                 fontSize: 14,
                 fontWeight: 500,
                 "&:hover": {
-                  backgroundColor: "#1D4ED8",
+                  backgroundColor: "var(--color-primary)",
                 },
               }}
             >
@@ -123,3 +130,4 @@ function NoDataOverlay({ title, description, actionLabel, onCancel, onAction }) 
 }
 
 export default NoDataOverlay;
+

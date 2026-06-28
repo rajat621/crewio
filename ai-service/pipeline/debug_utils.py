@@ -1,10 +1,18 @@
+<<<<<<< HEAD
+﻿"""Debug export helpers for table extraction pipeline."""
+=======
 """Debug export helpers for table extraction pipeline."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Sequence
+<<<<<<< HEAD
+import logging
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 import cv2
 import numpy as np
@@ -73,3 +81,70 @@ class DebugExporter:
                 cv2.putText(canvas, txt[:24], (x, max(0, y - 3)), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 0), 1)
 
         self.image(name, canvas)
+<<<<<<< HEAD
+
+
+class NoOpDebug:
+    """No-op debug shim used when debug is disabled or missing.
+
+    Methods mirror DebugExporter but do nothing. Keeps `enabled` and
+    `base_dir` attributes for callers that check them.
+    """
+
+    enabled: bool = False
+    base_dir = None
+
+    def image(self, *args, **kwargs) -> None:
+        return None
+
+    def json(self, *args, **kwargs) -> None:
+        return None
+
+    def text(self, *args, **kwargs) -> None:
+        return None
+
+    def save(self, *args, **kwargs) -> None:
+        return None
+
+    def table_preview(self, *args, **kwargs) -> None:
+        return None
+
+    def ocr_overlay(self, *args, **kwargs) -> None:
+        return None
+
+
+def ensure_debug(debug_obj: Any) -> Any:
+    """Return a valid debug object. If `debug_obj` is falsy, return a NoOpDebug.
+
+    Also emits a small log/profiler entry indicating debug mode state.
+    """
+    logger = logging.getLogger(__name__)
+    # Avoid importing profiler at module import time to reduce coupling.
+    try:
+        if debug_obj:
+            logger.info("Debug mode enabled")
+            try:
+                from pipeline.profiler import current
+
+                prof = current()
+                if prof:
+                    prof.set_meta("debug_mode", True)
+            except Exception:
+                pass
+            return debug_obj
+    except Exception:
+        # defensive: fallthrough to null debug
+        pass
+
+    logger.info("Debug mode disabled — using NoOpDebug shim")
+    try:
+        from pipeline.profiler import current
+
+        prof = current()
+        if prof:
+            prof.set_meta("debug_mode", False)
+    except Exception:
+        pass
+    return NoOpDebug()
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

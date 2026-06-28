@@ -4,7 +4,9 @@ const companySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: function requiredCompanyName() {
+        return !this.isOwner;
+      },
     },
     trn: {
       type: String,
@@ -99,6 +101,32 @@ const companySchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
+    },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
+    },
+    onboardingCompleted: {
+      type: Boolean,
+      default: false,
+    },
+    logoFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FileRecord',
+    },
+    templateFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FileRecord',
+    },
+    signatureFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FileRecord',
     },
   },
   { timestamps: true }

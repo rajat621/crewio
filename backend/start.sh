@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 # Backend startup script
 echo "Starting Crew Control Backend..."

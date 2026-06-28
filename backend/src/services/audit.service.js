@@ -1,4 +1,4 @@
-export const createAuditLog = async (logData) => {
+﻿export const createAuditLog = async (logData) => {
   // Service stub
   return logData;
 };

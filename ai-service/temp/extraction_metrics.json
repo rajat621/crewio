@@ -1,0 +1,178 @@
+{
+  "events": [
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-28T07:41:49.661269+00:00",
+      "run_id": "validation_digital_timesheet_after",
+      "pdf_path": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation_quick\\generated_dataset\\time_sheet-baseline_unknown.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-28T07:41:49.680266+00:00",
+      "run_id": "validation_digital_timesheet_after",
+      "pdf_path": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation_quick\\generated_dataset\\time_sheet-baseline_unknown.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-28T07:41:49.697266+00:00",
+      "run_id": "validation_digital_timesheet_after",
+      "pdf_path": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation_quick\\generated_dataset\\time_sheet-baseline_unknown.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-28T07:42:25.443545+00:00",
+      "run_id": "validation_digital_timesheet_after",
+      "pdf_path": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation_quick\\generated_dataset\\time_sheet-baseline_unknown.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "ocr",
+        "employee_rows": 1,
+        "subtotal": 1610.0,
+        "vat": 80.5,
+        "net_total": 1690.5,
+        "confidence": 0.7
+      },
+      "extra": {
+        "processing_time_ms": 35725
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-28T08:45:54.915855+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-28T08:45:54.928853+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-28T08:45:54.938856+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-28T08:46:18.714177+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 1,
+        "subtotal": 1280.0,
+        "vat": 58.81,
+        "net_total": 1235.01,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 23745
+      }
+    }
+  ],
+  "latest_by_event": {
+    "OCR_REPAIR_METRICS": {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-28T08:45:54.915855+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    "SEMANTIC_INPUT_METRICS": {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-28T08:45:54.928853+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    "SEMANTIC_OUTPUT_METRICS": {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-28T08:45:54.938856+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    "FINAL_EXTRACTION_METRICS": {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-28T08:46:18.714177+00:00",
+      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 1,
+        "subtotal": 1280.0,
+        "vat": 58.81,
+        "net_total": 1235.01,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 23745
+      }
+    }
+  },
+  "updated_at": "2026-06-28T08:46:18.714177+00:00"
+}

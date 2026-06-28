@@ -1,4 +1,4 @@
-import axios from 'axios'
+﻿import axios from 'axios'
 
 const trimTrailingSlash = (value) => String(value || '').replace(/\/$/, '')
 const trimApiSuffix = (value) => trimTrailingSlash(String(value || '').replace(/\/api\/?$/i, ''))

@@ -1,4 +1,4 @@
-import { Box, Typography, Chip } from "@mui/material";
+﻿import { Box, Typography, Chip } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 function AlertItem({ label, count }) {
@@ -8,20 +8,20 @@ function AlertItem({ label, count }) {
         height: 44,
         px: 2,
         borderRadius: 1,
-        border: "1px solid #DEDEDE",
+        border: "1px solid var(--border-card)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         cursor: "pointer",
         "&:hover": {
-          backgroundColor: "#F6F7FB",
+          backgroundColor: "var(--bg-canvas)",
         },
       }}
     >
       {/* LEFT */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <ChevronRightIcon sx={{ fontSize: 18, color: "#757575" }} />
-        <Typography fontSize={14} color="#757575">
+        <ChevronRightIcon sx={{ fontSize: 18, color: "var(--text-secondary)" }} />
+        <Typography fontSize={14} color="var(--text-secondary)">
           {label}
         </Typography>
       </Box>
@@ -32,8 +32,8 @@ function AlertItem({ label, count }) {
           label={count}
           size="small"
           sx={{
-            backgroundColor: "#1D4ED8",
-            color: "#FFFFFF",
+            backgroundColor: "var(--color-primary)",
+            color: "var(--bg-surface)",
             fontSize: 12,
             height: 22,
           }}
@@ -44,3 +44,4 @@ function AlertItem({ label, count }) {
 }
 
 export default AlertItem;
+

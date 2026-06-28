@@ -1,0 +1,19 @@
+{
+  "timings": {
+    "rasterization": 3890,
+    "preprocessing": 2239
+  },
+  "counts": {
+    "rasterization": 1,
+    "preprocessing": 1
+  },
+  "detailed": {
+    "detected_contours_total": 0,
+    "candidate_count_total": 0,
+    "inferred_rows_total": 0,
+    "inferred_columns_total": 0,
+    "generated_cells_total": 0,
+    "ocr_batch_count": 0,
+    "ocr_batch_time_ms": 0
+  }
+}

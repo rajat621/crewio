@@ -1,4 +1,4 @@
-
+﻿
 const employeesData = [
   {
     id: "EMP0001",
@@ -11,7 +11,7 @@ const employeesData = [
     company: "MCC",
     project: "P1001",
     startDate: "12 Jan 2023",
-    assignedStatus: "assigned",
+    assignedStatus: "on-site",
 
     checkIn: "09:02 AM",
     checkOut: "06:01 PM",
@@ -36,7 +36,7 @@ const employeesData = [
     company: "L&T",
     project: "P1002",
     startDate: "03 Mar 2022",
-    assignedStatus: "ending-soon",
+    assignedStatus: "site-over",
 
     checkIn: "09:35 AM",
     checkOut: "05:45 PM",
@@ -61,7 +61,7 @@ const employeesData = [
     company: "",
     project: "",
     startDate: "",
-    assignedStatus: "unassigned",
+    assignedStatus: "site-over",
 
     checkIn: "",
     checkOut: "",
@@ -86,7 +86,7 @@ const employeesData = [
     company: "MCC",
     project: "P1253",
     startDate: "01 Jun 2023",
-    assignedStatus: "assigned",
+    assignedStatus: "on-site",
 
     checkIn: "08:55 AM",
     checkOut: "06:10 PM",
@@ -111,7 +111,7 @@ const employeesData = [
     company: "TATA",
     project: "P2001",
     startDate: "15 Feb 2024",
-    assignedStatus: "assigned",
+    assignedStatus: "on-site",
 
     checkIn: "",
     checkOut: "",
@@ -129,7 +129,7 @@ const employeesData = [
   // ---------- BULK GENERATED VARIANTS ----------
   ...Array.from({ length: 45 }, (_, i) => {
     const index = i + 6;
-    const statuses = ["assigned", "ending-soon", "unassigned"];
+    const statuses = ["on-site", "site-over", "site-over"];
     const attendance = ["present", "late", "absent", "on-leave"];
     const passportStates = ["valid", "expiring-soon", "expired"];
     const trades = ["Carpenter", "Electrician", "Mason", "Welder", "Painter"];

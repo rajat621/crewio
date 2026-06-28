@@ -1,4 +1,4 @@
-// src/components/employees/attendance/attendanceData.js
+﻿// src/components/employees/attendance/attendanceData.js
 
 export const ATTENDANCE_STATUS = {
   PRESENT: "present",

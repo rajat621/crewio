@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo ,useEffect } from "react";
+﻿import { useState, useRef, useMemo ,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { employeesApi } from "../api/employees";
 import { companiesApi } from "../api/companies";
@@ -35,7 +35,7 @@ import dayjs from "dayjs";
 ═══════════════════════════════════════════════════════════════ */
 
 const GENDERS       = ["Male", "Female", "Other"];
-const TRADES        = ["Mason", "Carpenter", "Electrician", "Plumber", "Welder", "Helper"];
+// const TRADES        = ["Mason", "Carpenter", "Electrician", "Plumber", "Welder", "Helper"];
 const EMP_TYPES     = ["Full Time", "Part Time", "Contract", "Daily Wage"];
 
 const EMPLOYMENT_TYPE_MAP = {
@@ -115,11 +115,11 @@ const mapExpenseReceiptsForApi = (expenseReceipts) => {
    SHARED STYLE TOKENS
 ═══════════════════════════════════════════════════════════════ */
 
-const BLUE   = "#2C5FEA";
-const DARK   = "#111827";
-const GRAY   = "#6B7280";
-const BORDER = "#DEDEDE";
-const LIGHT  = "#F9FAFB";
+const BLUE   = "var(--color-primary)";
+const DARK   = "var(--text-primary)";
+const GRAY   = "var(--text-secondary)";
+const BORDER = "var(--border-card)";
+const LIGHT  = "var(--bg-surface)";
 
 const baseInput = {
   width: "100%",
@@ -130,7 +130,7 @@ const baseInput = {
   borderRadius: "8px",
   padding: "0 12px",
   fontSize: "14px",
-  color: "#141414",
+  color: "var(--text-primary)",
   background: "#fff",
   outline: "none",
   appearance: "none",
@@ -147,7 +147,11 @@ const DEFAULT_COUNTRY = getCountryByIso("AE") || COUNTRY_OPTIONS[0] || { isoCode
 
 const MAIN_STEPS = [
   { id: 1, label: "Employee Details", icon: PersonOutlineIcon },
+<<<<<<< HEAD
+  { id: 2, label: "Upload Documents", icon: BadgeOutlinedIcon },
+=======
   { id: 2, label: "Passport Details", icon: BadgeOutlinedIcon },
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   { id: 3, label: "Expenses", icon: PaymentsOutlinedIcon },
   { id: 4, label: "Work Details", icon: WorkOutlineIcon },
   { id: 5, label: "App Access", icon: AppRegistrationOutlinedIcon },
@@ -189,7 +193,7 @@ function Field({ label, required, children }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       {label && (
-        <label style={{ fontSize: "14px", color: "#141414", display: "flex", gap: "2px", alignItems: "center" }}>
+        <label style={{ fontSize: "14px", color: "var(--text-primary)", display: "flex", gap: "2px", alignItems: "center" }}>
           {label}
           {required && <span style={{ color: "#F00" }}>*</span>}
         </label>
@@ -257,7 +261,7 @@ const UserIcon = () => (
 );
 
 const UploadCloudIconComponent = () => (
-  <CloudUploadIcon sx={{ fontSize: 48, color: "#9CA3AF" }} />
+  <CloudUploadIcon sx={{ fontSize: 48, color: "var(--text-disabled)" }} />
 );
 
 const CalIconComponent = () => (
@@ -273,7 +277,7 @@ const KeyIconComponent = () => (
 );
 
 const SuccessCheckIcon = () => (
-  <CheckCircleIcon sx={{ fontSize: 80, color: "#2C5FEA" }} />
+  <CheckCircleIcon sx={{ fontSize: 80, color: "var(--color-primary)" }} />
 );
 
 /* ═══════════════════════════════════════════════════════════════
@@ -297,10 +301,10 @@ function Stepper({ currentStep, expenseSubStep }) {
             <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
               <StepCircle completed={isCompleted} active={isActive} icon={StepIcon} />
               <div>
-                <div style={{ fontSize: "8px", color: "#141414", lineHeight: "14px", letterSpacing: "0.24px", textTransform: "uppercase" }}>
+                <div style={{ fontSize: "8px", color: "var(--text-primary)", lineHeight: "14px", letterSpacing: "0.24px", textTransform: "uppercase" }}>
                   STEP {step.id}
                 </div>
-                <div style={{ fontSize: "14px", fontWeight: 500, lineHeight: "22px", letterSpacing: "0.42px", color: isActive || isCompleted ? DARK : "#141414", marginTop: "0px" }}>
+                <div style={{ fontSize: "14px", fontWeight: 500, lineHeight: "22px", letterSpacing: "0.42px", color: isActive || isCompleted ? DARK : "var(--text-primary)", marginTop: "0px" }}>
                   {step.label}
                 </div>
               </div>
@@ -322,7 +326,7 @@ function Stepper({ currentStep, expenseSubStep }) {
                               <div style={{ width: "1px", flex: 1, minHeight: "8px", background: BORDER }} />
                             )}
                           </div>
-                          <div style={{ fontSize: "12px", fontWeight: subActive || subCompleted ? 600 : 400, color: subActive || subCompleted ? DARK : "#9CA3AF", paddingTop: "8px", whiteSpace: "nowrap" }}>
+                          <div style={{ fontSize: "12px", fontWeight: subActive || subCompleted ? 600 : 400, color: subActive || subCompleted ? DARK : "var(--text-disabled)", paddingTop: "8px", whiteSpace: "nowrap" }}>
                             {sec.label}
                           </div>
                         </div>
@@ -344,8 +348,8 @@ function Stepper({ currentStep, expenseSubStep }) {
 
 function StepCircle({ completed, active, icon: IconComponent = DocIcon }) {
   const DARK_LOCAL = "#111111";
-  const GREY = "#9CA3AF";
-  const LIGHT_BORDER = "#D1D5DB";
+  const GREY = "var(--text-disabled)";
+  const LIGHT_BORDER = "var(--border-input-hover)";
 
   if (completed) {
     return (
@@ -367,7 +371,11 @@ function StepCircle({ completed, active, icon: IconComponent = DocIcon }) {
 
   return (
     <div style={{ width: 44, height: 44, borderRadius: "50%", border: `2px solid ${LIGHT_BORDER}`, padding: 5, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "#fff" }}>
+<<<<<<< HEAD
+      <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "var(--bg-surface-secondary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+=======
       <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         <IconComponent sx={{ fontSize: 18, color: GREY }} />
       </div>
     </div>
@@ -376,7 +384,7 @@ function StepCircle({ completed, active, icon: IconComponent = DocIcon }) {
 
 function SubCircle({ completed, active }) {
   const DARK = "#111111";
-  const LIGHT_BORDER = "#D1D5DB";
+  const LIGHT_BORDER = "var(--border-input-hover)";
   // COMPLETED
   if (completed) {
     return (
@@ -424,7 +432,7 @@ function SubCircle({ completed, active }) {
         height: 14,
         borderRadius: "50%",
         border: `2px solid ${LIGHT_BORDER}`,
-        background: "#F3F4F6",
+        background: "var(--bg-surface-secondary)",
       }}
     />
   );
@@ -442,7 +450,11 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
         flexDirection: "column",
         height: "100%",
         minHeight: 0,
+<<<<<<< HEAD
+        background: "var(--bg-surface-secondary)",
+=======
         background: "#F3F4F6",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         fontFamily: "sans-serif",
         overflow: "hidden",
       }}
@@ -455,7 +467,7 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
             height: "100%",
             minHeight: 0,
             background: "#fff",
-            border: `1px solid #DEDEDE`,
+            border: `1px solid var(--border-card)`,
             borderRadius: "12px",
             overflow: "hidden",
           }}
@@ -466,7 +478,11 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
               width: "282px",
               flexShrink: 0,
               height: "100%",
+<<<<<<< HEAD
+              background: "var(--bg-surface)",
+=======
               background: "#F9FAFB",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
               overflow: "hidden",
@@ -492,7 +508,7 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
                     height: "32px",
                     color: "#374151",
                     background: "#fff",
-                    border: `1px solid #DEDEDE`,
+                    border: `1px solid var(--border-card)`,
                     borderRadius: "8px",
                     padding: "5px 12px",
                     cursor: "pointer",
@@ -544,7 +560,7 @@ function CancelBtn({ onClick }) {
         border: "none",
         borderRadius: "8px",
         background: h ? "#EFF4FF" : "#fff",
-        color: "#1D4ED8",
+        color: "var(--color-primary)",
         fontSize: "12px",
         fontWeight: 500,
         lineHeight: "20px",
@@ -570,7 +586,7 @@ function PrimaryBtn({ onClick, children, disabled }) {
         padding: "0 24px",
         border: "none",
         borderRadius: "8px",
-        background: disabled ? "#D1D5DB" : h ? "#1D4ED8" : BLUE,
+        background: disabled ? "var(--border-input-hover)" : h ? "var(--color-primary)" : BLUE,
         color: "#fff",
         fontSize: "12px",
         fontWeight: 500,
@@ -589,8 +605,8 @@ function PrimaryBtn({ onClick, children, disabled }) {
 function FormHeading({ title, subtitle }) {
   return (
     <div style={{ marginBottom: "32px" }}>
-      <h2 style={{ fontSize: "18px", fontWeight: 600, color: "#141414", lineHeight: "28px", letterSpacing: "0.72px", margin: "0 0 10px 0" }}>{title}</h2>
-      <p style={{ fontSize: "14px", color: "#808080", lineHeight: "22px",letterSpacing:"0.42px", margin: 0 }}>{subtitle}</p>
+      <h2 style={{ fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", lineHeight: "28px", letterSpacing: "0.72px", margin: "0 0 10px 0" }}>{title}</h2>
+      <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: "22px",letterSpacing:"0.42px", margin: 0 }}>{subtitle}</p>
     </div>
   );
 }
@@ -706,7 +722,7 @@ useEffect(() => {
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <DatePicker
       format="DD/MM/YYYY"
-      sx={{color:"#808080"}}
+      sx={{color:"var(--text-secondary)"}}
       value={data.dateOfBirth ? dayjs(data.dateOfBirth) : null}
       onChange={(newValue) => {
         onChange({
@@ -719,18 +735,18 @@ useEffect(() => {
           fullWidth: true,
           placeholder: "DD/MM/YYYY",
           sx: {
-            color: "#808080",
+            color: "var(--text-secondary)",
             "& .MuiOutlinedInput-root": {
               height: "44px",
               borderRadius: "8px",
               "& fieldset": {
-                borderColor: "#DEDEDE", // default border
+                borderColor: "var(--border-card)", // default border
               },
               "&:hover fieldset": {
-                borderColor: "#DEDEDE",
+                borderColor: "var(--border-card)",
               },
               "&.Mui-focused fieldset": {
-                borderColor: "#DEDEDE", // no blue on focus
+                borderColor: "var(--border-card)", // no blue on focus
               },
             },
           },
@@ -850,7 +866,7 @@ useEffect(() => {
       onChange={set("mobile")}
       style={{
         borderRadius: "0 8px 8px 0",
-        borderLeft: `1px solid #E5E7EB`,
+        borderLeft: `1px solid var(--border-input)`,
       }}
     />
   </div>
@@ -968,14 +984,22 @@ function Step2({ data, onChange }) {
           handleFile(field, e.dataTransfer.files[0]);
         }}
         style={{
+<<<<<<< HEAD
+          border: `1.5px dashed ${dragging ? BLUE : "var(--border-input-hover)"}`,
+=======
           border: `1.5px dashed ${dragging ? BLUE : "#D1D5DB"}`,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           borderRadius: "10px",
           padding: "40px 24px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "8px",
+<<<<<<< HEAD
+          background: dragging ? "#EFF4FF" : "var(--bg-surface)",
+=======
           background: dragging ? "#EFF4FF" : "#FAFAFA",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           cursor: "pointer",
         }}
         onClick={() => inputRef.current.click()}
@@ -1022,7 +1046,7 @@ function Step2({ data, onChange }) {
   return (
     <div style={{ maxWidth: "560px" }}>
       <FormHeading
-        title="Passport Details"
+        title="Upload Documents"
         subtitle="Provide passport and identity information for verification and compliance."
       />
 
@@ -1035,7 +1059,7 @@ function Step2({ data, onChange }) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               format="DD/MM/YYYY"
-              sx={{color:"#808080"}}
+              sx={{color:"var(--text-secondary)"}}
               value={data.passportExpiry ? dayjs(data.passportExpiry) : null}
               onChange={(newValue) => {
                 onChange({
@@ -1048,18 +1072,18 @@ function Step2({ data, onChange }) {
                   fullWidth: true,
                   placeholder: "DD/MM/YYYY",
                   sx: {
-                    color: "#808080",
+                    color: "var(--text-secondary)",
                     "& .MuiOutlinedInput-root": {
                       height: "44px",
                       borderRadius: "8px",
                       "& fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&:hover fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                     },
                   },
@@ -1079,7 +1103,11 @@ function Step2({ data, onChange }) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               format="DD/MM/YYYY"
+<<<<<<< HEAD
+              sx={{ color: "var(--text-secondary)" }}
+=======
               sx={{ color: "#808080" }}
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               value={data.emiratesIdExpiry ? dayjs(data.emiratesIdExpiry) : null}
               onChange={(newValue) => {
                 onChange({
@@ -1092,11 +1120,24 @@ function Step2({ data, onChange }) {
                   fullWidth: true,
                   placeholder: "DD/MM/YYYY",
                   sx: {
+<<<<<<< HEAD
+                    color: "var(--text-secondary)",
+=======
                     color: "#808080",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                     "& .MuiOutlinedInput-root": {
                       height: "44px",
                       borderRadius: "8px",
                       "& fieldset": {
+<<<<<<< HEAD
+                        borderColor: "var(--border-card)",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "var(--border-card)",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "var(--border-card)",
+=======
                         borderColor: "#DEDEDE",
                       },
                       "&:hover fieldset": {
@@ -1104,6 +1145,7 @@ function Step2({ data, onChange }) {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "#DEDEDE",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                       },
                     },
                   },
@@ -1246,9 +1288,9 @@ function Step3({ expenseSubStep, data, onChange, expenseReceipts, onReceiptChang
         {/* Total Expenses Card */}
         <div
           style={{
-            border: `1px solid #DEDEDE`,
+            border: `1px solid var(--border-card)`,
             borderRadius: "8px",
-            background: "#F6F6F6",
+            background: "var(--bg-surface-secondary)",
             padding: "24px 59px 24px 20px",
             height:"110px",
             width: "240px",
@@ -1257,7 +1299,7 @@ function Step3({ expenseSubStep, data, onChange, expenseReceipts, onReceiptChang
             marginLeft: "24px",
           }}
         >
-          <div style={{ fontSize: "16px",lineHeight: "26px" ,color: "#808080" , marginBottom: "4px" }}>Total Expenses (AED)</div>
+          <div style={{ fontSize: "16px",lineHeight: "26px" ,color: "var(--text-secondary)" , marginBottom: "4px" }}>Total Expenses (AED)</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
             <span style={{ fontSize: "28px", fontWeight: 700, color: DARK }}>{total.toFixed(2)}</span>
             <span style={{ fontSize: "13px", color: GRAY }}>/ employee</span>
@@ -1311,18 +1353,20 @@ function Step4({ data, onChange }) {
       <FormHeading title="Work Details" subtitle="Define the employee's role and compensation details." />
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-        <Field label="Trade">
-          <FSelect value={data.trade} onChange={set("trade")}>
-            <option value="">Select trade</option>
-            {TRADES.map((t) => <option key={t}>{t}</option>)}
-          </FSelect>
-        </Field>
+<Field label="Trade">
+  <FInput
+    type="text"
+    placeholder="Enter trade"
+    value={data.trade}
+    onChange={set("trade")}
+  />
+</Field>
 
         <Field label="Joining Date">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               format="DD/MM/YYYY"
-              sx={{color:"#808080"}}
+              sx={{color:"var(--text-secondary)"}}
               value={data.joiningDate ? dayjs(data.joiningDate) : null}
               onChange={(newValue) => {
                 onChange({
@@ -1335,18 +1379,18 @@ function Step4({ data, onChange }) {
                   fullWidth: true,
                   placeholder: "DD/MM/YYYY",
                   sx: {
-                    color: "#808080",
+                    color: "var(--text-secondary)",
                     "& .MuiOutlinedInput-root": {
                       height: "44px",
                       borderRadius: "8px",
                       "& fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&:hover fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#DEDEDE",
+                        borderColor: "var(--border-card)",
                       },
                     },
                   },
@@ -1572,9 +1616,15 @@ function SuccessScreen({ onOpenAssign, onBackHome, onEdit }) {
             fontSize: "14px",
             width: "130px",
             height: "32px",
+<<<<<<< HEAD
+            color: "var(--text-secondary)",
+            background: "#fff",
+            border: `1px solid var(--border-card)`,
+=======
             color: "#6B7280",
             background: "#fff",
             border: `1px solid #DEDEDE`,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             borderRadius: "8px",
             padding: "5px 12px",
             cursor: "pointer",
@@ -1594,9 +1644,15 @@ function SuccessScreen({ onOpenAssign, onBackHome, onEdit }) {
             gap: "6px",
             fontSize: "14px",
             height: "32px",
+<<<<<<< HEAD
+            color: "var(--text-secondary)",
+            background: "#fff",
+            border: `1px solid var(--border-card)`,
+=======
             color: "#6B7280",
             background: "#fff",
             border: `1px solid #DEDEDE`,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             borderRadius: "8px",
             padding: "0 14px",
             cursor: "pointer",
@@ -1613,7 +1669,11 @@ function SuccessScreen({ onOpenAssign, onBackHome, onEdit }) {
         <h2 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: DARK, textAlign: "center" }}>
           Employee Added Successfully!
         </h2>
+<<<<<<< HEAD
+        <p style={{ margin: 0, fontSize: "14px", color: "var(--text-secondary)", textAlign: "center", maxWidth: "740px", fontWeight: 400 }}>
+=======
         <p style={{ margin: 0, fontSize: "14px", color: "#757575", textAlign: "center", maxWidth: "740px", fontWeight: 400 }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           The employee profile has been created and is ready for assignment.
         </p>
         <button
@@ -2000,7 +2060,11 @@ function AddEmployee() {
               maxWidth: "808px",
               minHeight: "500px",
               background: "#fff",
+<<<<<<< HEAD
+              border: "1px solid var(--border-card)",
+=======
               border: "1px solid #DEDEDE",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               borderRadius: "8px",
               overflow: "hidden",
               display: "flex",
@@ -2011,14 +2075,22 @@ function AddEmployee() {
             <div
               style={{
                 height: "64px",
+<<<<<<< HEAD
+                borderBottom: "1px solid var(--border-card)",
+=======
                 borderBottom: "1px solid #DEDEDE",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "0 18px",
               }}
             >
+<<<<<<< HEAD
+              <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "0.54px",lineHeight: "20px" }}>
+=======
               <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "#141414", letterSpacing: "0.54px",lineHeight: "20px" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 Assign to Company
               </h3>
               <button
@@ -2038,7 +2110,11 @@ function AddEmployee() {
             </div>
 
             <div style={{ padding: "24px 20px", flex: 1 }}>
+<<<<<<< HEAD
+              <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
+=======
               <label style={{ display: "block", fontSize: "14px", color: "#111827", marginBottom: "12px", fontWeight: 400 }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 Select a company
               </label>
               <select
@@ -2053,7 +2129,11 @@ function AddEmployee() {
                   borderRadius: "8px",
                   padding: "0 40px 0 14px",
                   fontSize: "14px",
+<<<<<<< HEAD
+                  color: "var(--text-primary)",
+=======
                   color: "#141414",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   background: "#fff",
                   fontFamily: "inherit",
                   appearance: "none",
@@ -2087,7 +2167,11 @@ function AddEmployee() {
 {/* div for button */}
             <div
               style={{
+<<<<<<< HEAD
+                borderTop: "1px solid var(--border-card)",
+=======
                 borderTop: "1px solid #DEDEDE",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 height: "68px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -2108,7 +2192,11 @@ function AddEmployee() {
                   fontSize: "12px",
                   fontWeight: 500,
                   color: "#fff",
+<<<<<<< HEAD
+                  background: assigningCompany || companyLoading || !selectedCompanyId ? "var(--text-disabled)" : BLUE,
+=======
                   background: assigningCompany || companyLoading || !selectedCompanyId ? "#9CA3AF" : BLUE,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   cursor: assigningCompany || companyLoading || !selectedCompanyId ? "not-allowed" : "pointer",
                   fontFamily: "inherit",
                 }}
@@ -2124,3 +2212,4 @@ function AddEmployee() {
 }
 
 export default AddEmployee;
+

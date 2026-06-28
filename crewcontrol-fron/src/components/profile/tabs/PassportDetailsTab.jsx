@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import { ProfileSection } from '../ProfileSection';
 import { ProfileField } from '../ProfileField';
 
@@ -47,17 +47,17 @@ const fileUploadStyles = {
     gap: '12px',
     minHeight: '44px',
     padding: '10px 14px',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'var(--bg-surface)',
     borderRadius: '6px',
-    border: '1px solid #DEDEDE',
+    border: '1px solid var(--border-card)',
     boxSizing: 'border-box',
   },
   fileBadge: {
     width: '36px',
     height: '36px',
     borderRadius: '8px',
-    backgroundColor: '#FEE2E2',
-    color: '#DC2626',
+    backgroundColor: 'var(--bg-error-soft)',
+    color: 'var(--color-error)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -67,12 +67,12 @@ const fileUploadStyles = {
   },
   fileName: {
     fontSize: '14px',
-    color: '#6B7280',
+    color: 'var(--text-secondary)',
   },
   uploadButton: {
     marginLeft: 'auto',
     fontSize: '13px',
-    color: '#1D4ED8',
+    color: 'var(--color-primary)',
     cursor: 'pointer',
     fontWeight: '600',
     border: '1px solid #BFDBFE',
@@ -158,7 +158,7 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
 
   return (
     <ProfileSection
-      title="Passport Details"
+      title="Uploaded Document’s"
       showEdit={true}
       isEditing={isEditing}
       onEdit={() => setIsEditing(true)}
@@ -185,7 +185,7 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
-              color: '#6B7280',
+              color: 'var(--text-secondary)',
               display: 'block',
               marginBottom: '8px',
             }}
@@ -221,7 +221,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
+              color: 'var(--text-secondary)',
+=======
               color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -240,7 +244,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
+              color: 'var(--text-secondary)',
+=======
               color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -259,7 +267,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
+              color: 'var(--text-secondary)',
+=======
               color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -278,7 +290,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
+              color: 'var(--text-secondary)',
+=======
               color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -297,7 +313,11 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
             style={{
               fontSize: '13px',
               fontWeight: '500',
+<<<<<<< HEAD
+              color: 'var(--text-secondary)',
+=======
               color: '#6B7280',
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               display: 'block',
               marginBottom: '8px',
             }}
@@ -316,3 +336,4 @@ export const PassportDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
 };
 
 export default PassportDetailsTab;
+

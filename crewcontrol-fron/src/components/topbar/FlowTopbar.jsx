@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Box,
   IconButton,
@@ -28,10 +28,10 @@ function FlowTopbar() {
       <Box
         sx={{
           height: 72,
-          borderBottom: "1px solid #DEDEDE",
+          borderBottom: "1px solid var(--border-card)",
           px: "40px",
           py: "20px",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           display: "flex",
           alignItems: "center",
         }}
@@ -97,11 +97,11 @@ function FlowTopbar() {
                 borderRadius: "16px",
                 cursor: "pointer",
                 backgroundColor: isProfileOpen
-                  ? "#DBE2F9"
-                  : "#FFFFFF",
+                  ? "var(--bg-info-soft)"
+                  : "var(--bg-surface)",
                 "&:hover": {
                   backgroundColor: isProfileOpen
-                    ? "#DBE2F9"
+                    ? "var(--bg-info-soft)"
                     : "#EDF1FC",
                 },
               }}
@@ -134,3 +134,4 @@ function FlowTopbar() {
 }
 
 export default FlowTopbar;
+

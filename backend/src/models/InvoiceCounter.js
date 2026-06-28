@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+﻿import mongoose from 'mongoose';
 
 const invoiceCounterSchema = new mongoose.Schema({
   scope: {
@@ -10,6 +10,11 @@ const invoiceCounterSchema = new mongoose.Schema({
   counter: {
     type: Number,
     default: 0,
+  },
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    index: true,
   },
 });
 

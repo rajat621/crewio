@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""Benchmark extraction accuracy using labeled expected row counts and totals.
+=======
 """Benchmark extraction accuracy using labeled expected row counts and totals.
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 Usage:
 python scripts/benchmark_extraction_accuracy.py --dataset datasets/benchmarks/extraction_cases.json

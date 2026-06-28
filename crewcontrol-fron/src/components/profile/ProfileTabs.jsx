@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 
 const profileTabsStyles = {
   container: {
     display: 'flex',
-    // borderBottom: '1px solid #E5E7EB',
+    // borderBottom: '1px solid var(--border-input)',
     gap: '24px',
     marginBottom: '16px',
     overflowX: 'auto',
@@ -15,7 +15,7 @@ const profileTabsStyles = {
     fontWeight: '400',
     letterSpacing: '0.14px',
     lineHeight: '20px ',
-    color: '#757575',
+    color: 'var(--text-secondary)',
     backgroundColor: 'transparent',
     border: 'none',
     borderBottom: '2px solid transparent',
@@ -27,12 +27,12 @@ const profileTabsStyles = {
     appearance: 'none',
   },
   tabHover: {
-    color: '#2C5FEA',
+    color: 'var(--color-primary)',
   borderBottom: '2px solid transparent', // force clean
   },
   tabActive: {
-  color: '#2C5FEA',
-  borderBottom: '2px solid #2C5FEA',
+  color: 'var(--color-primary)',
+  borderBottom: '2px solid var(--color-primary)',
   },
 };
 
@@ -64,7 +64,7 @@ export const ProfileTabs = ({ tabs, activeTabId, onTabChange }) => {
             event.currentTarget.style.borderBottomColor = 'transparent';
           }}
           onBlur={(event) => {
-            event.currentTarget.style.borderBottomColor = activeTabId === tab.id ? '#2C5FEA' : 'transparent';
+            event.currentTarget.style.borderBottomColor = activeTabId === tab.id ? 'var(--color-primary)' : 'transparent';
           }}
           onMouseDown={(event) => {
             event.currentTarget.style.borderBottomColor = 'transparent';
@@ -78,3 +78,4 @@ export const ProfileTabs = ({ tabs, activeTabId, onTabChange }) => {
 };
 
 export default ProfileTabs;
+

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 
 const profileSectionStyles = {
   container: {
-    border: '1px solid #E5E7EB',
+    border: '1px solid var(--border-input)',
     borderRadius: '8px',
     padding: '20px 16px',
     // marginTop: '24px',
@@ -17,7 +17,7 @@ const profileSectionStyles = {
   title: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#141414',
+    color: 'var(--text-primary)',
     margin: '0',
   },
   actions: {
@@ -29,9 +29,9 @@ const profileSectionStyles = {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    backgroundColor: '#FFFFFF',
-    border: '1px solid #D1D5DB',
-    color: '#6B7280',
+    backgroundColor: 'var(--bg-surface)',
+    border: '1px solid var(--border-input-hover)',
+    color: 'var(--text-secondary)',
     cursor: 'pointer',
     fontSize: '13px',
     fontWeight: '500',
@@ -43,7 +43,7 @@ const profileSectionStyles = {
     boxShadow: 'none',
   },
   editButtonHover: {
-    color: '#1D4ED8',
+    color: 'var(--color-primary)',
     borderColor: '#93C5FD',
     backgroundColor: '#EFF6FF',
     outline: 'none',
@@ -51,10 +51,10 @@ const profileSectionStyles = {
   },
   cancelButton: {
     textTransform: 'none',
-    color: '#1D4ED8',
-    border: '1px solid #D1D5DB',
+    color: 'var(--color-primary)',
+    border: '1px solid var(--border-input-hover)',
     borderRadius: '8px',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'var(--bg-surface)',
     padding: '0 16px',
     height: '32px',
     fontSize: '13px',
@@ -63,10 +63,10 @@ const profileSectionStyles = {
   },
   saveButton: {
     textTransform: 'none',
-    color: '#FFFFFF',
-    border: '1px solid #1D4ED8',
+    color: 'var(--bg-surface)',
+    border: '1px solid var(--color-primary)',
     borderRadius: '8px',
-    backgroundColor: '#1D4ED8',
+    backgroundColor: 'var(--color-primary)',
     padding: '0 16px',
     height: '32px',
     fontSize: '13px',
@@ -94,7 +94,7 @@ const profileSectionStyles = {
   },
 };
 
-const EditStrokeIcon = ({ color = '#6B7280' }) => (
+const EditStrokeIcon = ({ color = 'var(--text-secondary)' }) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -158,13 +158,13 @@ export const ProfileSection = ({
                 onBlur={() => setEditButtonHover(false)}
                 style={{
                   ...profileSectionStyles.editButton,
-                  border: `1px solid ${editButtonHover ? '#93C5FD' : '#D1D5DB'}`,
-                  color: editButtonHover ? '#1D4ED8' : profileSectionStyles.editButton.color,
+                  border: `1px solid ${editButtonHover ? '#93C5FD' : 'var(--border-input-hover)'}`,
+                  color: editButtonHover ? 'var(--color-primary)' : profileSectionStyles.editButton.color,
                   backgroundColor: editButtonHover ? '#EFF6FF' : profileSectionStyles.editButton.backgroundColor,
                 }}
                 aria-label={`Edit ${title}`}
               >
-                <EditStrokeIcon color={editButtonHover ? '#1D4ED8' : '#6B7280'} />
+                <EditStrokeIcon color={editButtonHover ? 'var(--color-primary)' : 'var(--text-secondary)'} />
                 <span>Edit</span>
               </button>
             )}
@@ -184,3 +184,4 @@ export const ProfileSection = ({
 };
 
 export default ProfileSection;
+

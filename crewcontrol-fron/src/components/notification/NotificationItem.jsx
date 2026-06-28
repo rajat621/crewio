@@ -1,59 +1,107 @@
-import { Box, Typography } from "@mui/material";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
+﻿import { Box, Typography } from "@mui/material";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import AssignmentTurnedInRoundedIcon from "@mui/icons-material/AssignmentTurnedInRounded";
+import ReceiptLongRoundedIcon from "@mui/icons-material/ReceiptLongRounded";
 
-const ICON_MAP = {
-  passport: {
-    icon: <ErrorOutlineIcon />,
-    bg: "#FFF4E5",
-    color: "#F59E0B",
-  },
-  absent: {
-    icon: <PersonOffOutlinedIcon />,
-    bg: "#EEF2FF",
-    color: "#1D4ED8",
-  },
+function NotificationItem({  type,title, description, time, unread = false }) {
+  const iconMap = {
+  expiry: <WarningAmberRoundedIcon sx={{ fontSize: 20 }} />,
+  task: <AssignmentTurnedInRoundedIcon sx={{ fontSize: 20 }} />,
+  invoice: <ReceiptLongRoundedIcon sx={{ fontSize: 20 }} />,
 };
 
-function NotificationItem({ type, title, description, time }) {
-  const config = ICON_MAP[type];
+const icon = iconMap[type];
 
   return (
     <Box
       sx={{
         display: "flex",
-        alignItems: "flex-start",
-        gap: 1.5,
+        height: unread ? 64 : "auto",
+        minHeight: unread ? 64 : 56,
+        padding: "8px" ,
+        justifyContent: "space-between",
+        alignItems: "center",
+        alignSelf: "stretch",
+        borderRadius: unread ? "8px" : 0,
+        border: unread ? "1px solid var(--border-card)" : "1px solid transparent",
+        background: unread ? "var(--bg-surface-secondary)" : "transparent",
+        boxSizing: "border-box",
       }}
     >
-      {/* ICON CONTAINER */}
       <Box
         sx={{
-          width: 36,
-          height: 36,
-          borderRadius: 2,
-          backgroundColor: config.bg,
-          color: config.color,
+          width: 44,
+          height: 44,
+          minWidth: 44,
+          borderRadius: "8px",
+          backgroundColor: unread ? "var(--bg-info-soft)" : "var(--bg-warning-soft)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          mr: "16px",
+          flexShrink: 0,
         }}
       >
-        {config.icon}
+        <Box
+          sx={{
+            width: 26,
+            height: 26,
+            borderRadius: "999px",
+            backgroundColor: unread ? "var(--bg-info-soft)" : "transparent",
+            color: unread ? "var(--color-info)" : "var(--color-warning)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+        {icon}
+        </Box>
       </Box>
 
-      {/* TEXT CONTENT */}
-      <Box sx={{ flexGrow: 1 }}>
-        <Typography fontSize={14} fontWeight={500} color="#141414">
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Typography
+          sx={{
+            fontSize: 15,
+            fontWeight: 600,
+            lineHeight: "20px",
+            color: "var(--text-primary)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          title={title}
+        >
           {title}
         </Typography>
-        <Typography fontSize={12} color="#757575">
+        <Typography
+          sx={{
+            mt: "2px",
+            fontSize: 13,
+            fontWeight: 400,
+            lineHeight: "18px",
+            color: "var(--text-tertiary)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          title={description}
+        >
           {description}
         </Typography>
       </Box>
 
-      {/* TIME */}
-      <Typography fontSize={12} color="#757575">
+      <Typography
+        sx={{
+          ml: "12px",
+          minWidth: 42,
+          textAlign: "right",
+          fontSize: 13,
+          fontWeight: 400,
+          lineHeight: "18px",
+          color: "var(--text-secondary)",
+          whiteSpace: "nowrap",
+        }}
+      >
         {time}
       </Typography>
     </Box>

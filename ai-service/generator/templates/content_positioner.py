@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""Dynamic content positioning with collision-avoidance in safe area."""
+=======
 """Dynamic content positioning with collision-avoidance in safe area."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 

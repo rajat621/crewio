@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import InvoiceAuditLog from '../models/InvoiceAuditLog.js';
+=======
 import InvoiceAuditLog from '../models/InvoiceAuditLog.js';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 /**
  * Create or get audit log for an invoice

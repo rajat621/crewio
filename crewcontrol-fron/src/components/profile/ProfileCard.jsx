@@ -1,4 +1,4 @@
-import {
+﻿import {
   Box,
   Typography,
   Divider,
@@ -24,7 +24,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
-const ICON_COLOR = "#757575";
+const ICON_COLOR = "var(--text-secondary)";
 
 const Row = ({ icon, label, right, onClick, warningIcon, disabled = false }) => (
   <Box
@@ -45,7 +45,7 @@ const Row = ({ icon, label, right, onClick, warningIcon, disabled = false }) => 
   >
     <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
       {icon}
-      <Typography fontSize={14} color="#141414">
+      <Typography fontSize={14} color="var(--text-primary)">
         {label}
       </Typography>
       {warningIcon && (
@@ -62,6 +62,7 @@ function ProfileCard({ onClose }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [companyStatus, setCompanyStatus] = useState("unknown");
+  const [companySummary, setCompanySummary] = useState(null);
 
   const handleViewProfile = () => {
     onClose?.();
@@ -102,17 +103,79 @@ function ProfileCard({ onClose }) {
 
       const companyId = getCompanyId(user);
       if (!companyId) {
+        // If there is no explicit companyId on the `user` object, try the
+        // owner-specific endpoint so the popover can still show the owner
+        // company details (this covers cases where the user object wasn't
+        // updated client-side after onboarding).
+        try {
+          const resp = await companiesApi.getOwnerCompany();
+          const comp = resp?.data?.data || resp?.data;
+          if (active && comp) {
+            // eslint-disable-next-line no-console
+            console.log('ProfileCard: fallback owner company fetched', comp, 'isComplete:', isCompanyProfileComplete(comp));
+            setCompanyStatus(isCompanyProfileComplete(comp) ? "complete" : "incomplete");
+            setCompanySummary({
+              name: comp.name || comp.companyLegalName || "",
+              address: comp.address || "",
+              city: comp.city || "",
+              contactEmail: comp.contactEmail || "",
+              mobileNumber: comp.mobileNumber || "",
+              countryCode: comp.countryCode || "",
+            });
+            return;
+          }
+        } catch (err) {
+          // ignore and fallthrough to mark incomplete
+        }
+
         if (active) setCompanyStatus("incomplete");
         return;
       }
 
       try {
-        const response = await companiesApi.getCompany(companyId);
+        // Debug: log which company id we're attempting to fetch
+        // eslint-disable-next-line no-console
+        console.log('ProfileCard: attempting getCompany for id=', companyId);
+        let response;
+        try {
+          response = await companiesApi.getCompany(companyId);
+          // eslint-disable-next-line no-console
+          console.log('ProfileCard: getCompany response', response?.status, response?.data?.data || response?.data);
+        } catch (err) {
+          // If the company id lookup fails (404 or other), fall back to owner's company
+          // eslint-disable-next-line no-console
+          console.warn('ProfileCard: getCompany failed for id', companyId, 'error:', err?.response?.status || err?.message);
+          try {
+            response = await companiesApi.getOwnerCompany();
+            // eslint-disable-next-line no-console
+            console.log('ProfileCard: fallback getOwnerCompany response', response?.status, response?.data?.data || response?.data);
+          } catch (ownerErr) {
+            // eslint-disable-next-line no-console
+            console.error('ProfileCard: fallback getOwnerCompany failed', ownerErr?.response?.status || ownerErr?.message);
+            response = null;
+          }
+        }
+
         const company = response?.data?.data || response?.data;
-        if (active) {
+        if (active && company) {
           setCompanyStatus(isCompanyProfileComplete(company) ? "complete" : "incomplete");
+          const summaryObj = {
+            name: company.name || company.companyLegalName || "",
+            address: company.address || "",
+            city: company.city || "",
+            contactEmail: company.contactEmail || "",
+            mobileNumber: company.mobileNumber || "",
+            countryCode: company.countryCode || "",
+          };
+          // eslint-disable-next-line no-console
+          console.log('ProfileCard: setting companySummary to', summaryObj);
+          setCompanySummary(summaryObj);
+        } else if (active) {
+          setCompanyStatus("incomplete");
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('ProfileCard: unexpected error while loading company', error?.message || error);
         if (active) setCompanyStatus("incomplete");
       }
     };
@@ -130,11 +193,11 @@ function ProfileCard({ onClose }) {
     <Box
       sx={{
         width: 320,
-        backgroundColor: "#FFFFFF",
-        border: "1px solid #DEDEDE",
+        backgroundColor: "var(--bg-surface)",
+        border: "1px solid var(--border-card)",
         borderRadius: "12px",
         boxShadow:
-          "0px 0px 2px 0px rgba(80, 92, 95, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.04)",
+          "0px 0px 2px 0px rgba(80, 92, 95, 0.2), 0px 6px 10px 0px var(--shadow-overlay)",
         p: "16px 12px",
       }}
     >
@@ -142,7 +205,7 @@ function ProfileCard({ onClose }) {
       <Box
         onClick={handleViewProfile}
         sx={{
-          border: "1px solid #DEDEDE",
+          border: "1px solid var(--border-card)",
           borderRadius: "12px",
           p: "12px",
           display: "flex",
@@ -160,15 +223,16 @@ function ProfileCard({ onClose }) {
             sx={{
               width: 44,
               height: 44,
-              color: "#808080",
+              color: "var(--text-secondary)",
             }}
           />          <Box>
-            <Typography fontSize={14} fontWeight={600} color="#141414">
+            <Typography fontSize={14} fontWeight={600} color="var(--text-primary)">
               {user?.firstName || "Jonathan"}
             </Typography>
-            <Typography fontSize={12} color="#757575">
+            <Typography fontSize={12} color="var(--text-secondary)">
               {user?.email || "jonathan@gmail.com"}
             </Typography>
+            {/* Company details intentionally omitted from popover per UX request */}
           </Box>
         </Box>
         <ChevronRightIcon sx={{ fontSize: 20, color: ICON_COLOR }} />
@@ -182,10 +246,10 @@ function ProfileCard({ onClose }) {
         onClick={handleSubscription}
       />
 
-      <Divider sx={{ my: "12px", borderColor: "#DEDEDE" }} />
+      <Divider sx={{ my: "12px", borderColor: "var(--border-card)" }} />
 
       {/* SETTINGS LABEL */}
-      <Typography fontSize={12} color="#757575" sx={{ mb: "8px" }}>
+      <Typography fontSize={12} color="var(--text-secondary)" sx={{ mb: "8px" }}>
         Setting & Preferences
       </Typography>
 
@@ -196,7 +260,7 @@ function ProfileCard({ onClose }) {
         onClick={handleCompanyProfile}
         warningIcon={
           showWarning ? (
-            <WarningAmberRoundedIcon sx={{ fontSize: 16, color: "#DC2626" }} />
+            <WarningAmberRoundedIcon sx={{ fontSize: 16, color: "var(--color-error)" }} />
           ) : undefined
         }
       />
@@ -205,7 +269,7 @@ function ProfileCard({ onClose }) {
         icon={<LanguageOutlinedIcon sx={{ fontSize: 20, color: ICON_COLOR }} />}
         label="Language"
         right={
-          <Typography fontSize={14} color="#1D4ED8">
+          <Typography fontSize={14} color="var(--color-primary)">
             English
           </Typography>
         }
@@ -232,10 +296,10 @@ function ProfileCard({ onClose }) {
         }
       />
 
-      <Divider sx={{ my: "12px", borderColor: "#DEDEDE" }} />
+      <Divider sx={{ my: "12px", borderColor: "var(--border-card)" }} />
 
       {/* SUPPORT LABEL */}
-      <Typography fontSize={12} color="#757575" sx={{ mb: "8px" }}>
+      <Typography fontSize={12} color="var(--text-secondary)" sx={{ mb: "8px" }}>
         Support
       </Typography>
 
@@ -264,10 +328,10 @@ function ProfileCard({ onClose }) {
           height: 40,
           borderRadius: "8px",
           textTransform: "none",
-          color: "#1D4ED8",
+          color: "var(--color-primary)",
           borderColor: "#CBD5FF",
           "&:hover": {
-            borderColor: "#1D4ED8",
+            borderColor: "var(--color-primary)",
             backgroundColor: "#F5F7FD",
           },
         }}
@@ -279,3 +343,4 @@ function ProfileCard({ onClose }) {
 }
 
 export default ProfileCard;
+

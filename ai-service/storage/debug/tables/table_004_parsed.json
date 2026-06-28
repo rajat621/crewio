@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿{
+=======
 {
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   "table_index": 4,
   "table_type": "financial_summary_table",
   "confidence": 0.7532258064516129,
@@ -13,4 +17,8 @@
     "deduction_breakdown": {}
   },
   "source_text": " 55  "
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

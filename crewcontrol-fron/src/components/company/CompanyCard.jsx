@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+=======
 import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -20,7 +24,7 @@ function StatusChip({ status }) {
         height: 24,
         px: "12px",
         borderRadius: "16px",
-        bgcolor: active ? "#DCFCE7" : "#FECACA",
+        bgcolor: active ? "var(--bg-success-soft)" : "#FECACA",
         color: active ? "#166534" : "#991B1B",
         fontSize: 12,
         fontWeight: 500,
@@ -90,10 +94,10 @@ function CompanyCard({ company }) {
     <Box
       onClick={handleCardClick}
       sx={{
-        border: "1px solid #DEDEDE",
+        border: "1px solid var(--border-card)",
         borderRadius: "8px",
         overflow: "hidden",
-        bgcolor: "#FFFFFF",
+        bgcolor: "var(--bg-surface)",
         cursor: "pointer",
         transition: "box-shadow 0.2s ease",
         "&:hover": {
@@ -112,10 +116,10 @@ function CompanyCard({ company }) {
           }}
         >
           <Box>
-            <Typography fontSize={18} fontWeight={600} color="#111827">
+            <Typography fontSize={18} fontWeight={600} color="var(--text-primary)">
               {company.name}
             </Typography>
-            <Typography fontSize={12} color="#757575">
+            <Typography fontSize={12} color="var(--text-secondary)">
               {company.dateRange}
             </Typography>
           </Box>
@@ -123,7 +127,7 @@ function CompanyCard({ company }) {
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }} onClick={(e) => e.stopPropagation()}>
             <StatusChip status={company.status} />
             <IconButton size="small" onClick={handleMenuOpen}>
-              <MoreVertIcon sx={{ fontSize: 18, color: "#6B7280" }} />
+              <MoreVertIcon sx={{ fontSize: 18, color: "var(--text-secondary)" }} />
             </IconButton>
           </Box>
         </Box>
@@ -142,21 +146,21 @@ function CompanyCard({ company }) {
               width: 44,
               height: 44,
               borderRadius: "50%",
-              bgcolor: "#1D4ED8",
+              bgcolor: "var(--color-primary)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#FFFFFF",
+              color: "var(--bg-surface)",
             }}
           >
             <GroupsOutlinedIcon fontSize="medium" />
           </Box>
 
           <Box sx={{ textAlign: "right" }}>
-            <Typography fontSize={12} color="#757575">
+            <Typography fontSize={12} color="var(--text-secondary)">
               Total worker assigned
             </Typography>
-            <Typography fontSize={18} fontWeight={450} color="#141414">
+            <Typography fontSize={18} fontWeight={450} color="var(--text-primary)">
               {company.totalWorkers}
             </Typography>
           </Box>
@@ -180,7 +184,7 @@ function CompanyCard({ company }) {
               mb: 0.75,
             }}
           >
-            <Typography fontSize={12} color="#757575">
+            <Typography fontSize={12} color="var(--text-secondary)">
               {item.label}
             </Typography>
             <Typography fontSize={12} fontWeight={500} color={item.color}>
@@ -270,4 +274,5 @@ function CompanyCard({ company }) {
 }
 
 export default CompanyCard;
+
 

@@ -1,0 +1,16 @@
+{
+  "table_index": 0,
+  "table_type": "attendance_table",
+  "confidence": 0.8869184805804523,
+  "parser": "attendance_table_parser",
+  "rows_count": 0,
+  "financials": {
+    "subtotal": 0.0,
+    "total_vat": 0.0,
+    "total_deduction": 0.0,
+    "gross_total": 0.0,
+    "net_payable": 0.0,
+    "deduction_breakdown": {}
+  },
+  "source_text": "ioneluno 0'6 10.0 10.0 10.0 10.0 M 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 10.0 10.0 10.0 10.0 W 10.0 10.0 AIBCLL Tile Mason nw de 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 A 10.0 10.0 10.0 W 10.0 10.0 AIBCLL Tile Mason Rajaram Mukhiya 10.0 10.0 10.0 10.0 10.0 W 10.0 10.0 10.0 10.0 10.0 10.0 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 AIBCLL Tile Mason Sonalal 15 14 13 12 11 10 6 "
+}

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 generator/layout_employee.py
 
 Renders the BKC-style tax invoice:
@@ -151,7 +155,11 @@ def render_employee_invoice(
     rows: List[InvoiceRow] = result.rows
     total_amt = total_vat_amt = total_net = 0.0
 
+<<<<<<< HEAD
+    for i, row in enumerate(rows, 1):
+=======
     for i, row in enumerate(rows[:15], 1):
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         y_row -= _ROW_H
         rx = tx
         # BKC uses percentage string for VAT column

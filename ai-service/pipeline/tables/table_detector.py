@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 Table boundary and line detection utilities.
 
 This module focuses on robust table localization for scanned UAE labour sheets.
@@ -21,6 +25,10 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 import cv2
 import numpy as np
+<<<<<<< HEAD
+from pipeline.profiler import current, new_request_collector
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +87,21 @@ class TableDetector:
             TableDetectionResult containing contours and intermediate masks.
         """
 
+<<<<<<< HEAD
+        prof = current()
+        with (prof or new_request_collector()).time_stage("table_detector.detect_tables"):
+            if image is None or image.size == 0:
+                raise ValueError("Input image is empty")
+
+            enhanced = self._enhance_image(image)
+            deskewed, angle = self._deskew_image(enhanced)
+            binary = self._binarize(deskewed)
+
+            horizontal_mask, vertical_mask = self._detect_lines(binary)
+            table_mask = cv2.bitwise_or(horizontal_mask, vertical_mask)
+
+            contours = self._extract_table_contours(table_mask, deskewed.shape[:2])
+=======
         if image is None or image.size == 0:
             raise ValueError("Input image is empty")
 
@@ -90,6 +113,7 @@ class TableDetector:
         table_mask = cv2.bitwise_or(horizontal_mask, vertical_mask)
 
         contours = self._extract_table_contours(table_mask, deskewed.shape[:2])
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         self._debug_write("01_enhanced", enhanced)
         self._debug_write("02_deskewed", deskewed)

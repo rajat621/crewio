@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 
 /* ===== ASSIGNED STATUS ENUM ===== */
 export const ASSIGNED_STATUS = {
-  ASSIGNED: "assigned",
-  UNASSIGNED: "unassigned",
-  ENDING_SOON: "ending-soon",
+  ON_SITE: "on-site",
+  ON_HOLD: "on-hold",
+  SITE_OVER: "site-over",
 };
 
 /**
@@ -25,30 +25,22 @@ function useAssignedKpi(rows) {
   const counts = useMemo(() => {
     const total = rows.length;
 
-    const assigned = rows.filter(
-      (r) => r.status === ASSIGNED_STATUS.ASSIGNED
-    ).length;
-
-    const unassigned = rows.filter(
-      (r) => r.status === ASSIGNED_STATUS.UNASSIGNED
-    ).length;
-
-    const endingSoon = rows.filter(
-      (r) => r.status === ASSIGNED_STATUS.ENDING_SOON
-    ).length;
+    const assigned = rows.filter((r) => r.assignedStatus === ASSIGNED_STATUS.ON_SITE).length;
+    const onHold = rows.filter((r) => r.assignedStatus === ASSIGNED_STATUS.ON_HOLD).length;
+    const siteOver = rows.filter((r) => r.assignedStatus === ASSIGNED_STATUS.SITE_OVER).length;
 
     return {
       total,
       assigned,
-      unassigned,
-      endingSoon,
+      onHold,
+      siteOver,
     };
   }, [rows]);
 
   /* ---------- TABLE FILTER ---------- */
   const filteredRows = useMemo(() => {
     if (!activeStatus) return rows;
-    return rows.filter((r) => r.status === activeStatus);
+    return rows.filter((r) => r.assignedStatus === activeStatus);
   }, [rows, activeStatus]);
 
   return {

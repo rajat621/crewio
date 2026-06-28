@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import PDFDocument from 'pdfkit';
+=======
 import PDFDocument from 'pdfkit';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import fs from 'fs';
 
 export const generatePdf = async (data) => {

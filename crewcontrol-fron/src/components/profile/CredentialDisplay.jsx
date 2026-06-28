@@ -1,18 +1,18 @@
-import React from 'react';
+﻿import React from 'react';
 
 const credentialDisplayStyles = {
   container: {
     maxWidth: '540px',
     margin: '0',
-    backgroundColor: '#F9FAFB',
-    border: '1px solid #DEDEDE',
+    backgroundColor: 'var(--bg-surface)',
+    border: '1px solid var(--border-card)',
     borderRadius: '8px',
     padding: '24px 20px',
   },
   heading: {
     fontSize: '18px',
     fontWeight: '500',
-    color: '#141414',
+    color: 'var(--text-primary)',
     lineHeight:'28px',
     textAlign: 'center',
     margin: '0 0 16px 0',
@@ -27,11 +27,11 @@ const credentialDisplayStyles = {
     width: '52px',
     height: '52px',
     borderRadius: '50%',
-    backgroundColor: '#111827',
+    backgroundColor: 'var(--text-primary)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#FFFFFF',
+    color: 'var(--bg-surface)',
     flexShrink: 0,
   },
   icon: {
@@ -46,13 +46,13 @@ const credentialDisplayStyles = {
   },
   credentialLabel: {
     fontSize: '16px',
-    color: '#808080',
+    color: 'var(--text-secondary)',
     fontWeight: '400',
   },
   credentialValue: {
     fontSize: '20px',
     fontWeight: '600',
-    color: '#141414',
+    color: 'var(--text-primary)',
     letterSpacing: '0.4px',
   },
   divider: {
@@ -63,12 +63,12 @@ const credentialDisplayStyles = {
   },
   dividerLine: {
     height: '1px',
-    backgroundColor: '#DEDEDE',
+    backgroundColor: 'var(--border-card)',
     flex: 1,
   },
   dividerText: {
     fontSize: '12px',
-    color: '#808080',
+    color: 'var(--text-secondary)',
     fontWeight: '400',
   },
 };
@@ -131,3 +131,4 @@ export const CredentialDisplay = ({ credentials = {} }) => {
 };
 
 export default CredentialDisplay;
+

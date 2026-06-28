@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+﻿import { Box, Button, Typography } from "@mui/material";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -21,17 +21,17 @@ function GenerateFlowPlaceholder() {
     >
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #DEDEDE",
+          backgroundColor: "var(--bg-surface)",
+          border: "1px solid var(--border-card)",
           borderRadius: "12px",
           p: "24px",
           maxWidth: 720,
         }}
       >
-        <Typography sx={{ fontSize: 22, fontWeight: 600, color: "#141414", mb: "10px" }}>
+        <Typography sx={{ fontSize: 22, fontWeight: 600, color: "var(--text-primary)", mb: "10px" }}>
           {target} Generate Flow
         </Typography>
-        <Typography sx={{ fontSize: 14, color: "#6B7280", mb: "20px" }}>
+        <Typography sx={{ fontSize: 14, color: "var(--text-secondary)", mb: "20px" }}>
           This flow is ready for your upcoming design. The redirection is now connected.
         </Typography>
 
@@ -53,3 +53,4 @@ function GenerateFlowPlaceholder() {
 }
 
 export default GenerateFlowPlaceholder;
+

@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useEffect } from "react";
+﻿import { useMemo, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth.css";
 import { useAuth } from "../context/AuthContext";
@@ -308,7 +308,7 @@ export default function OnboardingCompanyProfile() {
                       alignItems: "center",
                       gap: "8px",
                       padding: "10px 12px",
-                      border: `1px solid #DEDEDE`,
+                      border: `1px solid var(--border-card)`,
                       borderRadius: "8px",
                       cursor: "pointer",
                       background: "#fff",
@@ -316,19 +316,19 @@ export default function OnboardingCompanyProfile() {
                     }}
                   >
                     <ReactCountryFlag countryCode={formData.nationality || "AE"} svg style={{ width: "18px", height: "12px" }} />
-                    <span style={{ color: formData.nationality ? "#141414" : "#808080" }}>
+                    <span style={{ color: formData.nationality ? "var(--text-primary)" : "var(--text-secondary)" }}>
                       {COUNTRY_CODES.find((c) => c.iso === formData.nationality)?.country || "Select"}
                     </span>
                   </div>
 
                   {showNationDropdown && (
-                    <div style={{ position: "absolute", top: "50px", left: 0, width: "320px", maxHeight: "260px", border: `1px solid #DEDEDE`, borderRadius: "8px", background: "#fff", zIndex: 1200 }}>
+                    <div style={{ position: "absolute", top: "50px", left: 0, width: "320px", maxHeight: "260px", border: `1px solid var(--border-card)`, borderRadius: "8px", background: "#fff", zIndex: 1200 }}>
                       <input
                         type="text"
                         placeholder="Search..."
                         value={nationSearch}
                         onChange={(e) => setNationSearch(e.target.value)}
-                        style={{ width: "100%", padding: "8px", border: "none", borderBottom: `1px solid #DEDEDE`, outline: "none" }}
+                        style={{ width: "100%", padding: "8px", border: "none", borderBottom: `1px solid var(--border-card)`, outline: "none" }}
                       />
                       <div style={{ maxHeight: "200px", overflowY: "auto" }}>
                         {COUNTRY_CODES.filter((c) => !nationSearch || c.country.toLowerCase().includes(nationSearch.toLowerCase())).map((c) => (
@@ -338,7 +338,7 @@ export default function OnboardingCompanyProfile() {
                             style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", cursor: "pointer" }}
                           >
                             <ReactCountryFlag countryCode={c.iso} svg style={{ width: "18px", height: "12px" }} />
-                            <span style={{ fontSize: "13px", color: "#141414" }}>{c.country}</span>
+                            <span style={{ fontSize: "13px", color: "var(--text-primary)" }}>{c.country}</span>
                           </div>
                         ))}
                       </div>
@@ -366,7 +366,11 @@ export default function OnboardingCompanyProfile() {
 
 <div className="form-group" style={{ width: "100%" }}>
   <label >
+<<<<<<< HEAD
+    Mobile Number <span style={{ color: "var(--color-error)" }}>*</span>
+=======
     Mobile Number <span style={{ color: "#FF3B30" }}>*</span>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   </label>
 
   <div
@@ -375,7 +379,11 @@ export default function OnboardingCompanyProfile() {
       height: "44px",
       border: "1px solid #D9D9D9",
       borderRadius: "8px",
+<<<<<<< HEAD
+      background: "var(--bg-surface)",
+=======
       background: "#FFFFFF",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       display: "flex",
       alignItems: "center",
       paddingLeft: "22px",
@@ -518,7 +526,11 @@ export default function OnboardingCompanyProfile() {
                 <span
                   style={{
                     fontSize: "15px",
+<<<<<<< HEAD
+                    color: "var(--text-primary)",
+=======
                     color: "#141414",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                     minWidth: "54px",
                   }}
                 >
@@ -559,7 +571,11 @@ export default function OnboardingCompanyProfile() {
         marginLeft: "16px",
         fontSize: "14px",
         fontWeight: 400,
+<<<<<<< HEAD
+        color: "var(--text-primary)",
+=======
         color: "#141414",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         letterSpacing: "1px",
         padding: 0,
       }}
@@ -591,3 +607,4 @@ export default function OnboardingCompanyProfile() {
     </div>
   );
 }
+

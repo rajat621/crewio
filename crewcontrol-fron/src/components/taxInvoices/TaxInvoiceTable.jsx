@@ -1,4 +1,4 @@
-import UniversalTable from "../table/UniversalTable";
+﻿import UniversalTable from "../table/UniversalTable";
 import TaxInvoiceRow from "./TaxInvoiceRow";
 import { TAX_INVOICE_COLUMNS } from "./taxInvoiceColumns";
 

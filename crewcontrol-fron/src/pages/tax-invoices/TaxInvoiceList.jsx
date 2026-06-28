@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import { Box, Button, Snackbar, Alert } from "@mui/material";
+=======
 import { Box, Button, Snackbar, Alert } from "@mui/material";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
@@ -133,8 +137,8 @@ function TaxInvoiceList() {
       {/* TABLE CARD */}
       <Box
         sx={{
-          bgcolor: "#FFFFFF",
-          border: "1px solid #DEDEDE",
+          bgcolor: "var(--bg-surface)",
+          border: "1px solid var(--border-card)",
           borderRadius: "12px",
           p: "20px",
         }}
@@ -157,3 +161,4 @@ function TaxInvoiceList() {
 }
 
 export default TaxInvoiceList;
+

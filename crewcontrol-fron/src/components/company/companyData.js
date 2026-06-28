@@ -1,4 +1,4 @@
-export const companies = [
+﻿export const companies = [
   {
     id: "mcc-1",
     name: "MCC Group.",

@@ -1,4 +1,4 @@
-import { Box, Typography, Button, OutlinedInput } from "@mui/material";
+﻿import { Box, Typography, Button, OutlinedInput } from "@mui/material";
 
 const FIELDS = [
   { key: "name",    label: "Company Name"                     },
@@ -20,7 +20,7 @@ function CompanyDetailsPanel({
   return (
     <Box
       sx={{
-        border: "1px solid #DEDEDE",
+        border: "1px solid var(--border-card)",
         borderRadius: "8px",
         p: "20px 16px",
         display: "flex",
@@ -38,7 +38,7 @@ function CompanyDetailsPanel({
           mb: "24px",
         }}
       >
-        <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "#141414" }}>
+        <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "var(--text-primary)" }}>
           Company Details
         </Typography>
 
@@ -51,12 +51,12 @@ function CompanyDetailsPanel({
               fontSize: "12px",
               fontWeight: 500,
               color: "#374151",
-              border: "1px solid #D1D5DB",
+              border: "1px solid var(--border-input-hover)",
               borderRadius: "8px",
               p: "6px 12px",
               height: "32px",
               minWidth: "unset",
-              "&:hover": { backgroundColor: "#F9FAFB", borderColor: "#9CA3AF" },
+              "&:hover": { backgroundColor: "var(--bg-surface)", borderColor: "var(--text-disabled)" },
             }}
           >
             Edit
@@ -71,7 +71,7 @@ function CompanyDetailsPanel({
             <Typography
               sx={{
                 fontSize: "14px",
-                color: "#6B7280",
+                color: "var(--text-secondary)",
                 fontWeight: 400,
                 mb: "8px",
               }}
@@ -87,26 +87,26 @@ function CompanyDetailsPanel({
               onChange={(e) => onFieldChange?.(key, e.target.value)}
               sx={{
                 fontSize: "14px",
-                color: "#141414",
+                color: "var(--text-primary)",
                 lineHeight: "20px",
                 letterSpacing: "0.5px",
-                backgroundColor: "#FFFFFF",
+                backgroundColor: "var(--bg-surface)",
                 borderRadius: "8px",
                 height: "44px",
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#E5E7EB",
+                  borderColor: "var(--border-input)",
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: editable ? "#2563EB" : "#DEDEDE",
+                  borderColor: editable ? "var(--color-primary)" : "var(--border-card)",
                 },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#2563EB",
+                  borderColor: "var(--color-primary)",
                   borderWidth: "1.5px",
                 },
                 // Cursor not-allowed in read-only view
                 ...(!editable && {
                   cursor: "default",
-                  color: "#6B7280",
+                  color: "var(--text-secondary)",
                   "& input": { cursor: "default" },
                 }),
               }}
@@ -125,8 +125,8 @@ function CompanyDetailsPanel({
                 textTransform: "none",
                 fontSize: "13px",
                 fontWeight: 500,
-                color: "#2563EB",
-                // border: "1px solid #D1D5DB",
+                color: "var(--color-primary)",
+                // border: "1px solid var(--border-input-hover)",
                 borderRadius: "8px",
                 p: "6px 12px",
                 height: "34px",
@@ -142,13 +142,13 @@ function CompanyDetailsPanel({
                 textTransform: "none",
                 fontSize: "12px",
                 fontWeight: 500,
-                backgroundColor: "#2563EB",
+                backgroundColor: "var(--color-primary)",
                 borderRadius: "8px",
                 p: "6px 12px",
                 height: "32px",
                 width: "76px",
                 boxShadow: "none",
-                "&:hover": { backgroundColor: "#1D4ED8", boxShadow: "none" },
+                "&:hover": { backgroundColor: "var(--color-primary)", boxShadow: "none" },
               }}
             >
               Save
@@ -165,7 +165,7 @@ function CompanyDetailsPanel({
             }}
           >
             <Typography
-              sx={{ fontSize: "12px", color: "#1D4ED8", fontWeight: 400 }}
+              sx={{ fontSize: "12px", color: "var(--color-primary)", fontWeight: 400 }}
             >
               These details are used for invoices and official documents.
             </Typography>

@@ -1,4 +1,4 @@
-import {
+﻿import {
   TableRow,
   TableCell,
   IconButton,
@@ -131,7 +131,7 @@ export default function TaxInvoiceRow({ row, onDeleteSuccess, onNotify }) {
         <TableCell>
           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <PictureAsPdfOutlinedIcon
-              sx={{ fontSize: 16, color: "#EF4444" }}
+              sx={{ fontSize: 16, color: "var(--color-error)" }}
             />
             <Typography fontSize={13}>{row.timesheet}</Typography>
           </Box>
@@ -185,3 +185,4 @@ export default function TaxInvoiceRow({ row, onDeleteSuccess, onNotify }) {
     </>
   );
 }
+

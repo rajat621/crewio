@@ -1,4 +1,4 @@
-
+﻿
 import { Box } from "@mui/material";
 import TrackEmployeeTable from "./TrackEmployeeTable";
 import TrackEmployeeMap from "./TrackEmployeeMap";
@@ -7,7 +7,7 @@ function TrackEmployee({ rows = [] }) {
   return (
     <Box
       sx={{
-        bgcolor: "#FFFFFF",
+        bgcolor: "var(--bg-surface)",
         border: "1px solid",
         borderColor: "divider",
         borderRadius: 1.5,
@@ -32,4 +32,5 @@ function TrackEmployee({ rows = [] }) {
 }
 
 export default TrackEmployee;
+
 

@@ -1,4 +1,4 @@
-import { Box, Divider, Typography } from "@mui/material";
+﻿import { Box, Divider, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import CompanyHeader from "../components/company/CompanyHeader";
@@ -237,8 +237,8 @@ function CompanyDetail() {
        */}
       <Box
         sx={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #DEDEDE",
+          backgroundColor: "var(--bg-surface)",
+          border: "1px solid var(--border-card)",
           borderRadius: "12px",
           p: "20px",
           display: "grid",
@@ -250,7 +250,7 @@ function CompanyDetail() {
         {/* ═══ LEFT PANEL — own bordered card ═══════════════════════════ */}
         <Box
           sx={{
-            border: "1px solid #DEDEDE",
+            border: "1px solid var(--border-card)",
             borderRadius: "10px",
             overflow: "hidden",   // lets the F7F5FF bg bleed to card edges
           }}
@@ -259,7 +259,7 @@ function CompanyDetail() {
           <CompanyHeader company={company} onAssignEmployee={handleOpenAssignDialog} />
 
           {/* Divider between header and employee table */}
-          <Divider sx={{  borderColor: "#DEDEDE" }} />
+          <Divider sx={{  borderColor: "var(--border-card)" }} />
 
           {/* Employee table with search + pagination */}
           <Box sx={{ p: "16px" }}>

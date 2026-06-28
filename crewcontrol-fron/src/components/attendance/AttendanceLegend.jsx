@@ -1,4 +1,4 @@
-//src\components\attendance\AttendanceLegend.jsx
+﻿//src\components\attendance\AttendanceLegend.jsx
 import { Box, Typography } from "@mui/material";
 
 function LegendItem({ color, label }) {
@@ -12,7 +12,7 @@ function LegendItem({ color, label }) {
           backgroundColor: color,
         }}
       />
-      <Typography fontSize={14} color="#757575">
+      <Typography fontSize={14} color="var(--text-secondary)">
         {label}
       </Typography>
     </Box>
@@ -30,10 +30,11 @@ function AttendanceLegend() {
         mb: "12px",
       }}
     >
-      <LegendItem color="#1D4ED8" label="Total present" />
-      <LegendItem color="#DBE2F9" label="Total absent" />
+      <LegendItem color="var(--color-primary)" label="Total present" />
+      <LegendItem color="var(--bg-info-soft)" label="Total absent" />
     </Box>
   );
 }
 
 export default AttendanceLegend;
+

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 generator/assets.py  –  Resolve template / signature / stamp assets.
 
 Supports:
@@ -11,6 +15,10 @@ Supports:
 from __future__ import annotations
 
 import base64
+<<<<<<< HEAD
+import hashlib
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import os
 from typing import Optional
 
@@ -21,6 +29,13 @@ except ImportError:
     _PDF2IMAGE_OK = False
 
 
+<<<<<<< HEAD
+_ASSET_PATH_CACHE = {}
+_TEMPLATE_IMAGE_CACHE = {}
+
+
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def _find_poppler() -> Optional[str]:
     candidates = [
         r"C:\Program Files\poppler\Library\bin",
@@ -54,8 +69,19 @@ def materialize_asset(value: Optional[str], out_dir: str, prefix: str) -> Option
     if not v:
         return None
 
+<<<<<<< HEAD
+    cache_key = hashlib.sha1(f"{prefix}|{v}".encode("utf-8", errors="ignore")).hexdigest()
+    cached = _ASSET_PATH_CACHE.get(cache_key)
+    if cached and os.path.exists(cached):
+        return cached
+
     # Already a file on disk
     if os.path.exists(v):
+        _ASSET_PATH_CACHE[cache_key] = v
+=======
+    # Already a file on disk
+    if os.path.exists(v):
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         return v
 
     # Data URI
@@ -95,6 +121,10 @@ def materialize_asset(value: Optional[str], out_dir: str, prefix: str) -> Option
     try:
         with open(path, "wb") as fh:
             fh.write(raw)
+<<<<<<< HEAD
+        _ASSET_PATH_CACHE[cache_key] = path
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         return path
     except Exception:
         return None
@@ -114,6 +144,17 @@ def template_to_image(template_path: Optional[str], out_dir: str) -> Optional[st
 
     if ext == ".pdf" and _PDF2IMAGE_OK:
         try:
+<<<<<<< HEAD
+            stat = os.stat(template_path)
+            cache_key = f"{template_path}|{int(stat.st_mtime)}|{stat.st_size}"
+            cached = _TEMPLATE_IMAGE_CACHE.get(cache_key)
+            if cached and os.path.exists(cached):
+                return cached
+        except Exception:
+            cache_key = template_path
+        try:
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             kwargs = {"first_page": 1, "last_page": 1, "dpi": 180}
             pp = _find_poppler()
             if pp:
@@ -124,6 +165,10 @@ def template_to_image(template_path: Optional[str], out_dir: str) -> Optional[st
             os.makedirs(out_dir, exist_ok=True)
             img_path = os.path.join(out_dir, "template_bg.png")
             images[0].save(img_path, "PNG")
+<<<<<<< HEAD
+            _TEMPLATE_IMAGE_CACHE[cache_key] = img_path
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             return img_path
         except Exception:
             return None

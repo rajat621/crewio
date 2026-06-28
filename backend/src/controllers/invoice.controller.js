@@ -1,4 +1,4 @@
-import { Invoice } from '../models/Invoice.js';
+﻿import { Invoice } from '../models/Invoice.js';
 import Company from '../models/Company.js';
 import User from '../models/User.js';
 import AttendanceImport from '../models/AttendanceImport.js';
@@ -10,6 +10,11 @@ import fs from 'fs';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { fileURLToPath } from 'url';
+<<<<<<< HEAD
+import FileRecord from '../models/FileRecord.js';
+import AuditLog from '../models/AuditLog.js';
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -310,6 +315,20 @@ export const extractInvoiceDraft = async (req, res) => {
       return res.status(400).json({ message: 'timesheetPath is required' });
     }
 
+<<<<<<< HEAD
+    // Require that the timesheetPath corresponds to an uploaded FileRecord
+    const fr = await FileRecord.findOne({ path: timesheetPath });
+    if (!fr) {
+      return res.status(400).json({ message: 'timesheetPath is not an authorized file' });
+    }
+
+    const ctx = { userId: req.user?.userId, ownerId: req.user?.ownerId, companyId: req.user?.companyId };
+    if (String(fr.ownerId) !== String(ctx.ownerId || ctx.userId) && String(fr.companyId) !== String(ctx.companyId)) {
+      return res.status(403).json({ message: 'Access denied to requested file' });
+    }
+
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const sourcePath = toAbsoluteStoragePath(timesheetPath);
     if (!sourcePath || !fs.existsSync(sourcePath)) {
       return res.status(400).json({ message: 'Source timesheet PDF not found' });
@@ -337,8 +356,14 @@ export const extractInvoiceDraft = async (req, res) => {
 
 export const getInvoices = async (req, res) => {
   try {
+<<<<<<< HEAD
+    const ownerId = req.user?.ownerId;
+    if (!ownerId) return res.status(403).json({ message: 'User not authorized' });
+    const items = await Invoice.find({ ownerId }).sort({ createdAt: -1 });
+=======
     const userId = req.user?.userId || req.user?._id || req.user?.id;
     const items = await Invoice.find({ createdBy: userId }).sort({ createdAt: -1 });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const data = items.map((inv) => {
       const obj = inv.toObject ? inv.toObject() : inv;
       const subtotal = Number(obj.subtotal || 0);
@@ -361,8 +386,14 @@ export const getInvoices = async (req, res) => {
 
 export const getInvoice = async (req, res) => {
   try {
+<<<<<<< HEAD
+    const ownerId = req.user?.ownerId;
+    if (!ownerId) return res.status(403).json({ message: 'User not authorized' });
+    const invoice = await Invoice.findOne({ _id: req.params.id, ownerId });
+=======
     const userId = req.user?.userId || req.user?._id || req.user?.id;
     const invoice = await Invoice.findOne({ _id: req.params.id, createdBy: userId });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!invoice) {
       return res.status(404).json({ message: 'Invoice not found' });
     }
@@ -385,12 +416,24 @@ export const createInvoice = async (req, res) => {
     }
 
     // Always allocate invoice numbers server-side so the global counter advances
+<<<<<<< HEAD
+    // even when the UI sends a preview value. Pass ownerId for tenant scoping.
+    const ownerId = req.user?.ownerId;
+    payload.invoiceNumber = await generateInvoiceNumber(userId, ownerId);
+
+    if (!ownerId) return res.status(403).json({ message: 'User not authorized' });
+
+    const clientCompany = await Company.findOne({
+      _id: payload.company,
+      ownerId,
+=======
     // even when the UI sends a preview value.
     payload.invoiceNumber = await generateInvoiceNumber(userId);
 
     const clientCompany = await Company.findOne({
       _id: payload.company,
       owner: userId,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       $or: [
         { companyRole: 'client' },
         { companyRole: { $exists: false }, isOwner: { $ne: true } },
@@ -403,7 +446,11 @@ export const createInvoice = async (req, res) => {
     // Owner company provides the template, signature, stamp and appears in the "Regards" section.
     // Priority: explicit owner flag -> user-linked owner company -> company with branding assets.
     let ownerCompany = await Company.findOne({
+<<<<<<< HEAD
+      ownerId,
+=======
       owner: userId,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       $or: [
         { companyRole: 'owner' },
         { isOwner: true },
@@ -419,6 +466,164 @@ export const createInvoice = async (req, res) => {
       payload.clientName = clientCompany.name || payload.clientName;
     }
 
+<<<<<<< HEAD
+    const sourceTimesheetPath = payload.source_timesheet_pdf;
+    let sourceTimesheetAbsolutePath = null;
+    if (sourceTimesheetPath) {
+      const frSource = await FileRecord.findOne({ path: sourceTimesheetPath });
+      if (!frSource) return res.status(400).json({ message: 'source_timesheet_pdf is not an authorized file' });
+      const ctx = { userId: req.user?.userId, ownerId: req.user?.ownerId, companyId: req.user?.companyId };
+      if (String(frSource.ownerId) !== String(ctx.ownerId || ctx.userId) && String(frSource.companyId) !== String(ctx.companyId)) {
+        return res.status(403).json({ message: 'Access denied to requested file' });
+      }
+      sourceTimesheetAbsolutePath = toAbsoluteStoragePath(sourceTimesheetPath);
+      if (!sourceTimesheetAbsolutePath || !fs.existsSync(sourceTimesheetAbsolutePath)) {
+        return res.status(400).json({ message: 'Source timesheet PDF does not exist' });
+      }
+    }
+
+    let approvedRows = normalizeInvoiceRows(req.body?.approvedExtraction?.accepted_rows || req.body?.approvedExtraction?.rows || req.body?.items || []);
+    const hasManualApprovedExtraction = Boolean(req.body?.approvedExtraction);
+    let extractedWarnings = Array.isArray(req.body?.approvedExtraction?.extraction_warnings)
+      ? req.body.approvedExtraction.extraction_warnings
+      : [];
+    let extractedRejectedRows = normalizeRejectedRows(req.body?.approvedExtraction?.rejected_rows || []);
+    let confidenceScores = req.body?.approvedExtraction?.confidence_scores || {};
+    let extractedAttendanceRows = req.body?.approvedExtraction?.attendance_rows || [];
+    let extractionMethod = req.body?.approvedExtraction?.extraction_method || 'unknown';
+    let extractedTotalDeduction = Number(req.body?.approvedExtraction?.totals?.total_deduction || 0);
+    let extractedFinancials = req.body?.approvedExtraction?.financials || null;
+    let generationRunId = req.body?.run_id || randomUUID();
+
+    if (!approvedRows.length && sourceTimesheetAbsolutePath) {
+      const draft = await buildExtractedDraft(sourceTimesheetAbsolutePath);
+      generationRunId = draft.run_id || generationRunId;
+      approvedRows = draft.rows;
+      extractedWarnings = draft.warnings;
+      extractedRejectedRows = draft.rejected_rows;
+      confidenceScores = draft.confidence_scores;
+      extractedAttendanceRows = draft.attendance_rows;
+      extractionMethod = draft.metadata?.billing?.source || 'unknown';
+      extractedTotalDeduction = draft.totals?.total_deduction || 0;
+      extractedFinancials = draft.financials || null;
+      req.body = {
+        ...req.body,
+        approvedExtraction: {
+          ...(req.body?.approvedExtraction || {}),
+          raw_rows: draft.raw_rows,
+          raw_row_count: draft.raw_row_count,
+        },
+      };
+
+      logEvent('extraction_complete', {
+        run_id: generationRunId,
+        source_pdf: payload.source_timesheet_pdf || sourceTimesheetAbsolutePath || '',
+        rows: draft.rows.length,
+        deduction_source: String(draft.financials?.deduction_source || ''),
+        summary_table_detected: Boolean(draft.financials?.summary_detected),
+        final_net: Number(draft.financials?.net_payable || 0),
+      });
+    }
+
+    if (approvedRows.length && (!sourceTimesheetAbsolutePath || !extractedFinancials)) {
+      logEvent('extraction_complete', {
+        run_id: generationRunId,
+        source_pdf: payload.source_timesheet_pdf || '',
+        rows: approvedRows.length,
+        deduction_source: String(extractedFinancials?.deduction_source || ''),
+        summary_table_detected: Boolean(extractedFinancials?.summary_detected),
+        final_net: Number(extractedFinancials?.net_payable || 0),
+      });
+    }
+
+    // Apply production confidence gating to all invoices (extracted OR approved)
+    if (approvedRows.length > 0 && Object.keys(confidenceScores).length > 0) {
+      const validationResult = validateExtractionQuality({
+        accepted_rows: approvedRows,
+        rejected_rows: extractedRejectedRows,
+        confidence_scores: confidenceScores,
+      });
+
+      const gatingAction = getGatingAction(validationResult);
+
+      // Block automatic generation if confidence is critically low
+      if (gatingAction.action === 'BLOCK') {
+        logEvent('validation_failed', {
+          run_id: generationRunId,
+          reason: 'confidence_block',
+          action: gatingAction.action,
+          avg_confidence: validationResult.avgConfidence,
+          rejection_rate: validationResult.rejectionRate,
+        });
+        return res.status(409).json({
+          message: 'Invoice generation blocked: extraction quality below minimum threshold',
+          requiresManualApproval: true,
+          validationResult,
+          gatingAction,
+          verification: {
+            accepted_rows: approvedRows,
+            rejected_rows: extractedRejectedRows,
+            confidence_scores: confidenceScores,
+            extraction_warnings: extractedWarnings,
+          },
+        });
+      }
+
+      // Require explicit approval if confidence is below recommended threshold
+      if (gatingAction.action === 'REQUIRE_APPROVAL' && !hasManualApprovedExtraction) {
+        logEvent('validation_failed', {
+          run_id: generationRunId,
+          reason: 'manual_approval_required',
+          action: gatingAction.action,
+          avg_confidence: validationResult.avgConfidence,
+          rejection_rate: validationResult.rejectionRate,
+        });
+        return res.status(409).json({
+          message: 'Manual approval required: extraction confidence below recommended threshold',
+          requiresManualApproval: true,
+          validationResult,
+          gatingAction,
+          verification: {
+            accepted_rows: approvedRows,
+            rejected_rows: extractedRejectedRows,
+            confidence_scores: confidenceScores,
+            extraction_warnings: extractedWarnings,
+          },
+        });
+      }
+
+      // Warn but allow if minor concerns
+      if (gatingAction.action === 'WARN') {
+        extractedWarnings.push(...gatingAction.details);
+      }
+    }
+
+    if (!approvedRows.length) {
+      return res.status(422).json({
+        message: 'No valid billing summary rows were extracted from the timesheet PDF',
+        extractionWarnings: extractedWarnings,
+      });
+    }
+
+    const extractedRows = Array.isArray(req.body?.approvedExtraction?.raw_rows)
+      ? req.body.approvedExtraction.raw_rows
+      : approvedRows;
+    const rendererRows = approvedRows;
+
+    console.log('ROWS BEFORE RENDER', rendererRows);
+    if (rendererRows.length !== extractedRows.length) {
+      console.error('ROW LOSS DETECTED');
+      console.error(JSON.stringify({
+        run_id: generationRunId,
+        source_pdf: payload.source_timesheet_pdf || sourceTimesheetAbsolutePath || '',
+        extracted_count: extractedRows.length,
+        renderer_count: rendererRows.length,
+        extracted_rows: extractedRows,
+        renderer_rows: rendererRows,
+      }));
+    }
+
+=======
     const sourceTimesheetAbsolutePath = payload.source_timesheet_pdf
       ? toAbsoluteStoragePath(payload.source_timesheet_pdf)
       : null;
@@ -570,6 +775,7 @@ export const createInvoice = async (req, res) => {
       }));
     }
 
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const taxRate = payload.tax || 0;
     const totals = extractedFinancials
       ? {
@@ -587,6 +793,10 @@ export const createInvoice = async (req, res) => {
     const draftInvoice = await Invoice.create({
       ...payload,
       createdBy: userId,
+<<<<<<< HEAD
+      ownerId: ownerId,
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       items: approvedRows.map((row) => ({
         description: row.description,
         quantity: row.quantity,
@@ -739,12 +949,18 @@ export const generateInvoiceRecord = async (req, res) => {
 
 export const updateInvoice = async (req, res) => {
   try {
+<<<<<<< HEAD
+    const ownerId = req.user?.ownerId;
+    if (!ownerId) return res.status(403).json({ message: 'User not authorized' });
+    const updated = await Invoice.findOneAndUpdate({ _id: req.params.id, ownerId }, req.body, { new: true });
+=======
     const userId = req.user?.userId || req.user?._id || req.user?.id;
     const updated = await Invoice.findOneAndUpdate(
       { _id: req.params.id, createdBy: userId },
       req.body,
       { new: true }
     );
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!updated) {
       return res.status(404).json({ message: 'Invoice not found' });
     }
@@ -756,8 +972,14 @@ export const updateInvoice = async (req, res) => {
 
 export const deleteInvoice = async (req, res) => {
   try {
+<<<<<<< HEAD
+    const ownerId = req.user?.ownerId;
+    if (!ownerId) return res.status(403).json({ message: 'User not authorized' });
+    const deleted = await Invoice.findOneAndDelete({ _id: req.params.id, ownerId });
+=======
     const userId = req.user?.userId || req.user?._id || req.user?.id;
     const deleted = await Invoice.findOneAndDelete({ _id: req.params.id, createdBy: userId });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!deleted) {
       return res.status(404).json({ message: 'Invoice not found' });
     }
@@ -769,17 +991,51 @@ export const deleteInvoice = async (req, res) => {
 
 export const downloadInvoice = async (req, res) => {
   try {
+<<<<<<< HEAD
+    const ownerId = req.user?.ownerId;
+    if (!ownerId) return res.status(403).json({ message: 'User not authorized' });
+    const invoice = await Invoice.findOne({ _id: req.params.id, ownerId });
+=======
     const userId = req.user?.userId || req.user?._id || req.user?.id;
     const invoice = await Invoice.findOne({ _id: req.params.id, createdBy: userId });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!invoice) {
       return res.status(404).json({ message: 'Invoice not found' });
     }
 
     const generatedPath = invoice.generated_invoice_pdf || invoice.pdfUrl;
+<<<<<<< HEAD
+    if (!generatedPath) return res.status(404).json({ message: 'Generated invoice PDF not found' });
+
+    // Try to locate a tracked FileRecord first. If none exists, fall back to resolving
+    // the path directly on disk (useful for seeded or legacy records where FileRecord
+    // wasn't created). Prefer tenant checks using invoice.ownerId.
+    const fileRec = await FileRecord.findOne({ path: generatedPath });
+    const requesterOwner = req.user?.ownerId || req.user?.userId;
+    let absoluteGeneratedPath = null;
+
+    if (fileRec) {
+      if (String(fileRec.ownerId) !== String(requesterOwner) && String(fileRec.companyId) !== String(req.user?.companyId)) {
+        return res.status(403).json({ message: 'Access denied to invoice PDF' });
+      }
+      absoluteGeneratedPath = toAbsoluteStoragePath(fileRec.path);
+    } else {
+      // No FileRecord — resolve path directly and allow serve if file exists and
+      // the invoice owner matches the request owner.
+      if (String(invoice.ownerId) !== String(requesterOwner)) {
+        return res.status(403).json({ message: 'Access denied to invoice PDF' });
+      }
+      absoluteGeneratedPath = toAbsoluteStoragePath(generatedPath);
+    }
+
+    if (!absoluteGeneratedPath || !fs.existsSync(absoluteGeneratedPath)) {
+      return res.status(404).json({ message: 'Generated invoice PDF not found on disk' });
+=======
     const absoluteGeneratedPath = toAbsoluteStoragePath(generatedPath);
 
     if (!generatedPath || !absoluteGeneratedPath || !fs.existsSync(absoluteGeneratedPath)) {
       return res.status(404).json({ message: 'Generated invoice PDF not found' });
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     }
 
     res.setHeader('Content-Type', 'application/pdf');
@@ -791,6 +1047,24 @@ export const downloadInvoice = async (req, res) => {
       res.setHeader('Content-Disposition', `attachment; filename="invoice-${invoice.invoiceNumber}.pdf"`);
     }
 
+<<<<<<< HEAD
+    // Audit
+    try {
+      await AuditLog.create({
+        user: req.user?.userId,
+        ownerId: requesterOwner,
+        action: 'DOWNLOAD_INVOICE_PDF',
+        entity: 'Invoice',
+        entityId: invoice._id,
+        company: fileRec.companyId || null,
+        changes: { fileId: fileRec._id, path: fileRec.path },
+      });
+    } catch (e) {
+      console.error('Failed to write audit log for invoice download', e.message);
+    }
+
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const pdfData = fs.readFileSync(absoluteGeneratedPath);
     return res.send(pdfData);
   } catch (error) {

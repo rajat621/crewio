@@ -1,4 +1,4 @@
-import {
+﻿import {
   TableRow,
   TableCell,
   Chip,
@@ -12,18 +12,18 @@ import { EmployeeActionMenu } from "../../profile/EmployeeActionMenu";
 const STATUS_CONFIG = {
   valid: {
     label: "Valid",
-    bg: "#DCFCE7",
+    bg: "var(--bg-success-soft)",
     color: "#15803D",
   },
   "expiring-soon": {
     label: "Expiring Soon",
-    bg: "#FEF3C7",
+    bg: "var(--bg-warning-soft)",
     color: "#92400E",
   },
   expired: {
     label: "Expired",
     bg: "#FECACA",
-    color: "#DC2626",
+    color: "var(--color-error)",
   },
 };
 
@@ -67,3 +67,4 @@ function PassportRow({ row }) {
 }
 
 export default PassportRow;
+

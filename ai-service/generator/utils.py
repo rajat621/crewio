@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 generator/utils.py  –  Shared drawing utilities for invoice PDF generation.
 """
 

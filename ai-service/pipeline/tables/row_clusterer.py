@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 Y-axis clustering for OCR cells.
 
 Groups OCR boxes into logical rows even when scans are slightly skewed.

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import { useCallback, useEffect, useMemo, useState } from "react";
+=======
 import { useCallback, useEffect, useMemo, useState } from "react";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import {
   Box,
   Button,
@@ -190,6 +194,12 @@ const buildAttendanceRows = ({ employees, attendanceRecords, selectedMonth }) =>
   });
 };
 
+<<<<<<< HEAD
+  const mapEmployeeToRow = (employee) => {
+  const firstName = employee?.firstName || "";
+  const lastName = employee?.lastName || "";
+  const fullName = `${firstName} ${lastName}`.trim() || employee?.name || "-";
+=======
 const mapEmployeeToRow = (employee) => {
   const firstName = employee?.firstName || "";
   const lastName = employee?.lastName || "";
@@ -207,8 +217,22 @@ const mapEmployeeToRow = (employee) => {
     employee?.company?.name ||
     employee?.companyName ||
     (typeof employee?.assignedCompanyId === "string" ? employee.assignedCompanyId : "-");
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
-  return {
+  const companyId =
+    employee?.assignedCompanyId?._id ||
+    employee?.assignedCompanyId ||
+    employee?.company?._id ||
+    employee?.company ||
+    null;
+
+  const assignedCompany =
+    employee?.assignedCompanyId?.name ||
+    employee?.company?.name ||
+    employee?.companyName ||
+    (typeof employee?.assignedCompanyId === "string" ? employee.assignedCompanyId : "-");
+
+    return {
     id: employee?.employeeId || employee?._id || "-",
     apiId: employee?._id || employee?.employeeId || "-",
     name: fullName,
@@ -221,7 +245,12 @@ const mapEmployeeToRow = (employee) => {
     companyId,
     project: "-",
     startDate: formatDate(employee?.joiningDate || employee?.joinDate),
+<<<<<<< HEAD
+    // Prefer backend-provided assignedStatus if available, otherwise fall back
+    assignedStatus: employee?.assignedStatus || (companyId ? "on-site" : "site-over"),
+=======
     assignedStatus: companyId ? "assigned" : "unassigned",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     checkIn: "-",
     checkOut: "-",
@@ -475,7 +504,7 @@ const Employees = () => {
       {activeTab === "employee-detail" && (
         <Box
           sx={{
-            bgcolor: "#FFFFFF",
+            bgcolor: "var(--bg-surface)",
             border: "1px solid",
             borderColor: "divider",
             borderRadius: 1.5,
@@ -490,7 +519,7 @@ const Employees = () => {
       {activeTab === "assigned" && (
         <Box
           sx={{
-            bgcolor: "#FFFFFF",
+            bgcolor: "var(--bg-surface)",
             border: "1px solid",
             borderColor: "divider",
             borderRadius: 1.5,
@@ -520,7 +549,7 @@ const Employees = () => {
       {activeTab === "attendance" && (
         <Box
           sx={{
-            bgcolor: "#FFFFFF",
+            bgcolor: "var(--bg-surface)",
             border: "1px solid",
             borderColor: "divider",
             borderRadius: 1.5,
@@ -551,7 +580,7 @@ const Employees = () => {
       {activeTab === "passport" && (
         <Box
           sx={{
-            bgcolor: "#FFFFFF",
+            bgcolor: "var(--bg-surface)",
             border: "1px solid",
             borderColor: "divider",
             borderRadius: 1.5,
@@ -574,7 +603,11 @@ const Employees = () => {
       {activeTab === "emirate-id" && (
         <Box
           sx={{
+<<<<<<< HEAD
+            bgcolor: "var(--bg-surface)",
+=======
             bgcolor: "#FFFFFF",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             border: "1px solid",
             borderColor: "divider",
             borderRadius: 1.5,
@@ -619,7 +652,11 @@ const Employees = () => {
               maxWidth: "808px",
               minHeight: "500px",
               background: "#fff",
+<<<<<<< HEAD
+              border: "1px solid var(--border-card)",
+=======
               border: "1px solid #DEDEDE",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               borderRadius: "8px",
               overflow: "hidden",
               display: "flex",
@@ -630,14 +667,22 @@ const Employees = () => {
             <div
               style={{
                 height: "64px",
+<<<<<<< HEAD
+                borderBottom: "1px solid var(--border-card)",
+=======
                 borderBottom: "1px solid #DEDEDE",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "0 18px",
               }}
             >
+<<<<<<< HEAD
+              <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "0.54px", lineHeight: "20px" }}>
+=======
               <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "#141414", letterSpacing: "0.54px", lineHeight: "20px" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 Assign to Company
               </h3>
               <button
@@ -657,7 +702,11 @@ const Employees = () => {
             </div>
 
             <div style={{ padding: "24px 20px", flex: 1 }}>
+<<<<<<< HEAD
+              <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
+=======
               <label style={{ display: "block", fontSize: "14px", color: "#111827", marginBottom: "12px", fontWeight: 400 }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 Select a company
               </label>
               <select
@@ -671,7 +720,11 @@ const Employees = () => {
                   borderRadius: "8px",
                   padding: "0 40px 0 14px",
                   fontSize: "14px",
+<<<<<<< HEAD
+                  color: "var(--text-primary)",
+=======
                   color: "#141414",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   background: "#fff",
                   fontFamily: "inherit",
                   appearance: "none",
@@ -694,7 +747,11 @@ const Employees = () => {
 
             <div
               style={{
+<<<<<<< HEAD
+                borderTop: "1px solid var(--border-card)",
+=======
                 borderTop: "1px solid #DEDEDE",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 height: "68px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -715,7 +772,11 @@ const Employees = () => {
                   fontSize: "12px",
                   fontWeight: 500,
                   color: "#fff",
+<<<<<<< HEAD
+                  background: !selectedCompanyId ? "var(--text-disabled)" : "var(--color-primary)",
+=======
                   background: !selectedCompanyId ? "#9CA3AF" : "#2563EB",
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   cursor: !selectedCompanyId ? "not-allowed" : "pointer",
                   fontFamily: "inherit",
                 }}
@@ -731,3 +792,4 @@ const Employees = () => {
 };
 
 export default Employees;
+

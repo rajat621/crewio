@@ -1,4 +1,4 @@
-//src\components\attendance\AttendanceHeader.jsx
+﻿//src\components\attendance\AttendanceHeader.jsx
 import { Box, Typography, MenuItem, Select } from "@mui/material";
 
 function AttendanceHeader({ value, onChange }) {
@@ -21,7 +21,7 @@ function AttendanceHeader({ value, onChange }) {
           justifyContent: "space-between",
         }}
       >
-        <Typography fontSize={20} fontWeight={600} color="#141414">
+        <Typography fontSize={20} fontWeight={600} color="var(--text-primary)">
           Attendance
         </Typography>
 
@@ -51,8 +51,8 @@ function AttendanceHeader({ value, onChange }) {
           gap: "24px",
         }}
       >
-        <LegendItem color="#1D4ED8" label="Total present" />
-        <LegendItem color="#DBE2F9" label="Total absent" />
+        <LegendItem color="var(--color-primary)" label="Total present" />
+        <LegendItem color="var(--bg-info-soft)" label="Total absent" />
       </Box>
     </Box>
   );
@@ -69,7 +69,7 @@ function LegendItem({ color, label }) {
           backgroundColor: color,
         }}
       />
-      <Typography fontSize={14} color="#757575">
+      <Typography fontSize={14} color="var(--text-secondary)">
         {label}
       </Typography>
     </Box>
@@ -77,3 +77,4 @@ function LegendItem({ color, label }) {
 }
 
 export default AttendanceHeader;
+

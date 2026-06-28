@@ -1,4 +1,4 @@
-// import {
+﻿// import {
 //   Box,
 //   Typography,
 //   Button,
@@ -74,8 +74,8 @@
 //                   minWidth: 32,
 //                   height: 32,
 //                   borderRadius: "8px",
-//                   borderColor: "#2563EB",
-//                   color: "#2563EB",
+//                   borderColor: "var(--color-primary)",
+//                   color: "var(--color-primary)",
 //                 }}
 //               >
 //                 –
@@ -93,8 +93,8 @@
 //                   minWidth: 32,
 //                   height: 32,
 //                   borderRadius: "8px",
-//                   borderColor: "#2563EB",
-//                   color: "#2563EB",
+//                   borderColor: "var(--color-primary)",
+//                   color: "var(--color-primary)",
 //                 }}
 //               >
 //                 +
@@ -141,7 +141,7 @@
 
 //           <Box
 //             sx={{
-//               border: "1px dashed #D1D5DB",
+//               border: "1px dashed var(--border-input-hover)",
 //               borderRadius: "12px",
 //               height: 300,
 //               display: "flex",
@@ -153,18 +153,18 @@
 //             }}
 //           >
 //             <CloudUploadOutlinedIcon
-//               sx={{ fontSize: 56, color: "#9CA3AF" }}
+//               sx={{ fontSize: 56, color: "var(--text-disabled)" }}
 //             />
 
-//             <Typography fontSize={14} color="#6B7280">
+//             <Typography fontSize={14} color="var(--text-secondary)">
 //               Drag & drop the timesheet here
 //             </Typography>
 
-//             <Typography fontSize={12} color="#9CA3AF">
+//             <Typography fontSize={12} color="var(--text-disabled)">
 //               Accepted formats: PDF (Max 5MB)
 //             </Typography>
 
-//             <Typography fontSize={12} color="#9CA3AF">
+//             <Typography fontSize={12} color="var(--text-disabled)">
 //               – OR –
 //             </Typography>
 
@@ -178,7 +178,7 @@
 //                 borderRadius: "8px",
 //                 textTransform: "uppercase",
 //                 boxShadow:
-//                   "0px 4px 10px rgba(37, 99, 235, 0.25)",
+//                   "0px 4px 10px var(--shadow-floating)",
 //               }}
 //             >
 //               Browse
@@ -251,12 +251,12 @@
 //       >
 //         <Box
 //           sx={{
-//             border: "1px solid #E5E7EB",
+//             border: "1px solid var(--border-input)",
 //             borderRadius: "14px",
 //             p: "20px",
 //           }}
 //         >
-//           <Typography fontSize={12} color="#9CA3AF">
+//           <Typography fontSize={12} color="var(--text-disabled)">
 //             Company Name
 //           </Typography>
 //           <Typography
@@ -270,12 +270,12 @@
 
 //         <Box
 //           sx={{
-//             border: "1px solid #E5E7EB",
+//             border: "1px solid var(--border-input)",
 //             borderRadius: "14px",
 //             p: "20px",
 //           }}
 //         >
-//           <Typography fontSize={12} color="#9CA3AF">
+//           <Typography fontSize={12} color="var(--text-disabled)">
 //             Invoice No.
 //           </Typography>
 //           <Typography
@@ -360,8 +360,8 @@ function InvoiceDetailsStep({
                 minWidth: 32,
                 height: 32,
                 borderRadius: "8px",
-                borderColor: "#2563EB",
-                color: "#2563EB",
+                borderColor: "var(--color-primary)",
+                color: "var(--color-primary)",
               }}
             >
               –
@@ -379,8 +379,8 @@ function InvoiceDetailsStep({
                 minWidth: 32,
                 height: 32,
                 borderRadius: "8px",
-                borderColor: "#2563EB",
-                color: "#2563EB",
+                borderColor: "var(--color-primary)",
+                color: "var(--color-primary)",
               }}
             >
               +
@@ -415,7 +415,7 @@ function InvoiceDetailsStep({
 
           <Box
             sx={{
-              border: "1px dashed #D1D5DB",
+              border: "1px dashed var(--border-input-hover)",
               borderRadius: "12px",
               height: 300,
               display: "flex",
@@ -427,18 +427,18 @@ function InvoiceDetailsStep({
             }}
           >
             <CloudUploadOutlinedIcon
-              sx={{ fontSize: 56, color: "#9CA3AF" }}
+              sx={{ fontSize: 56, color: "var(--text-disabled)" }}
             />
 
-            <Typography fontSize={14} color="#6B7280">
+            <Typography fontSize={14} color="var(--text-secondary)">
               Drag & drop the timesheet here
             </Typography>
 
-            <Typography fontSize={12} color="#9CA3AF">
+            <Typography fontSize={12} color="var(--text-disabled)">
               Accepted formats: PDF (Max 5MB)
             </Typography>
 
-            <Typography fontSize={12} color="#9CA3AF">
+            <Typography fontSize={12} color="var(--text-disabled)">
               – OR –
             </Typography>
 
@@ -452,7 +452,7 @@ function InvoiceDetailsStep({
                 borderRadius: "8px",
                 textTransform: "uppercase",
                 boxShadow:
-                  "0px 4px 10px rgba(37, 99, 235, 0.25)",
+                  "0px 4px 10px var(--shadow-floating)",
               }}
             >
               Browse
@@ -524,13 +524,13 @@ function InvoiceDetailsStep({
       >
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
-            backgroundColor: "#F6F6F6",
+            border: "1px solid var(--border-input)",
+            backgroundColor: "var(--bg-surface-secondary)",
             borderRadius: "14px",
             p: "20px",
           }}
         >
-          <Typography fontSize={12} color="#9CA3AF">
+          <Typography fontSize={12} color="var(--text-disabled)">
             Company Name
           </Typography>
           <Typography fontSize={26} fontWeight={700} sx={{ mt: "4px" }}>
@@ -540,13 +540,13 @@ function InvoiceDetailsStep({
 
         <Box
           sx={{
-            border: "1px solid #E5E7EB",
-            backgroundColor: "#F6F6F6",
+            border: "1px solid var(--border-input)",
+            backgroundColor: "var(--bg-surface-secondary)",
             borderRadius: "14px",
             p: "20px",
           }}
         >
-          <Typography fontSize={12} color="#9CA3AF">
+          <Typography fontSize={12} color="var(--text-disabled)">
             Invoice No.
           </Typography>
           <Typography fontSize={26} fontWeight={700} sx={{ mt: "4px" }}>
@@ -559,3 +559,4 @@ function InvoiceDetailsStep({
 }
 
 export default InvoiceDetailsStep;
+

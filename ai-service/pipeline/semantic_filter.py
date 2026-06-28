@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 pipeline/semantic_filter.py
 
 Semantic row classification and strict filtering for OCR-extracted table rows.
@@ -174,6 +178,17 @@ def classify_row(cells: Sequence[str]) -> RowType:
         return RowType.SIGNATURE_ROW
 
     # --- Financial summary lines ---
+<<<<<<< HEAD
+    # Block on exact first-cell financial labels regardless of column count
+    _FINANCIAL_EXACT = {
+        "TOTAL", "SUBTOTAL", "SUB TOTAL", "NET TOTAL", "GRAND TOTAL",
+        "GROSS TOTAL", "NET AMOUNT", "NET AMOUNT PAYABLE", "VAT",
+        "DEDUCTION", "DEDUCTIONS", "TOTAL DEDUCTION", "BALANCE", "SUMMARY",
+    }
+    if first in _FINANCIAL_EXACT:
+        return RowType.FINANCIAL_SUMMARY_ROW
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if _FINANCIAL_RE.search(first) and len(non_empty) <= 3:
         return RowType.FINANCIAL_SUMMARY_ROW
 

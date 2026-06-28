@@ -1,0 +1,16 @@
+﻿{
+  "table_index": 1,
+  "table_type": "financial_summary_table",
+  "confidence": 0.6512048192771084,
+  "parser": "financial_summary_parser",
+  "rows_count": 0,
+  "financials": {
+    "subtotal": 0.0,
+    "total_vat": 0.0,
+    "total_deduction": 0.0,
+    "gross_total": 0.0,
+    "net_payable": 0.0,
+    "deduction_breakdown": {}
+  },
+  "source_text": "10 234 April 10 10 10 74 March 10 121 April 11 10 10 11 10 268 April 10 10 10 10"
+}

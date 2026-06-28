@@ -1,16 +1,6 @@
-* {
-  box-sizing: border-box;
-  font-family: sans-serif !important;
-}
-
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  font-family: sans-serif !important;
-}
+﻿@import "./styles/variables.css";
+@import "./styles/globals.css";
+@import "./styles/utilities.css";
 
 .app-container {
   height: 100vh;
@@ -18,6 +8,8 @@ body,
   min-height: 0;
   min-width: 0;
 }
+<<<<<<< HEAD
+=======
 
 .main-content,
 .scrollable-container,
@@ -132,3 +124,4 @@ input:-ms-input-placeholder {
   box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.16);
   outline: none;
 }
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

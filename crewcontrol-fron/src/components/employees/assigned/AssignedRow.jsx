@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import { TableRow, TableCell, Chip } from "@mui/material";
+=======
 import { TableRow, TableCell, Chip } from "@mui/material";
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import LinkOffOutlinedIcon from "@mui/icons-material/LinkOffOutlined";
 import AddLinkOutlinedIcon from "@mui/icons-material/AddLinkOutlined";
@@ -6,13 +10,39 @@ import { EmployeeActionMenu } from "../../profile/EmployeeActionMenu";
 import { CELL_SX } from "../../table/tableUtils";
 
 const STATUS_CONFIG = {
-  assigned: { label: "Assigned", bg: "#DCFCE7", color: "#15803D" },
-  "ending-soon": { label: "Ending Soon", bg: "#E5E7EB", color: "#374151" },
-  unassigned: { label: "Unassigned", bg: "#FECACA", color: "#DC2626" },
+  'on-site': { label: 'On-Site', bg: 'var(--bg-success-soft)', color: '#15803D' },
+  'on-hold': { label: 'On-Hold', bg: 'var(--bg-error-soft)', color: 'var(--color-error)' },
+  'site-over': { label: 'Worker Site-Over', bg: 'var(--border-input)', color: 'var(--text-secondary)' },
 };
 
 export default function AssignedRow({ row, onViewProfile, onAssign, onUnassign }) {
+<<<<<<< HEAD
+  const cfg = STATUS_CONFIG[row.assignedStatus] || STATUS_CONFIG['site-over'];
+
+  const actions = [
+    {
+      id: "view-profile",
+      label: "View Profile",
+      icon: <VisibilityOutlinedIcon fontSize="small" />,
+      onClick: () => onViewProfile?.(row),
+    },
+    row.assignedStatus === "site-over"
+      ? {
+          id: "assign",
+          label: "Assign",
+          icon: <AddLinkOutlinedIcon fontSize="small" />,
+          onClick: () => onAssign?.(row),
+        }
+      : {
+          id: "unassign",
+          label: "Unassign",
+          icon: <LinkOffOutlinedIcon fontSize="small" />,
+          onClick: () => onUnassign?.(row),
+        },
+  ];
+=======
   const cfg = STATUS_CONFIG[row.assignedStatus] || STATUS_CONFIG.unassigned;
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
   const actions = [
     {
@@ -64,3 +94,4 @@ export default function AssignedRow({ row, onViewProfile, onAssign, onUnassign }
     </TableRow>
   );
 }
+

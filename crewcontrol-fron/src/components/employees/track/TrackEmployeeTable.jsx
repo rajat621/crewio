@@ -1,4 +1,4 @@
-
+﻿
 // import { useState } from "react";
 // import {
 //   Box,
@@ -19,9 +19,9 @@
 // import employeesData from "../../../data/employees";
 
 // const STATUS_CONFIG = {
-//   present: { label: "Present", bg: "#DCFCE7", color: "#15803D" },
-//   "on-leave": { label: "On Leave", bg: "#FEF3C7", color: "#92400E" },
-//   absent: { label: "Absent", bg: "#FECACA", color: "#DC2626" },
+//   present: { label: "Present", bg: "var(--bg-success-soft)", color: "#15803D" },
+//   "on-leave": { label: "On Leave", bg: "var(--bg-warning-soft)", color: "#92400E" },
+//   absent: { label: "Absent", bg: "#FECACA", color: "var(--color-error)" },
 // };
 
 // function TrackEmployeeTable() {
@@ -34,7 +34,7 @@
 //   return (
 //     <Box
 //       sx={{
-//         bgcolor: "#FFFFFF",
+//         bgcolor: "var(--bg-surface)",
 //         border: "1px solid",
 //         borderColor: "divider",
 //         borderRadius: 1,
@@ -116,7 +116,7 @@
 //               const cfg =
 //                 STATUS_CONFIG[row.attendanceStatus] || {
 //                   label: "Unknown",
-//                   bg: "#E5E7EB",
+//                   bg: "var(--border-input)",
 //                   color: "#374151",
 //                 };
 
@@ -174,9 +174,9 @@ import {
 } from "../../table/tableUtils";
 
 const STATUS_CONFIG = {
-  present: { label: "Present", bg: "#DCFCE7", color: "#15803D" },
-  "on-leave": { label: "On Leave", bg: "#FEF3C7", color: "#92400E" },
-  absent: { label: "Absent", bg: "#FECACA", color: "#DC2626" },
+  present: { label: "Present", bg: "var(--bg-success-soft)", color: "#15803D" },
+  "on-leave": { label: "On Leave", bg: "var(--bg-warning-soft)", color: "#92400E" },
+  absent: { label: "Absent", bg: "#FECACA", color: "var(--color-error)" },
 };
 
 function TrackEmployeeTable({ rows = [] }) {
@@ -189,7 +189,7 @@ function TrackEmployeeTable({ rows = [] }) {
   return (
     <Box
       sx={{
-        bgcolor: "#FFFFFF",
+        bgcolor: "var(--bg-surface)",
         border: "1px solid",
         borderColor: "divider",
         borderRadius: 1,
@@ -257,7 +257,7 @@ function TrackEmployeeTable({ rows = [] }) {
               const cfg =
                 STATUS_CONFIG[row.attendanceStatus] || {
                   label: "Unknown",
-                  bg: "#E5E7EB",
+                  bg: "var(--border-input)",
                   color: "#374151",
                 };
 
@@ -290,3 +290,4 @@ function TrackEmployeeTable({ rows = [] }) {
 }
 
 export default TrackEmployeeTable;
+

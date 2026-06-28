@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Box,
@@ -52,10 +52,10 @@ function Topbar({ onAddNew }) {
       <Box
         sx={{
           height: 72,
-          borderBottom: "1px solid #DEDEDE",
+          borderBottom: "1px solid var(--border-card)",
           px: "40px",
           py: "20px",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           display: "flex",
           alignItems: "center",
         }}
@@ -80,8 +80,8 @@ function Topbar({ onAddNew }) {
               />
             ) : isProfilePopupPage ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <SettingsIcon sx={{ fontSize: 20, color: "#141414" }} />
-                <Typography fontSize={14} fontWeight={500} color="#141414">
+                <SettingsIcon sx={{ fontSize: 20, color: "var(--text-primary)" }} />
+                <Typography fontSize={14} fontWeight={500} color="var(--text-primary)">
                   Setting
                 </Typography>
               </Box>
@@ -109,6 +109,16 @@ function Topbar({ onAddNew }) {
                   alignItems: "center",
                   borderRadius: "8px",
                   cursor: "pointer",
+<<<<<<< HEAD
+                  backgroundColor: "var(--color-primary)",
+                  color: "var(--bg-surface)",
+                  fontSize: 14,
+                  fontWeight: 400,
+                  boxShadow: "0px 2px 8px var(--shadow-floating)",
+                }}
+              >
+                Quick Actions
+=======
                   backgroundColor: "#2C5FEA",
                   color: "#FFFFFF",
                   fontSize: 14,
@@ -117,6 +127,7 @@ function Topbar({ onAddNew }) {
                 }}
               >
                 Add New
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               </Box>
             ) : null}
 
@@ -144,11 +155,11 @@ function Topbar({ onAddNew }) {
                 borderRadius: "16px",
                 cursor: "pointer",
                 backgroundColor: isProfileOpen
-                  ? "#DBE2F9"
-                  : "#FFFFFF",
+                  ? "var(--bg-info-soft)"
+                  : "var(--bg-surface)",
                 "&:hover": {
                   backgroundColor: isProfileOpen
-                    ? "#DBE2F9"
+                    ? "var(--bg-info-soft)"
                     : "#EDF1FC",
                 },
               }}
@@ -157,7 +168,7 @@ function Topbar({ onAddNew }) {
                 sx={{
                   width: 32,
                   height: 32,
-                  color: "#808080",
+                  color: "var(--text-secondary)",
                 }}
               />
 
@@ -187,4 +198,5 @@ function Topbar({ onAddNew }) {
 }
 
 export default Topbar;
+
 

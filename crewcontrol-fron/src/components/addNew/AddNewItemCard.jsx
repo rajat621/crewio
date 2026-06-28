@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+﻿import { Box, Typography } from "@mui/material";
 
 function AddNewItemCard({ label, Icon, selected, disabled, onClick }) {
   return (
@@ -11,8 +11,8 @@ function AddNewItemCard({ label, Icon, selected, disabled, onClick }) {
         py: "20px",
         borderRadius: "8px",
         border: "1px solid",
-        borderColor: selected ? "#4D67EB" : "#DEDEDE",
-        backgroundColor: "#FFFFFF",
+        borderColor: selected ? "var(--color-primary)" : "var(--border-card)",
+        backgroundColor: "var(--bg-surface)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -20,8 +20,8 @@ function AddNewItemCard({ label, Icon, selected, disabled, onClick }) {
         opacity: disabled ? 0.5 : 1,
         transition: "border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease",
         "&:hover": {
-          borderColor: disabled ? "#DEDEDE" : selected ? "#4D67EB" : "#C8D2F1",
-          boxShadow: disabled ? "none" : "0 2px 6px rgba(77, 103, 235, 0.08)",
+          borderColor: disabled ? "var(--border-card)" : selected ? "var(--color-primary)" : "var(--border-input-hover)",
+          boxShadow: disabled ? "none" : "0 2px 6px var(--bg-info-soft)",
           transform: disabled ? "none" : "translateY(-1px)",
         },
       }}
@@ -41,13 +41,13 @@ function AddNewItemCard({ label, Icon, selected, disabled, onClick }) {
             width: 70,
             height: 70,
             borderRadius: "50%",
-            backgroundColor: "#E3E9FA",
+            backgroundColor: "var(--bg-info-soft)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          {Icon ? <Icon sx={{ fontSize: 32, color: "#4D67EB" }} /> : null}
+          {Icon ? <Icon sx={{ fontSize: 32, color: "var(--color-primary)" }} /> : null}
         </Box>
       </Box>
 
@@ -65,7 +65,7 @@ function AddNewItemCard({ label, Icon, selected, disabled, onClick }) {
       >
         <Typography
           fontSize={14}
-          color={disabled ? "#B0B0B0" : "#757575"}
+          color={disabled ? "#B0B0B0" : "var(--text-secondary)"}
         >
           {label}
         </Typography>
@@ -75,3 +75,4 @@ function AddNewItemCard({ label, Icon, selected, disabled, onClick }) {
 }
 
 export default AddNewItemCard;
+

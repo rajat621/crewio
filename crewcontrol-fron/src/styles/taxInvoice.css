@@ -1,4 +1,4 @@
-/* PAGE WRAPPER */
+﻿/* PAGE WRAPPER */
 .invoice-page {
   padding: 24px;
 }
@@ -18,7 +18,7 @@
   align-items: center;
   margin-bottom: 16px;
   font-size: 14px;
-  color: #6B7280;
+  color: var(--text-secondary);
 }
 
 /* CARD */
@@ -35,19 +35,19 @@
   font-weight: 500;
   text-align: left;
   padding: 12px 16px;
-  color: #6B7280;
-  border-bottom: 1px solid #E5E7EB;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-input);
 }
 
 .invoice-table td {
   padding: 12px 16px;
   font-size: 13px;
-  color: #111827;
-  border-bottom: 1px solid #E5E7EB;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-input);
 }
 
 .pdf-red {
-  color: #EF4444;
+  color: var(--color-error);
   font-weight: 500;
 }
 
@@ -55,14 +55,14 @@
 .small-input {
   height: 44px;
   padding: 0 12px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--border-input);
   border-radius: 8px;
   width: 260px;
 }
 
 /* BUTTONS */
 .btn-primary {
-  background-color: #2F5BEA;
+  background-color: var(--color-primary);
   color: #ffffff;
   border-radius: 8px;
   height: 44px;
@@ -75,10 +75,11 @@
 
 .btn-secondary {
   background: white;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--border-input);
   height: 44px;
   padding: 0 16px;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
 }
+

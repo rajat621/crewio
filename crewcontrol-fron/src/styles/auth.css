@@ -1,4 +1,4 @@
-* {
+﻿* {
   box-sizing: border-box;
   font-family: sans-serif !important;
 }
@@ -63,7 +63,7 @@ html, body {
   margin-bottom: 40px;
   box-shadow: 
     0 0 2px rgba(20, 20, 20, 0.10),
-    0 6px 6px rgba(20, 20, 20, 0.04);
+    0 6px 6px var(--bg-surface-secondary);
 }
 
 /* ─── SIGNUP CARD ─────────────────────────────────────────── */
@@ -78,7 +78,7 @@ html, body {
   margin-bottom: 40px;
   box-shadow: 
     0 0 2px rgba(20, 20, 20, 0.10),
-    0 6px 6px rgba(20, 20, 20, 0.04);
+    0 6px 6px var(--bg-surface-secondary);
 }
 
 /* ─── HEADING ─────────────────────────────────────────────── */
@@ -87,12 +87,12 @@ html, body {
   font-size: 20px;
   font-weight: 600;
   font-family: sans-serif;
-  color: #141414;
+  color: var(--text-primary);
 }
 
 /* ─── VERIFY EMAIL CARD SUBTITLE ─────────────────────────── */
 .auth-card .subtitle {
-  color: #808080;
+  color: var(--text-secondary);
   font-size: 14px;
   font-weight: 400;
   margin: 0 0 24px 0;
@@ -103,7 +103,7 @@ html, body {
   font-size: 24px;
   font-weight: 600;
   font-family: sans-serif;
-  color: #141414;
+  color: var(--text-primary);
 }
 
 .subtitle {
@@ -143,7 +143,7 @@ html, body {
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 14px;
-  color: #111827;
+  color: var(--text-primary);
   background: #ffffff;
   outline: none;
   transition: border-color 0.15s;
@@ -177,7 +177,7 @@ html, body {
 .auth-title {
   font-size: 24px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0 0 8px 0;
 }
 
@@ -347,7 +347,7 @@ html, body {
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 14px;
-  color: #111827;
+  color: var(--text-primary);
   background: #ffffff;
   outline: none;
   transition: border-color 0.15s;
@@ -427,7 +427,7 @@ html, body {
   border-radius: 8px;
   border: 1px solid #d1d5db;
   background: #ffffff;
-  color: #111827;
+  color: var(--text-primary);
   outline: none;
   transition: border-color 0.15s;
 }
@@ -450,14 +450,14 @@ html, body {
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: 600;
-  color: #141414;
+  color: var(--text-primary);
 }
 
 .verify-email-card .verify-description {
   margin: 0 0 24px 0;
   font-size: 18px;
   font-weight: 400;
-  color: #808080;
+  color: var(--text-secondary);
   line-height: 24px;
 }
 
@@ -547,7 +547,7 @@ html, body {
   font-size: 20px;
   font-weight: 600;
   letter-spacing: 1px;
-  color: #141414;
+  color: var(--text-primary);
 }
 
 .onboarding-subtitle {
@@ -556,14 +556,14 @@ html, body {
   font-weight: 400;
   letter-spacing: 1px;
   line-height: 18px;
-  color: #808080;
+  color: var(--text-secondary);
 }
 
 .onboarding-section-title {
   margin: 0 0 12px 0;
   font-size: 14px;
   font-weight: 600;
-  color: #141414;
+  color: var(--text-primary);
 }
 
 .onboarding-card .form-group {
@@ -577,7 +577,7 @@ html, body {
 .onboarding-card .form-group label {
   font-size: 14px;
   font-weight: 400;
-  color: #141414;
+  color: var(--text-primary);
 }
 
 .onboarding-card .form-group input,
@@ -810,7 +810,7 @@ html, body {
 .upload-text {
   font-size: 12px;
   font-weight: 400;
-  color: #808080;
+  color: var(--text-secondary);
   margin: 0;
   /* letter-spacing: 0.25px; */
 }
@@ -818,7 +818,7 @@ html, body {
 .upload-hint {
   font-size: 12px;
   font-weight: 300;
-  color: #808080;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 60%;
   font-style: italic;
@@ -827,7 +827,7 @@ html, body {
 .upload-divider {
   font-size: 12px;
   font-weight: 500;
-  color: #808080;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -976,7 +976,7 @@ html, body {
 .success-title {
   font-size: 18px;
   font-weight: 600;
-  color: #141414;
+  color: var(--text-primary);
   margin: 0 0 15px 0;
   letter-spacing: 0%;
 }
@@ -984,7 +984,7 @@ html, body {
 .success-subtitle {
   font-size: 14px;
   font-weight: 400;
-  color: #757575;
+  color: var(--text-secondary);
   margin: 0 0 32px 0;
   letter-spacing: 0%;
 }

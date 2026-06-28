@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Dialog,
@@ -51,7 +51,7 @@ function AddNewDialog({ open, onClose }) {
       maxWidth={false}
       BackdropProps={{
         sx: {
-          backgroundColor: "rgba(20,20,20,0.2)", // #141414 @ 20%
+          backgroundColor: "var(--overlay-scrim)", // var(--text-primary) @ 20%
           backdropFilter: "blur(2px)",
         },
       }}
@@ -59,7 +59,7 @@ function AddNewDialog({ open, onClose }) {
         sx: {
           width: 650,
           height: 520,
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--bg-surface)",
           border: "1px solid #5F5F6F1A",
           borderRadius: "8px",
           boxShadow: "0px 2px 2px 0px rgba(95, 95, 111, 0.12)",
@@ -85,7 +85,7 @@ function AddNewDialog({ open, onClose }) {
             lineHeight: "20px",
             letterSpacing: "0.03em",
             fontFamily: '"Inter", sans-serif',
-            color: "#141414",
+            color: "var(--text-primary)",
           }}
         >
           Choose What to Add
@@ -94,7 +94,7 @@ function AddNewDialog({ open, onClose }) {
         <IconButton
           size="small"
           onClick={handleClose}
-          sx={{ color: "#141414", p: 0 }}
+          sx={{ color: "var(--text-primary)", p: 0 }}
         >
           <CloseIcon sx={{ fontSize: 22 }} />
         </IconButton>
@@ -167,3 +167,4 @@ function AddNewDialog({ open, onClose }) {
 }
 
 export default AddNewDialog;
+

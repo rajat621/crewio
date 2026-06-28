@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+﻿import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
@@ -241,8 +241,8 @@ function Company() {
       {/* ================= COMPANY CARDS CONTAINER ================= */}
       <Box
         sx={{
-          bgcolor: "#FFFFFF",
-          border: "1px solid #DEDEDE",
+          bgcolor: "var(--bg-surface)",
+          border: "1px solid var(--border-card)",
           borderRadius: 1.5,
           p: "20px",
         }}
@@ -265,3 +265,4 @@ function Company() {
 }
 
 export default Company;
+

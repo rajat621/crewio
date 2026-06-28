@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 generator/pdf_writer.py
 
 Single public entry point: generate_invoice_pdf(...)
@@ -14,6 +18,10 @@ from __future__ import annotations
 
 import logging
 import os
+<<<<<<< HEAD
+import time
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 from datetime import datetime
 from typing import Optional
 
@@ -32,7 +40,11 @@ from generator.templates import (
     TemplateSanitizer,
 )
 from generator.templates.compact_single_page_engine import CompactSinglePageInvoiceEngine
+<<<<<<< HEAD
+from pipeline.structured_logging import classify_failure, log_event, stage_complete, stage_failure, stage_start
+=======
 from pipeline.structured_logging import log_event
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 
 logger = logging.getLogger(__name__)
@@ -64,6 +76,12 @@ def generate_invoice_pdf(
     Returns:
         Absolute path to the generated PDF.
     """
+<<<<<<< HEAD
+    render_stage_started = stage_start(logger, "invoice_rendering", run_id=run_id or "", pdf_path=source_pdf_path or "")
+    pdf_stage_started = stage_start(logger, "pdf_generation", run_id=run_id or "", pdf_path=source_pdf_path or "")
+
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     os.makedirs(output_dir, exist_ok=True)
     timestamp   = int(datetime.now().timestamp())
     output_path = os.path.join(output_dir, f"tax-invoice-{timestamp}.pdf")
@@ -185,6 +203,64 @@ def generate_invoice_pdf(
     rendered_once = False
     if rendered_once:
         raise RuntimeError("Single-pass render guard violation")
+<<<<<<< HEAD
+    try:
+        engine.render(
+            c=c,
+            result=result,
+            profile=profile,
+            client_details=client_details,
+            signature_path=sig_path,
+            stamp_path=stmp_path,
+            safe_zone=safe_zone,
+        )
+    except Exception as exc:
+        stage_failure(
+            logger,
+            "invoice_rendering",
+            render_stage_started,
+            exc,
+            run_id=run_id or "",
+            failure_category=classify_failure(exc),
+        )
+        raise
+    rendered_once = True
+
+    try:
+        c.save()
+    except Exception as exc:
+        stage_failure(
+            logger,
+            "pdf_generation",
+            pdf_stage_started,
+            exc,
+            run_id=run_id or "",
+            failure_category=classify_failure(exc),
+        )
+        raise
+
+    stage_complete(
+        logger,
+        "invoice_rendering",
+        render_stage_started,
+        run_id=run_id or "",
+        rows=len(result.rows or []),
+    )
+    log_event(
+        logger,
+        "performance_timing",
+        metric="pdf_render_duration_ms",
+        duration_ms=int((time.time() - render_stage_started) * 1000),
+        run_id=run_id or "",
+    )
+    stage_complete(
+        logger,
+        "pdf_generation",
+        pdf_stage_started,
+        run_id=run_id or "",
+        output_path=output_path,
+    )
+=======
     engine.render(
         c=c,
         result=result,
@@ -197,6 +273,7 @@ def generate_invoice_pdf(
     rendered_once = True
 
     c.save()
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     log_event(
         logger,

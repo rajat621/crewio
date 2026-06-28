@@ -1,4 +1,4 @@
-// src/pages/Home.jsx
+﻿// src/pages/Home.jsx
 import { Box, Typography, Grid, Button, IconButton } from "@mui/material";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -44,7 +44,11 @@ const normalizeAttendanceStatus = (status) => {
   return status || "absent";
 };
 
+<<<<<<< HEAD
+const buildWeeklyChartData = (attendanceRecords, employeeIdsSet) => {
+=======
 const buildWeeklyChartData = (attendanceRecords) => {
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   const now = new Date();
   const today = getStartOfDay(now);
   const dayIndex = today.getDay();
@@ -67,6 +71,12 @@ const buildWeeklyChartData = (attendanceRecords) => {
   const bucketByDate = new Map(buckets.map((bucket) => [bucket.key, bucket]));
 
   attendanceRecords.forEach((record) => {
+<<<<<<< HEAD
+    const employeeId = String(record?.employee || "");
+    if (employeeIdsSet && !employeeIdsSet.has(employeeId)) return;
+
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const key = getDateKey(record?.date);
     const bucket = bucketByDate.get(key);
     if (!bucket) return;
@@ -79,7 +89,11 @@ const buildWeeklyChartData = (attendanceRecords) => {
   return buckets.map(({ day, present, absent }) => ({ day, present, absent }));
 };
 
+<<<<<<< HEAD
+const buildMonthlyChartData = (attendanceRecords, employeeIdsSet) => {
+=======
 const buildMonthlyChartData = (attendanceRecords) => {
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -93,6 +107,12 @@ const buildMonthlyChartData = (attendanceRecords) => {
   }));
 
   attendanceRecords.forEach((record) => {
+<<<<<<< HEAD
+    const employeeId = String(record?.employee || "");
+    if (employeeIdsSet && !employeeIdsSet.has(employeeId)) return;
+
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const date = new Date(record?.date);
     if (Number.isNaN(date.getTime())) return;
     if (date.getFullYear() !== year || date.getMonth() !== month) return;
@@ -190,6 +210,11 @@ function Home() {
         const response = await companiesApi.getCompany(companyId);
         const company = response?.data?.data || response?.data;
         if (active) {
+          // Debug log to help determine why the warning is shown
+          try {
+            // eslint-disable-next-line no-console
+            console.log('loadCompanyStatus - fetched company:', company, 'isComplete:', isCompanyProfileComplete(company));
+          } catch (e) {}
           setShowCompanyWarning(!isCompanyProfileComplete(company));
         }
       } catch (error) {
@@ -224,6 +249,8 @@ function Home() {
         const attendanceRecords = parseDataArray(attendanceResponse);
         const companies = parseDataArray(companiesResponse);
         const invoices = parseDataArray(invoicesResponse);
+<<<<<<< HEAD
+=======
         const employeeIds = new Set(
           employees
             .map((employee) => String(employee?._id || ""))
@@ -232,6 +259,7 @@ function Home() {
         const userAttendanceRecords = attendanceRecords.filter((record) =>
           employeeIds.has(String(record?.employee || ""))
         );
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
         const latestAttendanceByEmployee = new Map();
         attendanceRecords.forEach((record) => {
@@ -282,6 +310,10 @@ function Home() {
               .map((record) => {
                 const name = employeeNameById.get(String(record?.employee || "")) || "Unknown worker";
                 return {
+<<<<<<< HEAD
+                  employeeId: record?.employee,
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   name,
                   meta: `Absent on ${new Date(record?.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}`,
                 };
@@ -329,7 +361,15 @@ function Home() {
               .map((doc) => {
                 if (!isExpiringSoon(doc.expiry, doc.status)) return null;
                 return {
+<<<<<<< HEAD
+                  employeeId: employee?._id || employee?.employeeId,
                   name: `${fullName}'s ${doc.label} is expiring soon`,
+                  meta: doc.expiry
+                    ? `Expiring on ${new Date(doc.expiry).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}`
+                    : "Expiring soon",
+=======
+                  name: `${fullName}'s ${doc.label} is expiring soon`,
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 };
               })
               .filter(Boolean);
@@ -344,9 +384,17 @@ function Home() {
           revenueCount: invoices.length,
         });
 
+<<<<<<< HEAD
+        const employeeIdsSet = new Set(employees.map((e) => String(e?._id || e?.id || "")));
+        setChartData({
+          weekly: buildWeeklyChartData(attendanceRecords, employeeIdsSet),
+          monthly: buildMonthlyChartData(attendanceRecords, employeeIdsSet),
+          hasEmployees: employees.length > 0,
+=======
         setChartData({
           weekly: buildWeeklyChartData(userAttendanceRecords),
           monthly: buildMonthlyChartData(userAttendanceRecords),
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         });
 
         setAlerts({
@@ -384,7 +432,7 @@ function Home() {
           sx={{
             mb: "16px",
             border: "1px solid #FDE68A",
-            backgroundColor: "#FFFBEB",
+            backgroundColor: "var(--bg-surface)BEB",
             borderRadius: "10px",
             p: "12px 14px",
             display: "flex",
@@ -411,9 +459,9 @@ function Home() {
                 borderRadius: "8px",
                 border: "1px solid #FCD34D",
                 color: "#B45309",
-                backgroundColor: "#FFFFFF",
+                backgroundColor: "var(--bg-surface)",
                 "&:hover": {
-                  backgroundColor: "#FEF3C7",
+                  backgroundColor: "var(--bg-warning-soft)",
                 },
               }}
             >
@@ -428,7 +476,7 @@ function Home() {
                 height: 28,
                 color: "#A16207",
                 "&:hover": {
-                  backgroundColor: "#FEF3C7",
+                  backgroundColor: "var(--bg-warning-soft)",
                 },
               }}
               aria-label="Close warning"
@@ -448,13 +496,17 @@ function Home() {
           mb: "16px", // text → KPI
         }}
       >
+<<<<<<< HEAD
+        <Typography fontSize={18} fontWeight={400} color="var(--text-secondary)">
+=======
         <Typography fontSize={18} fontWeight={400} color="#757575">
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           Good morning,&nbsp;
           <Typography
             component="span"
             fontSize={18}
             fontWeight={600}
-            color="#141414"
+            color="var(--text-primary)"
           >
             {user?.firstName || "Jonathan"}!
           </Typography>
@@ -472,6 +524,10 @@ function Home() {
           <AttendanceCard
             weeklyData={chartData.weekly}
             monthlyData={chartData.monthly}
+<<<<<<< HEAD
+            hasEmployees={chartData.hasEmployees}
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           />
         </Grid>
 
@@ -484,3 +540,4 @@ function Home() {
 }
 
 export default Home;
+

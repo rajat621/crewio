@@ -1,4 +1,4 @@
-// import { useState, useMemo } from "react";
+﻿// import { useState, useMemo } from "react";
 // import {
 //   Box,
 //   Divider,
@@ -29,9 +29,9 @@
 
 // /* ===== STATUS CONFIG ===== */
 // const STATUS_CONFIG = {
-//   assigned: { label: "Assigned", bg: "#DCFCE7", color: "#15803D" },
-//   "ending-soon": { label: "Ending Soon", bg: "#E5E7EB", color: "#374151" },
-//   unassigned: { label: "Unassigned", bg: "#FECACA", color: "#DC2626" },
+//   assigned: { label: "Assigned", bg: "var(--bg-success-soft)", color: "#15803D" },
+//   "ending-soon": { label: "Ending Soon", bg: "var(--border-input)", color: "#374151" },
+//   unassigned: { label: "Unassigned", bg: "#FECACA", color: "var(--color-error)" },
 // };
 
 // /* ===== CONSTANTS ===== */
@@ -174,7 +174,7 @@
 //     <TableContainer
 //       component={Box}
 //       sx={{
-//         bgcolor: "#FFFFFF",
+//         bgcolor: "var(--bg-surface)",
 //         border: "1px solid",
 //         borderColor: "divider",
 //         borderRadius: 1,
@@ -302,3 +302,4 @@ export default function AssignedTable({
     />
   );
 }
+

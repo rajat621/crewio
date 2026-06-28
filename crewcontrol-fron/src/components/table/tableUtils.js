@@ -1,4 +1,4 @@
-// src/components/table/tableUtils.js
+﻿// src/components/table/tableUtils.js
 
 /* ================= SIZES ================= */
 export const TABLE_ROW_HEIGHT = 44;
@@ -19,7 +19,7 @@ export const HEADER_CELL_SX = {
   color: "text.secondary",
   height: TABLE_HEADER_HEIGHT,
   lineHeight: "32px",
-  bgcolor: "#F9FAFB",    // matches your table header bg
+  bgcolor: "var(--bg-surface)",    // matches your table header bg
 };
 
 /* ================= BODY CELL ================= */
@@ -51,3 +51,4 @@ export const ROW_SX = {
     borderBottom: 0,     // clean bottom edge like design
   },
 };
+

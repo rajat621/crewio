@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import Employee from '../../models/Employee.js';
+=======
 import Employee from '../../models/Employee.js';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 const PROFILE_SAFE_SELECT = '-appPassword -owner -expenses -expenseReceipts -passportCopy -emiratesIdCopy -laborCardCopy -medicalCertificateCopy -residenceIdCopy -contractPaperCopy';
 const ALLOWED_PROFILE_UPDATE_FIELDS = ['avatar', 'mobile', 'mobileNumber', 'countryCode', 'address', 'city'];

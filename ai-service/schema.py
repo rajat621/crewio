@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 schema.py
 
 Unified data models for:
@@ -117,6 +121,15 @@ class InvoiceRow:
     net_amount: float = 0.0
 
     # -----------------------------------------------------------------------
+<<<<<<< HEAD
+    # audit fields (preserve original OCR values)
+    # -----------------------------------------------------------------------
+    original_hours: float | None = None
+    original_amount: float | None = None
+
+    # -----------------------------------------------------------------------
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     # compute VAT
     # -----------------------------------------------------------------------
 
@@ -568,4 +581,8 @@ def validate_extraction(
     return (
         result.success
         and validate_rows(result.rows)
+<<<<<<< HEAD
     )
+=======
+    )
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

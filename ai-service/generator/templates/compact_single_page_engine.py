@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 Compact single-page invoice engine.
 
 REQUIREMENT: Everything MUST fit on ONE A4 page.

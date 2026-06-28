@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+﻿import mongoose from 'mongoose';
 
 const salarySlipSchema = new mongoose.Schema(
   {
@@ -10,7 +10,12 @@ const salarySlipSchema = new mongoose.Schema(
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
-      required: true,
+      default: null,
+    },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
     },
     month: {
       type: String,
@@ -24,6 +29,25 @@ const salarySlipSchema = new mongoose.Schema(
     allowances: Number,
     deductions: Number,
     netSalary: Number,
+    slipNumber: {
+      type: Number,
+      index: true,
+    },
+    deductionsDetails: {
+      type: [
+        {
+          type: { type: String },
+          amount: { type: Number },
+          note: { type: String },
+          createdAt: { type: Date, default: Date.now },
+        },
+      ],
+      default: [],
+    },
+    slipData: {
+  type: mongoose.Schema.Types.Mixed,
+  default: null,
+},
     status: {
       type: String,
       enum: ['draft', 'generated', 'sent'],

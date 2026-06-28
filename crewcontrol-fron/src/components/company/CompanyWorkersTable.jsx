@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   TableCell,
   TableRow,
@@ -32,10 +32,10 @@ function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
 
   const cellSx = {
     fontSize: "10px",
-    color: "#757575",
+    color: "var(--text-secondary)",
     lineHeight: "20px",
     letterSpacing: "0.2px",
-    borderBottom: "1px solid #DEDEDE",
+    borderBottom: "1px solid var(--border-card)",
     py: "0px",
     height: "44px",
   };
@@ -76,7 +76,7 @@ function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
         searchKeys={["name", "trade"]}
         searchPlaceholder="Search for application id, name..."
         containerSx={{
-          borderColor: "#DEDEDE",
+          borderColor: "var(--border-card)",
           borderRadius: "8px",
           boxShadow: "none",
         }}
@@ -89,24 +89,24 @@ function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
           width: "340px",
           "& .MuiInputBase-root": {
             fontSize: "14px",
-            color: "#9CA3AF",
+            color: "var(--text-disabled)",
           },
         }}
         toolbarPaginationTextSx={{
           fontSize: "12px",
-          color: "#6B7280",
+          color: "var(--text-secondary)",
         }}
         toolbarNavButtonSx={{
           width: 30,
           height: 30,
-          borderColor: "#DEDEDE",
+          borderColor: "var(--border-card)",
         }}
         headerRowSx={{ height: 32 }}
         headerCellSx={{
           fontSize: "10px",
           fontWeight: 600,
-          color: "#757575",
-          bgcolor: "#FFFFFF",
+          color: "var(--text-secondary)",
+          bgcolor: "var(--bg-surface)",
           borderBottom: "1px solid #E9E9EE",
           py: 0,
           lineHeight: "20px",
@@ -141,7 +141,11 @@ function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
                 onClick={(event) => handleOpenMenu(event, row)}
                 sx={ACTION_ICON_BUTTON_SX}
               >
+<<<<<<< HEAD
+                <MoreVertIcon sx={{ fontSize: 16, color: "var(--text-secondary)" }} />
+=======
                 <MoreVertIcon sx={{ fontSize: 16, color: "#757575" }} />
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               </IconButton>
             </TableCell>
           </TableRow>
@@ -181,3 +185,4 @@ function CompanyWorkersTable({ workers, onViewProfile, onRemoveWorker }) {
 }
 
 export default CompanyWorkersTable;
+

@@ -1,9 +1,36 @@
+<<<<<<< HEAD
+﻿"""
+=======
 """
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 validation.py  –  Extraction quality scoring.
 """
 
 from __future__ import annotations
 
+<<<<<<< HEAD
+import json
+import logging
+from typing import Any, Dict
+
+from schema import ExtractionResult
+from pipeline.structured_logging import classify_failure, hash_text, stage_complete, stage_failure, stage_start
+
+
+logger = logging.getLogger(__name__)
+
+
+def _clamp01(value: float) -> float:
+    return max(0.0, min(1.0, float(value)))
+
+
+def _safe_ratio(part: float, whole: float) -> float:
+    if whole <= 0:
+        return 0.0
+    return _clamp01(part / whole)
+
+
+=======
 from typing import Any, Dict
 
 from schema import ExtractionResult
@@ -19,6 +46,7 @@ def _safe_ratio(part: float, whole: float) -> float:
     return _clamp01(part / whole)
 
 
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 def score_extraction_details(result: ExtractionResult) -> Dict[str, Any]:
     """Return weighted document-level confidence and component breakdown."""
     rows = list(result.rows or [])
@@ -113,3 +141,56 @@ def score_extraction_details(result: ExtractionResult) -> Dict[str, Any]:
 def score_extraction(result: ExtractionResult) -> float:
     """Return weighted quality score 0.0-1.0 for an ExtractionResult."""
     return float(score_extraction_details(result).get("score", 0.0))
+<<<<<<< HEAD
+
+
+def validate_strict_model_payload(raw_output: str) -> Dict[str, Any]:
+    """
+    Validate strict JSON model output contract.
+
+    Required top-level keys:
+    - format
+    - client
+    - timesheet_meta
+    - rows
+    - totals
+    """
+
+    started = stage_start(
+        logger,
+        "validation",
+        payload_size=len(raw_output or ""),
+        payload_hash=hash_text(raw_output or ""),
+    )
+    try:
+        parsed = json.loads(raw_output)
+        if not isinstance(parsed, dict):
+            raise ValueError("model_output_must_be_object")
+
+        required = ["format", "client", "timesheet_meta", "rows", "totals"]
+        missing = [k for k in required if k not in parsed]
+        if missing:
+            raise ValueError(f"model_output_missing_keys:{','.join(missing)}")
+
+        if not isinstance(parsed.get("rows"), list):
+            raise ValueError("model_output_rows_must_be_array")
+        if not isinstance(parsed.get("client"), dict):
+            raise ValueError("model_output_client_must_be_object")
+        if not isinstance(parsed.get("timesheet_meta"), dict):
+            raise ValueError("model_output_timesheet_meta_must_be_object")
+        if not isinstance(parsed.get("totals"), dict):
+            raise ValueError("model_output_totals_must_be_object")
+
+        stage_complete(logger, "validation", started)
+        return parsed
+    except Exception as exc:
+        stage_failure(
+            logger,
+            "validation",
+            started,
+            exc,
+            failure_category=classify_failure(exc),
+        )
+        raise
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

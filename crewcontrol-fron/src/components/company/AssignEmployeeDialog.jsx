@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -155,21 +155,32 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
       PaperProps={{
         sx: {
           borderRadius: "12px",
-          border: "1px solid #DEDEDE",
+          border: "1px solid var(--border-card)",
           overflow: "hidden",
         },
       }}
     >
+<<<<<<< HEAD
+      <Box sx={{ px: "20px", pt:"20px",pb:"16px", borderBottom: "1px solid var(--border-card)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Typography sx={{ fontSize: "18px", fontWeight: 600, lineHeight: "20px", letterSpacing: "0.54px", color: "var(--text-primary)" }}>Unassigned Labor</Typography>
+        <IconButton onClick={onClose} size="small" sx={{ color: "var(--text-primary)" }}>
+=======
       <Box sx={{ px: "20px", pt:"20px",pb:"16px", borderBottom: "1px solid #DEDEDE", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Typography sx={{ fontSize: "18px", fontWeight: 600, lineHeight: "20px", letterSpacing: "0.54px", color: "#141414" }}>Unassigned Labor</Typography>
         <IconButton onClick={onClose} size="small" sx={{ color: "#141414" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           <CloseIcon />
         </IconButton>
       </Box>
 
       <Box sx={{ py: "24px", px: "20px" }}>
+<<<<<<< HEAD
+        <Box sx={{ border: "1px solid var(--border-card)", borderRadius: "10px", overflow: "hidden" }}>
+          <Box sx={{ p: "10px 12px", borderBottom: "1px solid var(--border-card)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+=======
         <Box sx={{ border: "1px solid #DEDEDE", borderRadius: "10px", overflow: "hidden" }}>
           <Box sx={{ p: "10px 12px", borderBottom: "1px solid #DEDEDE", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             <TextField
               placeholder="Search for application id, name..."
               value={query}
@@ -202,21 +213,25 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ color: "#9CA3AF", fontSize: 18 }} />
+                    <SearchIcon sx={{ color: "var(--text-disabled)", fontSize: 18 }} />
                   </InputAdornment>
                 ),
               }}
             />
 
             <Box sx={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+<<<<<<< HEAD
+              <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)" }}>
+=======
               <Typography sx={{ fontSize: "12px", color: "#757575" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 {total ? `${startIndex + 1}-${endIndex} of ${total}` : "0-0 of 0"}
               </Typography>
               <IconButton
                 size="small"
                 onClick={() => setPage((prev) => Math.max(1, prev - 1))}
                 disabled={page <= 1}
-                sx={{ border: "1px solid #DEDEDE", borderRadius: "8px", width: 30, height: 30 }}
+                sx={{ border: "1px solid var(--border-card)", borderRadius: "8px", width: 30, height: 30 }}
               >
                 <ChevronLeftIcon fontSize="small" />
               </IconButton>
@@ -224,7 +239,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
                 size="small"
                 onClick={() => setPage((prev) => Math.min(maxPage, prev + 1))}
                 disabled={page >= maxPage}
-                sx={{ border: "1px solid #DEDEDE", borderRadius: "8px", width: 30, height: 30 }}
+                sx={{ border: "1px solid var(--border-card)", borderRadius: "8px", width: 30, height: 30 }}
               >
                 <ChevronRightIcon fontSize="small" />
               </IconButton>
@@ -233,6 +248,15 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
 
           <Table size="small" sx={{ minWidth: 760 }}>
             <TableHead>
+<<<<<<< HEAD
+              <TableRow sx={{ backgroundColor: "var(--bg-surface)" }}>
+                <TableCell sx={{ width: 40, borderBottom: "1px solid var(--border-card)" }} />
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Employee ID</TableCell>
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Employee Name</TableCell>
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Trade</TableCell>
+                <TableCell sx={{ fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Rate</TableCell>
+                <TableCell align="center" sx={{ width: 60, fontSize: "10px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>Action</TableCell>
+=======
               <TableRow sx={{ backgroundColor: "#FAFAFA" }}>
                 <TableCell sx={{ width: 40, borderBottom: "1px solid #DEDEDE" }} />
                 <TableCell sx={{ fontSize: "10px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Employee ID</TableCell>
@@ -240,6 +264,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
                 <TableCell sx={{ fontSize: "10px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Trade</TableCell>
                 <TableCell sx={{ fontSize: "10px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Rate</TableCell>
                 <TableCell align="center" sx={{ width: 60, fontSize: "10px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>Action</TableCell>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               </TableRow>
             </TableHead>
 
@@ -253,18 +278,26 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
               ) : pageRows.length ? (
                 pageRows.map((row) => (
                   <TableRow key={row.id} hover>
-                    <TableCell sx={{ borderBottom: "1px solid #DEDEDE" }}>
+                    <TableCell sx={{ borderBottom: "1px solid var(--border-card)" }}>
                       <Checkbox
                         size="small"
                         checked={selectedIds.includes(row.id)}
                         onChange={() => toggleSelection(row.id)}
                       />
                     </TableCell>
+<<<<<<< HEAD
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.employeeId}</TableCell>
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.name}</TableCell>
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.trade}</TableCell>
+                    <TableCell sx={{ fontSize: "12px", color: "var(--text-secondary)", borderBottom: "1px solid var(--border-card)" }}>{row.rate}</TableCell>
+                    <TableCell align="center" sx={{ borderBottom: "1px solid var(--border-card)", ...ACTION_CELL_SX }}>
+=======
                     <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.employeeId}</TableCell>
                     <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.name}</TableCell>
                     <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.trade}</TableCell>
                     <TableCell sx={{ fontSize: "12px", color: "#6B7280", borderBottom: "1px solid #DEDEDE" }}>{row.rate}</TableCell>
                     <TableCell align="center" sx={{ borderBottom: "1px solid #DEDEDE", ...ACTION_CELL_SX }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                       <IconButton
                         size="small"
                         onClick={(event) => handleOpenMenu(event, row)}
@@ -277,7 +310,11 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
                 ))
               ) : (
                 <TableRow>
+<<<<<<< HEAD
+                  <TableCell colSpan={6} align="center" sx={{ py: 4, color: "var(--text-secondary)" , borderBottom: "none", fontSize: "12px" }}>
+=======
                   <TableCell colSpan={6} align="center" sx={{ py: 4, color: "#6B7280" , borderBottom: "none", fontSize: "12px" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                     No unassigned employees found
                   </TableCell>
                 </TableRow>
@@ -287,7 +324,11 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
         </Box>
       </Box>
 
+<<<<<<< HEAD
+      <Box sx={{ p: "16px 20px 20px", borderTop: "1px solid var(--border-card)", display: "flex", justifyContent: "flex-end" }}>
+=======
       <Box sx={{ p: "16px 20px 20px", borderTop: "1px solid #DEDEDE", display: "flex", justifyContent: "flex-end" }}>
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         <Button
           onClick={handleAssign}
           disabled={!selectedIds.length || assigning}
@@ -299,9 +340,9 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
             borderRadius: "8px",
             fontSize: "12px",
             boxShadow: "none",
-            backgroundColor: "#2563EB",
+            backgroundColor: "var(--color-primary)",
             "&:hover": {
-              backgroundColor: "#1D4ED8",
+              backgroundColor: "var(--color-primary)",
               boxShadow: "none",
             },
           }}
@@ -326,8 +367,8 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
         }}
       >
         <MenuItem onClick={handleViewProfile}>
-          <VisibilityOutlinedIcon fontSize="small" sx={{ mr: 1, color: "#6B7280" }} />
-          <Typography sx={{ fontSize: "14px", color: "#6B7280" }}>View Profile</Typography>
+          <VisibilityOutlinedIcon fontSize="small" sx={{ mr: 1, color: "var(--text-secondary)" }} />
+          <Typography sx={{ fontSize: "14px", color: "var(--text-secondary)" }}>View Profile</Typography>
         </MenuItem>
       </Menu>
     </Dialog>
@@ -335,3 +376,4 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
 }
 
 export default AssignEmployeeDialog;
+

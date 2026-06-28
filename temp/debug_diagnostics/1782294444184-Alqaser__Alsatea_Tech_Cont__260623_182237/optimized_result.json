@@ -1,0 +1,68 @@
+{
+  "tables_count": 0,
+  "warnings": [
+    "scan_quality:low_contrast",
+    "scan_quality:missing_borders",
+    "small_table_fragments_skipped:10",
+    "table_skipped:cell_ocr_disabled:1:1",
+    "table_skipped:cell_ocr_disabled:1:2",
+    "No structured table reconstructed from OCR pipeline"
+  ],
+  "avg_conf": 0.0,
+  "text_parts": "10,790.01 NETAMOUNTPAYABLEAED\n513.81 %SIVA\n10,380.00 GROSSTOTALAED\n103.80 TOTALDEDUCTIONAED\n00'0 Mess Deduction\n08'E01 Gas Deduction\n00'0 OtherDeduction\n00'0\n00'0 Alpeuadsuasav\nDEDUCTIONS\nGrand Total (Additional Hrs)\no'BtOT Grand Total\n1,280.00 10.00 0 H H H H H 10.0 10.0 0'6 10.0 10.0 O'OT 10.0 M 10.0 0'6 10.0 10.0 O'OT 10.0 M M (nks\n000002 10.00 0'002 M 10.0 H H H 10.0 10.0 M 10.0 10.0 10.0 O'OT O'OT 10.0 M 10.0 10.0 10.0 10.0 o'Ot 10.0 M 10.0 O'OT O'OT 10.0 10.0 10.0 M 10.0 10.0 TOEY ewPwen\n0000 10.00 o 220.0 M 10.0 H H H 10.0 10.0 M 10.0 10.0 10.0 10.0 O'OT 10.0 10.0 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 A 10.0 10.0 10.0 M 10.0 10.0 TOEN\n00000 10.00 0 230.0 M 10.0 A H H 10.0 10.0 M 10.0 10.0 10.0 10.0 O'OT O'OT 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 TOEY BOA L sumw wm 1130VVSD\n00'0002 000T 0 0 230.0 M 10.0 H H H 10.0 10.0 M 10.0 10.0 10.0 10.0 O'OT O'OT M 10.0 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 10.0 10.0 10.0 10.0 M 10.0 10.0 TOUY ruog D930VVSD\nRate Amount Juase unoH 31 82 26 2 21 20 18 17 16 15 14 13 12 11 10 9 S E 2 Project Name awen aalodwy saiordag pog",
+  "debug": {
+    "tables": [
+      {
+        "layout_ocr_fallback": {
+          "layout_ocr_pages": [
+            {
+              "page": 1,
+              "reason": "no_semantic_header",
+              "line_count": 18
+            }
+          ]
+        }
+      }
+    ],
+    "scan_quality_avg": 0.7175,
+    "config": {
+      "morphology": {
+        "horizontal_kernel_width": 40,
+        "vertical_kernel_height": 40,
+        "open_iterations": 2
+      },
+      "ocr": {
+        "min_confidence": 0.45,
+        "dpi": 300
+      },
+      "row_cluster": {
+        "y_tolerance_px": 12.0,
+        "y_tolerance_ratio": 0.45
+      },
+      "column_cluster": {
+        "x_tolerance_px": 14.0,
+        "x_tolerance_ratio": 0.45
+      },
+      "skew": {
+        "enabled": true,
+        "max_angle_deg": 8.0
+      },
+      "preprocessing": {
+        "adaptive_block_size": 31,
+        "adaptive_c": 15,
+        "denoise_h": 10,
+        "clahe_clip_limit": 3.2
+      },
+      "debug": {
+        "enabled": false,
+        "output_dir": "D:\\Crew_control\\ai-service\\storage\\debug"
+      },
+      "template": {
+        "attendance_row_min_tokens": 4,
+        "attendance_row_min_markers": 1,
+        "low_text_threshold_chars": 650
+      }
+    },
+    "downscaled_pages": 1
+  }
+}

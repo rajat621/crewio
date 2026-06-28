@@ -1,8 +1,9 @@
-import express from 'express';
+﻿import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { uploadFile } from '../controllers/upload.controller.js';
+import authenticateToken from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ const upload = multer({
 	storage,
 	limits: { fileSize: 10 * 1024 * 1024 },
 });
-
-router.post('/', upload.single('file'), uploadFile);
+// Require authentication for uploads and attach tenant context
+router.post('/', authenticateToken, upload.single('file'), uploadFile);
 
 export default router;

@@ -1,15 +1,15 @@
-import { Chip } from "@mui/material";
+﻿import { Chip } from "@mui/material";
 
 const STATUS_STYLE = {
   active: {
     label: "Active",
-    bg: "#DCFCE7",
+    bg: "var(--bg-success-soft)",
     color: "#15803D",
   },
   deactivated: {
     label: "Deactivate",
-    bg: "#FEE2E2",
-    color: "#DC2626",
+    bg: "var(--bg-error-soft)",
+    color: "var(--color-error)",
   },
 };
 
@@ -32,3 +32,4 @@ function CompanyStatusChip({ status }) {
 }
 
 export default CompanyStatusChip;
+

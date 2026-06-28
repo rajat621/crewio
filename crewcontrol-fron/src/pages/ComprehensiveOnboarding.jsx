@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useCallback, useEffect } from "react";
+﻿import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authApi } from "../api/auth";
 import { companiesApi } from "../api/companies";
@@ -446,7 +446,11 @@ export default function ComprehensiveOnboarding() {
         type="button"
         className="btn-google"
         onClick={() => {
+<<<<<<< HEAD
+          const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+=======
           const apiBase = getApiBaseUrl();
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           const frontend = encodeURIComponent(window.location.origin);
           window.location.href = `${apiBase}/api/auth/google?flow=signup&frontend=${frontend}`;
         }}
@@ -736,20 +740,20 @@ export default function ComprehensiveOnboarding() {
           <div style={{ position: "relative" }} ref={nationDropdownRef}>
             <div
               onClick={() => setShowNationDropdown((s) => !s)}
-              style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", border: `1px solid #DEDEDE`, borderRadius: "8px", cursor: "pointer", background: "#fff", minHeight: "44px" }}
+              style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", border: `1px solid var(--border-card)`, borderRadius: "8px", cursor: "pointer", background: "#fff", minHeight: "44px" }}
             >
               <ReactCountryFlag countryCode={formData.nationality || "AE"} svg style={{ width: "18px", height: "12px" }} />
-              <span style={{ color: formData.nationality ? "#141414" : "#808080" }}>{COUNTRY_CODES.find((c) => c.iso === formData.nationality)?.country || "Select"}</span>
+              <span style={{ color: formData.nationality ? "var(--text-primary)" : "var(--text-secondary)" }}>{COUNTRY_CODES.find((c) => c.iso === formData.nationality)?.country || "Select"}</span>
             </div>
 
             {showNationDropdown && (
-              <div style={{ position: "absolute", top: "50px", left: 0, width: "320px", maxHeight: "260px", border: `1px solid #DEDEDE`, borderRadius: "8px", background: "#fff", zIndex: 1200 }}>
-                <input type="text" placeholder="Search..." value={nationSearch} onChange={(e) => setNationSearch(e.target.value)} style={{ width: "100%", padding: "8px", border: "none", borderBottom: `1px solid #DEDEDE`, outline: "none" }} />
+              <div style={{ position: "absolute", top: "50px", left: 0, width: "320px", maxHeight: "260px", border: `1px solid var(--border-card)`, borderRadius: "8px", background: "#fff", zIndex: 1200 }}>
+                <input type="text" placeholder="Search..." value={nationSearch} onChange={(e) => setNationSearch(e.target.value)} style={{ width: "100%", padding: "8px", border: "none", borderBottom: `1px solid var(--border-card)`, outline: "none" }} />
                 <div style={{ maxHeight: "200px", overflowY: "auto" }}>
                   {COUNTRY_CODES.filter((c) => !nationSearch || c.country.toLowerCase().includes(nationSearch.toLowerCase())).map((c) => (
                     <div key={c.iso} onClick={() => { setFormData((p) => ({ ...p, nationality: c.iso })); setShowNationDropdown(false); setNationSearch(""); }} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", cursor: "pointer" }}>
                       <ReactCountryFlag countryCode={c.iso} svg style={{ width: "18px", height: "12px" }} />
-                      <span style={{ fontSize: "13px", color: "#141414" }}>{c.country}</span>
+                      <span style={{ fontSize: "13px", color: "var(--text-primary)" }}>{c.country}</span>
                     </div>
                   ))}
                 </div>
@@ -812,9 +816,9 @@ export default function ComprehensiveOnboarding() {
     gap: 0,
     alignItems: "stretch",
     height: "44px",
-    border: "1px solid #D1D5DB",
+    border: "1px solid var(--border-input-hover)",
     borderRadius: "12px",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "var(--bg-surface)",
     overflow: "hidden",
   }}
 >
@@ -823,7 +827,7 @@ export default function ComprehensiveOnboarding() {
       display: "flex",
       alignItems: "center",
       height: "100%",
-      borderRight: "1px solid #E5E7EB",
+      borderRight: "1px solid var(--border-input)",
     }}
   >
     <div
@@ -899,7 +903,7 @@ export default function ComprehensiveOnboarding() {
         borderRight: "none",
         padding: "0 8px 0 4px",
         fontSize: "14px",
-        color: "#141414",
+        color: "var(--text-primary)",
         height: "100%",
         outline: "none",
         background: "transparent",
@@ -925,7 +929,7 @@ export default function ComprehensiveOnboarding() {
       height: "100%",
       outline: "none",
       background: "transparent",
-      color: "#141414",
+      color: "var(--text-primary)",
       boxShadow: "none",
     }}
   />
@@ -1240,3 +1244,4 @@ export default function ComprehensiveOnboarding() {
     </div>
   );
 }
+

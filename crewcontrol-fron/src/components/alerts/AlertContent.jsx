@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+﻿import { Box, Typography, Button } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 function AlertContent({ items }) {
@@ -21,7 +21,7 @@ function AlertContent({ items }) {
             justifyContent: "space-between",
           }}
         >
-          <Typography fontSize={14} color="#757575">
+          <Typography fontSize={14} color="var(--text-secondary)">
             {item}
           </Typography>
 
@@ -42,3 +42,4 @@ function AlertContent({ items }) {
 }
 
 export default AlertContent;
+

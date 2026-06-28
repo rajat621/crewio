@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿"""Template profile detection and naming utilities."""
+=======
 """Template profile detection and naming utilities."""
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 

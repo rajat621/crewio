@@ -1,8 +1,8 @@
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+﻿import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import DoneIcon from "@mui/icons-material/Done";
 
-const DARK   = "#111827";
-const BORDER = "#DEDEDE";
+const DARK   = "var(--text-primary)";
+const BORDER = "var(--border-card)";
 
 /* ═══════════════════════════════════════════════════════════════
    REUSABLE STEPPER COMPONENT
@@ -64,15 +64,20 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
                     <StepIcon sx={{ fontSize: 18, color: "#fff" }} />
                   </div>
                 ) : (
+<<<<<<< HEAD
+                  <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "var(--bg-surface-secondary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <StepIcon sx={{ fontSize: 18, color: "var(--text-disabled)" }} />
+=======
                   <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <StepIcon sx={{ fontSize: 18, color: "#9CA3AF" }} />
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   </div>
                 )}
               </div>
 
               {/* Text */}
               <div>
-                <div style={{ fontSize: "8px", color: "#141414", lineHeight: "14px", letterSpacing: "0.24px", textTransform: "uppercase" }}>
+                <div style={{ fontSize: "8px", color: "var(--text-primary)", lineHeight: "14px", letterSpacing: "0.24px", textTransform: "uppercase" }}>
                   STEP {step.id}
                 </div>
                 <div
@@ -81,7 +86,7 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
                     fontWeight: 500,
                     lineHeight: "22px",
                     letterSpacing: "0.42px",
-                    color: isActive || isCompleted ? DARK : "#141414",
+                    color: isActive || isCompleted ? DARK : "var(--text-primary)",
                     marginTop: "0px",
                   }}
                 >
@@ -117,7 +122,7 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
                                   padding: 2,
                                   boxSizing: "border-box",
                                 } : {
-                                  background: "#F3F4F6",
+                                  background: "var(--bg-surface-secondary)",
                                   border: `2px solid ${BORDER}`,
                                 }),
                                 flexShrink: 0,
@@ -131,7 +136,7 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
                             style={{
                               fontSize: "12px",
                               fontWeight: subActive || subCompleted ? 600 : 400,
-                              color: subActive || subCompleted ? DARK : "#9CA3AF",
+                              color: subActive || subCompleted ? DARK : "var(--text-disabled)",
                               paddingTop: "8px",
                               whiteSpace: "nowrap",
                             }}
@@ -156,3 +161,4 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
     </div>
   );
 }
+

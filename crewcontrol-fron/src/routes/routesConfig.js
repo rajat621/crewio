@@ -1,4 +1,4 @@
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+﻿import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
@@ -47,6 +47,29 @@ const routesConfig = [
       showAddNew: false,
     },
   },
+<<<<<<< HEAD
+    {
+    path: "/salary-slip",
+    label: "Salary Slip",
+    title: "Salary Slip",
+    icon: PaidOutlinedIcon,
+    topbar: {
+      showSearch: false,
+      showAddNew: false,
+    },
+  },
+  {
+    path: "/expenses",
+    label: "Expenses",
+    title: "Expenses",
+    icon: RequestQuoteOutlinedIcon,
+    topbar: {
+      showSearch: false,
+      showAddNew: false,
+    },
+  },
+=======
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   {
     path: "/finance",
     label: "Finance",
@@ -58,6 +81,9 @@ const routesConfig = [
       showAddNew: false,
     },
   },
+<<<<<<< HEAD
+  
+=======
   {
     path: "/salary-slip",
     label: "Salary Slip",
@@ -80,6 +106,7 @@ const routesConfig = [
       showAddNew: false,
     },
   },
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 ];
 
 export default routesConfig;

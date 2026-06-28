@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, InputAdornment } from "@mui/material";
+﻿import { Box, Typography, TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import TrackEmployeeTable from "./TrackEmployeeTable";
 
@@ -7,7 +7,7 @@ function TrackEmployeeList({ rows }) {
     <Box
       sx={{
         width: 360,
-        border: "1px solid #DEDEDE",
+        border: "1px solid var(--border-card)",
         borderRadius: 8,
         overflow: "hidden",
       }}
@@ -20,13 +20,13 @@ function TrackEmployeeList({ rows }) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          borderBottom: "1px solid #DEDEDE",
+          borderBottom: "1px solid var(--border-card)",
         }}
       >
         <Typography fontSize={16} fontWeight={600}>
           Employee’s
         </Typography>
-        <Typography fontSize={14} color="#6B7280">
+        <Typography fontSize={14} color="var(--text-secondary)">
           20/20
         </Typography>
       </Box>
@@ -57,3 +57,4 @@ function TrackEmployeeList({ rows }) {
 }
 
 export default TrackEmployeeList;
+

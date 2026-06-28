@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿import nodemailer from 'nodemailer';
+=======
 import { Resend } from 'resend';
+>>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import { env } from '../config/env.js';
 
 const resend = new Resend(env.RESEND_API_KEY);

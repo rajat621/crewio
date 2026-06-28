@@ -1,4 +1,4 @@
-import { Box, Typography, Button, IconButton } from "@mui/material";
+﻿import { Box, Typography, Button, IconButton } from "@mui/material";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import { useNavigate } from "react-router-dom";
@@ -36,24 +36,24 @@ function CompanyHeader({ company, onAssignEmployee }) {
             cursor: "pointer",
             height: 32,
             width: 32,
-            border: "1px solid #DEDEDE", //border of arror box in list next to chat 
+            border: "1px solid var(--border-card)", //border of arror box in list next to chat 
             borderRadius: "8px",
             paddingLeft: 0,
             backgroundColor:"transparent",
             "&:hover": { backgroundColor: "#EDE9FF" }
           }}
           >
-          <ArrowBackIosOutlinedIcon sx={{ color: "#808080", fontSize: 14 }} />
+          <ArrowBackIosOutlinedIcon sx={{ color: "var(--text-secondary)", fontSize: 14 }} />
           </Box>
 
           <Box>
             <Typography
-              sx={{ fontSize: "32px", fontWeight: 500, color: "#141414", lineHeight: "44px" }}
+              sx={{ fontSize: "32px", fontWeight: 500, color: "var(--text-primary)", lineHeight: "44px" }}
             >
               {company.name}
             </Typography>
             <Typography
-              sx={{ fontSize: "12px", color: "#6B7280", mt: "2px", lineHeight: "14px", letterSpacing: "0.24px" }}
+              sx={{ fontSize: "12px", color: "var(--text-secondary)", mt: "2px", lineHeight: "14px", letterSpacing: "0.24px" }}
             >
               {company.dateRange}
             </Typography>
@@ -74,22 +74,22 @@ function CompanyHeader({ company, onAssignEmployee }) {
               width: "44px",
               height: "44px",
               borderRadius: "50%",
-              backgroundColor: "#1D4ED8",
+              backgroundColor: "var(--color-primary)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
             }}
           >
-            <GroupsOutlinedIcon sx={{ color: "#FFFFFF", fontSize: 28 }} />
+            <GroupsOutlinedIcon sx={{ color: "var(--bg-surface)", fontSize: 28 }} />
           </Box>
 
           <Box sx={{ textAlign: "right" }}>
-            <Typography sx={{ fontSize: "12px", color: "#808080" ,lineHeight: "14px", letterSpacing: "0.24px" }}>
+            <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)" ,lineHeight: "14px", letterSpacing: "0.24px" }}>
               Total worker assigned
             </Typography>
             <Typography
-              sx={{ fontSize: "32px", fontWeight: 600, color: "#141414", lineHeight: "26px",mt: "8px" }}
+              sx={{ fontSize: "32px", fontWeight: 600, color: "var(--text-primary)", lineHeight: "26px",mt: "8px" }}
             >
               {company.totalWorkers}
             </Typography>
@@ -118,7 +118,7 @@ function CompanyHeader({ company, onAssignEmployee }) {
           onClick={onAssignEmployee}
           sx={{
             textTransform: "none",
-            backgroundColor: "#2563EB",
+            backgroundColor: "var(--color-primary)",
             borderRadius: "8px",
             fontSize: "12px",
             fontWeight: 500,
@@ -126,7 +126,7 @@ function CompanyHeader({ company, onAssignEmployee }) {
             height: "32px",
             whiteSpace: "nowrap",
             boxShadow: "none",
-            "&:hover": { backgroundColor: "#1D4ED8", boxShadow: "none" },
+            "&:hover": { backgroundColor: "var(--color-primary)", boxShadow: "none" },
           }}
         >
           Assignee Employee

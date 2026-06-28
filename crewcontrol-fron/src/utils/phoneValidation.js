@@ -1,4 +1,4 @@
-import { parsePhoneNumberFromString } from "libphonenumber-js";
+﻿import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { getCountryByIso, getCountryByPhoneCode } from "./locationService";
 
 export const getMaxMobileDigits = ({ countryIso, countryCode }) => {

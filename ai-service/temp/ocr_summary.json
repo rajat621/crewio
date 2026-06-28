@@ -1,0 +1,9 @@
+{
+  "summary": {
+    "total_cells": 9,
+    "ocr_calls": 4,
+    "worker_threads": 2,
+    "max_concurrent_ocr": 0,
+    "rapid_model_init": 0
+  }
+}

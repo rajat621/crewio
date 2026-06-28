@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+﻿import { useNavigate } from "react-router-dom";
 import "../styles/auth.css";
 import logo from "../assets/crewio_logo.png";
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { ProfileSection } from '../ProfileSection';
 
 const toInputDate = (value) => {
@@ -28,15 +28,15 @@ const fieldStyles = {
   label: {
     fontSize: '14px',
     fontWeight: '400',
-    color: '#111827',
+    color: 'var(--text-primary)',
     margin: 0,
   },
   inputWrap: {
     width: '100%',
     height: '44px',
-    border: '1px solid #DEDEDE',
+    border: '1px solid var(--border-card)',
     borderRadius: '8px',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'var(--bg-surface)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -45,7 +45,7 @@ const fieldStyles = {
   },
   textValue: {
     fontSize: '14px',
-    color: '#9CA3AF',
+    color: 'var(--text-disabled)',
   },
   input: {
     width: '100%',
@@ -53,18 +53,18 @@ const fieldStyles = {
     border: 'none',
     outline: 'none',
     fontSize: '14px',
-    color: '#111827',
+    color: 'var(--text-primary)',
     backgroundColor: 'transparent',
   },
   suffix: {
     fontSize: '14px',
-    color: '#9CA3AF',
+    color: 'var(--text-disabled)',
     marginLeft: '8px',
   },
   icon: {
     width: '16px',
     height: '16px',
-    color: '#9CA3AF',
+    color: 'var(--text-disabled)',
     flexShrink: 0,
     marginLeft: '8px',
   },
@@ -137,14 +137,6 @@ export const WorkDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
     setIsEditing(false);
   };
 
-  const tradeOptions = [
-    { value: 'carpenter', label: 'Carpenter' },
-    { value: 'steel-fixer', label: 'Steel Fixer' },
-    { value: 'mason', label: 'Mason' },
-    { value: 'electrician', label: 'Electrician' },
-    { value: 'plumber', label: 'Plumber' },
-    { value: 'other', label: 'Other' },
-  ];
 
   const employmentTypeOptions = [
     { value: 'full-time', label: 'Full Time' },
@@ -187,7 +179,24 @@ export const WorkDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
       </div>
     </div>
   );
-
+const renderTextField = ({ label, value, placeholder, onChange }) => (
+  <div style={fieldStyles.fieldWrap}>
+    <p style={fieldStyles.label}>{label}</p>
+    <div style={fieldStyles.inputWrap}>
+      {isEditing ? (
+        <input
+          type="text"
+          style={fieldStyles.input}
+          value={value || ''}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      ) : (
+        <span style={fieldStyles.textValue}>{value || placeholder}</span>
+      )}
+    </div>
+  </div>
+);
   const renderMoneyField = ({ label, value, onChange }) => (
     <div style={fieldStyles.fieldWrap}>
       <p style={fieldStyles.label}>{label}</p>
@@ -221,13 +230,12 @@ export const WorkDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
       singleColumn={true}
     >
       <div style={{ maxWidth: '580px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {renderSelectField({
-          label: 'Trade',
-          value: formData.trade,
-          placeholder: 'Select trade',
-          options: tradeOptions,
-          onChange: (value) => handleFieldChange('trade', value),
-        })}
+{renderTextField({
+  label: 'Trade',
+  value: formData.trade,
+  placeholder: 'Enter trade',
+  onChange: (value) => handleFieldChange('trade', value),
+})}
 
         {renderDateField({
           label: 'Joining Date',
@@ -260,3 +268,4 @@ export const WorkDetailsTab = ({ employee = {}, onUpdate = () => {} }) => {
 };
 
 export default WorkDetailsTab;
+

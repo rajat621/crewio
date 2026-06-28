@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+﻿import { Grid } from "@mui/material";
 import CompanyCard from "./CompanyCard";
 
 function CompanyGrid({ companies, onDeactivateCompany, onAssignEmployees }) {
