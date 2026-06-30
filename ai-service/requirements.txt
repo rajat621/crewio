@@ -1,47 +1,67 @@
-<<<<<<< HEAD
-﻿# Core web framework
-=======
-# Core web framework
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
+﻿# # Core web framework
+# Flask==2.3.3
+# Flask-CORS==4.0.0
+# python-dotenv==1.0.0
+
+# # PDF text extraction
+# pdfplumber==0.10.3
+# pypdf==3.17.4
+
+# # PDF → image conversion (for image-based PDFs and template rendering)
+# pdf2image==1.17.0
+# Pillow==11.2.1
+
+# # Invoice PDF generation
+# reportlab==4.0.7
+
+# # Local LLM/Ollama integration
+# requests==2.32.3
+# google-genai==1.16.1
+
+# # OCR providers
+# paddleocr==2.7.3
+# rapidocr-onnxruntime==1.3.24
+# opencv-python-headless==4.10.0.84
+
+# # Data handling
+# numpy==1.26.4
+# pandas==2.2.1
+# =============================================================================
+# AI Service — Python dependencies
+# =============================================================================
+
+# --- Web framework ---
 Flask==2.3.3
 Flask-CORS==4.0.0
 python-dotenv==1.0.0
 
-# PDF text extraction
+# --- PDF text extraction (native digital PDFs) ---
 pdfplumber==0.10.3
 pypdf==3.17.4
 
-# PDF → image conversion (for image-based PDFs and template rendering)
+# --- PDF → image conversion (scanned PDFs, Vision rendering, invoice templates) ---
 pdf2image==1.17.0
-<<<<<<< HEAD
 Pillow==11.2.1
-=======
-Pillow==10.3.0
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
-# Invoice PDF generation
+# --- Invoice PDF generation ---
 reportlab==4.0.7
 
-<<<<<<< HEAD
-# Local LLM/Ollama integration
+# --- HTTP client (Gemini Vision API, Ollama) ---
 requests==2.32.3
-google-genai==1.16.1
 
-# OCR providers
-paddleocr==2.7.3
+# --- Google Gemini Vision (PRIMARY engine for scanned PDFs) ---
+# No extra package needed — uses requests directly against REST API
+# Optional official SDK (not required):
+# google-genai==1.16.1
+
+# --- OCR providers (FINAL FALLBACK only) ---
 rapidocr-onnxruntime==1.3.24
+paddleocr==2.7.3
 opencv-python-headless==4.10.0.84
-=======
-# Anthropic SDK (for Vision API extraction of image-based PDFs)
-anthropic>=0.25.0
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
-# Data handling
+# --- Numeric / data ---
 numpy==1.26.4
 pandas==2.2.1
-<<<<<<< HEAD
-=======
-opencv-python-headless==4.10.0.84
 
-gunicorn==22.0.0
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
+# --- Testing ---
+pytest==8.1.1

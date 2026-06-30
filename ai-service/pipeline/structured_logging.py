@@ -1,15 +1,10 @@
-<<<<<<< HEAD
 ﻿"""Structured logging helpers for extraction and benchmarking metrics."""
-=======
-"""Structured logging helpers for extraction and benchmarking metrics."""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 
 import json
 import logging
 import os
-<<<<<<< HEAD
 import random
 import time
 from contextvars import ContextVar
@@ -18,10 +13,6 @@ from typing import Any, Dict
 
 from config_runtime import CONFIG
 
-=======
-from typing import Any, Dict
-
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 _ALLOWED_EVENTS = {
     "extraction_complete",
@@ -29,7 +20,6 @@ _ALLOWED_EVENTS = {
     "renderer_complete",
     "invoice_generated",
     "validation_failed",
-<<<<<<< HEAD
     "table_detected",
     "table_classified",
     "table_parser_selected",
@@ -107,8 +97,6 @@ FAILURE_CATEGORIES = {
     "UNKNOWN_FAILURE",
     "PROVIDER_OVERLOAD",
     "UNKNOWN_PROVIDER_ERROR",
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 }
 
 
@@ -116,7 +104,6 @@ def _verbose_enabled() -> bool:
     return os.getenv("AI_VERBOSE_LOGS", "0").strip().lower() in {"1", "true", "yes"}
 
 
-<<<<<<< HEAD
 def _roll(rate: float) -> bool:
     bounded = max(0.0, min(1.0, float(rate)))
     return random.random() < bounded
@@ -223,10 +210,4 @@ def log_event(logger: logging.Logger, event: str, **fields: Any) -> None:
         "run_id": trace_ctx.get("run_id", "") or fields.get("run_id", ""),
         **fields,
     }
-=======
-def log_event(logger: logging.Logger, event: str, **fields: Any) -> None:
-    if not _verbose_enabled() and event not in _ALLOWED_EVENTS:
-        return
-    payload: Dict[str, Any] = {"event": event, **fields}
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     logger.info(json.dumps(payload, ensure_ascii=True, sort_keys=True))

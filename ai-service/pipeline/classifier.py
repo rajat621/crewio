@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""
-=======
-"""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 pipeline/classifier.py
 
 Semantic PDF classifier for layout-adaptive extraction.
@@ -264,8 +260,4 @@ def classify_pdf(
     else:
         fmt = TimesheetFormat.GENERIC
     
-<<<<<<< HEAD
     return (fmt, layout, is_image)
-=======
-    return (fmt, layout, is_image)
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

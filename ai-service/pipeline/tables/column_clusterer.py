@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""
-=======
-"""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 X-axis clustering for OCR cells.
 
 Aligns OCR boxes into dynamic columns while handling uneven spacing.

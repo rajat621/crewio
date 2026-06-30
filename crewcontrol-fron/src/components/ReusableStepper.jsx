@@ -64,13 +64,8 @@ export function ReusableStepper({ currentStep, steps, subSteps = null }) {
                     <StepIcon sx={{ fontSize: 18, color: "#fff" }} />
                   </div>
                 ) : (
-<<<<<<< HEAD
                   <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "var(--bg-surface-secondary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <StepIcon sx={{ fontSize: 18, color: "var(--text-disabled)" }} />
-=======
-                  <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <StepIcon sx={{ fontSize: 18, color: "#9CA3AF" }} />
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   </div>
                 )}
               </div>

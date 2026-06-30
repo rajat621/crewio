@@ -9,7 +9,11 @@ export default function TableHeader({ columns, rowSx, cellSx }) {
           <TableCell
             key={col.key}
             align={col.align || "left"}
-            sx={{ ...HEADER_CELL_SX, ...cellSx }}
+            sx={{
+              ...HEADER_CELL_SX,
+              ...(col.width ? { width: col.width } : {}),
+              ...cellSx,
+            }}
           >
             {col.label}
           </TableCell>

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿import fs from 'fs';
-=======
-import fs from 'fs';
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import path from 'path';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 

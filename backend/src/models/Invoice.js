@@ -72,14 +72,11 @@ const invoiceSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-<<<<<<< HEAD
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       index: true,
     },
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     rejected_rows: {
       type: [rejectedRowSchema],
       default: [],

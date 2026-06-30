@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿/**
-=======
-/**
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
  * Comprehensive renderer regression test suite
  * Tests: single-page, multi-page, edge cases, confidence gating
  */

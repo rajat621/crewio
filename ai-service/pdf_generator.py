@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""
-=======
-"""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 pdf_generator.py  –  Template-driven tax invoice PDF generator.
 
 Faithfully reproduces the layout visible in the reference image:
@@ -280,15 +276,11 @@ def generate_invoice_pdf(
 ) -> str:
     _ensure_dir(output_dir)
     timestamp = int(datetime.now().timestamp())
-<<<<<<< HEAD
     company_id = str(company_data.get("companyId") or company_data.get("company_id") or "na")
     user_id = str(company_data.get("userId") or company_data.get("user_id") or "na")
     safe_company = "".join(ch for ch in company_id if ch.isalnum())[:16] or "na"
     safe_user = "".join(ch for ch in user_id if ch.isalnum())[:16] or "na"
     output_path = os.path.join(output_dir, f"tax-invoice-{safe_company}-{safe_user}-{timestamp}-{uuid4().hex[:8]}.pdf")
-=======
-    output_path = os.path.join(output_dir, f"tax-invoice-{timestamp}.pdf")
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     c = canvas.Canvas(output_path, pagesize=A4)
     width, height = A4

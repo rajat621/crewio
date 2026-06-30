@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""Template classification and sanitization for production-safe invoice rendering."""
-=======
-"""Template classification and sanitization for production-safe invoice rendering."""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 

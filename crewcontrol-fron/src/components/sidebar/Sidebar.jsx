@@ -6,13 +6,8 @@ import crewioLogo from "../../assets/crewio_logo.png";
 
 /* ---------- NAV ITEM ---------- */
 function NavItem({ Icon, label, selected, onClick, comingSoon = false }) {
-<<<<<<< HEAD
   const iconColor = selected ? "var(--color-primary)" : "var(--text-secondary)";
   const textColor = selected ? "var(--text-primary)" : "var(--text-secondary)";
-=======
-  const iconColor = selected ? "#1D4ED8" : "#757575";
-  const textColor = selected ? "#141414" : "#757575";
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
   return (
     <Box
@@ -52,11 +47,7 @@ function NavItem({ Icon, label, selected, onClick, comingSoon = false }) {
             px: "10px",
             height: 18,
             borderRadius: "999px",
-<<<<<<< HEAD
             backgroundColor: "var(--bg-info-soft)",
-=======
-            backgroundColor: "#E3E9FA",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             display: "flex",
             alignItems: "center",
           }}
@@ -144,17 +135,10 @@ function Sidebar() {
       >
         <Box
           sx={{
-<<<<<<< HEAD
             border: "1px solid var(--border-input)",
             borderRadius: "12px",
             backgroundColor: "var(--bg-surface)",
             boxShadow: "0px 0px 2px var(--shadow-soft)",
-=======
-            border: "1px solid #E5E7EB",
-            borderRadius: "12px",
-            backgroundColor: "#FFFFFF",
-            boxShadow: "0px 0px 2px rgba(20, 20, 20, 0.12)",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             px: "18px",
             py: "14px",
             display: "flex",
@@ -163,17 +147,10 @@ function Sidebar() {
           }}
         >
           <Box sx={{ textAlign: "center" }}>
-<<<<<<< HEAD
             <Typography sx={{ fontSize: 12, color: "var(--text-disabled)", mb: "2px" }}>
               Current Plan
             </Typography>
             <Typography sx={{ fontSize: 18, fontWeight: 600, color: "var(--text-primary)" }}>
-=======
-            <Typography sx={{ fontSize: 12, color: "#9CA3AF", mb: "2px" }}>
-              Current Plan
-            </Typography>
-            <Typography sx={{ fontSize: 18, fontWeight: 600, color: "#141414" }}>
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               Crewio Plus
             </Typography>
           </Box>

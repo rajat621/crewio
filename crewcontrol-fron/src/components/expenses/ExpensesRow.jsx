@@ -1,4 +1,8 @@
 ﻿import { TableRow, TableCell, Button } from "@mui/material";
+import { BODY_CELL_SX, ACTION_CELL_SX } from "../table/tableUtils";
+import { EXPENSE_COLUMNS } from "./expensesColumns";
+
+const colWidth = (key) => EXPENSE_COLUMNS.find((c) => c.key === key)?.width;
 
 export default function ExpensesRow({ row, onView, selectedId, index }) {
   const isSelected = selectedId === row.id;
@@ -14,13 +18,13 @@ export default function ExpensesRow({ row, onView, selectedId, index }) {
         bgcolor: isSelected ? "rgba(44,95,234,0.04) !important" : undefined,
       }}
     >
-      <TableCell sx={{ fontSize: 14 }}>{serialNo}</TableCell>
-      <TableCell sx={{ fontSize: 14 }}>{row.employeeName}</TableCell>
-      <TableCell sx={{ fontSize: 14 }}>{row.trade}</TableCell>
-      <TableCell sx={{ fontSize: 14 }}>{row.totalAdvance.toFixed(2)}</TableCell>
-      <TableCell sx={{ fontSize: 14 }}>{row.deduction.toFixed(2)}</TableCell>
-      <TableCell sx={{ fontSize: 14 }}>{row.remainingAmount.toFixed(2)}</TableCell>
-      <TableCell align="right">
+      <TableCell sx={{ ...BODY_CELL_SX, width: colWidth("id") }}>{serialNo}</TableCell>
+      <TableCell sx={{ ...BODY_CELL_SX, width: colWidth("employeeName") }}>{row.employeeName}</TableCell>
+      <TableCell sx={{ ...BODY_CELL_SX, width: colWidth("trade") }}>{row.trade}</TableCell>
+      <TableCell sx={{ ...BODY_CELL_SX, width: colWidth("totalAdvance") }}>{row.totalAdvance.toFixed(2)}</TableCell>
+      <TableCell sx={{ ...BODY_CELL_SX, width: colWidth("deduction") }}>{row.deduction.toFixed(2)}</TableCell>
+      <TableCell sx={{ ...BODY_CELL_SX, width: colWidth("remainingAmount") }}>{row.remainingAmount.toFixed(2)}</TableCell>
+      <TableCell align="right" sx={{ ...ACTION_CELL_SX, width: colWidth("actions") }}>
         <Button
           variant="text"
           onClick={() => onView(row)}

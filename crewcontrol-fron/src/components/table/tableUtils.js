@@ -5,11 +5,18 @@ export const TABLE_ROW_HEIGHT = 44;
 export const TABLE_HEADER_HEIGHT = 32;
 
 /* ================= COMMON CELL ================= */
+// NOTE: whiteSpace was previously "nowrap" with no overflow/textOverflow
+// handling, so when the table's container shrank (e.g. the detail panel
+// opening), cell text was clipped hard at the cell edge with no ellipsis
+// and no wrap ("Acti...", "Vi"). We now allow content to wrap onto a
+// second line instead, so every column stays fully readable regardless
+// of how much horizontal space the table has.
 export const CELL_SX = {
   fontSize: 12,
-  py: 0,                 // 🔒 no vertical padding drift
-  lineHeight: "44px",    // ✅ vertically centers content in 44px row
-  whiteSpace: "nowrap",
+  py: "6px",              // small vertical padding so wrapped lines don't touch
+  whiteSpace: "normal",
+  wordBreak: "break-word",
+  overflowWrap: "anywhere",
 };
 
 /* ================= HEADER CELL ================= */
@@ -18,7 +25,6 @@ export const HEADER_CELL_SX = {
   fontWeight: 500,
   color: "text.secondary",
   height: TABLE_HEADER_HEIGHT,
-  lineHeight: "32px",
   bgcolor: "var(--bg-surface)",    // matches your table header bg
 };
 
@@ -31,6 +37,7 @@ export const BODY_CELL_SX = {
 /* ================= ACTION CELL ================= */
 export const ACTION_CELL_SX = {
   ...CELL_SX,
+  whiteSpace: "nowrap",   // "View" / icon actions should stay on one line
   textAlign: "center",
   verticalAlign: "middle",
 };
@@ -46,7 +53,7 @@ export const ACTION_ICON_BUTTON_SX = {
 
 /* ================= ROW ================= */
 export const ROW_SX = {
-  height: TABLE_ROW_HEIGHT,
+  minHeight: TABLE_ROW_HEIGHT,
   "&:last-child td": {
     borderBottom: 0,     // clean bottom edge like design
   },

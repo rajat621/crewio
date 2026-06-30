@@ -47,7 +47,6 @@ const routesConfig = [
       showAddNew: false,
     },
   },
-<<<<<<< HEAD
     {
     path: "/salary-slip",
     label: "Salary Slip",
@@ -68,8 +67,6 @@ const routesConfig = [
       showAddNew: false,
     },
   },
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   {
     path: "/finance",
     label: "Finance",
@@ -81,32 +78,7 @@ const routesConfig = [
       showAddNew: false,
     },
   },
-<<<<<<< HEAD
   
-=======
-  {
-    path: "/salary-slip",
-    label: "Salary Slip",
-    title: "Salary Slip",
-    icon: PaidOutlinedIcon,
-    comingSoon: true,
-    topbar: {
-      showSearch: false,
-      showAddNew: false,
-    },
-  },
-  {
-    path: "/quotation",
-    label: "Quotation",
-    title: "Quotation",
-    icon: RequestQuoteOutlinedIcon,
-    comingSoon: true,
-    topbar: {
-      showSearch: false,
-      showAddNew: false,
-    },
-  },
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 ];
 
 export default routesConfig;

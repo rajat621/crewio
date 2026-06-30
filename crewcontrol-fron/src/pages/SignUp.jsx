@@ -183,11 +183,7 @@ export default function SignUp() {
             className="btn-google"
             disabled={loading}
             onClick={() => {
-<<<<<<< HEAD
               const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-=======
-              const apiBase = getApiBaseUrl()
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               const frontend = encodeURIComponent(window.location.origin)
               window.location.href = `${apiBase}/api/auth/google?flow=signup&frontend=${frontend}`
             }}

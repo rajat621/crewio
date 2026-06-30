@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿import mongoose from 'mongoose';
-=======
 import mongoose from 'mongoose';
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import { env } from '../src/config/env.js';
 import { Attendance, Company, Employee } from '../src/models/index.js';
 
@@ -257,8 +253,4 @@ main().catch(async (error) => {
     // ignore disconnect failures
   }
   process.exit(1);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

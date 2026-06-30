@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿import { TableRow, TableCell, Chip } from "@mui/material";
-=======
-import { TableRow, TableCell, Chip } from "@mui/material";
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import LinkOffOutlinedIcon from "@mui/icons-material/LinkOffOutlined";
 import AddLinkOutlinedIcon from "@mui/icons-material/AddLinkOutlined";
@@ -16,33 +12,7 @@ const STATUS_CONFIG = {
 };
 
 export default function AssignedRow({ row, onViewProfile, onAssign, onUnassign }) {
-<<<<<<< HEAD
   const cfg = STATUS_CONFIG[row.assignedStatus] || STATUS_CONFIG['site-over'];
-
-  const actions = [
-    {
-      id: "view-profile",
-      label: "View Profile",
-      icon: <VisibilityOutlinedIcon fontSize="small" />,
-      onClick: () => onViewProfile?.(row),
-    },
-    row.assignedStatus === "site-over"
-      ? {
-          id: "assign",
-          label: "Assign",
-          icon: <AddLinkOutlinedIcon fontSize="small" />,
-          onClick: () => onAssign?.(row),
-        }
-      : {
-          id: "unassign",
-          label: "Unassign",
-          icon: <LinkOffOutlinedIcon fontSize="small" />,
-          onClick: () => onUnassign?.(row),
-        },
-  ];
-=======
-  const cfg = STATUS_CONFIG[row.assignedStatus] || STATUS_CONFIG.unassigned;
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
   const actions = [
     {

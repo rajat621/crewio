@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿#!/usr/bin/env node
-=======
 #!/usr/bin/env node
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 /**
  * Final Production Validation Script

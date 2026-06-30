@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿import { TableRow, TableCell, Chip } from "@mui/material";
-=======
-import { TableRow, TableCell, Chip } from "@mui/material";
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import { useNavigate } from "react-router-dom";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 
@@ -12,30 +8,18 @@ import { EmployeeActionMenu } from "../../profile/EmployeeActionMenu";
 const STATUS_CONFIG = {
   valid: {
     label: "Valid",
-<<<<<<< HEAD
     bg: "var(--bg-success-soft)",
-=======
-    bg: "#DCFCE7",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     color: "#15803D",
   },
   "expiring-soon": {
     label: "Expiring Soon",
-<<<<<<< HEAD
     bg: "var(--bg-warning-soft)",
-=======
-    bg: "#FEF3C7",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     color: "#92400E",
   },
   expired: {
     label: "Expired",
     bg: "#FECACA",
-<<<<<<< HEAD
     color: "var(--color-error)",
-=======
-    color: "#DC2626",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   },
 };
 
@@ -78,8 +62,4 @@ function EmirateIdRow({ row }) {
   );
 }
 
-<<<<<<< HEAD
 export default EmirateIdRow;
-=======
-export default EmirateIdRow;
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

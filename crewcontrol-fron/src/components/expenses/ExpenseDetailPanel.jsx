@@ -33,7 +33,7 @@ function MoneyFlowIcon({ direction }) {
   return (
     <div style={{
       width: 28, height: 28, borderRadius: "50%",
-      border: `1px solid ${BORDER}`, background: "#fff",
+      border: `1px solid ${BORDER}`, background: "var(--bg-surface)",
       display: "flex", alignItems: "center", justifyContent: "center",
       position: "relative", flexShrink: 0,
     }}>
@@ -44,7 +44,7 @@ function MoneyFlowIcon({ direction }) {
         bottom: direction === "in"  ? -4 : "auto",
         right:  direction === "out" ? -4 : "auto",
         left:   direction === "in"  ? -4 : "auto",
-        color: GRAY, background: "#fff", borderRadius: "50%",
+        color: GRAY, background: "var(--bg-surface)", borderRadius: "50%",
       }} />
     </div>
   );
@@ -136,13 +136,13 @@ export default function ExpenseDetailPanel({ row, onClose }) {
   return (
     <div style={{
       width: 360, flexShrink: 0,
-      background: "#fff", border: `1px solid ${BORDER}`,
+      background: "var(--bg-surface)", border: `1px solid ${BORDER}`,
       borderRadius: "12px", display: "flex", flexDirection: "column",
       overflow: "hidden",
     }}>
 
       {/* ── HEADER ── */}
-      <div style={{ padding: "20px 20px 16px", display: "flex", alignItems: "flex-start", gap: 14 }}>
+      <div style={{ padding: "20px 20px 16px", display: "flex", alignItems: "flex-start", gap: 14,background: "#F7F5FF" }}>
         <div style={{
           width: 44, height: 44, borderRadius: "50%", background: bg,
           display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
@@ -151,7 +151,7 @@ export default function ExpenseDetailPanel({ row, onClose }) {
         </div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 16, fontWeight: 700, color: DARK, margin: 0, lineHeight: "22px", wordBreak: "break-word" }}>
+          <p style={{ fontSize: 18, fontWeight: 500, color: "#141414", margin: 0, lineHeight: "22px", wordBreak: "break-word" }}>
             {row.employeeName}
           </p>
         </div>
@@ -168,24 +168,24 @@ export default function ExpenseDetailPanel({ row, onClose }) {
       </div>
 
       {/* ── BREAKDOWN ── */}
-      <div style={{ padding: "0 20px 16px" }}>
+      <div style={{ padding: "0 20px 16px" ,background: "#F7F5FF"}}>
         {/* Total */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-          <span style={{ fontSize: 13, color: GRAY }}>Total Expense Amount</span>
+          <span style={{ fontSize: 12, fontWeight: 400, color: GRAY }}>Total Expense Amount</span>
           <span style={{ fontSize: 16, fontWeight: 700, color: DARK }}>AED {total.toFixed(0)}</span>
         </div>
 
         {/* Dynamic per-category rows — only what was actually added */}
         {displayRows.length === 0 ? (
-          <p style={{ fontSize: 13, color: GRAY, margin: "8px 0" }}>No categories yet</p>
+          <p style={{ fontSize: 12, fontWeight: 400, color: GRAY, margin: "8px 0" }}>No categories yet</p>
         ) : (
           displayRows.map(({ label, value }) => (
             <div
               key={label}
               style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}
             >
-              <span style={{ fontSize: 13, color: GRAY }}>{label}</span>
-              <span style={{ fontSize: 13, color: DARK }}>
+              <span style={{ fontSize: 12, fontWeight: 400, color: GRAY }}>{label}</span>
+              <span style={{ fontSize: 12, fontWeight: 400, color: DARK }}>
                 <span style={{ color: GRAY, marginRight: 3 }}>AED</span>
                 {value.toFixed(0)}
               </span>
@@ -197,20 +197,20 @@ export default function ExpenseDetailPanel({ row, onClose }) {
 
         {/* Remain Amount */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <span style={{ fontSize: 13, color: GRAY }}>Remain Amount</span>
+          <span style={{ fontSize: 12, fontWeight: 400, color: GRAY }}>Remain Amount</span>
           <span style={{ fontSize: 22, fontWeight: 700, color: DARK }}>AED {remain.toFixed(0)}</span>
         </div>
       </div>
 
       {/* ── PAYMENT HISTORY ── */}
       <div style={{ borderTop: `1px solid ${BORDER}`, flex: 1, overflow: "auto" }}>
-        <p style={{ fontSize: 13, fontWeight: 600, color: DARK, margin: 0, padding: "14px 20px 10px" }}>
+        <p style={{ fontSize: 12, fontWeight: 400, color: DARK, margin: 0, padding: "14px 20px 10px" }}>
           Payment history
         </p>
 
-        <div style={{ padding: "0 20px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ padding: "0 20px 20px", display: "flex", flexDirection: "column", gap: 10}}>
           {history.length === 0 && (
-            <p style={{ fontSize: 13, color: GRAY, margin: 0, textAlign: "center", padding: "8px 0" }}>
+            <p style={{ fontSize: 12, fontWeight: 400, color: GRAY, margin: 0, textAlign: "center", padding: "8px 0" }}>
               No history yet
             </p>
           )}
@@ -220,21 +220,21 @@ export default function ExpenseDetailPanel({ row, onClose }) {
               style={{
                 border: `1px solid ${BORDER}`, borderRadius: 10,
                 padding: "12px 14px", display: "flex", alignItems: "flex-start",
-                justifyContent: "space-between", background: "var(--bg-surface)",
+                justifyContent: "space-between", background: "#F7F5FF",
               }}
             >
               <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
                 <MoneyFlowIcon direction={isDeductionType(item.type) ? "out" : "in"} />
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: BLUE, margin: 0 }}>
+                  <p style={{ fontSize: 12, fontWeight: 400, color: BLUE, margin: 0 }}>
                     {item.label}
                   </p>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: DARK, margin: 0 }}>
+                  <p style={{ fontSize: 12, fontWeight: 400, color: DARK, margin: 0 }}>
                     AED <strong>{Number(item.amount).toFixed(2)}</strong>
                   </p>
                 </div>
               </div>
-              <span style={{ fontSize: 12, color: GRAY, whiteSpace: "nowrap" }}>{item.date}</span>
+              <span style={{ fontSize: 12, fontWeight: 400, color: GRAY, whiteSpace: "nowrap" }}>{item.date}</span>
             </div>
           ))}
         </div>

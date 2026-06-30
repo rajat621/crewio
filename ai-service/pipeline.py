@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 ﻿"""
 pipeline.py  –  Orchestration layer for the invoice generation pipeline.
 
 This replaces the old regex-based pipeline. It delegates to:
     extractor.py         – universal timesheet data extraction (deterministic + Ollama local)
-=======
-"""
-pipeline.py  –  Orchestration layer for the invoice generation pipeline.
-
-This replaces the old regex-based pipeline. It delegates to:
-  extractor.py         – universal timesheet data extraction (pdfplumber + Claude Vision)
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   invoice_generator.py – layout-aware PDF generation
 
 Public API
@@ -53,12 +45,8 @@ def get_ocr_capabilities() -> Dict[str, bool]:
         "ocr_available":       pdf2image_ok and tesseract_ok,
         "tesseract_available": tesseract_ok,
         "pdf2image_available": pdf2image_ok,
-<<<<<<< HEAD
         "vision_api":          False,
         "local_ollama":        True,
-=======
-        "vision_api":          True,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     }
 
 

@@ -12,20 +12,16 @@ import dashboardRoutes from './routes/dashboard.routes.js';
 import aiRoutes from './routes/ai.routes.js';
 import templateProfileRoutes from './routes/templateProfile.routes.js';
 import mobileRoutes from './routes/mobile.routes.js';
-<<<<<<< HEAD
 import ownerRoutes from './routes/owner.routes.js';
 import salarySlipRoutes from './routes/salarySlip.routes.js';
 import expenseRoutes from './routes/expense.routes.js';
 import filesRoutes from './routes/files.routes.js';
 import chatRoutes from './routes/chat.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
-=======
-import { env } from './config/env.js';
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import errorHandler from './middleware/error.middleware.js';
 
 dotenv.config();
-
+const env = process.env;
 const app = express();
 
 const localOrigins = [
@@ -39,7 +35,7 @@ const localOrigins = [
 ];
 
 const allowedOrigins = Array.from(new Set([
-  env.FRONTEND_URL,
+  process.env.FRONTEND_URL,
   ...localOrigins,
 ].filter(Boolean)));
 
@@ -88,15 +84,12 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/template-profiles', templateProfileRoutes);
 app.use('/api/mobile', mobileRoutes);
-<<<<<<< HEAD
 app.use('/api/owner', ownerRoutes);
 app.use('/api/salary-slips', salarySlipRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/files', filesRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/notifications', notificationRoutes);
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 // 404 handler
 app.use((req, res) => {
