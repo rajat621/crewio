@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""
-=======
-"""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 generator/layout_project.py
 
 Universal project-based invoice renderer.
@@ -369,12 +365,6 @@ def render_project_invoice(
 
     for i, row in enumerate(rows, 1):
 
-<<<<<<< HEAD
-=======
-        if y_row < 70 * mm:
-            break
-
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         y_row -= _ROW_H
 
         rx = tx
@@ -636,8 +626,4 @@ def render_project_invoice(
                 right - 1,
                 8.6 * _mm,
                 contact,
-<<<<<<< HEAD
             )
-=======
-            )
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

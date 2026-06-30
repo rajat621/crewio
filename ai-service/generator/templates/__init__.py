@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""Dynamic template rendering stack for production invoice generation."""
-=======
-"""Dynamic template rendering stack for production invoice generation."""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from .template_loader import TemplateLoader, TemplateAsset
 from .template_analyzer import TemplateAnalyzer, TemplateAnalysis

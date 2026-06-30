@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""Merge multi-table parsing outputs into unified rows + financials."""
-=======
-"""Merge multi-table parsing outputs into unified rows + financials."""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 from __future__ import annotations
 
@@ -12,10 +8,7 @@ from typing import Dict, List, Optional, Sequence
 from schema import InvoiceFinancials, InvoiceRow
 
 from .table_classifier import TableType
-<<<<<<< HEAD
 from pipeline.profiler import current, new_request_collector
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 
 @dataclass
@@ -41,13 +34,9 @@ def merge_table_payloads(
     base_financials: InvoiceFinancials,
     payloads: Sequence[ParsedTablePayload],
 ) -> MergeResult:
-<<<<<<< HEAD
     prof = current()
     with (prof or new_request_collector()).time_stage("table_merger.merge_table_payloads"):
         rows_map: Dict[tuple, InvoiceRow] = {}
-=======
-    rows_map: Dict[tuple, InvoiceRow] = {}
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     for row in list(base_rows):
         key = (row.trade, row.project_id or "", row.employee_id or "", row.hours, row.rate, row.amount)
         rows_map[key] = row
@@ -55,25 +44,16 @@ def merge_table_payloads(
     financial_summaries: List[ParsedTablePayload] = []
 
     for payload in payloads:
-<<<<<<< HEAD
-=======
-        for row in payload.rows:
-            key = (row.trade, row.project_id or "", row.employee_id or "", row.hours, row.rate, row.amount)
-            rows_map[key] = row
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         if payload.table_type in {
             TableType.FINANCIAL_SUMMARY_TABLE,
             TableType.DEDUCTION_SUMMARY_TABLE,
             TableType.TOTALS_FOOTER_TABLE,
         }:
             financial_summaries.append(payload)
-<<<<<<< HEAD
         else:
             for row in payload.rows:
                 key = (row.trade, row.project_id or "", row.employee_id or "", row.hours, row.rate, row.amount)
                 rows_map[key] = row
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     merged_rows = list(rows_map.values())
     fin = InvoiceFinancials(

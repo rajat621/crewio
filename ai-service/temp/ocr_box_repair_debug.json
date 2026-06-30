@@ -394,61 +394,174 @@
           "h": 32
         }
       ]
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 599,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 11
+      },
+      "metrics": {
+        "total_tokens": 270,
+        "usable_tokens": 270,
+        "oversized_tokens": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 11.0,
+        "median_token_height_after": 11.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [],
+      "oversized_examples": []
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 599,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 11
+      },
+      "metrics": {
+        "total_tokens": 270,
+        "usable_tokens": 270,
+        "oversized_tokens": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 11.0,
+        "median_token_height_after": 11.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [],
+      "oversized_examples": []
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 1100,
+      "image_height": 599,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 11
+      },
+      "metrics": {
+        "total_tokens": 270,
+        "usable_tokens": 270,
+        "oversized_tokens": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 11.0,
+        "median_token_height_after": 11.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [],
+      "oversized_examples": []
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 767,
+      "image_height": 1100,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 23
+      },
+      "metrics": {
+        "total_tokens": 23,
+        "usable_tokens": 23,
+        "oversized_tokens": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 23.0,
+        "median_token_height_after": 23.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [],
+      "oversized_examples": []
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 767,
+      "image_height": 1100,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 23
+      },
+      "metrics": {
+        "total_tokens": 23,
+        "usable_tokens": 23,
+        "oversized_tokens": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 23.0,
+        "median_token_height_after": 23.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [],
+      "oversized_examples": []
+    },
+    {
+      "source": "layout_ocr_fallback",
+      "page_index": 1,
+      "image_width": 767,
+      "image_height": 1100,
+      "thresholds": {
+        "median_multiplier": 2.5,
+        "image_height_ratio": 0.08,
+        "child_height_px": 23
+      },
+      "metrics": {
+        "total_tokens": 23,
+        "usable_tokens": 23,
+        "oversized_tokens": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0,
+        "median_token_height_before": 23.0,
+        "median_token_height_after": 23.0,
+        "oversized_tokens_after": 0,
+        "unreliable_tokens": 0
+      },
+      "events": [],
+      "oversized_examples": []
     }
   ],
   "latest": {
     "source": "layout_ocr_fallback",
     "page_index": 1,
-    "image_width": 1100,
-    "image_height": 532,
+    "image_width": 767,
+    "image_height": 1100,
     "thresholds": {
       "median_multiplier": 2.5,
       "image_height_ratio": 0.08,
-      "child_height_px": 12
+      "child_height_px": 23
     },
     "metrics": {
-      "total_tokens": 105,
-      "usable_tokens": 105,
-      "oversized_tokens": 1,
-      "reprocessed_tokens": 1,
+      "total_tokens": 23,
+      "usable_tokens": 23,
+      "oversized_tokens": 0,
+      "reprocessed_tokens": 0,
       "split_success_rate": 0.0,
-      "median_token_height_before": 12.0,
-      "median_token_height_after": 12.0,
+      "median_token_height_before": 23.0,
+      "median_token_height_after": 23.0,
       "oversized_tokens_after": 0,
       "unreliable_tokens": 0
     },
-    "events": [
-      {
-        "event": "OCR_BOX_REJECTED",
-        "token": {
-          "text": "DUBAI",
-          "x": 649,
-          "y": 460,
-          "w": 44,
-          "h": 32,
-          "reason": "oversized_geometry"
-        }
-      },
-      {
-        "event": "OCR_BOX_REPROCESSED",
-        "token": {
-          "text": "DUBAI",
-          "x": 649,
-          "y": 460,
-          "w": 44,
-          "h": 32
-        },
-        "children": 1
-      }
-    ],
-    "oversized_examples": [
-      {
-        "text": "DUBAI",
-        "x": 649,
-        "y": 460,
-        "w": 44,
-        "h": 32
-      }
-    ]
+    "events": [],
+    "oversized_examples": []
   }
 }

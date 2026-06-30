@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""
-=======
-"""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 pipeline
 
 Universal OCR extraction pipeline.
@@ -38,8 +34,4 @@ __all__ = [
     "classify_pdf",
     "extract_text_pdf",
     "extract_vision_pdf",
-<<<<<<< HEAD
 ]
-=======
-]
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

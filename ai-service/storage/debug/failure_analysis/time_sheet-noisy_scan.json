@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿{
-=======
 {
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   "case_id": "time_sheet-noisy_scan",
   "failure_reason": "critical_failures:financials_impossible",
   "failed_stage": "financial_reconciliation",
@@ -30,8 +26,4 @@
   },
   "source_pdf": "D:\\Crew_control\\time_sheet.pdf",
   "variant_pdf": "D:\\Crew_control\\ai-service\\storage\\debug\\unknown_template_validation\\generated_dataset\\time_sheet-noisy_scan.pdf"
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

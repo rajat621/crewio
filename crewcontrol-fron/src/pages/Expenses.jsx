@@ -174,9 +174,13 @@ function Expenses() {
       });
 
       setRows(nextRows);
+      // Keep the panel open only if the previously-selected row still exists
+      // after a refresh (e.g. after edit/delete). Never auto-open a row that
+      // wasn't already selected by the user — the panel should only appear
+      // when "View" is clicked.
       setSelectedRow((prev) => {
-        if (!prev) return nextRows[0] || null;
-        return nextRows.find((row) => row.id === prev.id) || nextRows[0] || null;
+        if (!prev) return null;
+        return nextRows.find((row) => row.id === prev.id) || null;
       });
     } catch (err) {
       setRows([]);
@@ -373,39 +377,51 @@ if (!loading && !hasRows) {
         </Button>
       </Box>
 
+      {/* OUTER WRAPPER CARD — encloses both the table card and the detail
+          card so they read as one cohesive group, with a 16px (gap: 2) gap
+          between them, matching the target design. */}
       <Box
         sx={{
-          display: "flex",
-          gap: 2,
-          alignItems: "flex-start",
+          bgcolor: "var(--bg-surface)",
+          border: "1px solid var(--border-card)",
+          borderRadius: "12px",
+          p: "16px",
         }}
       >
-        {/* TABLE CARD */}
         <Box
           sx={{
-            flex: 1,
-            bgcolor: "var(--bg-surface)",
-            border: "1px solid var(--border-card)",
-            borderRadius: "12px",
-            p: "20px",
-            minWidth: 0,
+            display: "flex",
+            gap: 2,
+            alignItems: "flex-start",
           }}
         >
-          <ExpensesTable
-            rows={rows}
-            onView={(row) => setSelectedRow(row)}
-            selectedId={selectedRow?.id}
-          />
-        </Box>
+          {/* TABLE CARD */}
+          <Box
+            sx={{
+              flex: 1,
+              bgcolor: "var(--bg-surface)",
+              // border: "1px solid var(--border-card)",
+              // borderRadius: "12px",
+              // p: "20px",
+              // minWidth: 0,
+            }}
+          >
+            <ExpensesTable
+              rows={rows}
+              onView={(row) => setSelectedRow(row)}
+              selectedId={selectedRow?.id}
+            />
+          </Box>
 
-        {selectedRow ? (
-          <ExpenseDetailPanel
-            row={selectedRow}
-            onClose={() => setSelectedRow(null)}
-            onEdit={handleEditLatest}
-            onDelete={handleDeleteLatest}
-          />
-        ) : null}
+          {selectedRow ? (
+            <ExpenseDetailPanel
+              row={selectedRow}
+              onClose={() => setSelectedRow(null)}
+              onEdit={handleEditLatest}
+              onDelete={handleDeleteLatest}
+            />
+          ) : null}
+        </Box>
       </Box>
 
       <Snackbar

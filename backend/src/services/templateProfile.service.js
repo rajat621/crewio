@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿import TemplateProfile from '../models/TemplateProfile.js';
-=======
 import TemplateProfile from '../models/TemplateProfile.js';
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 /**
  * Get the active template profile for a company

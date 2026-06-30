@@ -147,11 +147,7 @@ const DEFAULT_COUNTRY = getCountryByIso("AE") || COUNTRY_OPTIONS[0] || { isoCode
 
 const MAIN_STEPS = [
   { id: 1, label: "Employee Details", icon: PersonOutlineIcon },
-<<<<<<< HEAD
   { id: 2, label: "Upload Documents", icon: BadgeOutlinedIcon },
-=======
-  { id: 2, label: "Passport Details", icon: BadgeOutlinedIcon },
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   { id: 3, label: "Expenses", icon: PaymentsOutlinedIcon },
   { id: 4, label: "Work Details", icon: WorkOutlineIcon },
   { id: 5, label: "App Access", icon: AppRegistrationOutlinedIcon },
@@ -371,11 +367,7 @@ function StepCircle({ completed, active, icon: IconComponent = DocIcon }) {
 
   return (
     <div style={{ width: 44, height: 44, borderRadius: "50%", border: `2px solid ${LIGHT_BORDER}`, padding: 5, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "#fff" }}>
-<<<<<<< HEAD
       <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "var(--bg-surface-secondary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-=======
-      <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#F3F4F6", display: "flex", alignItems: "center", justifyContent: "center" }}>
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         <IconComponent sx={{ fontSize: 18, color: GREY }} />
       </div>
     </div>
@@ -450,11 +442,7 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
         flexDirection: "column",
         height: "100%",
         minHeight: 0,
-<<<<<<< HEAD
         background: "var(--bg-surface-secondary)",
-=======
-        background: "#F3F4F6",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         fontFamily: "sans-serif",
         overflow: "hidden",
       }}
@@ -478,11 +466,7 @@ function Shell({ currentStep, expenseSubStep, children, footerContent, onBack, i
               width: "282px",
               flexShrink: 0,
               height: "100%",
-<<<<<<< HEAD
               background: "var(--bg-surface)",
-=======
-              background: "#F9FAFB",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               borderRight: `1px solid ${BORDER}`,
               padding: "28px 20px",
               overflow: "hidden",
@@ -984,22 +968,14 @@ function Step2({ data, onChange }) {
           handleFile(field, e.dataTransfer.files[0]);
         }}
         style={{
-<<<<<<< HEAD
           border: `1.5px dashed ${dragging ? BLUE : "var(--border-input-hover)"}`,
-=======
-          border: `1.5px dashed ${dragging ? BLUE : "#D1D5DB"}`,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           borderRadius: "10px",
           padding: "40px 24px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "8px",
-<<<<<<< HEAD
           background: dragging ? "#EFF4FF" : "var(--bg-surface)",
-=======
-          background: dragging ? "#EFF4FF" : "#FAFAFA",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           cursor: "pointer",
         }}
         onClick={() => inputRef.current.click()}
@@ -1103,11 +1079,7 @@ function Step2({ data, onChange }) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               format="DD/MM/YYYY"
-<<<<<<< HEAD
               sx={{ color: "var(--text-secondary)" }}
-=======
-              sx={{ color: "#808080" }}
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               value={data.emiratesIdExpiry ? dayjs(data.emiratesIdExpiry) : null}
               onChange={(newValue) => {
                 onChange({
@@ -1120,16 +1092,11 @@ function Step2({ data, onChange }) {
                   fullWidth: true,
                   placeholder: "DD/MM/YYYY",
                   sx: {
-<<<<<<< HEAD
                     color: "var(--text-secondary)",
-=======
-                    color: "#808080",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                     "& .MuiOutlinedInput-root": {
                       height: "44px",
                       borderRadius: "8px",
                       "& fieldset": {
-<<<<<<< HEAD
                         borderColor: "var(--border-card)",
                       },
                       "&:hover fieldset": {
@@ -1137,15 +1104,6 @@ function Step2({ data, onChange }) {
                       },
                       "&.Mui-focused fieldset": {
                         borderColor: "var(--border-card)",
-=======
-                        borderColor: "#DEDEDE",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#DEDEDE",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#DEDEDE",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                       },
                     },
                   },
@@ -1616,15 +1574,9 @@ function SuccessScreen({ onOpenAssign, onBackHome, onEdit }) {
             fontSize: "14px",
             width: "130px",
             height: "32px",
-<<<<<<< HEAD
             color: "var(--text-secondary)",
             background: "#fff",
             border: `1px solid var(--border-card)`,
-=======
-            color: "#6B7280",
-            background: "#fff",
-            border: `1px solid #DEDEDE`,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             borderRadius: "8px",
             padding: "5px 12px",
             cursor: "pointer",
@@ -1644,15 +1596,9 @@ function SuccessScreen({ onOpenAssign, onBackHome, onEdit }) {
             gap: "6px",
             fontSize: "14px",
             height: "32px",
-<<<<<<< HEAD
             color: "var(--text-secondary)",
             background: "#fff",
             border: `1px solid var(--border-card)`,
-=======
-            color: "#6B7280",
-            background: "#fff",
-            border: `1px solid #DEDEDE`,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
             borderRadius: "8px",
             padding: "0 14px",
             cursor: "pointer",
@@ -1669,11 +1615,7 @@ function SuccessScreen({ onOpenAssign, onBackHome, onEdit }) {
         <h2 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: DARK, textAlign: "center" }}>
           Employee Added Successfully!
         </h2>
-<<<<<<< HEAD
         <p style={{ margin: 0, fontSize: "14px", color: "var(--text-secondary)", textAlign: "center", maxWidth: "740px", fontWeight: 400 }}>
-=======
-        <p style={{ margin: 0, fontSize: "14px", color: "#757575", textAlign: "center", maxWidth: "740px", fontWeight: 400 }}>
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
           The employee profile has been created and is ready for assignment.
         </p>
         <button
@@ -2060,11 +2002,7 @@ function AddEmployee() {
               maxWidth: "808px",
               minHeight: "500px",
               background: "#fff",
-<<<<<<< HEAD
               border: "1px solid var(--border-card)",
-=======
-              border: "1px solid #DEDEDE",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               borderRadius: "8px",
               overflow: "hidden",
               display: "flex",
@@ -2075,22 +2013,14 @@ function AddEmployee() {
             <div
               style={{
                 height: "64px",
-<<<<<<< HEAD
                 borderBottom: "1px solid var(--border-card)",
-=======
-                borderBottom: "1px solid #DEDEDE",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "0 18px",
               }}
             >
-<<<<<<< HEAD
               <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "0.54px",lineHeight: "20px" }}>
-=======
-              <h3 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "#141414", letterSpacing: "0.54px",lineHeight: "20px" }}>
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 Assign to Company
               </h3>
               <button
@@ -2110,11 +2040,7 @@ function AddEmployee() {
             </div>
 
             <div style={{ padding: "24px 20px", flex: 1 }}>
-<<<<<<< HEAD
               <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
-=======
-              <label style={{ display: "block", fontSize: "14px", color: "#111827", marginBottom: "12px", fontWeight: 400 }}>
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 Select a company
               </label>
               <select
@@ -2129,11 +2055,7 @@ function AddEmployee() {
                   borderRadius: "8px",
                   padding: "0 40px 0 14px",
                   fontSize: "14px",
-<<<<<<< HEAD
                   color: "var(--text-primary)",
-=======
-                  color: "#141414",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   background: "#fff",
                   fontFamily: "inherit",
                   appearance: "none",
@@ -2167,11 +2089,7 @@ function AddEmployee() {
 {/* div for button */}
             <div
               style={{
-<<<<<<< HEAD
                 borderTop: "1px solid var(--border-card)",
-=======
-                borderTop: "1px solid #DEDEDE",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                 height: "68px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -2192,11 +2110,7 @@ function AddEmployee() {
                   fontSize: "12px",
                   fontWeight: 500,
                   color: "#fff",
-<<<<<<< HEAD
                   background: assigningCompany || companyLoading || !selectedCompanyId ? "var(--text-disabled)" : BLUE,
-=======
-                  background: assigningCompany || companyLoading || !selectedCompanyId ? "#9CA3AF" : BLUE,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                   cursor: assigningCompany || companyLoading || !selectedCompanyId ? "not-allowed" : "pointer",
                   fontFamily: "inherit",
                 }}

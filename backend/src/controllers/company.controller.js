@@ -7,7 +7,6 @@ const getAuthenticatedUser = async (req) => {
   return User.findById(userId).populate('company');
 };
 
-<<<<<<< HEAD
 const getAuthenticatedOwnerId = (req, user) => req.user?.ownerId || user?._id || req.user?.userId || null;
 
 const buildEmptyOwnerCompany = (ownerId) => ({
@@ -60,8 +59,6 @@ const ensureOwnerCompany = async (user, req) => {
   return company;
 };
 
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 const estimateDataUrlBytes = (dataUrl) => {
   if (!dataUrl || typeof dataUrl !== 'string') return 0;
   const base64Part = dataUrl.split(',')[1];
@@ -98,7 +95,6 @@ const validateAssetField = (fieldName, value) => {
 
 export const createCompany = async (req, res) => {
   try {
-<<<<<<< HEAD
     const ownerId =
   req.user?.ownerId ||
   req.employee?.ownerId;
@@ -115,13 +111,6 @@ if (!ownerId) {
     message: 'User not authenticated'
   });
 }
-=======
-    const user = await getAuthenticatedUser(req);
-    if (!user) {
-      return res.status(401).json({ message: 'User not authenticated' });
-    }
-
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const { name, trn, websiteLink, stamp, invoiceTemplate, signature,
       address, telephoneNumber, poBox, faxNumber, city } = req.body;
 
@@ -146,13 +135,9 @@ if (!ownerId) {
       stamp,
       invoiceTemplate,
       signature,
-<<<<<<< HEAD
       owner: user.userId,
       ownerId: user.ownerId,
       createdBy: user.userId,
-=======
-      owner: user._id,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       companyRole: 'client',
       isOwner: false,
       ...(address !== undefined && { address }),
@@ -177,10 +162,7 @@ if (!ownerId) {
 
 export const updateOwnerCompany = async (req, res) => {
   try {
-<<<<<<< HEAD
     console.log('updateOwnerCompany payload:', JSON.stringify(req.body));
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     const user = await getAuthenticatedUser(req);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -231,19 +213,7 @@ export const updateOwnerCompany = async (req, res) => {
 
     if (!company) {
       company = new Company({
-<<<<<<< HEAD
         ...buildEmptyOwnerCompany(authenticatedOwnerId),
-=======
-        name,
-        trn,
-        websiteLink,
-        stamp,
-        invoiceTemplate,
-        signature,
-        owner: user._id,
-        companyRole: 'owner',
-        isOwner: true,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         ...otherFields,
         ...(name !== undefined && { name }),
         ...(trn !== undefined && { trn }),
@@ -342,11 +312,7 @@ export const updateCompany = async (req, res) => {
     const company = await Company.findOneAndUpdate(
       {
         _id: id,
-<<<<<<< HEAD
         ownerId: user.ownerId,
-=======
-        owner: user._id,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         $or: [
           { companyRole: 'client' },
           { companyRole: { $exists: false }, isOwner: { $ne: true } },
@@ -401,11 +367,8 @@ export const createClientCompany = async (req, res) => {
       invoiceTemplate,
       signature,
       owner: user._id,
-<<<<<<< HEAD
       ownerId,
       createdBy: req.user?.userId || user._id,
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       companyRole: 'client',
       isOwner: false,
       ...(address !== undefined && { address }),
@@ -435,15 +398,10 @@ export const getCompanies = async (req, res) => {
       return res.status(401).json({ message: 'User not authenticated' });
     }
 
-<<<<<<< HEAD
     const ownerId = req.user?.ownerId || user._id;
 
     const companies = await Company.find({
       ownerId,
-=======
-    const companies = await Company.find({
-      owner: user._id,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       $or: [
         { companyRole: 'client' },
         { companyRole: { $exists: false }, isOwner: { $ne: true } },
@@ -463,12 +421,8 @@ export const getCompany = async (req, res) => {
       return res.status(401).json({ message: 'User not authenticated' });
     }
 
-<<<<<<< HEAD
     const ownerId = req.user?.ownerId || user._id;
     const company = await Company.findOne({ _id: req.params.id, ownerId });
-=======
-    const company = await Company.findOne({ _id: req.params.id, owner: user._id });
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     if (!company) {
       return res.status(404).json({ message: 'Company not found' });
     }
@@ -488,11 +442,7 @@ export const deleteCompany = async (req, res) => {
 
     const deleted = await Company.findOneAndDelete({
       _id: req.params.id,
-<<<<<<< HEAD
       ownerId: req.user?.ownerId || user._id,
-=======
-      owner: user._id,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       $or: [
         { companyRole: 'client' },
         { companyRole: { $exists: false }, isOwner: { $ne: true } },
@@ -515,24 +465,16 @@ export const getClientCompanies = async (req, res) => {
       return res.status(401).json({ message: 'User not authenticated' });
     }
 
-<<<<<<< HEAD
     const ownerId = req.user?.ownerId || user._id;
 
     const companies = await Company.find({
       ownerId,
-=======
-    const companies = await Company.find({
-      owner: user._id,
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       $or: [
         { companyRole: 'client' },
         { companyRole: { $exists: false }, isOwner: { $ne: true } },
       ],
     }).sort({ createdAt: -1 });
-<<<<<<< HEAD
     console.log('getClientCompanies: ownerId=', ownerId, 'found=', (companies || []).length);
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     res.json({ data: companies });
   } catch (error) {
     console.error('Get client companies error:', error);

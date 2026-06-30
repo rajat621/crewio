@@ -1,24 +1,13 @@
-<<<<<<< HEAD
 ﻿"""Centralized extraction configuration for OCR and table reconstruction."""
 
 from __future__ import annotations
 
-=======
-"""Centralized extraction configuration for OCR and table reconstruction."""
-
-from __future__ import annotations
-
-import os
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 from pathlib import Path
 from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, Optional
 
-<<<<<<< HEAD
 from config_runtime import CONFIG
 
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 @dataclass
 class MorphologyConfig:
@@ -128,15 +117,9 @@ def load_extraction_config() -> ExtractionConfig:
 
     default_debug_dir = Path(__file__).resolve().parents[1] / "storage" / "debug"
 
-<<<<<<< HEAD
     debug_flag = CONFIG.overrides.ai_extract_debug
     debug_dir = CONFIG.overrides.ai_extract_debug_dir
     ocr_conf = CONFIG.overrides.ai_ocr_min_conf
-=======
-    debug_flag = os.getenv("AI_EXTRACT_DEBUG", "false").strip().lower() == "true"
-    debug_dir = os.getenv("AI_EXTRACT_DEBUG_DIR", "").strip()
-    ocr_conf = os.getenv("AI_OCR_MIN_CONF", "").strip()
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
     cfg.debug.enabled = debug_flag
     cfg.debug.output_dir = debug_dir or str(default_debug_dir)
@@ -189,7 +172,6 @@ def apply_runtime_overrides(config: ExtractionConfig, overrides: Optional[Dict[s
                 setattr(target, key, value)
 
     return config
-<<<<<<< HEAD
 
 
 def get_runtime_extraction_mode() -> str:
@@ -204,5 +186,3 @@ def get_provider_runtime_flags() -> Dict[str, Any]:
         "provider_retries": int(CONFIG.circuit_breaker.max_retries),
         "provider_timeout_ms": int(CONFIG.timeouts.provider_timeout_ms),
     }
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0

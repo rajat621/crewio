@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""Real-world unknown-template robustness validation suite.
-=======
-"""Real-world unknown-template robustness validation suite.
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
 Scope:
 - Generates unseen/stressed variants from local UAE labour timesheets.

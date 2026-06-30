@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿import { useEffect, useMemo, useState } from "react";
-=======
-import { useEffect, useMemo, useState } from "react";
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import {
   Box,
   Divider,
@@ -136,15 +132,9 @@ export default function AttendanceTable({
     <TableContainer
       component={Box}
       sx={{
-<<<<<<< HEAD
         bgcolor: "var(--bg-surface)",
         border: "1px solid",
         borderColor: "var(--border-card)",
-=======
-        bgcolor: "#FFFFFF",
-        border: "1px solid",
-        borderColor: "#DEDEDE",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         borderRadius: 1,
         overflow: "hidden",
       }}
@@ -214,11 +204,7 @@ export default function AttendanceTable({
         </Box>
       </Box>
 
-<<<<<<< HEAD
       <Divider sx={{ borderColor: "var(--border-card)" }} />
-=======
-      <Divider sx={{ borderColor: "#DEDEDE" }} />
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
       <Table>
         <TableHeader columns={columns} />

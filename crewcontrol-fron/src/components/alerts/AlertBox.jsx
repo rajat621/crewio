@@ -3,7 +3,6 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertAccordion from "./AlertAccordion";
 
-<<<<<<< HEAD
 function asList(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -172,16 +171,6 @@ function AlertBox({ alerts }) {
       },
     ];
   }, [alerts, openEmployeeChat, openEmployeeProfile, openTaxInvoiceGenerate]);
-=======
-function AlertBox({ alerts }) {
-  const [openKey, setOpenKey] = useState(null);
-
-  const absentWorkers = Array.isArray(alerts?.absentWorkers) ? alerts.absentWorkers : [];
-  const payments = Array.isArray(alerts?.payments) ? alerts.payments : [];
-  const taxPayments = Array.isArray(alerts?.taxPayments) ? alerts.taxPayments : [];
-  const passportExpiring = Array.isArray(alerts?.documentExpiring) ? alerts.documentExpiring : [];
-  const siteFinished = Array.isArray(alerts?.siteFinished) ? alerts.siteFinished : [];
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 
   const toggle = (key) => setOpenKey((prev) => (prev === key ? null : key));
 
@@ -198,11 +187,7 @@ function AlertBox({ alerts }) {
         boxShadow: "0px 0px 2px rgba(20,20,20,0.12)",
         display: "flex",
         flexDirection: "column",
-<<<<<<< HEAD
         gap: "16px",
-=======
-        gap: "12px",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         overflowY: "auto",
         scrollbarGutter: "stable",
         scrollbarWidth: "thin",
@@ -219,13 +204,8 @@ function AlertBox({ alerts }) {
         },
       }}
     >
-<<<<<<< HEAD
       <Typography fontSize={18} fontWeight={600} color="#27243A">
         Smart Alerts
-=======
-      <Typography fontSize={18} fontWeight={600} color="#141414">
-        Alert Box
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       </Typography>
 
       <Box
@@ -235,7 +215,6 @@ function AlertBox({ alerts }) {
           gap: "12px",
         }}
       >
-<<<<<<< HEAD
         {groupedAlerts.map((group) => (
           <AlertAccordion
             key={group.key}
@@ -246,52 +225,6 @@ function AlertBox({ alerts }) {
             sections={group.sections}
           />
         ))}
-=======
-        <AlertAccordion
-          title="Absent worker"
-          count={absentWorkers.length}
-          isOpen={openKey === "absent"}
-          onToggle={() => toggle("absent")}
-          type="absent"
-          items={absentWorkers}
-        />
-
-        <AlertAccordion
-          title="Payment"
-          count={payments.length}
-          isOpen={openKey === "payment"}
-          onToggle={() => toggle("payment")}
-          type="payment"
-          items={payments}
-        />
-
-        <AlertAccordion
-          title="Tax Payment"
-          count={taxPayments.length}
-          isOpen={openKey === "tax"}
-          onToggle={() => toggle("tax")}
-          type="tax"
-          items={taxPayments}
-        />
-
-        <AlertAccordion
-          title="Document Expiring"
-          count={passportExpiring.length}
-          isOpen={openKey === "document-expiring"}
-          onToggle={() => toggle("document-expiring")}
-          type="document"
-          items={passportExpiring}
-        />
-
-        <AlertAccordion
-          title="Site Finished"
-          count={siteFinished.length}
-          isOpen={openKey === "site-finished"}
-          onToggle={() => toggle("site-finished")}
-          type="site"
-          items={siteFinished}
-        />
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       </Box>
     </Box>
   );

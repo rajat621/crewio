@@ -139,14 +139,11 @@ const employeeSchema = new mongoose.Schema(
       ref: 'User',
       index: true,
     },
-<<<<<<< HEAD
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       index: true,
     },
-=======
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
     status: {
       type: String,
       enum: ['active', 'inactive', 'resigned'],

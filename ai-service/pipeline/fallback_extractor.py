@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿"""
-=======
-"""
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 Fallback extraction strategy for low-confidence or unknown layouts.
 
 When structured table extraction fails or confidence is low:

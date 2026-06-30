@@ -51,8 +51,8 @@
  * 
  * Usage:
  *   <ProfileSection title="Personal Info" onEdit={handleEdit}>
- *     {/* fields */}
- *   </ProfileSection>
+//  *     {/* fields 
+//  *   </ProfileSection>
  */
 
 /**

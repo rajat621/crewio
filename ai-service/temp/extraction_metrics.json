@@ -113,14 +113,869 @@
       "extra": {
         "processing_time_ms": 23745
       }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T01:43:40.574384+00:00",
+      "run_id": "08772e00-1476-4226-bbdc-e6757e73d199",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697420111-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-29T01:43:40.590300+00:00",
+      "run_id": "08772e00-1476-4226-bbdc-e6757e73d199",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697420111-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-29T01:43:40.600747+00:00",
+      "run_id": "08772e00-1476-4226-bbdc-e6757e73d199",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697420111-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T01:44:02.398634+00:00",
+      "run_id": "08772e00-1476-4226-bbdc-e6757e73d199",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697420111-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "ocr_box_geometry_repair",
+      "metrics": {
+        "total_tokens_before": 270,
+        "total_tokens_after": 270,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      },
+      "extra": {
+        "page": 1,
+        "source": "layout_ocr_fallback"
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T01:44:16.253726+00:00",
+      "run_id": "08772e00-1476-4226-bbdc-e6757e73d199",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697420111-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "ocr_box_geometry_repair",
+      "metrics": {
+        "total_tokens_before": 270,
+        "total_tokens_after": 270,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      },
+      "extra": {
+        "page": 1,
+        "source": "layout_ocr_fallback"
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T01:44:30.039206+00:00",
+      "run_id": "08772e00-1476-4226-bbdc-e6757e73d199",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697420111-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "ocr_box_geometry_repair",
+      "metrics": {
+        "total_tokens_before": 270,
+        "total_tokens_after": 270,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      },
+      "extra": {
+        "page": 1,
+        "source": "layout_ocr_fallback"
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-29T01:44:30.234118+00:00",
+      "run_id": "08772e00-1476-4226-bbdc-e6757e73d199",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697420111-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 0,
+        "subtotal": 0.0,
+        "vat": 0.0,
+        "net_total": 0.0,
+        "confidence": 0.0
+      },
+      "extra": {
+        "processing_time_ms": 49592
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T01:44:54.424942+00:00",
+      "run_id": "44a0bb6f-2496-4b85-9a16-32e18acf6bff",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697494114-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-29T01:44:54.437935+00:00",
+      "run_id": "44a0bb6f-2496-4b85-9a16-32e18acf6bff",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697494114-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-29T01:44:54.447966+00:00",
+      "run_id": "44a0bb6f-2496-4b85-9a16-32e18acf6bff",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697494114-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-29T01:45:24.427458+00:00",
+      "run_id": "44a0bb6f-2496-4b85-9a16-32e18acf6bff",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782697494114-Invoice_8__1__removed.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 11,
+        "subtotal": 19653.25,
+        "vat": 956.368,
+        "net_total": 20083.73,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 28269
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T11:26:11.682881+00:00",
+      "run_id": "54d10de4-bd2e-4625-a77f-7dcaaf8e65eb",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732371099-1RV24MC082_RAJAT_RAJ_removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-29T11:26:11.740355+00:00",
+      "run_id": "54d10de4-bd2e-4625-a77f-7dcaaf8e65eb",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732371099-1RV24MC082_RAJAT_RAJ_removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-29T11:26:11.752684+00:00",
+      "run_id": "54d10de4-bd2e-4625-a77f-7dcaaf8e65eb",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732371099-1RV24MC082_RAJAT_RAJ_removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T11:27:13.247070+00:00",
+      "run_id": "54d10de4-bd2e-4625-a77f-7dcaaf8e65eb",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732371099-1RV24MC082_RAJAT_RAJ_removed.pdf",
+      "stage": "ocr_box_geometry_repair",
+      "metrics": {
+        "total_tokens_before": 23,
+        "total_tokens_after": 23,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      },
+      "extra": {
+        "page": 1,
+        "source": "layout_ocr_fallback"
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T11:27:22.074626+00:00",
+      "run_id": "54d10de4-bd2e-4625-a77f-7dcaaf8e65eb",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732371099-1RV24MC082_RAJAT_RAJ_removed.pdf",
+      "stage": "ocr_box_geometry_repair",
+      "metrics": {
+        "total_tokens_before": 23,
+        "total_tokens_after": 23,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      },
+      "extra": {
+        "page": 1,
+        "source": "layout_ocr_fallback"
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T11:27:31.227502+00:00",
+      "run_id": "54d10de4-bd2e-4625-a77f-7dcaaf8e65eb",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732371099-1RV24MC082_RAJAT_RAJ_removed.pdf",
+      "stage": "ocr_box_geometry_repair",
+      "metrics": {
+        "total_tokens_before": 23,
+        "total_tokens_after": 23,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      },
+      "extra": {
+        "page": 1,
+        "source": "layout_ocr_fallback"
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-29T11:27:31.285531+00:00",
+      "run_id": "54d10de4-bd2e-4625-a77f-7dcaaf8e65eb",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732371099-1RV24MC082_RAJAT_RAJ_removed.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 0,
+        "subtotal": 0.0,
+        "vat": 0.0,
+        "net_total": 0.0,
+        "confidence": 0.35
+      },
+      "extra": {
+        "processing_time_ms": 50306
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T11:34:49.932835+00:00",
+      "run_id": "f62685c9-d048-4c8e-8950-dac7a78e895a",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732889300-CV__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-29T11:34:49.940634+00:00",
+      "run_id": "f62685c9-d048-4c8e-8950-dac7a78e895a",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732889300-CV__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-29T11:34:49.959595+00:00",
+      "run_id": "f62685c9-d048-4c8e-8950-dac7a78e895a",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732889300-CV__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-29T11:34:55.551517+00:00",
+      "run_id": "f62685c9-d048-4c8e-8950-dac7a78e895a",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782732889300-CV__16_.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "unknown",
+        "employee_rows": 0,
+        "subtotal": 0.0,
+        "vat": 0.0,
+        "net_total": 0.0,
+        "confidence": 0.6
+      },
+      "extra": {
+        "processing_time_ms": 5067
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-29T11:36:40.599963+00:00",
+      "run_id": "c9d6f141-f701-40e3-be5f-e0ea9f074521",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782733000344-CV__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-29T11:36:40.625086+00:00",
+      "run_id": "c9d6f141-f701-40e3-be5f-e0ea9f074521",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782733000344-CV__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-29T11:36:40.636886+00:00",
+      "run_id": "c9d6f141-f701-40e3-be5f-e0ea9f074521",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782733000344-CV__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-29T11:36:46.001417+00:00",
+      "run_id": "c9d6f141-f701-40e3-be5f-e0ea9f074521",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782733000344-CV__16_.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "unknown",
+        "employee_rows": 0,
+        "subtotal": 0.0,
+        "vat": 0.0,
+        "net_total": 0.0,
+        "confidence": 0.6
+      },
+      "extra": {
+        "processing_time_ms": 4943
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:39:53.027748+00:00",
+      "run_id": "9e771406-c310-4412-8c39-fcad210806a8",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783592484-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:39:53.199573+00:00",
+      "run_id": "9e771406-c310-4412-8c39-fcad210806a8",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783592484-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:39:53.212530+00:00",
+      "run_id": "9e771406-c310-4412-8c39-fcad210806a8",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783592484-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:40:19.343329+00:00",
+      "run_id": "9e771406-c310-4412-8c39-fcad210806a8",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783592484-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 1,
+        "subtotal": 1280.0,
+        "vat": 58.81,
+        "net_total": 1235.01,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 26079
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:40:53.097263+00:00",
+      "run_id": "4aa34dd8-85ba-4fa0-a874-972c4c45b181",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783652240-Alqaser_Alsatea_Tech_Cont__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:40:53.120495+00:00",
+      "run_id": "4aa34dd8-85ba-4fa0-a874-972c4c45b181",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783652240-Alqaser_Alsatea_Tech_Cont__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:40:53.133232+00:00",
+      "run_id": "4aa34dd8-85ba-4fa0-a874-972c4c45b181",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783652240-Alqaser_Alsatea_Tech_Cont__16_.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:41:02.383740+00:00",
+      "run_id": "4aa34dd8-85ba-4fa0-a874-972c4c45b181",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783652240-Alqaser_Alsatea_Tech_Cont__16_.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 2,
+        "subtotal": 4210.0,
+        "vat": 204.25,
+        "net_total": 4289.25,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 9228
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:41:57.665509+00:00",
+      "run_id": "b63d216f-85ed-4376-a871-c5cfbd644022",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783717383-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:41:57.680511+00:00",
+      "run_id": "b63d216f-85ed-4376-a871-c5cfbd644022",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783717383-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:41:57.702765+00:00",
+      "run_id": "b63d216f-85ed-4376-a871-c5cfbd644022",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783717383-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:42:11.926532+00:00",
+      "run_id": "b63d216f-85ed-4376-a871-c5cfbd644022",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783717383-Alqaser_Alsatea_Tech_Cont.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 3,
+        "subtotal": 1275.0,
+        "vat": 50.0,
+        "net_total": 1050.0,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 14191
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:43:24.087517+00:00",
+      "run_id": "d09438f2-6e88-4a5d-b0f6-341235a65dda",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783803430-Alqaser_Alsatea_Tech_Apr_26_pdf.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:43:24.098760+00:00",
+      "run_id": "d09438f2-6e88-4a5d-b0f6-341235a65dda",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783803430-Alqaser_Alsatea_Tech_Apr_26_pdf.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:43:24.109403+00:00",
+      "run_id": "d09438f2-6e88-4a5d-b0f6-341235a65dda",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783803430-Alqaser_Alsatea_Tech_Apr_26_pdf.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:43:33.293123+00:00",
+      "run_id": "d09438f2-6e88-4a5d-b0f6-341235a65dda",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783803430-Alqaser_Alsatea_Tech_Apr_26_pdf.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 1,
+        "subtotal": 575.0,
+        "vat": 28.75,
+        "net_total": 603.75,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 9153
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:44:58.916498+00:00",
+      "run_id": "a6876ac7-3ebc-46a9-94b9-dc1fc6aaecdf",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783897177-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:44:58.932325+00:00",
+      "run_id": "a6876ac7-3ebc-46a9-94b9-dc1fc6aaecdf",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783897177-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:44:58.942580+00:00",
+      "run_id": "a6876ac7-3ebc-46a9-94b9-dc1fc6aaecdf",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783897177-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:45:40.924346+00:00",
+      "run_id": "a6876ac7-3ebc-46a9-94b9-dc1fc6aaecdf",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783897177-Invoice_8__1__removed.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 10,
+        "subtotal": 19235.25,
+        "vat": 930.818,
+        "net_total": 19547.18,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 40468
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:46:20.429408+00:00",
+      "run_id": "cecb7cff-4663-4a71-861d-8f49825014f2",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783980127-INVOICE_BKC_OCT.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:46:20.441566+00:00",
+      "run_id": "cecb7cff-4663-4a71-861d-8f49825014f2",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783980127-INVOICE_BKC_OCT.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:46:20.452296+00:00",
+      "run_id": "cecb7cff-4663-4a71-861d-8f49825014f2",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783980127-INVOICE_BKC_OCT.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:46:45.331890+00:00",
+      "run_id": "cecb7cff-4663-4a71-861d-8f49825014f2",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782783980127-INVOICE_BKC_OCT.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 3,
+        "subtotal": 6512.0,
+        "vat": 324.35,
+        "net_total": 6811.35,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 24825
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:48:22.330385+00:00",
+      "run_id": "ad378ab4-41e5-4163-80a4-7a407f9950d0",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784102051-timesheet3.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:48:22.342414+00:00",
+      "run_id": "ad378ab4-41e5-4163-80a4-7a407f9950d0",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784102051-timesheet3.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:48:22.352379+00:00",
+      "run_id": "ad378ab4-41e5-4163-80a4-7a407f9950d0",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784102051-timesheet3.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:48:31.340270+00:00",
+      "run_id": "ad378ab4-41e5-4163-80a4-7a407f9950d0",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784102051-timesheet3.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 2,
+        "subtotal": 4210.0,
+        "vat": 204.25,
+        "net_total": 4289.25,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 8962
+      }
+    },
+    {
+      "event": "OCR_REPAIR_METRICS",
+      "timestamp": "2026-06-30T01:57:17.303307+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "total_tokens_before": 0,
+        "total_tokens_after": 0,
+        "oversized_tokens_before": 0,
+        "oversized_tokens_after": 0,
+        "reprocessed_tokens": 0,
+        "split_success_rate": 0.0
+      }
+    },
+    {
+      "event": "SEMANTIC_INPUT_METRICS",
+      "timestamp": "2026-06-30T01:57:17.317301+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "tokens_received": 0,
+        "clusters_created": 0,
+        "logical_rows_created": 0
+      }
+    },
+    {
+      "event": "SEMANTIC_OUTPUT_METRICS",
+      "timestamp": "2026-06-30T01:57:17.329432+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
+      "stage": "extraction_start",
+      "metrics": {
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "top_rejection_reasons": {}
+      }
+    },
+    {
+      "event": "FINAL_EXTRACTION_METRICS",
+      "timestamp": "2026-06-30T01:58:01.339340+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
+      "stage": "final_extraction",
+      "metrics": {
+        "source": "vision",
+        "employee_rows": 10,
+        "subtotal": 19235.25,
+        "vat": 930.818,
+        "net_total": 19547.18,
+        "confidence": 0.82
+      },
+      "extra": {
+        "processing_time_ms": 42599
+      }
     }
   ],
   "latest_by_event": {
     "OCR_REPAIR_METRICS": {
       "event": "OCR_REPAIR_METRICS",
-      "timestamp": "2026-06-28T08:45:54.915855+00:00",
-      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
-      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "timestamp": "2026-06-30T01:57:17.303307+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
       "stage": "extraction_start",
       "metrics": {
         "total_tokens_before": 0,
@@ -133,9 +988,9 @@
     },
     "SEMANTIC_INPUT_METRICS": {
       "event": "SEMANTIC_INPUT_METRICS",
-      "timestamp": "2026-06-28T08:45:54.928853+00:00",
-      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
-      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "timestamp": "2026-06-30T01:57:17.317301+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
       "stage": "extraction_start",
       "metrics": {
         "tokens_received": 0,
@@ -145,9 +1000,9 @@
     },
     "SEMANTIC_OUTPUT_METRICS": {
       "event": "SEMANTIC_OUTPUT_METRICS",
-      "timestamp": "2026-06-28T08:45:54.938856+00:00",
-      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
-      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "timestamp": "2026-06-30T01:57:17.329432+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
       "stage": "extraction_start",
       "metrics": {
         "rows_accepted": 0,
@@ -157,22 +1012,22 @@
     },
     "FINAL_EXTRACTION_METRICS": {
       "event": "FINAL_EXTRACTION_METRICS",
-      "timestamp": "2026-06-28T08:46:18.714177+00:00",
-      "run_id": "5b326f24-b19e-4aef-8c48-0488c9447c08",
-      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782636354664-Alqaser__Alsatea_Tech_Cont__260623_182237.pdf",
+      "timestamp": "2026-06-30T01:58:01.339340+00:00",
+      "run_id": "550613b1-71fc-4bf4-be95-c1201c5e2c9c",
+      "pdf_path": "D:\\Crew_control\\backend\\src\\storage\\uploads\\timesheets\\1782784637048-Invoice_8__1__removed.pdf",
       "stage": "final_extraction",
       "metrics": {
         "source": "vision",
-        "employee_rows": 1,
-        "subtotal": 1280.0,
-        "vat": 58.81,
-        "net_total": 1235.01,
+        "employee_rows": 10,
+        "subtotal": 19235.25,
+        "vat": 930.818,
+        "net_total": 19547.18,
         "confidence": 0.82
       },
       "extra": {
-        "processing_time_ms": 23745
+        "processing_time_ms": 42599
       }
     }
   },
-  "updated_at": "2026-06-28T08:46:18.714177+00:00"
+  "updated_at": "2026-06-30T01:58:01.339340+00:00"
 }

@@ -109,7 +109,6 @@ function Topbar({ onAddNew }) {
                   alignItems: "center",
                   borderRadius: "8px",
                   cursor: "pointer",
-<<<<<<< HEAD
                   backgroundColor: "var(--color-primary)",
                   color: "var(--bg-surface)",
                   fontSize: 14,
@@ -118,16 +117,6 @@ function Topbar({ onAddNew }) {
                 }}
               >
                 Quick Actions
-=======
-                  backgroundColor: "#2C5FEA",
-                  color: "#FFFFFF",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  boxShadow: "0px 2px 8px rgba(44, 95, 234, 0.25)",
-                }}
-              >
-                Add New
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
               </Box>
             ) : null}
 

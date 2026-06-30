@@ -366,11 +366,7 @@ export default function OnboardingCompanyProfile() {
 
 <div className="form-group" style={{ width: "100%" }}>
   <label >
-<<<<<<< HEAD
     Mobile Number <span style={{ color: "var(--color-error)" }}>*</span>
-=======
-    Mobile Number <span style={{ color: "#FF3B30" }}>*</span>
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
   </label>
 
   <div
@@ -379,11 +375,7 @@ export default function OnboardingCompanyProfile() {
       height: "44px",
       border: "1px solid #D9D9D9",
       borderRadius: "8px",
-<<<<<<< HEAD
       background: "var(--bg-surface)",
-=======
-      background: "#FFFFFF",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
       display: "flex",
       alignItems: "center",
       paddingLeft: "22px",
@@ -526,11 +518,7 @@ export default function OnboardingCompanyProfile() {
                 <span
                   style={{
                     fontSize: "15px",
-<<<<<<< HEAD
                     color: "var(--text-primary)",
-=======
-                    color: "#141414",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
                     minWidth: "54px",
                   }}
                 >
@@ -571,11 +559,7 @@ export default function OnboardingCompanyProfile() {
         marginLeft: "16px",
         fontSize: "14px",
         fontWeight: 400,
-<<<<<<< HEAD
         color: "var(--text-primary)",
-=======
-        color: "#141414",
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
         letterSpacing: "1px",
         padding: 0,
       }}

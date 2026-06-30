@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
-=======
-import { Box, Typography, Divider, IconButton, Menu, MenuItem, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
->>>>>>> 2484f72e1eb51ddf60a6f00e07ada7c5c77025f0
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
