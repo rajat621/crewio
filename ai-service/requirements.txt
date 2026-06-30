@@ -34,7 +34,7 @@
 Flask==2.3.3
 Flask-CORS==4.0.0
 python-dotenv==1.0.0
-
+gunicorn==23.0.0
 # --- PDF text extraction (native digital PDFs) ---
 pdfplumber==0.10.3
 pypdf==3.17.4
