@@ -2,7 +2,7 @@ import SalarySlip from '../models/SalarySlip.js'
 import Employee from '../models/Employee.js'
 import InvoiceCounter from '../models/InvoiceCounter.js'
 import Notification from '../models/Notification.js'
-import { generateSalarySlipPdfBuffer } from '../services/salarySlipJsPdf.service.js'
+import { generateSalarySlipPdfBuffer } from '../services/Salaryslipjspdf.service.js'
 import { createAuditLog } from '../services/audit.service.js'
 import { sendPushToEmployee } from '../services/push.service.js'
 
