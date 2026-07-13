@@ -1,0 +1,17 @@
+﻿* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif !important;
+}
+body {
+  margin: 0;
+  background: #F6F7FC;
+  font-family: sans-serif !important;
+  color: var(--text-primary);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}

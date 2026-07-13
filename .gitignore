@@ -1,0 +1,134 @@
+# Virtual environment
+.venv/
+venv/
+env/
+.env/
+
+# Secrets and Environment Files
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+backend/.env
+ai-service/.env
+crewcontrol-fron/.env
+crewcontrol-fron/.env.local
+
+# Local databases
+*.db
+*.db-journal
+
+# Downloaded model cache
+backend/.cache/
+ai-service/__pycache__/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# VS Code and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+ai-service_consolidated_code.txt
+# Node
+node_modules/
+package-lock.json
+dist/
+build/
+frontend/dist/
+frontend/.vite/
+crewcontrol-fron/dist/
+/consolidated_texts/
+scripts/*
+# OS files
+.DS_Store
+Thumbs.db
+*.png
+code_dump_src.txt
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Test/Sample files
+*.pdf
+test-logo.png
+timesheet.pdf
+Invoice*.pdf
+
+# Storage uploads (keep structure, not contents)
+backend/src/storage/uploads/*
+backend/src/storage/invoices/*
+!backend/src/storage/uploads/.gitkeep
+!backend/src/storage/invoices/.gitkeep
+
+AI_SERVICE_CONSOLIDATED.txt
+*.txt
+!requirements.txt
+
+# Dependencies
+node_modules/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+dist/
+*.lock
+*.sh
+*.bat
+# Environment
+.env
+.env.local
+.env.*.local
+.env.*
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Flutter
+coverage/
+.dart_tool/
+.flutter-plugins
+*.apk
+*.ipa
+*.app
+.venv
+aquas_lib_consolidated.txt
+CONSOLIDATED_CODEBASE.txt
+*.zip
+# Node
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.npm
+ docs
+dashboard_code\backend_all.txt
+
+   dashboard_code/*
+        files
+        filestructure.txt
+        infra
+ filestructure.txt
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+.cache/
+temp/

@@ -1,0 +1,226 @@
+{
+  "summary": {
+    "files_total": 7,
+    "success_count": 7,
+    "failed_count": 0,
+    "review_count": 7
+  },
+  "per_file": [
+    {
+      "file": "Alqaser  Alsatea Tech Cont _260623_182237.pdf",
+      "path": "d:\\Crew_control\\ai-service\\timesheets\\Alqaser  Alsatea Tech Cont _260623_182237.pdf",
+      "success": true,
+      "rows": 1,
+      "subtotal": 4600.0,
+      "deductions": 31.0,
+      "vat": 228.45,
+      "net_total": 5082.81,
+      "confidence": 0.62,
+      "source": "ocr",
+      "review_required": true,
+      "review_reasons": [
+        "row_review:0",
+        "field_review:subtotal",
+        "field_review:vat",
+        "field_review:net_total",
+        "field_review:deductions"
+      ],
+      "anomalies": [],
+      "warnings": [
+        "extraction_source:ocr_fallback",
+        "layout:unknown",
+        "strategy:scanned_pdf_prefers_vision",
+        "validation:vat_inconsistency:reported=513.8100:expected=228.4500",
+        "validation:repairs=1"
+      ],
+      "error": null,
+      "elapsed_ms": 33352
+    },
+    {
+      "file": "Alqaser Alsatea Tech Cont (16).pdf",
+      "path": "d:\\Crew_control\\ai-service\\timesheets\\Alqaser Alsatea Tech Cont (16).pdf",
+      "success": true,
+      "rows": 2,
+      "subtotal": 4210.0,
+      "deductions": 125.0,
+      "vat": 204.25,
+      "net_total": 4289.25,
+      "confidence": 0.57,
+      "source": "ocr",
+      "review_required": true,
+      "review_reasons": [
+        "row_review:0",
+        "row_review:1",
+        "field_review:subtotal",
+        "field_review:vat",
+        "field_review:net_total",
+        "field_review:deductions"
+      ],
+      "anomalies": [],
+      "warnings": [
+        "extraction_source:ocr_fallback",
+        "layout:unknown",
+        "strategy:scanned_pdf_prefers_vision",
+        "validation:subtotal_row_mismatch:reported=31.00:row_sum=4210.00:diff_ratio=13480.65%",
+        "validation:repairs=3"
+      ],
+      "error": null,
+      "elapsed_ms": 28901
+    },
+    {
+      "file": "Alqaser Alsatea Tech Cont.pdf",
+      "path": "d:\\Crew_control\\ai-service\\timesheets\\Alqaser Alsatea Tech Cont.pdf",
+      "success": true,
+      "rows": 3,
+      "subtotal": 1275.0,
+      "deductions": 275.0,
+      "vat": 50.0,
+      "net_total": 1050.0,
+      "confidence": 0.65,
+      "source": "ocr",
+      "review_required": true,
+      "review_reasons": [
+        "row_review:0",
+        "row_review:1",
+        "row_review:2",
+        "field_review:subtotal",
+        "field_review:vat",
+        "field_review:net_total",
+        "field_review:deductions"
+      ],
+      "anomalies": [],
+      "warnings": [
+        "extraction_source:ocr_fallback",
+        "layout:unknown",
+        "strategy:scanned_pdf_prefers_vision"
+      ],
+      "error": null,
+      "elapsed_ms": 29373
+    },
+    {
+      "file": "Alqaser_Alsatea_Tech_Apr_26.pdf.pdf",
+      "path": "d:\\Crew_control\\ai-service\\timesheets\\Alqaser_Alsatea_Tech_Apr_26.pdf.pdf",
+      "success": true,
+      "rows": 3,
+      "subtotal": 2226.0,
+      "deductions": 0.0,
+      "vat": 111.3,
+      "net_total": 2337.3,
+      "confidence": 0.51,
+      "source": "ocr",
+      "review_required": true,
+      "review_reasons": [
+        "row_review:0",
+        "row_review:1",
+        "row_review:2",
+        "field_review:subtotal",
+        "field_review:vat",
+        "field_review:net_total",
+        "field_review:deductions"
+      ],
+      "anomalies": [],
+      "warnings": [
+        "extraction_source:ocr_fallback",
+        "layout:unknown",
+        "strategy:scanned_pdf_prefers_vision",
+        "validation:subtotal_row_mismatch:reported=4.00:row_sum=2226.00:diff_ratio=55550.00%",
+        "validation:vat_inconsistency:reported=0.2000:expected=111.3000",
+        "validation:net_total_inconsistency:reported=4.20:expected=2337.30",
+        "validation:repairs=3"
+      ],
+      "error": null,
+      "elapsed_ms": 30562
+    },
+    {
+      "file": "Invoice 8 (1)_removed.pdf",
+      "path": "d:\\Crew_control\\ai-service\\timesheets\\Invoice 8 (1)_removed.pdf",
+      "success": true,
+      "rows": 28,
+      "subtotal": 45585.0,
+      "deductions": 818.96,
+      "vat": 2238.302,
+      "net_total": 47004.34,
+      "confidence": 0.84,
+      "source": "native_pdf",
+      "review_required": true,
+      "review_reasons": [
+        "anomaly:duplicate_employee"
+      ],
+      "anomalies": [
+        "duplicate_employee"
+      ],
+      "warnings": [
+        "row_rejected:STEEL FIXER:hours_exceeds_limit:430.0",
+        "layout:mixed",
+        "strategy:digital_pdf_prefers_native",
+        "validation:subtotal_row_mismatch:reported=50.00:row_sum=45585.00:diff_ratio=91070.00%",
+        "validation:net_total_inconsistency:reported=22786.29:expected=47004.34",
+        "validation:repairs=3",
+        "anomaly:count=1"
+      ],
+      "error": null,
+      "elapsed_ms": 2488
+    },
+    {
+      "file": "timesheet.pdf",
+      "path": "d:\\Crew_control\\ai-service\\timesheets\\timesheet.pdf",
+      "success": true,
+      "rows": 3,
+      "subtotal": 6512.0,
+      "deductions": 0.0,
+      "vat": 325.6,
+      "net_total": 6837.6,
+      "confidence": 0.65,
+      "source": "ocr",
+      "review_required": true,
+      "review_reasons": [
+        "row_review:0",
+        "row_review:1",
+        "row_review:2",
+        "field_review:subtotal",
+        "field_review:vat",
+        "field_review:net_total",
+        "field_review:deductions"
+      ],
+      "anomalies": [],
+      "warnings": [
+        "extraction_source:ocr_fallback",
+        "layout:unknown",
+        "strategy:scanned_pdf_prefers_vision"
+      ],
+      "error": null,
+      "elapsed_ms": 21801
+    },
+    {
+      "file": "timesheet3.pdf",
+      "path": "d:\\Crew_control\\ai-service\\timesheets\\timesheet3.pdf",
+      "success": true,
+      "rows": 2,
+      "subtotal": 4210.0,
+      "deductions": 125.0,
+      "vat": 204.25,
+      "net_total": 4289.25,
+      "confidence": 0.57,
+      "source": "ocr",
+      "review_required": true,
+      "review_reasons": [
+        "row_review:0",
+        "row_review:1",
+        "field_review:subtotal",
+        "field_review:vat",
+        "field_review:net_total",
+        "field_review:deductions"
+      ],
+      "anomalies": [],
+      "warnings": [
+        "extraction_source:ocr_fallback",
+        "layout:unknown",
+        "strategy:scanned_pdf_prefers_vision",
+        "validation:subtotal_row_mismatch:reported=31.00:row_sum=4210.00:diff_ratio=13480.65%",
+        "validation:repairs=3"
+      ],
+      "error": null,
+      "elapsed_ms": 27160
+    }
+  ]
+}

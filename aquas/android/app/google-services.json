@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "808047098281",
+    "project_id": "aqasapp-9c261",
+    "storage_bucket": "aqasapp-9c261.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808047098281:android:7c82e09ad8ec5033b6acb8",
+        "android_client_info": {
+          "package_name": "com.example.aquas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAom5YyJzUkYd6ELUTQ6EGVYrK4rPWgDiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,10 @@
+﻿@import "./styles/variables.css";
+@import "./styles/globals.css";
+@import "./styles/utilities.css";
+
+.app-container {
+  height: 100vh;
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+}
