@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../config/theme/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -77,40 +78,12 @@ class _SplashPageState extends State<SplashPage>
                 opacity: _fadeAnimation,
                 child: ScaleTransition(
                   scale: _scaleAnimation,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1F3B7E),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // AQAS Logo placeholder (replace with actual logo)
-                        const Text(
-                          'AQAS',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.warningYellow,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'TOGETHER WE BUILD',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.warningYellow,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: SvgPicture.asset(
+  'assets/images/Logo (2).svg',
+  width: 180,
+  height: 180,
+  fit: BoxFit.contain,
+),
                 ),
               ),
               const SizedBox(height: 60),

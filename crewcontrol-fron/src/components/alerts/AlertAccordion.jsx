@@ -10,7 +10,7 @@ function formatCount(count) {
   return String(count || 0).padStart(2, "0");
 }
 
-function AlertActionRow({ item, actionLabel, onAction }) {
+function AlertActionRow({ item, actionLabel, busyLabel, onAction, isBusy }) {
   return (
     <Box
       sx={{
@@ -57,6 +57,7 @@ function AlertActionRow({ item, actionLabel, onAction }) {
 
       <Button
         variant="outlined"
+        disabled={isBusy}
         onClick={(event) => {
           event.stopPropagation();
           onAction?.(item);
@@ -69,26 +70,26 @@ function AlertActionRow({ item, actionLabel, onAction }) {
           minHeight: 32,
           px: 0,
           borderRadius: "8px",
-          borderColor: "#2454D9",
-          color: "#2454D9",
+          borderColor: isBusy ? "#B9C4D6" : "#2454D9",
+          color: isBusy ? "#8A93A6" : "#2454D9",
           fontSize: 14,
           fontWeight: 600,
           lineHeight: "20px",
           textTransform: "none",
           backgroundColor: "transparent",
           "&:hover": {
-            borderColor: "#2454D9",
-            backgroundColor: "var(--bg-info-soft)",
+            borderColor: isBusy ? "#B9C4D6" : "#2454D9",
+            backgroundColor: isBusy ? "transparent" : "var(--bg-info-soft)",
           },
         }}
       >
-        {actionLabel}
+        {isBusy ? (busyLabel || "...") : actionLabel}
       </Button>
     </Box>
   );
 }
 
-function AlertSection({ title, items, actionLabel, onAction }) {
+function AlertSection({ title, items, actionLabel, busyLabel, onAction, isItemBusy }) {
   if (!items.length) return null;
 
   return (
@@ -118,7 +119,9 @@ function AlertSection({ title, items, actionLabel, onAction }) {
             key={`${item.name || "alert"}-${index}`}
             item={item}
             actionLabel={actionLabel}
+            busyLabel={busyLabel}
             onAction={onAction}
+            isBusy={Boolean(isItemBusy?.(item))}
           />
         ))}
       </Box>
@@ -226,7 +229,9 @@ function AlertAccordion({
               title={section.title}
               items={section.items || []}
               actionLabel={section.actionLabel}
+              busyLabel={section.busyLabel}
               onAction={section.onAction}
+              isItemBusy={section.isItemBusy}
             />
           ))}
         </Box>
@@ -236,4 +241,3 @@ function AlertAccordion({
 }
 
 export default AlertAccordion;
-

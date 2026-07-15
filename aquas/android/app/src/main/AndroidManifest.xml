@@ -20,6 +20,7 @@
 
     <!-- Push / local notifications (Android 13+ requires this at runtime) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
     <!-- Lets FCM/local notifications keep working reliably across reboots
          and Doze mode for time-sensitive alerts (assignment, chat, etc.) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
