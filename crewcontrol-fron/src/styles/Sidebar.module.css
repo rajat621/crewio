@@ -1,0 +1,33 @@
+﻿.sidebar {
+  width: 240px;
+  background-color: var(--bg-surface);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.active {
+  background-color: var(--bg-info-soft);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+

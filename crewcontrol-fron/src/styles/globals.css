@@ -1,0 +1,106 @@
+﻿* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+}
+
+.main-content,
+.scrollable-container,
+[data-scrollable="true"] {
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+.thin-overlay-scroll {
+  overflow-y: auto;
+  overflow-y: overlay;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-gutter: auto;
+}
+
+.thin-overlay-scroll::-webkit-scrollbar,
+.main-content::-webkit-scrollbar,
+.scrollable-container::-webkit-scrollbar,
+[data-scrollable="true"]::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.thin-overlay-scroll::-webkit-scrollbar-track,
+.main-content::-webkit-scrollbar-track,
+.scrollable-container::-webkit-scrollbar-track,
+[data-scrollable="true"]::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-overlay-scroll::-webkit-scrollbar-thumb,
+.main-content::-webkit-scrollbar-thumb,
+.scrollable-container::-webkit-scrollbar-thumb,
+[data-scrollable="true"]::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.thin-overlay-scroll::-webkit-scrollbar-thumb:hover,
+.main-content::-webkit-scrollbar-thumb:hover,
+.scrollable-container::-webkit-scrollbar-thumb:hover,
+[data-scrollable="true"]::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+input::placeholder,
+input::-webkit-input-placeholder,
+input::-moz-placeholder,
+input:-ms-input-placeholder {
+  color: var(--text-placeholder);
+  opacity: 1;
+}
+
+.assign-company-select {
+  border: 1px solid var(--border-input);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  outline: none;
+}
+
+.assign-company-select:hover {
+  border-color: var(--border-input-hover);
+}
+
+.assign-company-select:focus,
+.assign-company-select:focus-visible {
+  border-color: var(--border-input-selected);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  outline: none;
+}
+

@@ -1,0 +1,24 @@
+node_modules/
+.env
+.env.local
+
+# User-uploaded and generated files never belong in git - once STORAGE_DRIVER=r2
+# is set these won't be written locally at all except as scratch space during
+# PDF generation, but keep this ignored regardless.
+src/storage/uploads/
+src/storage/invoices/
+!src/storage/.gitkeep
+
+# Test/benchmark artifacts
+test-outputs/
+loadtests/*.log
+scripts/*_report.json
+scripts/*_plan.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS/editor
+.DS_Store
+.vscode/

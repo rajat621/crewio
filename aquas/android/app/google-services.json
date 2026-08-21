@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "863513738499",
+    "project_id": "crewio-2f1ec",
+    "storage_bucket": "crewio-2f1ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863513738499:android:2722cfee360f86285dfd36",
+        "android_client_info": {
+          "package_name": "ae.crewio.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh1T9xOlXxLhwcXOp_vdkA7AGslsijyPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,2 @@
+﻿"""Local vision extraction helpers."""
+

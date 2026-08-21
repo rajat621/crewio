@@ -1,0 +1,16 @@
+# Copy this file to android/key.properties (same folder) and fill in your
+# real values. android/key.properties is git-ignored - never commit it or
+# the .jks/.keystore file it points to.
+#
+# Generate an upload keystore first, if you don't have one:
+#   keytool -genkey -v -keystore ~/crewcontrol-upload-key.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias crewcontrol_upload
+#
+# Keep that .jks file and these passwords somewhere safe (e.g. a password
+# manager / secrets vault) - losing them means you can never publish an
+# update to an app already live on the Play Store under this signing key.
+
+storeFile=/absolute/path/to/crewcontrol-upload-key.jks
+storePassword=CHANGE_ME
+keyAlias=crewcontrol_upload
+keyPassword=CHANGE_ME

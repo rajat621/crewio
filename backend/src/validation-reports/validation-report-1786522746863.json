@@ -1,0 +1,124 @@
+{
+  "timestamp": "2026-08-12T08:19:06.513Z",
+  "environment": {
+    "nodeVersion": "v22.22.2",
+    "platform": "linux"
+  },
+  "tests": {
+    "tests": [
+      {
+        "name": "test_singlePageInvoice",
+        "passed": true
+      },
+      {
+        "name": "test_multiPageInvoice",
+        "passed": true,
+        "fileSize": 7902
+      },
+      {
+        "name": "test_noProjectIDs",
+        "passed": true
+      },
+      {
+        "name": "test_mixedProjectIDs",
+        "passed": true
+      },
+      {
+        "name": "test_longTradeNames",
+        "passed": true
+      },
+      {
+        "name": "test_multipleVATRates",
+        "passed": true,
+        "results": [
+          {
+            "passed": true,
+            "vatRate": "0%"
+          },
+          {
+            "passed": true,
+            "vatRate": "5%"
+          },
+          {
+            "passed": true,
+            "vatRate": "15%"
+          }
+        ]
+      },
+      {
+        "name": "test_largeRowCount",
+        "passed": true
+      },
+      {
+        "name": "test_confidenceGatingBlock",
+        "passed": true,
+        "result": {
+          "approved": false,
+          "confident": false,
+          "avgConfidence": 0.45,
+          "rejectionRate": 0.9375,
+          "acceptedRowCount": 1,
+          "rejectedRowCount": 15,
+          "errors": [
+            "Overall extraction confidence (45.00%) below minimum threshold (70.00%)",
+            "Rejection rate (93.75%) exceeds maximum (5.00%). 15 rows rejected."
+          ],
+          "warnings": [
+            "3 row(s) have low confidence: overall, trade, rate"
+          ]
+        }
+      },
+      {
+        "name": "test_confidenceGatingApproval",
+        "passed": true,
+        "result": {
+          "approved": false,
+          "confident": false,
+          "avgConfidence": 0.7933333333333333,
+          "rejectionRate": 0.11764705882352941,
+          "acceptedRowCount": 15,
+          "rejectedRowCount": 2,
+          "errors": [
+            "Rejection rate (11.76%) exceeds maximum (5.00%). 2 rows rejected."
+          ],
+          "warnings": [
+            "Extraction confidence (79.33%) is below recommended threshold (85.00%). Recommend review."
+          ]
+        },
+        "reviewRequired": true
+      },
+      {
+        "name": "test_confidenceGatingAutoGenerate",
+        "passed": true,
+        "result": {
+          "approved": true,
+          "confident": true,
+          "avgConfidence": 0.9574999999999999,
+          "rejectionRate": 0,
+          "acceptedRowCount": 20,
+          "rejectedRowCount": 0,
+          "errors": [],
+          "warnings": []
+        }
+      },
+      {
+        "name": "test_universalReviewInvariant",
+        "passed": true
+      },
+      {
+        "name": "test_reviewTokenSecurity",
+        "passed": true
+      }
+    ],
+    "summary": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0
+    }
+  },
+  "recommendations": [
+    "âœ“ All tests passed - system is ready for production",
+    "âœ“ Confidence gating working correctly",
+    "âœ“ Multi-page pagination verified"
+  ]
+}

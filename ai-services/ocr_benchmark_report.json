@@ -1,0 +1,161 @@
+[
+  {
+    "file": "Alqaser  Alsatea Tech Cont _260623_182237.pdf",
+    "layout": "attendance_matrix_with_summary",
+    "strategy": "attendance_matrix_with_summary_prefers_ocr_geometry",
+    "source": "ocr",
+    "rows_extracted": 0,
+    "subtotal": 0.0,
+    "vat": 0.0,
+    "net_total": 0.0,
+    "confidence": 0.2,
+    "mismatches": [
+      "reconcile:deductions_capped_to_subtotal",
+      "reconcile:vat_recomputed",
+      "reconcile:net_total_recomputed"
+    ],
+    "warnings": [
+      "layout:attendance_matrix_with_summary",
+      "strategy:attendance_matrix_with_summary_prefers_ocr_geometry",
+      "reconcile:deductions_capped_to_subtotal",
+      "reconcile:vat_recomputed",
+      "reconcile:net_total_recomputed",
+      "anomaly:count=4"
+    ]
+  },
+  {
+    "file": "Alqaser Alsatea Tech Cont (16).pdf",
+    "layout": "attendance_matrix_with_summary",
+    "strategy": "attendance_matrix_with_summary_prefers_ocr_geometry",
+    "source": "ocr",
+    "rows_extracted": 1,
+    "subtotal": 0.0,
+    "vat": 0.0,
+    "net_total": 0.0,
+    "confidence": 0.63,
+    "mismatches": [
+      "validation:repairs=2"
+    ],
+    "warnings": [
+      "extraction_source:ocr_fallback",
+      "layout:attendance_matrix_with_summary",
+      "strategy:attendance_matrix_with_summary_prefers_ocr_geometry",
+      "validation:repairs=2",
+      "anomaly:count=1"
+    ]
+  },
+  {
+    "file": "Alqaser Alsatea Tech Cont.pdf",
+    "layout": "attendance_matrix_with_summary",
+    "strategy": "attendance_matrix_with_summary_prefers_ocr_geometry",
+    "source": "ocr",
+    "rows_extracted": 4,
+    "subtotal": 5725.0,
+    "vat": 286.25,
+    "net_total": 6011.25,
+    "confidence": 0.63,
+    "mismatches": [
+      "validation:rejected_rows=4",
+      "validation:subtotal_row_mismatch:reported=31.00:row_sum=5725.00:diff_ratio=99.46%",
+      "validation:vat_inconsistency:reported=1.5500:expected=286.2500",
+      "validation:net_total_inconsistency:reported=32.55:expected=6011.25",
+      "validation:repairs=3",
+      "reconcile:subtotal_reset_from_rows"
+    ],
+    "warnings": [
+      "extraction_priority:billing_summary",
+      "extraction_source:ocr_fallback",
+      "layout:attendance_matrix_with_summary",
+      "strategy:attendance_matrix_with_summary_prefers_ocr_geometry",
+      "validation:rejected_rows=4",
+      "validation:subtotal_row_mismatch:reported=31.00:row_sum=5725.00:diff_ratio=99.46%",
+      "validation:vat_inconsistency:reported=1.5500:expected=286.2500",
+      "validation:net_total_inconsistency:reported=32.55:expected=6011.25",
+      "validation:repairs=3",
+      "reconcile:subtotal_reset_from_rows",
+      "anomaly:count=2"
+    ]
+  },
+  {
+    "file": "Alqaser_Alsatea_Tech_Apr_26.pdf.pdf",
+    "layout": "attendance_matrix_with_summary",
+    "strategy": "attendance_matrix_with_summary_prefers_ocr_geometry",
+    "source": "ocr",
+    "rows_extracted": 0,
+    "subtotal": 5.0,
+    "vat": 0.25,
+    "net_total": 5.25,
+    "confidence": 0.82,
+    "mismatches": [],
+    "warnings": [
+      "layout:attendance_matrix_with_summary",
+      "strategy:attendance_matrix_with_summary_prefers_ocr_geometry"
+    ]
+  },
+  {
+    "file": "Invoice 8 (1)_removed.pdf",
+    "layout": "attendance_matrix_with_summary",
+    "strategy": "digital_pdf_prefers_native",
+    "source": "native_pdf",
+    "rows_extracted": 27,
+    "subtotal": 21979.75,
+    "vat": 1098.99,
+    "net_total": 22786.29,
+    "confidence": 0.68,
+    "mismatches": [
+      "validation:rejected_rows=23",
+      "validation:subtotal_row_mismatch:reported=50.00:row_sum=21979.75:diff_ratio=99.77%",
+      "validation:repairs=2",
+      "reconcile:subtotal_reset_from_rows"
+    ],
+    "warnings": [
+      "row_rejected:STEEL FIXER:hours_exceeds_limit:430.0",
+      "layout:attendance_matrix_with_summary",
+      "strategy:digital_pdf_prefers_native",
+      "validation:rejected_rows=23",
+      "validation:subtotal_row_mismatch:reported=50.00:row_sum=21979.75:diff_ratio=99.77%",
+      "validation:repairs=2",
+      "reconcile:subtotal_reset_from_rows",
+      "anomaly:count=2"
+    ]
+  },
+  {
+    "file": "timesheet.pdf",
+    "layout": "mixed_layout",
+    "strategy": "mixed_layout_prefers_vision_then_ocr",
+    "source": "ocr",
+    "rows_extracted": 3,
+    "subtotal": 6512.0,
+    "vat": 325.6,
+    "net_total": 6837.6,
+    "confidence": 0.76,
+    "mismatches": [],
+    "warnings": [
+      "extraction_priority:billing_summary",
+      "extraction_source:ocr_fallback",
+      "layout:mixed_layout",
+      "strategy:mixed_layout_prefers_vision_then_ocr"
+    ]
+  },
+  {
+    "file": "timesheet3.pdf",
+    "layout": "attendance_matrix_with_summary",
+    "strategy": "attendance_matrix_with_summary_prefers_ocr_geometry",
+    "source": "ocr",
+    "rows_extracted": 1,
+    "subtotal": 0.0,
+    "vat": 0.0,
+    "net_total": 0.0,
+    "confidence": 0.63,
+    "mismatches": [
+      "validation:repairs=2"
+    ],
+    "warnings": [
+      "extraction_source:ocr_fallback",
+      "layout:attendance_matrix_with_summary",
+      "strategy:attendance_matrix_with_summary_prefers_ocr_geometry",
+      "validation:repairs=2",
+      "anomaly:count=1"
+    ]
+  }
+]

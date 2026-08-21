@@ -1,0 +1,11 @@
+[phases.setup]
+aptPkgs = [
+  "poppler-utils",
+  "libgl1",
+  "libglib2.0-0",
+  "libsm6",
+  "libxext6"
+]
+
+[start]
+cmd = "gunicorn main:app --workers 2 --threads 4 --bind 0.0.0.0:$PORT --timeout 300"
