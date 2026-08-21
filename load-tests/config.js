@@ -27,11 +27,22 @@ export const EMPLOYEE_IDS = (__ENV.TEST_EMPLOYEE_IDS || '')
 
 export const EMPLOYEE_PASSWORD = __ENV.TEST_EMPLOYEE_PASSWORD || '';
 
+// LOAD_TEST_CLIENT_IP: only meaningful when the server's LOAD_TEST_ALLOWED_IPS
+// exemption (rateLimiters.js) is active for controlled testing - sent as
+// X-Forwarded-For so apiLimiter's skip() sees the expected, pre-authorized
+// IP. Discovered during testing: Railway's proxy chain is deeper than the
+// app's `trust proxy: 1` setting accounts for, so req.ip does NOT resolve to
+// the real client IP without this - a real finding, not just a test
+// workaround (see PERFORMANCE.md). Omitted entirely (empty header, ignored)
+// when unset, so this has zero effect outside an explicitly authorized test run.
+const LOAD_TEST_CLIENT_IP = __ENV.LOAD_TEST_CLIENT_IP || '';
+
 // A single shared owner-scoped header set - used by every scenario that
 // reads owner/dashboard-side data. Real JWT, real middleware, no auth bypass.
 export const ownerHeaders = () => ({
   Authorization: `Bearer ${OWNER_JWT_TOKEN}`,
   'Content-Type': 'application/json',
+  ...(LOAD_TEST_CLIENT_IP ? { 'X-Forwarded-For': LOAD_TEST_CLIENT_IP } : {}),
 });
 
 // Picks one employee id deterministically per VU/iteration so concurrent
