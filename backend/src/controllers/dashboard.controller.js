@@ -227,32 +227,52 @@ export const getFinanceSummary = async (req, res) => {
     const summary = await cacheGetOrSet(cacheKey, 30, async () => {
       const slipPeriodMatch = getSalarySlipPeriodMatch(range);
 
+      // Atlas M0 (shared/free tier, confirmed - see PERFORMANCE.md) has a
+      // hard concurrent-operation ceiling, not a per-query cost problem
+      // (every query shape here is already IXSCAN-only, verified via
+      // explain() against production). On a tier like that, the number of
+      // Mongo round trips per request matters as much as each one's own
+      // cost. Invoice and CompanyExpense were each queried multiple times
+      // with the EXACT SAME $match - merged into one $facet per collection
+      // so the index scan happens once and all three (Invoice) / two
+      // (CompanyExpense) aggregations share it, instead of each repeating
+      // the same IXSCAN independently. Cuts this endpoint's Mongo round
+      // trips from 9 to 6 with byte-identical results.
+      const dateFormat = range.granularity === 'day' ? '%Y-%m-%d' : '%Y-%m';
       const [
-        invoiceBuckets,
-        expenseBuckets,
+        invoiceFacet,
+        expenseFacet,
         salaryPeriodAgg,
-        invoiceTotalsByCompany,
         companies,
         employees,
-        invoiceTotalsAgg,
-        expenseTotalAgg,
         employeeExpensePeriodAgg,
       ] = await Promise.all([
         Invoice.aggregate([
           { $match: { ownerId, invoiceDate: { $gte: range.start, $lt: range.end } } },
           {
-            $group: {
-              _id: { $dateToString: { format: range.granularity === 'day' ? '%Y-%m-%d' : '%Y-%m', date: '$invoiceDate' } },
-              revenue: { $sum: '$total' },
+            $facet: {
+              buckets: [
+                { $group: { _id: { $dateToString: { format: dateFormat, date: '$invoiceDate' } }, revenue: { $sum: '$total' } } },
+              ],
+              byCompany: [
+                { $group: { _id: '$company', invoiceTotal: { $sum: '$total' } } },
+              ],
+              totals: [
+                { $group: { _id: null, subtotal: { $sum: '$subtotal' }, vat: { $sum: '$vatAmount' } } },
+              ],
             },
           },
         ]),
         CompanyExpense.aggregate([
           { $match: { ownerId, date: { $gte: range.start, $lt: range.end } } },
           {
-            $group: {
-              _id: { $dateToString: { format: range.granularity === 'day' ? '%Y-%m-%d' : '%Y-%m', date: '$date' } },
-              expense: { $sum: '$amount' },
+            $facet: {
+              buckets: [
+                { $group: { _id: { $dateToString: { format: dateFormat, date: '$date' } }, expense: { $sum: '$amount' } } },
+              ],
+              total: [
+                { $group: { _id: null, total: { $sum: '$amount' } } },
+              ],
             },
           },
         ]),
@@ -263,10 +283,6 @@ export const getFinanceSummary = async (req, res) => {
         SalarySlip.aggregate([
           { $match: { ownerId, status: { $in: PAID_SLIP_STATUSES }, ...slipPeriodMatch } },
           { $group: { _id: null, total: { $sum: '$netSalary' } } },
-        ]),
-        Invoice.aggregate([
-          { $match: { ownerId, invoiceDate: { $gte: range.start, $lt: range.end } } },
-          { $group: { _id: '$company', invoiceTotal: { $sum: '$total' } } },
         ]),
         Company.find({ ownerId, companyRole: 'client' }).select('name status').lean(),
         // totalInvestmentAmount/totalEarnedAmount are the cached/running
@@ -281,14 +297,6 @@ export const getFinanceSummary = async (req, res) => {
         // filtered records[] sum below now happens entirely server-side
         // via aggregation instead.
         Employee.find({ ownerId }).select('employeeId name company totalInvestmentAmount totalEarnedAmount').lean(),
-        Invoice.aggregate([
-          { $match: { ownerId, invoiceDate: { $gte: range.start, $lt: range.end } } },
-          { $group: { _id: null, subtotal: { $sum: '$subtotal' }, vat: { $sum: '$vatAmount' } } },
-        ]),
-        CompanyExpense.aggregate([
-          { $match: { ownerId, date: { $gte: range.start, $lt: range.end } } },
-          { $group: { _id: null, total: { $sum: '$amount' } } },
-        ]),
         // Employee.expenses.records[].amount summed server-side for the
         // period-filtered "Total Expenses" KPI - $convert (not $toDate)
         // so a record with a missing/malformed `date` string is excluded
@@ -309,6 +317,12 @@ export const getFinanceSummary = async (req, res) => {
           { $group: { _id: null, total: { $sum: '$expenses.records.amount' } } },
         ]),
       ]);
+
+      const invoiceBuckets = invoiceFacet[0]?.buckets || [];
+      const invoiceTotalsByCompany = invoiceFacet[0]?.byCompany || [];
+      const invoiceTotalsAgg = invoiceFacet[0]?.totals || [];
+      const expenseBuckets = expenseFacet[0]?.buckets || [];
+      const expenseTotalAgg = expenseFacet[0]?.total || [];
 
       const revenueByBucket = new Map(invoiceBuckets.map((r) => [r._id, r.revenue || 0]));
       const expenseByBucket = new Map(expenseBuckets.map((r) => [r._id, r.expense || 0]));

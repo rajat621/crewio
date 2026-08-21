@@ -303,6 +303,7 @@ if (!ownerId) {
 
     await company.save();
     console.log('Create company: ownerId=', user.ownerId, 'createdBy=', user.userId, 'companyId=', company._id);
+    await cacheInvalidate(employeeCachePrefix(user.ownerId));
 
     res.status(201).json({
       message: 'Company created successfully',
@@ -569,6 +570,8 @@ export const updateCompany = async (req, res) => {
       return res.status(404).json({ message: 'Company not found' });
     }
 
+    await cacheInvalidate(employeeCachePrefix(ownerId));
+
     res.json({
       message: 'Company updated successfully',
       data: company,
@@ -624,6 +627,7 @@ export const createClientCompany = async (req, res) => {
 
     await company.save();
     console.log('Create client company: ownerId=', ownerId, 'createdBy=', req.user?.userId || userId, 'companyId=', company._id);
+    await cacheInvalidate(employeeCachePrefix(ownerId));
 
     res.status(201).json({
       message: 'Client company created successfully',
@@ -664,10 +668,21 @@ export const getCompanies = async (req, res) => {
       ],
     };
 
-    const [companies, total] = await Promise.all([
-      Company.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
-      Company.countDocuments(query),
-    ]);
+    // Cached like every other list endpoint in this codebase (employees,
+    // salary-slips) - was previously the one hot list endpoint hitting Mongo
+    // on every single request with no staleness tolerance at all, unlike its
+    // siblings. Same prefix getCompanyWorkforceSummary already uses, so the
+    // existing delete-time cacheInvalidate call below already covers this;
+    // create/update now also invalidate it (see createCompany/updateCompany/
+    // createClientCompany).
+    const cacheKey = `${employeeCachePrefix(ownerId)}companies:list:${page}:${limit}`;
+    const { companies, total } = await cacheGetOrSet(cacheKey, 30, async () => {
+      const [companies, total] = await Promise.all([
+        Company.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+        Company.countDocuments(query),
+      ]);
+      return { companies, total };
+    });
     res.json({ data: companies, page, limit, total, hasMore: skip + companies.length < total });
   } catch (error) {
     console.error('Get companies error:', error);
@@ -797,15 +812,19 @@ export const getClientCompanies = async (req, res) => {
     // endpoint transferred every client company's full asset payload on
     // every Companies-page/Home load regardless of list size, with no
     // pagination on top of that.
-    const [companies, total] = await Promise.all([
-      Company.find(query)
-        .select('-logo -stamp -signature -invoiceTemplate')
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Company.countDocuments(query),
-    ]);
+    const cacheKey = `${employeeCachePrefix(ownerId)}companies:clients:${page}:${limit}`;
+    const { companies, total } = await cacheGetOrSet(cacheKey, 30, async () => {
+      const [companies, total] = await Promise.all([
+        Company.find(query)
+          .select('-logo -stamp -signature -invoiceTemplate')
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit)
+          .lean(),
+        Company.countDocuments(query),
+      ]);
+      return { companies, total };
+    });
     res.json({ data: companies, page, limit, total, hasMore: skip + companies.length < total });
   } catch (error) {
     console.error('Get client companies error:', error);
