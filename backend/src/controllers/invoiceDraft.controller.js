@@ -14,6 +14,14 @@ import {
   summariseDraft,
 } from '../services/invoiceDraft.service.js';
 import { invoiceApprovalQueue } from '../queue/invoiceApproval.queue.js';
+import { withTimeout } from '../utils/cache.util.js';
+
+// The shared Redis connection uses maxRetriesPerRequest:null (required by
+// BullMQ), which means a Queue.add() call made directly from this request
+// handler could otherwise queue indefinitely during a Redis outage instead
+// of failing fast - bound it the same way cache.util.js bounds its own
+// Redis calls.
+const QUEUE_ADD_TIMEOUT_MS = 5000;
 
 /**
  * Invoice drafts: the human approval step between extraction and PDF.
@@ -191,21 +199,24 @@ export const getInvoiceDraft = async (req, res) => {
     let draft = await loadOwnedDraft(req, res);
     if (!draft) return undefined;
 
-    // Timeout self-heal: a draft can only leave 'approving' via the
-    // invoice-approval worker (success -> 'approved', failure ->
+    // Timeout self-heal: a draft can only leave 'approving'/'processing'
+    // via the invoice-approval worker (success -> 'approved', failure ->
     // rollbackDraft's 'ready'). If that worker process isn't running at
     // all (misconfigured deploy, crashed, never started) the job that was
     // enqueued for this draft will simply never be picked up, and nothing
-    // else ever touches this document - it would otherwise sit in
-    // 'approving' forever, unable to be re-approved (status isn't
-    // 'ready') or discarded (discardInvoiceDraft's guard). Polling is
-    // exactly where a stuck claim gets noticed, so recover it here: past
-    // a generous timeout with no update, treat it the same as a failed
-    // job and roll it back with an explicit, honest error message.
+    // else ever touches this document - it would otherwise sit stuck
+    // forever, unable to be re-approved (status isn't 'ready') or
+    // discarded (discardInvoiceDraft's guard). Polling is exactly where a
+    // stuck claim gets noticed, so recover it here: past a generous
+    // timeout with no update, treat it the same as a failed job and roll
+    // it back with an explicit, honest error message.
     const APPROVAL_TIMEOUT_MS = 2 * 60 * 1000;
-    if (draft.status === 'approving' && Date.now() - new Date(draft.updatedAt).getTime() > APPROVAL_TIMEOUT_MS) {
+    if (
+      (draft.status === 'approving' || draft.status === 'processing') &&
+      Date.now() - new Date(draft.updatedAt).getTime() > APPROVAL_TIMEOUT_MS
+    ) {
       const recovered = await InvoiceDraft.findOneAndUpdate(
-        { _id: draft._id, status: 'approving' },
+        { _id: draft._id, status: { $in: ['approving', 'processing'] } },
         { $set: { status: 'ready', error: 'Invoice generation timed out. Please try approving again.' } },
         { new: true }
       );
@@ -420,17 +431,20 @@ export const approveInvoiceDraft = async (req, res) => {
       // above: even if something enqueued twice for the exact same
       // claim, BullMQ treats a second add() with an existing jobId as a
       // no-op rather than running the job twice.
-      await invoiceApprovalQueue.add(
-        'approve',
-        {
-          draftId: String(claimedDraft._id),
-          ownerId: String(claimedDraft.ownerId),
-          userId: req.user?.userId || null,
-          companyId: req.user?.companyId || null,
-          payload,
-          expectedVersion: claimedDraft.__v,
-        },
-        { jobId: `approve:${claimedDraft._id}:${claimedDraft.__v}` }
+      await withTimeout(
+        invoiceApprovalQueue.add(
+          'approve',
+          {
+            draftId: String(claimedDraft._id),
+            ownerId: String(claimedDraft.ownerId),
+            userId: req.user?.userId || null,
+            companyId: req.user?.companyId || null,
+            payload,
+            expectedVersion: claimedDraft.__v,
+          },
+          { jobId: `approve:${claimedDraft._id}:${claimedDraft.__v}` }
+        ),
+        QUEUE_ADD_TIMEOUT_MS
       );
     } catch (enqueueError) {
       // Queue unavailable (Redis down) - roll the claim back immediately
@@ -468,33 +482,33 @@ export const discardInvoiceDraft = async (req, res) => {
     const draft = await loadOwnedDraft(req, res);
     if (!draft) return undefined;
 
-    // 'approving' included: a job may be mid-flight in the worker right
-    // now (recompute/render/save), about to create a real Invoice and
-    // flip this draft to 'approved' - discarding underneath it would let
-    // the worker's later write resurrect a 'discarded' draft back to
-    // 'approved' with an invoiceId, or (worse, if the worker's own
-    // findByIdAndUpdate loses this specific race) leave an Invoice
+    // 'approving'/'processing' included: a job may be mid-flight in the
+    // worker right now (recompute/render/save), about to create a real
+    // Invoice and flip this draft to 'approved' - discarding underneath
+    // it would let the worker's later write resurrect a 'discarded' draft
+    // back to 'approved' with an invoiceId, or (worse, if the worker's
+    // own findByIdAndUpdate loses this specific race) leave an Invoice
     // pointing at a draft the user believes they discarded. Same
     // financial-correctness reasoning as the 'approved' guard already had.
-    if (draft.status === 'approved' || draft.status === 'approving') {
+    if (draft.status === 'approved' || draft.status === 'approving' || draft.status === 'processing') {
       return res.status(409).json({
-        message: draft.status === 'approving'
-          ? 'This draft is being approved and cannot be discarded right now'
-          : 'Approved drafts cannot be discarded',
+        message: draft.status === 'approved'
+          ? 'Approved drafts cannot be discarded'
+          : 'This draft is being approved and cannot be discarded right now',
       });
     }
 
     // Atomic transition: the earlier status check above is only a
     // fast-path early return for the common case - the actual safety
     // guarantee is here. A concurrent approval request's atomic claim
-    // (approveInvoiceDraft) could commit status:'approving'/'approved'
-    // between this function's read above and this write; without
-    // re-checking the condition as part of the SAME atomic operation,
-    // this save() would silently overwrite that approval back to
-    // 'discarded', stranding an already-created (or in-flight) Invoice
+    // (approveInvoiceDraft) could commit status:'approving'/'processing'/
+    // 'approved' between this function's read above and this write;
+    // without re-checking the condition as part of the SAME atomic
+    // operation, this save() would silently overwrite that approval back
+    // to 'discarded', stranding an already-created (or in-flight) Invoice
     // with a draft that no longer reflects it.
     const updated = await InvoiceDraft.findOneAndUpdate(
-      { _id: draft._id, ownerId: draft.ownerId, status: { $nin: ['approved', 'approving'] } },
+      { _id: draft._id, ownerId: draft.ownerId, status: { $nin: ['approved', 'approving', 'processing'] } },
       { $set: { status: 'discarded', expiresAt: new Date(Date.now() + 60 * 60 * 1000) }, $inc: { __v: 1 } },
       { new: true }
     );

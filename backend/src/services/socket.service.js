@@ -1,9 +1,11 @@
 import { Server } from 'socket.io';
+import { createAdapter } from '@socket.io/redis-adapter';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { env } from '../config/env.js';
 import { getAllowedOrigins, isAllowedOrigin } from '../config/corsOrigins.js';
 import Employee from '../models/Employee.js';
+import redisConnection from '../queue/redis.connection.js';
 
 /**
  * Real-time layer for CrewControl.
@@ -39,6 +41,22 @@ export const initSocket = (httpServer) => {
     // fallback rather than requiring an immediate websocket upgrade.
     transports: ['websocket', 'polling'],
   });
+
+  // Without this, io.to(room).emit(...) (used by every emitTo* helper
+  // below) only reaches sockets connected to THIS process - horizontally
+  // scaling the API to more than one Railway replica would silently break
+  // realtime delivery for any client connected to a different replica
+  // than the one handling the emit. Reuses the same shared Redis
+  // connection as everything else (BullMQ, cache) via .duplicate() - the
+  // adapter needs its own dedicated pub/sub connections, it can't share
+  // the primary connection's command queue.
+  if (redisConnection) {
+    const pubClient = redisConnection.duplicate();
+    const subClient = redisConnection.duplicate();
+    io.adapter(createAdapter(pubClient, subClient));
+  } else {
+    console.warn('[socket] Redis disabled - Socket.IO adapter running single-instance only. Realtime events will NOT reach clients on other replicas if this API is horizontally scaled.');
+  }
 
   io.use((socket, next) => {
     try {

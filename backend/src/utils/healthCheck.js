@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import os from 'os';
 import redisConnection from '../queue/redis.connection.js';
 import { extractionQueue } from '../queue/extraction.queue.js';
+import { invoiceApprovalQueue } from '../queue/invoiceApproval.queue.js';
 
 const MONGO_READY_STATES = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
 
@@ -37,6 +38,20 @@ export const getRedisStatus = async () => {
 export const getQueueStatus = async () => {
   try {
     const counts = await extractionQueue.getJobCounts();
+    return { status: 'ok', counts };
+  } catch (error) {
+    return { status: 'failed', message: error.message };
+  }
+};
+
+// Same as getQueueStatus above, but for invoice-approval - previously not
+// surfaced anywhere, which meant a stuck/growing invoice-approval queue
+// (e.g. the worker not deployed at all - see DEPLOYMENT.md) was invisible
+// to /health despite being the queue actually reported as failing in
+// production.
+export const getInvoiceApprovalQueueStatus = async () => {
+  try {
+    const counts = await invoiceApprovalQueue.getJobCounts();
     return { status: 'ok', counts };
   } catch (error) {
     return { status: 'failed', message: error.message };

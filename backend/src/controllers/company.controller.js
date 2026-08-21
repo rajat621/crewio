@@ -635,6 +635,18 @@ export const createClientCompany = async (req, res) => {
   }
 };
 
+// 500 matches the {page:1,limit:500} convention this codebase's frontend
+// hooks already use for "give me effectively everything reasonable" calls
+// to this endpoint (see useActiveClientCompanies.js, useCompaniesPageData.js)
+// - both getClientCompanies() (no params) and getClientCompanies({limit:500})
+// callers keep their existing "see every company" behavior for any tenant
+// under 500 companies, while still capping the previously-unbounded query.
+const parseCompanyPagination = (req) => {
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+  const limit = Math.min(500, Math.max(1, parseInt(req.query.limit, 10) || 500));
+  return { page, limit, skip: (page - 1) * limit };
+};
+
 export const getCompanies = async (req, res) => {
   try {
     const userId = getAuthenticatedUserId(req);
@@ -643,15 +655,20 @@ export const getCompanies = async (req, res) => {
     }
 
     const ownerId = req.user?.ownerId || userId;
-
-    const companies = await Company.find({
+    const { page, limit, skip } = parseCompanyPagination(req);
+    const query = {
       ownerId,
       $or: [
         { companyRole: 'client' },
         { companyRole: { $exists: false }, isOwner: { $ne: true } },
       ],
-    }).sort({ createdAt: -1 });
-    res.json({ data: companies });
+    };
+
+    const [companies, total] = await Promise.all([
+      Company.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Company.countDocuments(query),
+    ]);
+    res.json({ data: companies, page, limit, total, hasMore: skip + companies.length < total });
   } catch (error) {
     console.error('Get companies error:', error);
     return serverError(res, 'Failed to fetch companies');
@@ -688,41 +705,64 @@ export const deleteCompany = async (req, res) => {
       return res.status(401).json({ message: 'User not authenticated' });
     }
 
-    const deleted = await Company.findOneAndDelete({
-      _id: req.params.id,
-      ownerId: req.user?.ownerId || userId,
-      $or: [
-        { companyRole: 'client' },
-        { companyRole: { $exists: false }, isOwner: { $ne: true } },
-      ],
-    });
+    // These three writes (delete the company, unassign its employees,
+    // drop its template profile) were previously three independent
+    // operations - a crash/timeout between any two of them could leave
+    // employees pointing at a deleted company, or a template profile
+    // orphaned with no company to belong to. A session/transaction makes
+    // them atomic: either all three commit or none do. Atlas clusters are
+    // always replica sets, so transactions are available without any
+    // extra configuration.
+    const session = await mongoose.startSession();
+    let deleted;
+    try {
+      await session.withTransaction(async () => {
+        deleted = await Company.findOneAndDelete(
+          {
+            _id: req.params.id,
+            ownerId: req.user?.ownerId || userId,
+            $or: [
+              { companyRole: 'client' },
+              { companyRole: { $exists: false }, isOwner: { $ne: true } },
+            ],
+          },
+          { session }
+        );
+        if (!deleted) return;
+
+        // No cascade on the Employee side previously - employees still
+        // assigned to this company would keep a stale company reference,
+        // and getEmployee's assignedStatus display logic treats any truthy
+        // company value as "still assigned" (on-site/on-hold), so they'd
+        // incorrectly appear assigned after their company no longer exists.
+        // Same update shape unassignEmployee already uses for this exact
+        // state, scoped to the same ownerId as the deletion above.
+        await Employee.updateMany(
+          { company: deleted._id, ownerId: deleted.ownerId },
+          { $set: { company: null, lifecycleState: 'WAITING_FOR_COMPANY', assignedStatus: 'on-hold' } },
+          { session }
+        );
+
+        // TemplateProfile.companyId is schema-required (select via
+        // models/TemplateProfile.js), unlike Employee.company which is
+        // optional - a template profile cannot validly exist without its
+        // company, so cascade delete is the correct behavior here rather
+        // than orphaning. Without this, canAccessCompany's live Company
+        // lookup on every TemplateProfile endpoint would permanently lock
+        // the owner out of their own template configuration with no
+        // recovery path, since the record survives but its authorization
+        // gate can never pass again.
+        await TemplateProfile.deleteMany({ companyId: deleted._id, ownerId: deleted.ownerId }, { session });
+      });
+    } finally {
+      await session.endSession();
+    }
+
     if (!deleted) {
       return res.status(404).json({ message: 'Company not found' });
     }
 
-    // No cascade on the Employee side previously - employees still
-    // assigned to this company would keep a stale company reference,
-    // and getEmployee's assignedStatus display logic treats any truthy
-    // company value as "still assigned" (on-site/on-hold), so they'd
-    // incorrectly appear assigned after their company no longer exists.
-    // Same update shape unassignEmployee already uses for this exact
-    // state, scoped to the same ownerId as the deletion above.
-    await Employee.updateMany(
-      { company: deleted._id, ownerId: deleted.ownerId },
-      { $set: { company: null, lifecycleState: 'WAITING_FOR_COMPANY', assignedStatus: 'on-hold' } }
-    );
     await cacheInvalidate(employeeCachePrefix(deleted.ownerId));
-
-    // TemplateProfile.companyId is schema-required (select via
-    // models/TemplateProfile.js), unlike Employee.company which is
-    // optional - a template profile cannot validly exist without its
-    // company, so cascade delete is the correct behavior here rather
-    // than orphaning. Without this, canAccessCompany's live Company
-    // lookup on every TemplateProfile endpoint would permanently lock
-    // the owner out of their own template configuration with no
-    // recovery path, since the record survives but its authorization
-    // gate can never pass again.
-    await TemplateProfile.deleteMany({ companyId: deleted._id, ownerId: deleted.ownerId });
 
     res.json({ message: 'Company deleted successfully' });
   } catch (error) {
@@ -739,6 +779,14 @@ export const getClientCompanies = async (req, res) => {
     }
 
     const ownerId = req.user?.ownerId || userId;
+    const { page, limit, skip } = parseCompanyPagination(req);
+    const query = {
+      ownerId,
+      $or: [
+        { companyRole: 'client' },
+        { companyRole: { $exists: false }, isOwner: { $ne: true } },
+      ],
+    };
 
     // .lean() - result goes straight to res.json(), never mutated here.
     // Excludes logo/stamp/signature/invoiceTemplate - found via direct DB
@@ -747,18 +795,18 @@ export const getClientCompanies = async (req, res) => {
     // never reads any of them (verified - the list shows a generic
     // building icon per card, not the uploaded logo). Previously this
     // endpoint transferred every client company's full asset payload on
-    // every Companies-page/Home load regardless of list size.
-    const companies = await Company.find({
-      ownerId,
-      $or: [
-        { companyRole: 'client' },
-        { companyRole: { $exists: false }, isOwner: { $ne: true } },
-      ],
-    })
-      .select('-logo -stamp -signature -invoiceTemplate')
-      .sort({ createdAt: -1 })
-      .lean();
-    res.json({ data: companies });
+    // every Companies-page/Home load regardless of list size, with no
+    // pagination on top of that.
+    const [companies, total] = await Promise.all([
+      Company.find(query)
+        .select('-logo -stamp -signature -invoiceTemplate')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Company.countDocuments(query),
+    ]);
+    res.json({ data: companies, page, limit, total, hasMore: skip + companies.length < total });
   } catch (error) {
     console.error('Get client companies error:', error);
     return serverError(res, 'Failed to fetch client companies');

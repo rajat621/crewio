@@ -699,7 +699,20 @@ def download_invoice(filename: str):
         return jsonify(err("Invalid filename")), 400
     if not path.exists():
         return jsonify(err("File not found")), 404
-    return send_file(str(path), mimetype="application/pdf", as_attachment=True, download_name=safe_name)
+    response = send_file(str(path), mimetype="application/pdf", as_attachment=True, download_name=safe_name)
+    # Unlike _UPLOAD_DIR (cleaned up via try/finally at every call site),
+    # nothing ever deleted generated invoice PDFs here - they accumulated
+    # in the OS temp directory indefinitely. call_on_close runs after the
+    # WSGI server has fully sent the response body (send_file streams it),
+    # so this can't race the download itself. Best-effort: a failed
+    # cleanup must not turn a successful download into an error response.
+    def _cleanup_after_send():
+        try:
+            path.unlink(missing_ok=True)
+        except Exception:
+            logger.warning("failed to clean up generated invoice PDF: %s", path, exc_info=True)
+    response.call_on_close(_cleanup_after_send)
+    return response
 
 @app.route("/debug", methods=["GET"])
 def debug():

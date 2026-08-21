@@ -165,7 +165,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import { connectDB } from './config/db.js';
 import { apiLimiter } from './middleware/rateLimiters.js';
 import { attachRequestContext, logRequests } from './middleware/requestContext.middleware.js';
-import { getMongoStatus, getRedisStatus, getQueueStatus, getAiServiceStatus, getSystemInfo } from './utils/healthCheck.js';
+import { getMongoStatus, getRedisStatus, getQueueStatus, getInvoiceApprovalQueueStatus, getAiServiceStatus, getSystemInfo } from './utils/healthCheck.js';
 import { getMetricsSnapshot } from './utils/metrics.js';
 import { runtimeConfig } from './config/env.js';
 import fs from 'fs';
@@ -287,10 +287,11 @@ app.get('/health', async (req, res) => {
   // Each of these is either a synchronous property read (Mongo) or a
   // short-timeout local call (Redis ping, queue depth) - no unbounded
   // external network calls, per the "must stay lightweight" requirement.
-  const [mongo, redis, queue] = await Promise.all([
+  const [mongo, redis, queue, invoiceApprovalQueue] = await Promise.all([
     Promise.resolve(getMongoStatus()),
     getRedisStatus(),
     getQueueStatus(),
+    getInvoiceApprovalQueueStatus(),
   ]);
 
   res.json({
@@ -299,6 +300,7 @@ app.get('/health', async (req, res) => {
     mongo,
     redis,
     queue,
+    invoiceApprovalQueue,
     aiService: getAiServiceStatus(),
     metrics: getMetricsSnapshot(),
     responseTimeMs: Math.round(Number(process.hrtime.bigint() - startedAt) / 1e6),

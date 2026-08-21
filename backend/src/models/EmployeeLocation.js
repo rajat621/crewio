@@ -14,6 +14,11 @@ const employeeLocationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Matches location.controller.js's getEmployeeLocations filter+sort shape
+// ({employee, ownerId} sorted by createdAt) - the existing single-field
+// indexes only narrow the candidate set, leaving the sort unindexed.
+employeeLocationSchema.index({ employee: 1, ownerId: 1, createdAt: -1 });
+
 const EmployeeLocation = mongoose.model('EmployeeLocation', employeeLocationSchema);
 export default EmployeeLocation;
 

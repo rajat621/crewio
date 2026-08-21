@@ -48,12 +48,19 @@ const invoiceDraftSchema = new mongoose.Schema(
     // 'approving': the atomic claim has committed (blocks any concurrent
     // second approval attempt) and a BullMQ job has been enqueued to do
     // the actual recompute/render/save work off the request thread - see
-    // invoiceApproval.worker.js. Transitions to 'approved' on success or
-    // back to 'ready' (with `error` set) on failure, same as the old
-    // synchronous handler's own rollback-on-error behavior.
+    // invoiceApproval.worker.js. 'processing': the worker itself has
+    // atomically claimed the job (its own compare-and-swap out of
+    // 'approving') and is actively rendering/saving - this second state
+    // exists so a stalled-job redelivery (BullMQ can redeliver the same
+    // job if processing outruns the lock) finds status !== 'approving'
+    // and refuses to double-process, closing the gap a single
+    // 'approving' status left between "job enqueued" and "job claimed".
+    // Transitions to 'approved' on success or back to 'ready' (with
+    // `error` set) on failure, same as the old synchronous handler's own
+    // rollback-on-error behavior.
     status: {
       type: String,
-      enum: ['extracting', 'ready', 'approving', 'approved', 'failed', 'discarded'],
+      enum: ['extracting', 'ready', 'approving', 'processing', 'approved', 'failed', 'discarded'],
       default: 'extracting',
       index: true,
     },

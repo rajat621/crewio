@@ -72,6 +72,12 @@ salarySlipSchema.index(
   { unique: true, name: 'unique_employee_month_year_owner' }
 );
 
+// Matches listSalarySlips' owner-wide (no employeeId) filter+sort shape
+// ({ownerId, optional month} sorted by createdAt) - the existing
+// single-field ownerId index only narrows the candidate set, leaving the
+// sort unindexed.
+salarySlipSchema.index({ ownerId: 1, createdAt: -1 });
+
 export default SalarySlip;
 
 

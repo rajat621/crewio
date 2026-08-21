@@ -4,6 +4,13 @@ import ExtractionJob from '../models/ExtractionJob.js';
 import extractionQueue from '../queue/extraction.queue.js';
 import env from '../config/env.js';
 import { runtimeConfig } from '../config/env.js';
+import { withTimeout } from '../utils/cache.util.js';
+
+// Same reasoning as invoiceDraft.controller.js's invoiceApprovalQueue.add()
+// wrap: the shared Redis connection's maxRetriesPerRequest:null means a
+// hung/unreachable Redis could otherwise stall this call (and the HTTP
+// request awaiting it) indefinitely instead of failing fast.
+const QUEUE_ADD_TIMEOUT_MS = 5000;
 
 const ALLOWED_JOB_TYPES = new Set([
   'extract',
@@ -85,28 +92,42 @@ export const enqueueExtractionJob = async ({ jobType, companyId, userId, payload
     progress: 0,
   });
 
-  await extractionQueue.add(
-    'process-ai-job',
-    {
-      jobId,
-      jobType,
-      companyId: String(companyId),
-      userId: String(userId),
-      payload: payload || {},
-      traceContext: {
-        requestId: traceContext.requestId || null,
-        traceId: traceContext.traceId || null,
-      },
-      observability: {
-        enqueuedAt: new Date().toISOString(),
-      },
-    },
-    {
-      jobId,
-      removeOnComplete: { count: 500 },
-      removeOnFail: { count: 500 },
-    }
-  );
+  try {
+    await withTimeout(
+      extractionQueue.add(
+        'process-ai-job',
+        {
+          jobId,
+          jobType,
+          companyId: String(companyId),
+          userId: String(userId),
+          payload: payload || {},
+          traceContext: {
+            requestId: traceContext.requestId || null,
+            traceId: traceContext.traceId || null,
+          },
+          observability: {
+            enqueuedAt: new Date().toISOString(),
+          },
+        },
+        {
+          jobId,
+          removeOnComplete: { count: 500 },
+          removeOnFail: { count: 500 },
+        }
+      ),
+      QUEUE_ADD_TIMEOUT_MS
+    );
+  } catch (enqueueError) {
+    // Don't leave a 'queued' ExtractionJob record with no job that will
+    // ever be picked up by a worker - mark it failed so polling clients get
+    // a clear terminal state instead of waiting forever.
+    await ExtractionJob.findOneAndUpdate(
+      { jobId },
+      { status: 'failed', error: 'Failed to queue extraction job. Please try again.' }
+    ).catch(() => {});
+    throw enqueueError;
+  }
 
   return {
     jobId,

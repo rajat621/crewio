@@ -148,6 +148,12 @@ const companySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Matches getCompanies/getClientCompanies' actual filter+sort shape
+// ({ownerId, companyRole/$or} sorted by createdAt) - the existing
+// single-field ownerId index only narrows the candidate set, leaving the
+// role filter and sort unindexed.
+companySchema.index({ ownerId: 1, companyRole: 1, createdAt: -1 });
+
 const Company = mongoose.model('Company', companySchema);
 export default Company;
 

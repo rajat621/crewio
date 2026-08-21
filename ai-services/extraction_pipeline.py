@@ -366,9 +366,11 @@ from __future__ import annotations
 
 import logging
 import os
+import threading
 import time
 from typing import Dict, List, Optional
 from dotenv import load_dotenv
+from config_runtime import CONFIG
 load_dotenv()
 from anomaly_detection import (
     detect_abnormal_hours,
@@ -388,6 +390,20 @@ from ocr_extractor import extract_ocr
 from vision_extractor import extract_vision
 
 logger = logging.getLogger(__name__)
+
+# The legacy pipeline (pipeline/run.py) already bounds concurrent
+# Gemini/OCR calls via threading.Semaphore, but this v2 pipeline - the one
+# actually wired to /v2/* - called extract_vision/extract_ocr directly with
+# no guard at all. With only 2 gunicorn workers x 4 threads (8 total
+# request slots) and Gemini calls that can take up to 120s each, an
+# unguarded pipeline lets a burst of concurrent extractions exhaust every
+# slot at once with no backpressure. Reuses the same CONFIG values the
+# legacy pipeline's guards are sized from, just applied at this pipeline's
+# actual call sites (extraction_pipeline.py -> vision_extractor/
+# ocr_extractor), initialized at import time so it doesn't depend on the
+# legacy pipeline's lazy _init_concurrency_guards() ever having run.
+_vision_semaphore = threading.Semaphore(CONFIG.concurrency_limits.inference_concurrency)
+_ocr_semaphore = threading.Semaphore(CONFIG.concurrency_limits.ocr_concurrency)
 
 
 def _vision_available() -> bool:
@@ -588,7 +604,8 @@ def run_extraction_pipeline(
                 continue
             logger.info("step2_route vision_extraction reason=%s", strategy.reason)
             try:
-                vision_result = extract_vision(pdf_path)
+                with _vision_semaphore:
+                    vision_result = extract_vision(pdf_path)
                 logger.info(
                     "step2_vision rows=%d subtotal=%.2f confidence=%.2f",
                     len(vision_result.invoice_rows),
@@ -610,7 +627,8 @@ def run_extraction_pipeline(
         elif stage == ExtractionStage.OCR:
             logger.info("step2_route ocr_extraction reason=%s", strategy.reason)
             try:
-                ocr_result = extract_ocr(pdf_path)
+                with _ocr_semaphore:
+                    ocr_result = extract_ocr(pdf_path)
                 logger.info(
                     "step2_ocr rows=%d subtotal=%.2f confidence=%.2f",
                     len(ocr_result.invoice_rows),

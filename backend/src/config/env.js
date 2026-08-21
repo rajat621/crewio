@@ -291,6 +291,19 @@ if (IS_PRODUCTION && !process.env.STRIPE_SECRET_KEY) {
   warnConfig('STRIPE_SECRET_KEY is not set - subscription checkout/billing-portal/webhook endpoints will fail until it is configured.');
 }
 
+// Redis backs BullMQ (invoice approval, AI extraction) and the read-through
+// cache - it is not optional infrastructure in production. Without this
+// check, an unset REDIS_URL silently falls back to 127.0.0.1 inside
+// redis.connection.js, which simply never connects in a Railway container -
+// queues and cache degrade silently instead of failing loudly at boot.
+// DISABLE_REDIS=true remains a valid, explicit opt-out (queues fail fast on
+// enqueue instead; see invoiceApproval.queue.js/extraction.queue.js).
+if (IS_PRODUCTION && !process.env.REDIS_URL && process.env.DISABLE_REDIS !== 'true') {
+  throw new Error(
+    'FATAL: REDIS_URL is not set in production. Set REDIS_URL, or set DISABLE_REDIS=true to explicitly run without Redis/queues. Refusing to start.'
+  );
+}
+
 export const env = {
   NODE_ENV: NODE_ENV,
   IS_PRODUCTION: IS_PRODUCTION,

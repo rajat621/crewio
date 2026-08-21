@@ -26,7 +26,12 @@ const DEFAULT_TTL_SECONDS = 60;
 // to Mongo as if it were a cache miss.
 const REDIS_OP_TIMEOUT_MS = 800;
 
-const withTimeout = (promise, ms) =>
+// Exported so any Redis-backed call in a hot request path (not just this
+// file's own get/set/scan) can be bounded the same way - e.g. BullMQ
+// Queue.add() calls made directly from HTTP handlers, which otherwise ride
+// the shared connection's maxRetriesPerRequest:null and can queue
+// indefinitely during a Redis outage instead of failing fast.
+export const withTimeout = (promise, ms) =>
   new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error(`redis op timed out after ${ms}ms`)), ms);
     promise.then(

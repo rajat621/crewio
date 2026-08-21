@@ -12,6 +12,12 @@ const workSessionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Matches the mobile lifecycle "find this employee's open session" query
+// shape ({employee, endAt: null} sorted by startAt) - the existing
+// single-field employee index only narrows the candidate set, leaving the
+// endAt filter and sort unindexed.
+workSessionSchema.index({ employee: 1, endAt: 1, startAt: -1 });
+
 const WorkSession = mongoose.model('WorkSession', workSessionSchema);
 export default WorkSession;
 

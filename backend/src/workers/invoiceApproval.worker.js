@@ -23,6 +23,7 @@ import {
   reserveTempFilePath,
   saveLocalFile,
   cleanupTempFile,
+  deleteObject,
 } from '../services/storage.service.js';
 import { recomputeDraft, summariseDraft } from '../services/invoiceDraft.service.js';
 import { generateInvoiceNumber } from '../services/invoiceNumber.service.js';
@@ -66,16 +67,30 @@ const processApproval = async (job) => {
   logEvent('job_start', { draftId, jobId: job.id });
 
   let claimedDraft;
+  let savedFileRef = null;
   try {
-    claimedDraft = await InvoiceDraft.findById(draftId);
-    if (!claimedDraft) throw new Error('Draft not found');
-    // The HTTP handler already atomically flipped this to 'approving'
-    // before enqueueing - if it's not still 'approving' (e.g. a rollback
-    // already happened, or this is a stale re-delivered job), there is
-    // nothing safe to do. Guards against a duplicate job somehow running
-    // twice from ever producing two invoices for one draft.
-    if (claimedDraft.status !== 'approving') {
-      logEvent('job_skipped_stale', { draftId, actualStatus: claimedDraft.status });
+    // Atomic claim: the HTTP handler already atomically flipped this to
+    // 'approving' before enqueueing, but that alone isn't enough to stop
+    // this specific job from running twice. BullMQ can redeliver the same
+    // job to another worker (or this one again) if processing outruns the
+    // lock (default lockDuration 30s - AI recompute + PDF render + R2
+    // upload can easily exceed that under load, see the Worker() options
+    // below). A plain read-then-compare of `status !== 'approving'` is
+    // not a defense against that: two concurrent deliveries could both
+    // read 'approving' before either writes back. This findOneAndUpdate
+    // is the actual compare-and-swap - only one delivery can ever
+    // transition 'approving' -> 'processing' for a given draft; every
+    // other delivery (concurrent or stalled-redelivered) gets null back
+    // and skips.
+    claimedDraft = await InvoiceDraft.findOneAndUpdate(
+      { _id: draftId, status: 'approving' },
+      { $set: { status: 'processing' } },
+      { new: true }
+    );
+    if (!claimedDraft) {
+      const current = await InvoiceDraft.findById(draftId);
+      if (!current) throw new Error('Draft not found');
+      logEvent('job_skipped_stale', { draftId, actualStatus: current.status });
       return { skipped: true };
     }
 
@@ -165,6 +180,7 @@ const processApproval = async (job) => {
       ownerId: draft.ownerId,
       company: clientCompany._id,
       invoiceNumber,
+      sourceDraftId: draft._id,
       clientName: clientCompany.name || finalPayload?.meta?.client_name || 'Client',
       items,
       subtotal: totals.subtotal,
@@ -209,6 +225,10 @@ const processApproval = async (job) => {
         filename: `${invoiceNumber}.pdf`,
       });
       generatedInvoicePdf = saved.path;
+      // Tracked outside this try block so the outer catch can clean up an
+      // orphaned upload if invoice.save() (below) fails after this point -
+      // storage.service.js's saveBuffer() has no rollback of its own.
+      savedFileRef = { key: saved.key, driver: saved.driver };
     } finally {
       await cleanupTempFile(outputAbsolutePath);
     }
@@ -240,6 +260,15 @@ const processApproval = async (job) => {
     return { invoiceId: String(invoice._id), invoiceNumber };
   } catch (error) {
     logEvent('job_failed', { draftId, error: error.message, elapsedMs: Date.now() - startedAt });
+    if (savedFileRef) {
+      // The PDF made it to storage but a later step (invoice.save() or
+      // beyond) threw - without this, the object is orphaned forever since
+      // no Invoice record will ever reference it. Best-effort: a failure
+      // here must not mask the original error.
+      await deleteObject(savedFileRef).catch((cleanupError) => {
+        logEvent('orphaned_file_cleanup_failed', { draftId, key: savedFileRef.key, error: cleanupError.message });
+      });
+    }
     await rollbackDraft(draftId, 'Failed to generate invoice. Please try approving again.');
     // Re-throw so BullMQ marks the job itself failed (visible in
     // getJobCounts/dashboards) - the draft-level rollback above is what
@@ -265,6 +294,16 @@ const bootstrap = async () => {
     // concurrency here bounds simultaneous R2 uploads/PDF renders per
     // process without serializing every approval behind a single worker.
     concurrency: Number(process.env.INVOICE_APPROVAL_WORKER_CONCURRENCY || 4),
+    // BullMQ's default lockDuration (30s) can be exceeded by AI recompute
+    // + PDF render + R2 upload under load, which would make BullMQ treat
+    // an in-flight job as stalled and redeliver it to another worker -
+    // the processApproval's atomic 'approving'->'processing' claim makes
+    // a redelivered job a safe no-op, but raising the lock well above
+    // realistic processing time means that path is rarely even exercised.
+    // stalledInterval matches lockDuration so BullMQ's stalled-check
+    // cadence doesn't itself trigger spurious redelivery mid-lock.
+    lockDuration: Number(process.env.INVOICE_APPROVAL_WORKER_LOCK_MS || 180000),
+    stalledInterval: Number(process.env.INVOICE_APPROVAL_WORKER_LOCK_MS || 180000),
   });
 
   worker.on('completed', (job) => logEvent('queue_completed', { queueJobId: job.id }));

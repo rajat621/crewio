@@ -23,6 +23,13 @@ const buildDateFilter = (month) => {
   return { date: { $gte: start, $lt: end } };
 };
 
+// Company expenses are normally a small per-tenant/per-month ledger, so this
+// stays a hard safety cap rather than full page/limit pagination (keeps the
+// response shape - a flat `expenses` array - unchanged for the existing
+// frontend). Previously had no .limit() at all: omitting `month` returned
+// every expense the owner had ever logged in one response.
+const COMPANY_EXPENSE_HARD_CAP = 2000;
+
 export const listCompanyExpenses = async (req, res) => {
   try {
     const user = req.user;
@@ -34,6 +41,7 @@ export const listCompanyExpenses = async (req, res) => {
     const expenses = await cacheGetOrSet(cacheKey, 20, async () =>
       CompanyExpense.find({ ownerId: user.ownerId, ...buildDateFilter(month) })
         .sort({ date: -1, createdAt: -1 })
+        .limit(COMPANY_EXPENSE_HARD_CAP)
         .lean()
     );
 

@@ -82,11 +82,27 @@ const invoiceSchema = new mongoose.Schema(
       type: [rejectedRowSchema],
       default: [],
     },
+    // Set only by invoiceApproval.worker.js. DB-level backstop on top of
+    // the worker's atomic 'approving'->'processing' claim: if that claim
+    // were ever somehow bypassed (e.g. a bug, not just the stalled-job
+    // redelivery it's designed for), a second attempt to create an
+    // Invoice for the same draft fails at the unique-index level instead
+    // of silently producing a duplicate financial record. Sparse because
+    // invoices created outside the draft-approval flow have no draft.
+    sourceDraftId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'InvoiceDraft',
+    },
   },
   { timestamps: true }
 );
 
 invoiceSchema.index({ createdBy: 1, invoiceNumber: 1 }, { unique: true });
+invoiceSchema.index({ sourceDraftId: 1 }, { unique: true, sparse: true });
+// Matches getInvoices' actual filter+sort shape ({ownerId, invoiceDate
+// range} sorted by createdAt) - the existing single-field ownerId index
+// only narrows the candidate set, leaving the sort/range unindexed.
+invoiceSchema.index({ ownerId: 1, createdAt: -1 });
 
 const Invoice = mongoose.model('Invoice', invoiceSchema);
 const InvoiceItem = mongoose.model('InvoiceItem', invoiceItemSchema);

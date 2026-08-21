@@ -30,6 +30,20 @@ try {
   console.warn('Failed to set server.timeout:', err && err.message);
 }
 
+// Node's keepAliveTimeout defaults to 5s - too low behind a reverse proxy
+// (Railway's edge, any LB). If the proxy's own idle timeout is longer than
+// Node's, the proxy can send a request on a connection Node has already
+// started closing, producing a race that surfaces as sporadic ECONNRESET/
+// 502s under concurrent load rather than any real application error.
+// headersTimeout must be set higher than keepAliveTimeout (Node requirement).
+try {
+  const KEEP_ALIVE_TIMEOUT_MS = Number(process.env.KEEP_ALIVE_TIMEOUT_MS || 61000);
+  server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT_MS;
+  server.headersTimeout = KEEP_ALIVE_TIMEOUT_MS + 5000;
+} catch (err) {
+  console.warn('Failed to set keepAliveTimeout/headersTimeout:', err && err.message);
+}
+
 // --- Process-level safety nets ----------------------------------------------
 // Without these, one unhandled error anywhere in the app (a missed .catch on
 // a promise, for example) silently kills the entire process with no log, or
