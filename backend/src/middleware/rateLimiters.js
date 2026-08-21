@@ -39,12 +39,28 @@ if (!redisConnection) {
 // env-configurable so it can be tuned from real production traffic data
 // without a code deploy; 2000/15min (~133/min per IP) still bounds
 // scraping/DoS while giving real shared-IP concurrency actual headroom.
+// Narrowly-scoped exemption for controlled production load testing from a
+// single known source IP (a real distributed fleet of users never shares
+// one IP the way one load-test machine does, so per-IP limiting is the
+// wrong tool to apply to that specific known, authorized test traffic).
+// Inert by default - only takes effect if LOAD_TEST_ALLOWED_IPS is
+// explicitly set, and only exempts the exact IPs listed, leaving apiLimiter
+// fully enforced for every other client. Remove/unset this env var once
+// load testing is complete - it must not remain a standing bypass.
+const loadTestAllowedIps = new Set(
+  (process.env.LOAD_TEST_ALLOWED_IPS || '')
+    .split(',')
+    .map((ip) => ip.trim())
+    .filter(Boolean)
+);
+
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: Number(process.env.API_RATE_LIMIT_MAX || 2000),
   standardHeaders: true,
   legacyHeaders: false,
   store: makeRedisStore('rl:api:'),
+  skip: (req) => loadTestAllowedIps.has(req.ip),
   message: { message: 'Too many requests. Please try again in a few minutes.' },
 });
 

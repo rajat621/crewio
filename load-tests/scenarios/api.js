@@ -38,7 +38,13 @@ const WEIGHTED_READS = [
   { path: '/api/invoices?page=1&limit=50', name: 'invoices_list' },
   { path: '/api/salary-slips?page=1&limit=20', name: 'salary_slips_list' },
   { path: '/api/notifications/owner?page=1&limit=20', name: 'notifications_list' },
-  { path: '/api/expenses', name: 'expenses_list' },
+  // Matches expensesApi.getExpenses(undefined, page, limit, search) - the
+  // real frontend always paginates this call. Hitting it WITHOUT page/limit
+  // (as this scenario originally did) exercises expense.controller.js's
+  // unbounded "dump every employee's full expense history" branch instead -
+  // a real, separate, non-representative worst case, not this scenario's
+  // intended read-heavy-dashboard traffic.
+  { path: '/api/expenses?page=1&limit=20', name: 'expenses_list' },
   { path: '/api/company-expenses', name: 'company_expenses_list' },
 ];
 
