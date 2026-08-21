@@ -1,0 +1,26 @@
+{
+  "name": "crewio-load-tests",
+  "private": true,
+  "type": "module",
+  "description": "k6 + Node load-testing suite for the Crew Control backend. See README.md before running anything.",
+  "scripts": {
+    "loadtest:smoke": "k6 run scenarios/smoke.js",
+    "loadtest:api:10": "k6 run -e VUS=10 scenarios/api.js",
+    "loadtest:api:25": "k6 run -e VUS=25 scenarios/api.js",
+    "loadtest:api:50": "k6 run -e VUS=50 scenarios/api.js",
+    "loadtest:api:100": "k6 run -e VUS=100 scenarios/api.js",
+    "loadtest:api:250": "k6 run -e VUS=250 scenarios/api.js",
+    "loadtest:api:500": "k6 run -e VUS=500 scenarios/api.js",
+    "loadtest:api:750": "k6 run -e VUS=750 scenarios/api.js",
+    "loadtest:api:1000": "k6 run -e VUS=1000 scenarios/api.js",
+    "loadtest:dashboard": "k6 run scenarios/dashboard.js",
+    "loadtest:attendance": "k6 run scenarios/attendance.js",
+    "loadtest:mixed": "k6 run scenarios/mixed-workload.js",
+    "loadtest:invoice": "k6 run scenarios/invoices.js",
+    "loadtest:ai": "k6 run scenarios/ai.js",
+    "loadtest:realtime": "node scenarios/realtime.js"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.3"
+  }
+}

@@ -28,11 +28,20 @@ if (!redisConnection) {
   console.warn('[rateLimiters] Redis disabled - rate limits are per-replica in-memory, not shared across horizontally-scaled instances.');
 }
 
-// Applied globally to every request. Generous enough not to bother real
-// users, tight enough to blunt scraping/DoS attempts against a single IP.
+// Applied globally to every request, keyed by IP (express-rate-limit's
+// default keyGenerator) - not per-user. Measured via load-tests/scenarios/
+// smoke.js: the previous max:300 was exhausted by just 10 concurrent test
+// VUs in well under a minute (10 VUs x ~3 reads/iteration x ~1s think time
+// blows past 300 almost immediately), which would equally hit any real
+// deployment scenario where multiple legitimate users share one IP - an
+// office network behind one NAT gateway, or any client sitting behind a
+// corporate/mobile-carrier proxy. Raised substantially and made
+// env-configurable so it can be tuned from real production traffic data
+// without a code deploy; 2000/15min (~133/min per IP) still bounds
+// scraping/DoS while giving real shared-IP concurrency actual headroom.
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300,
+  max: Number(process.env.API_RATE_LIMIT_MAX || 2000),
   standardHeaders: true,
   legacyHeaders: false,
   store: makeRedisStore('rl:api:'),
