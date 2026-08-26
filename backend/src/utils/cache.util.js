@@ -84,6 +84,19 @@ const memoryDeleteByPrefix = (prefix) => {
 
 const isRedisUp = () => Boolean(redisConnection) && redisConnection.status === 'ready';
 
+// TEMP-DIAGNOSTIC (production Redis-contention investigation, remove after
+// use): opt-in via DIAG_REDIS_TIMING=true, zero overhead otherwise. Logs
+// only a category derived from the key (any 24-hex-char ObjectId segment -
+// ownerId, employeeId, etc. - is replaced with <id> so no tenant/user
+// identifier is ever written to logs) plus elapsed ms. No key values, no
+// cached payloads, ever logged.
+const DIAG_REDIS_TIMING = process.env.DIAG_REDIS_TIMING === 'true';
+const diagCategory = (key) => key.replace(/[0-9a-f]{24}/gi, '<id>');
+const diagLog = (op, key, ms) => {
+  if (!DIAG_REDIS_TIMING) return;
+  console.log(`[diag-redis] op=${op} category=${diagCategory(key)} ms=${ms}`);
+};
+
 /**
  * Returns the cached value for `key` if present, otherwise calls `fetchFn`,
  * caches its result for `ttlSeconds`, and returns it. `fetchFn` failures are
@@ -92,7 +105,9 @@ const isRedisUp = () => Boolean(redisConnection) && redisConnection.status === '
 export const cacheGetOrSet = async (key, ttlSeconds = DEFAULT_TTL_SECONDS, fetchFn) => {
   try {
     if (isRedisUp()) {
+      const __t0 = DIAG_REDIS_TIMING ? Date.now() : 0;
       const cached = await withTimeout(redisConnection.get(key), REDIS_OP_TIMEOUT_MS);
+      diagLog(key.startsWith('auth:user:') ? 'AUTH_GET' : 'CACHE_GET', key, Date.now() - __t0);
       if (cached !== null) return JSON.parse(cached);
     } else {
       const cached = memoryGet(key);
@@ -123,10 +138,12 @@ export const cacheGetOrSet = async (key, ttlSeconds = DEFAULT_TTL_SECONDS, fetch
     // other cache-write failure already handled here.
     pending.then((fresh) => {
       if (isRedisUp()) {
+        const __tSet0 = DIAG_REDIS_TIMING ? Date.now() : 0;
         withTimeout(
           redisConnection.set(key, JSON.stringify(fresh), 'EX', ttlSeconds),
           REDIS_OP_TIMEOUT_MS
-        ).catch((err) => console.error('[cache] write failed (result still returned)', key, err.message));
+        ).then(() => diagLog('CACHE_SET', key, Date.now() - __tSet0))
+          .catch((err) => console.error('[cache] write failed (result still returned)', key, err.message));
       } else {
         memorySet(key, fresh, ttlSeconds);
       }
@@ -145,6 +162,7 @@ export const cacheGetOrSet = async (key, ttlSeconds = DEFAULT_TTL_SECONDS, fetch
 export const cacheInvalidate = async (prefix) => {
   try {
     if (isRedisUp()) {
+      const __tInv0 = DIAG_REDIS_TIMING ? Date.now() : 0;
       // SCAN instead of KEYS - KEYS blocks the whole Redis instance on large
       // keyspaces, SCAN doesn't. Whole loop is timeout-bounded so a hung
       // connection can't stall the write path that triggered this.
@@ -162,6 +180,7 @@ export const cacheInvalidate = async (prefix) => {
           if (keys.length) await redisConnection.del(...keys);
         } while (cursor !== '0');
       })(), REDIS_OP_TIMEOUT_MS * 3);
+      diagLog('INVALIDATE', prefix, Date.now() - __tInv0);
     } else {
       memoryDeleteByPrefix(prefix);
     }
