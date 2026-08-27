@@ -110,7 +110,6 @@ export const cacheGetOrSet = async (key, ttlSeconds = DEFAULT_TTL_SECONDS, fetch
   if (!pending) {
     pending = fetchFn();
     inFlight.set(key, pending);
-    pending.finally(() => inFlight.delete(key));
 
     // Cache write happens in the background, NOT on the response path.
     // Measured: each Redis round-trip to Upstash costs ~82-90ms here, and
@@ -118,19 +117,32 @@ export const cacheGetOrSet = async (key, ttlSeconds = DEFAULT_TTL_SECONDS, fetch
     // adding a full extra round-trip to every cache-miss request for a
     // write the caller never needed to wait on (they already have `fresh`
     // once fetchFn() resolves; the write is purely for the NEXT request).
-    // Errors are swallowed the same as before - worst case is one extra
-    // Mongo hit on the next request within the TTL window, same as any
-    // other cache-write failure already handled here.
-    pending.then((fresh) => {
+    // Errors are swallowed - worst case is one extra Mongo hit next time.
+    const cacheWrite = pending.then((fresh) => {
       if (isRedisUp()) {
-        withTimeout(
+        return withTimeout(
           redisConnection.set(key, JSON.stringify(fresh), 'EX', ttlSeconds),
           REDIS_OP_TIMEOUT_MS
         ).catch((err) => console.error('[cache] write failed (result still returned)', key, err.message));
-      } else {
-        memorySet(key, fresh, ttlSeconds);
       }
-    }).catch(() => {});
+      memorySet(key, fresh, ttlSeconds);
+    });
+
+    // Bug found under sustained concurrent load (2026-08-27): this used to
+    // clear the in-flight guard as soon as fetchFn() resolved, *before* the
+    // background write above had actually landed in Redis. Any request
+    // arriving in that gap saw neither an in-flight promise to join nor a
+    // populated cache key, so it silently started its own brand-new
+    // fetchFn()+write cycle. Under a steady stream of concurrent requests
+    // (not just a one-off burst) this repeats continuously, so the cache
+    // for that key never actually stays warm - every request pays the full
+    // fetchFn() cost. Cheap fetchFns (a few ms) hid this completely; an
+    // expensive one (invoices' find+populate+count, ~150-330ms+ each) made
+    // it visible as p95=3s+ at 100 concurrent VUs with 0% errors. Holding
+    // the guard open until the write also settles closes the gap: a request
+    // arriving mid-write still joins `pending`, which already has the
+    // resolved value, instead of re-fetching from Mongo.
+    Promise.allSettled([pending, cacheWrite]).finally(() => inFlight.delete(key));
   }
 
   return pending;
