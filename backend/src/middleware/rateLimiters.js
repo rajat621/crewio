@@ -62,6 +62,20 @@ export const apiLimiter = rateLimit({
   store: makeRedisStore('rl:api:'),
   skip: (req) => loadTestAllowedIps.has(req.ip),
   message: { message: 'Too many requests. Please try again in a few minutes.' },
+  // Root cause of a real, measured ~1.7% 5xx rate at 100 concurrent VUs on
+  // /api/companies/clients (2026-08-27 Railway-internal load test): this
+  // limiter's RedisStore.increment() throwing on a transient Redis error
+  // (default express-rate-limit behavior when passOnStoreError is unset is
+  // to re-throw, which the global error handler turns into a fast ~5-9ms
+  // 500 - no Mongo ever touched, matching the exact evidence). apiLimiter is
+  // mounted globally ahead of every route (see app.js), so this affects any
+  // endpoint, not just companies/clients - it was just the one caught with
+  // visible errors in that specific test run. Failing open here matches
+  // this codebase's existing standing philosophy for this exact class of
+  // dependency (cache.util.js: "the app never breaks because the cache is
+  // down, it just gets slower") - a transient Redis hiccup should degrade
+  // rate-limiting for that one request, not fail the request outright.
+  passOnStoreError: true,
 });
 
 // Applied to login/OTP/refresh endpoints specifically. This is the one that

@@ -28,6 +28,8 @@ import {
 import { recomputeDraft, summariseDraft } from '../services/invoiceDraft.service.js';
 import { generateInvoiceNumber } from '../services/invoiceNumber.service.js';
 import { createAuditLog } from '../services/audit.service.js';
+import { cacheInvalidate } from '../utils/cache.util.js';
+import { employeeCachePrefix } from '../controllers/employee.controller.js';
 import { renderInvoicePdf } from '../services/invoiceRenderer.service.js';
 import { buildRendererPayload } from '../controllers/invoice.controller.js';
 
@@ -255,6 +257,13 @@ const processApproval = async (job) => {
       changes: { draftId: String(draftId), invoiceNumber },
       ownerId: draft.ownerId,
     }).catch(() => {});
+
+    // getInvoices/getInvoice (invoice.controller.js) cache invoice lists
+    // for 30s under this same ownerId-scoped prefix - without this, a
+    // just-approved invoice wouldn't show up in the list until the TTL
+    // expired, since this worker runs out-of-process from the HTTP
+    // request that would otherwise trigger the invalidation.
+    cacheInvalidate(employeeCachePrefix(draft.ownerId)).catch(() => {});
 
     logEvent('job_completed', { draftId, invoiceId: String(invoice._id), invoiceNumber, elapsedMs: Date.now() - startedAt });
     return { invoiceId: String(invoice._id), invoiceNumber };
