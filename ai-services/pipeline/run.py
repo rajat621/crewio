@@ -43,8 +43,18 @@ from pipeline.structured_logging import (
 logger = logging.getLogger(__name__)
 
 # Lightweight concurrency/resource guards (config-driven)
-from config_runtime import RuntimeConfig, CONFIG, _to_float
+from config_runtime import RuntimeConfig, CONFIG, _to_bool, _to_float
 import os
+
+# When true, a vision result that fails the financial-consistency gate is
+# accepted as-is instead of triggering a full CPU-bound OCR re-extraction on
+# top of the vision call. That OCR-after-vision-reject path is what turns a
+# ~10-15s Gemini call into a multi-minute request on documents with messy
+# summary sections (rotated attendance matrices, invoice-style totals that
+# don't cleanly foot to the row sum) - the OCR retry is often no more
+# accurate than vision on these, just much slower, so trading the extra
+# safety net for latency is a deliberate choice, not a default.
+AI_VISION_ONLY = _to_bool(os.getenv("AI_VISION_ONLY"), False)
 
 _runtime_config = None
 _ocr_semaphore = None
@@ -452,7 +462,15 @@ def run_extraction(
             )
         )
 
-        if vision_rejected or (
+        if AI_VISION_ONLY and (vision_rejected or (_is_vision_untrustworthy(result) and not vision_is_valid)):
+            # Vision-only mode: accept the vision result even though it failed
+            # the consistency gate, rather than paying for a full OCR re-run.
+            result.warnings.append("vision_only_mode:ocr_fallback_skipped")
+            try:
+                log_event(logger, "VISION_ONLY_MODE_ACCEPTED", pdf_path=pdf_path, run_id=run_id or "")
+            except Exception:
+                pass
+        elif vision_rejected or (
             _is_vision_untrustworthy(result)
             and not vision_is_valid
         ):
