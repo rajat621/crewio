@@ -5,6 +5,7 @@ import { useActiveClientCompanies } from "../hooks/useActiveClientCompanies";
 import { useCreateEmployeeMutation } from "../hooks/mutations/useCreateEmployeeMutation";
 import { useAssignEmployeeMutation } from "../hooks/mutations/useEmployeeMutations";
 import { useDocumentUpload, DOCUMENT_ACCEPT_ATTR } from "../hooks/useDocumentUpload";
+import SearchableSelect from "../components/common/SearchableSelect";
 import ReactCountryFlag from "react-country-flag";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -2393,42 +2394,20 @@ function AddEmployee() {
               <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
                 Select a company
               </label>
-              <select
-                className="assign-company-select"
+              <SearchableSelect
+                options={companyOptions.map((company) => ({ value: company.id, label: company.name }))}
                 value={selectedCompanyId}
-                onChange={(event) => setSelectedCompanyId(event.target.value)}
+                onChange={setSelectedCompanyId}
                 disabled={companyLoading || assigningCompany}
-                style={{
-                  width: "100%",
-                  maxWidth: "560px",
-                  height: "44px",
-                  borderRadius: "8px",
-                  padding: "0 40px 0 14px",
-                  fontSize: "14px",
-                  color: "var(--text-primary)",
-                  background: "#fff",
-                  fontFamily: "inherit",
-                  appearance: "none",
-                  WebkitAppearance: "none",
-                  MozAppearance: "none",
-
-                  backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='none'><path d='M5 7L10 12L15 7' stroke='%23141414' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>")`,
-                  backgroundRepeat: "no-repeat",
-
-                  // exact caret position from right
-                  backgroundPosition: "right 12px center",
-
-                  backgroundSize: "12px",
-                }}
-              >
-                {!companyLoading && !companyOptions.length && <option value="">No client companies found</option>}
-                {companyLoading && <option value="">Loading companies...</option>}
-                {companyOptions.map((company) => (
-                  <option key={company.id} value={company.id}>
-                    {company.name}
-                  </option>
-                ))}
-              </select>
+                placeholder={
+                  companyLoading
+                    ? "Loading companies..."
+                    : !companyOptions.length
+                      ? "No client companies found"
+                      : "Select or type to search"
+                }
+                style={{ maxWidth: "560px" }}
+              />
 
               {assignError && (
                 <p style={{ color: "#B91C1C", fontSize: "13px", margin: "14px 0 0" }}>

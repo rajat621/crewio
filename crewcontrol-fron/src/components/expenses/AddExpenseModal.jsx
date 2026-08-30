@@ -363,6 +363,7 @@
 import { useState, useEffect } from "react";
 import { employeesApi } from '../../api/employees'
 import { useEmployees } from '../../hooks/useEmployees'
+import SearchableSelect from '../common/SearchableSelect'
 
 const BORDER = "var(--border-card)";
 const DARK   = "var(--text-primary)";
@@ -566,10 +567,14 @@ export default function AddExpenseModal({ open, onClose, onSubmit, prefillEmploy
         {/* Body */}
         <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: 18 }}>
           <Field label="Employee Name">
-            <select
+            <SearchableSelect
+              options={employees.map((emp) => ({
+                value: emp._id || emp.id,
+                label: emp.name || `${emp.firstName || ""} ${emp.lastName || ""}`.trim(),
+              }))}
               value={form.employeeId}
-              onChange={async (e) => {
-                const id = e.target.value;
+              placeholder="Select or type to search"
+              onChange={async (id) => {
                 setForm((p) => ({ ...p, employeeId: id }));
                 if (!id) return;
                 try {
@@ -621,13 +626,7 @@ setForm((p) => ({
                   // ignore
                 }
               }}
-              style={{ ...baseInput, backgroundImage: dropArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', paddingRight: 32, cursor: 'pointer' }}
-            >
-              <option value="">Select employee</option>
-              {employees.map((emp) => (
-                <option key={emp._id || emp.id} value={emp._id || emp.id}>{emp.name || `${emp.firstName || ''} ${emp.lastName || ''}`.trim()}</option>
-              ))}
-            </select>
+            />
           </Field>
 
           <Field label="Emirates ID">

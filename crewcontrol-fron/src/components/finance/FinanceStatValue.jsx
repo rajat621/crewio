@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { formatCompactAmount } from "../../utils/financeFormat";
 
-// Renders "45 k / AED" as three differently-weighted spans (matches the
+// Renders "45 k AED" as three differently-weighted spans (matches the
 // two-tier size treatment in the Finance stat cards) while still slotting
 // into KpiCard's single `value` prop.
 function FinanceStatValue({ amount, unit = "AED" }) {
@@ -20,7 +20,7 @@ function FinanceStatValue({ amount, unit = "AED" }) {
         </Typography>
       )}
       <Typography component="span" fontSize={14} fontWeight={400} color="var(--text-secondary)">
-        / {unit}
+        {unit}
       </Typography>
     </Box>
   );

@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import { useShowCompanyWarning } from "../hooks/useShowCompanyWarning";
 import { isCompanyProfileComplete } from "../utils/companyProfileStatus";
 import { useDashboardData } from "../hooks/useDashboardData";
+import { useFinanceData } from "../hooks/useFinanceData";
 import KpiGrid from "../components/kpi/KPIGrid";
 import AttendanceCard from "../components/attendance/AttendanceCard";
 import AlertBox from "../components/alerts/AlertBox";
@@ -18,6 +19,11 @@ function Home() {
   const [isWarningDismissed, setIsWarningDismissed] = useState(false);
   const showCompanyWarning = useShowCompanyWarning(user?.companyId || user?.company);
   const { derived, isAlertsLoading, refetchAll } = useDashboardData();
+  // Home's "Total Revenue" tile mirrors the Finance page's own "Total
+  // Revenue" KPI card exactly (same hook, same default "monthly" period as
+  // Finance.jsx's own useState default) rather than computing a separate
+  // figure here - one number, one source of truth.
+  const { data: financeData } = useFinanceData();
   const kpis = derived?.kpis || { totalWorkers: 0, workersOnSite: 0, onHoldWorkers: 0, revenueCount: 0 };
   const chartData = derived?.chartData || { weekly: [], monthly: [] };
   const alerts = derived?.alerts || {
@@ -137,7 +143,7 @@ function Home() {
 
       {/* KPI CARDS */}
       <Grid container spacing={2}>
-        <KpiGrid kpis={kpis} />
+        <KpiGrid kpis={kpis} totalRevenue={financeData.totals.totalRevenue} />
       </Grid>
 
       {/* ATTENDANCE + ALERT */}

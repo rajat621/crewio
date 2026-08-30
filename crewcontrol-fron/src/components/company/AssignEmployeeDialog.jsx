@@ -43,7 +43,22 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
   const loadUnassignedEmployees = async () => {
     try {
       setLoading(true);
-      const response = await employeesApi.getEmployees({ status: "active", page: 1, limit: 500 });
+      // Filter server-side (assignedCompanyId: 'unassigned' - see
+      // employee.controller.js's getEmployees) instead of fetching every
+      // active employee and filtering in the browser. The old approach
+      // asked for limit: 500 but the server clamps limit to 200 and sorts
+      // by createdAt desc, so on any tenant with more than 200 active
+      // employees, unassigned employees outside the 200 most-recently-
+      // created active ones could never appear here at all, regardless of
+      // this filter's own logic. Filtering unassigned status server-side
+      // means the 200-row cap only ever has to cover the (usually much
+      // smaller) unassigned pool, not the whole active population.
+      const response = await employeesApi.getEmployees({
+        status: "active",
+        assignedCompanyId: "unassigned",
+        page: 1,
+        limit: 200,
+      });
       const rawEmployees = Array.isArray(response?.data?.employees)
         ? response.data.employees
         : Array.isArray(response?.data?.data)
@@ -51,13 +66,6 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
           : [];
 
       const rows = rawEmployees
-        .filter((employee) => {
-          if (Object.prototype.hasOwnProperty.call(employee || {}, "company")) {
-            return !employee?.company;
-          }
-
-          return !employee?.assignedCompanyId && !employee?.companyId;
-        })
         .map((employee) => ({
           id: employee?._id,
           employeeId: employee?.employeeId || employee?._id || "-",

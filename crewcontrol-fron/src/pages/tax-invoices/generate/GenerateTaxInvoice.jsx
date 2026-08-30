@@ -23,6 +23,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import InvoicePreviewWindow from "../../InvoicePreviewWindow";
+import SearchableSelect from "../../../components/common/SearchableSelect";
 
 
 /* ═══════════════════════════════════════════════════════════════
@@ -325,14 +326,12 @@ function Step1({ data, onChange, companies }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
         <Field label="Select a company" required>
-          <FSelect value={data.companyId} onChange={(e) => onChange({ ...data, companyId: e.target.value })}>
-            <option value="">Select</option>
-            {companies.map((c) => (
-              <option key={c._id || c.id} value={c._id || c.id}>
-                {c.name}
-              </option>
-            ))}
-          </FSelect>
+          <SearchableSelect
+            options={companies.map((c) => ({ value: c._id || c.id, label: c.name }))}
+            value={data.companyId}
+            onChange={(companyId) => onChange({ ...data, companyId })}
+            placeholder="Select or type to search"
+          />
         </Field>
       </div>
     </div>

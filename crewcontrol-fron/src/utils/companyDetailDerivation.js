@@ -1,30 +1,23 @@
-import { formatDate, normalizeAttendanceStatus, buildLatestStatusByEmployee } from './companyDerivation'
+import { formatDate } from './companyDerivation'
 
-// Extracted verbatim from CompanyDetail.jsx's loadCompany - the
-// present/absent/onLeave stats logic itself is the same shape as
-// companyDerivation.js's mapCompanyToCard, but this page's output object
-// has a different, page-specific shape (dateRange computed differently,
-// includes a `workers` array with per-worker fields CompanyWorkersTable
-// needs) - not a drop-in reuse of mapCompanyToCard, so kept as its own
-// function rather than forced to fit the other page's shape.
-export const computeCompanyDetail = ({ rawCompany, assignedEmployees, attendanceRecords }) => {
+// Extracted verbatim from CompanyDetail.jsx's loadCompany, then updated to
+// consume attendance.controller.js's getAttendanceSummary (?company=id)
+// instead of deriving present/absent/on-leave from a raw 120-day
+// attendance fetch. That old approach picked each employee's MOST RECENT
+// record within 120 days - stale if a worker's last marked day was days
+// ago - and pulled the tenant's entire attendance history for that window
+// into the browser just to compute three numbers, which was also this
+// page's main slow-load cause. attendanceSummary is already today-only and
+// pre-aggregated server-side (see useCompanyDetailData.js), so this is now
+// a direct passthrough rather than a per-employee reduce.
+export const computeCompanyDetail = ({ rawCompany, assignedEmployees, attendanceSummary }) => {
   if (!rawCompany) return null;
 
-  const latestStatusByEmployee = buildLatestStatusByEmployee(attendanceRecords);
-
-  const stats = assignedEmployees.reduce(
-    (acc, employee) => {
-      const employeeId = String(employee?._id || "");
-      const latestStatus = normalizeAttendanceStatus(latestStatusByEmployee.get(employeeId)?.status);
-
-      if (latestStatus === "present") acc.present += 1;
-      if (latestStatus === "absent") acc.absent += 1;
-      if (latestStatus === "on-leave") acc.onLeave += 1;
-
-      return acc;
-    },
-    { present: 0, absent: 0, onLeave: 0 }
-  );
+  const stats = {
+    present: Number(attendanceSummary?.present) || 0,
+    absent: Number(attendanceSummary?.absent) || 0,
+    onLeave: Number(attendanceSummary?.leave) || 0,
+  };
 
   return {
     id: rawCompany?._id,

@@ -17,6 +17,7 @@ import { useActiveClientCompanies } from "../hooks/useActiveClientCompanies";
 import { useUnassignEmployeeMutation, useReactivateEmployeeMutation, useAssignEmployeeMutation } from "../hooks/mutations/useEmployeeMutations";
 import { applySocketEvent } from "../sockets/socketBridge";
 import { getCurrentMonthValue } from "../utils/dateRanges";
+import { getDocumentExpiryStatus } from "../utils/documentExpiryStatus";
 
 import EmployeesTabs from "../components/employees/EmployeesTabs";
 
@@ -52,18 +53,12 @@ const formatDate = (value) => {
   });
 };
 
-const getDocumentStatus = (expiryValue) => {
-  if (!expiryValue) return "expired";
-
-  const expiry = new Date(expiryValue);
-  if (Number.isNaN(expiry.getTime())) return "expired";
-
-  const now = new Date();
-  if (expiry < now) return "expired";
-
-  const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-  return daysLeft <= 60 ? "expiring-soon" : "valid";
-};
+// Single source of truth for passport/Emirates ID status - see
+// documentExpiryStatus.js (also used by the Home page's Smart Alerts, and
+// mirrored server-side for the KPI counts / KPI-click table filter, so all
+// three surfaces agree). A missing/invalid expiry date is treated as
+// "expired" here, matching this table's pre-existing behavior.
+const getDocumentStatus = (expiryValue) => getDocumentExpiryStatus(expiryValue) ?? "expired";
 
 const getMonthKey = (value) => {
   const date = new Date(value);
@@ -811,36 +806,13 @@ const Employees = () => {
               <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
                 Select a company
               </label>
-              <select
-                className="assign-company-select"
+              <SearchableSelect
+                options={companies.map((company) => ({ value: company.id, label: company.name }))}
                 value={selectedCompanyId}
-                onChange={(event) => setSelectedCompanyId(event.target.value)}
-                style={{
-                  width: "100%",
-                  maxWidth: "560px",
-                  height: "44px",
-                  borderRadius: "8px",
-                  padding: "0 40px 0 14px",
-                  fontSize: "14px",
-                  color: "var(--text-primary)",
-                  background: "#fff",
-                  fontFamily: "inherit",
-                  appearance: "none",
-                  WebkitAppearance: "none",
-                  MozAppearance: "none",
-                  backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='none'><path d='M5 7L10 12L15 7' stroke='%23141414' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>")`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "right 12px center",
-                  backgroundSize: "12px",
-                }}
-              >
-                <option value="">Select company</option>
-                {companies.map((company) => (
-                  <option key={company.id} value={company.id}>
-                    {company.name}
-                  </option>
-                ))}
-              </select>
+                onChange={setSelectedCompanyId}
+                placeholder="Select or type to search"
+                style={{ maxWidth: "560px" }}
+              />
             </div>
 
             <div

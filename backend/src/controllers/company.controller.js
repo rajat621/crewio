@@ -10,6 +10,7 @@ import { employeeCachePrefix } from './employee.controller.js';
 import { cacheGetOrSet, cacheInvalidate } from '../utils/cache.util.js';
 import { invalidateAuthCache } from '../middleware/auth.middleware.js';
 import TemplateProfile from '../models/TemplateProfile.js';
+import { getUaeDayBounds, getUaeDateKey } from '../utils/businessTime.util.js';
 
 // GET /api/companies/owner/vat-summary - Smart Alerts "Tax to pay". Returns
 // active:false whenever there's nothing to show (no registration month set,
@@ -848,13 +849,13 @@ export const getClientCompanies = async (req, res) => {
 // population (not capped at 200) and with no raw employee/attendance
 // documents ever leaving MongoDB.
 //
-// "Present/absent/on-leave" here means the same thing the original browser
-// logic meant: each employee's MOST RECENT attendance record within the
-// last 120 days, classified via the same normalizeAttendanceStatus mapping
-// (leave -> on-leave, half-day -> present). An employee with no attendance
-// record in that window counts toward totalWorkers but none of the three
-// status buckets - identical to the original's behavior (latestStatus
-// would be '' for them, matching none of the three checks).
+// "Present/absent/on-leave" here means each employee's attendance record
+// for TODAY (the current UAE calendar day) only - not their most recent
+// record within some lookback window. An employee with no attendance
+// record marked yet today counts toward totalWorkers but none of the
+// three status buckets, so the cards always reflect who's actually
+// present/absent/on-leave right now rather than carrying forward a status
+// from days ago just because nothing newer has been recorded since.
 export const getCompanyWorkforceSummary = async (req, res) => {
   try {
     const userId = getAuthenticatedUserId(req);
@@ -863,23 +864,25 @@ export const getCompanyWorkforceSummary = async (req, res) => {
     }
     const ownerId = req.user?.ownerId || userId;
 
-    const cacheKey = `${employeeCachePrefix(ownerId)}company-workforce-summary`;
+    // Cache key includes today's UAE calendar day so it naturally rolls
+    // over into a fresh, empty "today" bucket at midnight instead of ever
+    // serving yesterday's counts past their 30s TTL boundary.
+    const cacheKey = `${employeeCachePrefix(ownerId)}company-workforce-summary:${getUaeDateKey()}`;
     const summary = await cacheGetOrSet(cacheKey, 30, async () => {
       const ownerObjectId = new mongoose.Types.ObjectId(ownerId);
-      const cutoff = new Date();
-      cutoff.setDate(cutoff.getDate() - 120);
-      cutoff.setHours(0, 0, 0, 0);
+      const { start, end } = getUaeDayBounds();
 
       const rows = await Employee.aggregate([
         { $match: { ownerId: ownerObjectId, company: { $ne: null } } },
         {
           // Index-backed (Attendance has {employee:1, date:-1}) - one
           // indexed, limit-1 lookup per employee, entirely server-side.
+          // Limited to today's UAE calendar day, not a rolling window.
           $lookup: {
             from: 'attendances',
             let: { empId: '$_id' },
             pipeline: [
-              { $match: { $expr: { $and: [{ $eq: ['$employee', '$$empId'] }, { $gte: ['$date', cutoff] }] } } },
+              { $match: { $expr: { $and: [{ $eq: ['$employee', '$$empId'] }, { $gte: ['$date', start] }, { $lte: ['$date', end] }] } } },
               { $sort: { date: -1 } },
               { $limit: 1 },
               { $project: { _id: 0, status: 1 } },

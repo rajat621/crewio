@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import KpiCard from "../kpi/KpiCard";
 import FinanceStatValue from "./FinanceStatValue";
 
@@ -8,28 +8,10 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import GroupAddOutlinedIcon from "@mui/icons-material/GroupAddOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 
-// KpiCard's label sits in a narrow right-aligned column next to the fixed
-// 70px icon circle - fine for Home's short single-word labels, but
-// Finance's two-word labels ("Total Expenses", "VAT Collected") wrap onto
-// a second line there and visually collide with the icon above. KpiCard
-// itself renders `label` verbatim inside its own Typography, so passing a
-// smaller, non-wrapping Typography as the label (same trick used for
-// `value`/FinanceStatValue) fixes this without touching the shared
-// component or Home's layout.
-function StatLabel({ children }) {
-  return (
-    <Typography
-      component="span"
-      fontSize={13}
-      color="var(--text-secondary)"
-      whiteSpace="nowrap"
-      textAlign="right"
-    >
-      {children}
-    </Typography>
-  );
-}
-
+// Labels are passed as plain strings, same as Home's KpiGrid, so they
+// render through KpiCard's own default Typography (fontSize 16) instead of
+// a smaller custom override - keeps this page's cards visually consistent
+// with Home's.
 function FinanceStatsGrid({ totals }) {
   const safeTotals = {
     totalRevenue: Number(totals?.totalRevenue || 0),
@@ -45,7 +27,7 @@ function FinanceStatsGrid({ totals }) {
           icon={<Diversity3OutlinedIcon sx={{ fontSize: 32 }} />}
           iconBg="var(--bg-info-soft)"
           iconColor="var(--color-primary)"
-          label={<StatLabel>Total Revenue</StatLabel>}
+          label="Total Revenue"
           value={<FinanceStatValue amount={safeTotals.totalRevenue} />}
         />
       </Grid>
@@ -55,7 +37,7 @@ function FinanceStatsGrid({ totals }) {
           icon={<PersonAddAltOutlinedIcon sx={{ fontSize: 32 }} />}
           iconBg="var(--bg-success-soft)"
           iconColor="var(--color-success)"
-          label={<StatLabel>Total Expenses</StatLabel>}
+          label="Total Expenses"
           value={<FinanceStatValue amount={safeTotals.totalExpenses} />}
         />
       </Grid>
@@ -65,7 +47,7 @@ function FinanceStatsGrid({ totals }) {
           icon={<GroupAddOutlinedIcon sx={{ fontSize: 32 }} />}
           iconBg="var(--bg-success-soft)"
           iconColor="var(--color-success)"
-          label={<StatLabel>VAT Collected</StatLabel>}
+          label="VAT Collected"
           value={<FinanceStatValue amount={safeTotals.vatCollected} />}
         />
       </Grid>
@@ -75,7 +57,7 @@ function FinanceStatsGrid({ totals }) {
           icon={<AssignmentOutlinedIcon sx={{ fontSize: 32 }} />}
           iconBg="#FCE7F3"
           iconColor="var(--color-error)"
-          label={<StatLabel>Net Profit</StatLabel>}
+          label="Net Profit"
           value={<FinanceStatValue amount={safeTotals.netProfit} />}
         />
       </Grid>

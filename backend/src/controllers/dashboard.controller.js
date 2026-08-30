@@ -419,7 +419,18 @@ export const getFinanceSummary = async (req, res) => {
       // Money Made always agrees with what that page shows and survives
       // any future purge of the underlying Invoice/SalarySlip/expense
       // records (see the function-level comment and Employee.js).
-      const moneyMade = employees.slice(0, 20).map((e) => {
+      //
+      // Covers every employee, not just the first N - `employees` here is
+      // already the lean, 5-field-projected `Employee.find` above (no
+      // `expenses` array, the one field that made a full fetch expensive -
+      // see that query's own comment), so mapping over all of them is a
+      // cheap in-memory operation, not an extra Mongo round trip. A prior
+      // `.slice(0, 20)` here silently dropped every employee past the
+      // 20th from both this table AND the totalLaborInvestment/
+      // recoveredInvestment sums below (they're derived from `moneyMade`,
+      // not from `employees` directly), undercounting the Investment
+      // Summary cards for any tenant with more than 20 employees.
+      const moneyMade = employees.map((e) => {
         const totalInvestment = Number(e.totalInvestmentAmount) || 0;
         const revenueGenerated = Number(e.totalEarnedAmount) || 0;
         const roi = totalInvestment > 0 ? Math.round((revenueGenerated / totalInvestment) * 100) : 0;

@@ -20,6 +20,7 @@ import { useEmployees } from "../../hooks/useEmployees";
 import { useSalarySlipForEdit } from "../../hooks/useSalarySlipForEdit";
 import { salarySlipsApi } from "../../api/salarySlips";
 import { useSaveSalarySlipMutation } from "../../hooks/mutations/useSalarySlipGenerationMutations";
+import SearchableSelect from "../../components/common/SearchableSelect";
 /* ═══════════════════════════════════════════════════════════════
    CONSTANTS
    (kept identical to GenerateTaxInvoice.jsx so both screens share
@@ -1750,10 +1751,14 @@ invoiceDate:
             <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "18px" }}>
               
               <Field label="Employee Name" required>
-                <select
+                <SearchableSelect
+                  options={employees.map((emp) => ({
+                    value: emp._id || emp.id,
+                    label: emp.name || `${emp.firstName || ""} ${emp.lastName || ""}`.trim(),
+                  }))}
                   value={form.employeeId || ""}
-                  onChange={async (e) => {
-                    const id = e.target.value;
+                  placeholder="Select or type to search"
+                  onChange={async (id) => {
                     setForm((p) => ({ ...p, employeeId: id }));
                     if (!id) return;
                     try {
@@ -1842,13 +1847,7 @@ currentMonthItems.forEach((it) => {
                       console.error('GenerateSalarySlip: failed to load employee', id, err);
                     }
                   }}
-                  style={{ ...baseInput, backgroundImage: dropArrow, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', paddingRight: 32, cursor: 'pointer' }}
-                >
-                  <option value="">Select employee</option>
-                  {employees.map((emp) => (
-                    <option key={emp._id || emp.id} value={emp._id || emp.id}>{emp.name || `${emp.firstName || ''} ${emp.lastName || ''}`.trim()}</option>
-                  ))}
-                </select>
+                />
               </Field>
               
               <Field label="Emirates ID" required>

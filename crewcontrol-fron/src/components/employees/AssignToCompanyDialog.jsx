@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { employeesApi } from "../../api/employees";
 import { useActiveClientCompanies } from "../../hooks/useActiveClientCompanies";
+import SearchableSelect from "../common/SearchableSelect";
 
 /**
  * The same "Assign to Company" popup already used on the Employees page's
@@ -112,36 +113,13 @@ function AssignToCompanyDialog({ open, employee, onClose, onAssigned }) {
           <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
             Select a company
           </label>
-          <select
-            className="assign-company-select"
+          <SearchableSelect
+            options={companies.map((company) => ({ value: company.id, label: company.name }))}
             value={selectedCompanyId}
-            onChange={(event) => setSelectedCompanyId(event.target.value)}
-            style={{
-              width: "100%",
-              maxWidth: "560px",
-              height: "44px",
-              borderRadius: "8px",
-              padding: "0 40px 0 14px",
-              fontSize: "14px",
-              color: "var(--text-primary)",
-              background: "#fff",
-              fontFamily: "inherit",
-              appearance: "none",
-              WebkitAppearance: "none",
-              MozAppearance: "none",
-              backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='none'><path d='M5 7L10 12L15 7' stroke='%23141414' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>")`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 12px center",
-              backgroundSize: "12px",
-            }}
-          >
-            <option value="">Select company</option>
-            {companies.map((company) => (
-              <option key={company.id} value={company.id}>
-                {company.name}
-              </option>
-            ))}
-          </select>
+            onChange={setSelectedCompanyId}
+            placeholder="Select or type to search"
+            style={{ maxWidth: "560px" }}
+          />
           {error ? (
             <div style={{ marginTop: "12px", color: "#B91C1C", fontSize: "13px" }}>{error}</div>
           ) : null}
