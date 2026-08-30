@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import api from '../api/client';
 import {
   recompute,
@@ -12,7 +11,6 @@ import {
 } from '../lib/invoiceCalc';
 import { useInvoiceDraftPoll } from '../hooks/useInvoiceDraftPoll';
 import { useSaveInvoiceDraftMutation, useApproveInvoiceDraftMutation } from '../hooks/mutations/useInvoiceDraftMutations';
-import { queryKeys } from '../queryKeys';
 
 /**
  * InvoicePreviewWindow
@@ -124,7 +122,6 @@ export default function InvoicePreviewWindow({
   const { data: pollResponse, error: pollError, refetch: refetchDraft } = useInvoiceDraftPoll(draftId);
   const saveDraftMutation = useSaveInvoiceDraftMutation(draftId);
   const approveDraftMutation = useApproveInvoiceDraftMutation(draftId);
-  const queryClient = useQueryClient();
 
   const handleReloadStaleDraft = useCallback(() => {
     hasSeededDraftRef.current = false;
@@ -412,6 +409,43 @@ export default function InvoicePreviewWindow({
 
   // ---- approve ----------------------------------------------------------
 
+  // Manual fallback poll for the 'approving' phase. useInvoiceDraftPoll's
+  // refetchInterval decides whether to keep polling purely off React
+  // Query's own cache state, and only reliably re-arms itself after a
+  // state change that came from an actual fetch - not after a synthetic
+  // queryClient.setQueryData() write (confirmed in production: the cache
+  // can be told the status is 'approving', but the interval timer that's
+  // supposed to react to that never restarts, so the query is never
+  // fetched again). A fresh mount of this same component picks up the
+  // real 'approved' status from the server instantly, proving the bug is
+  // purely "nothing ever asks again", not stale/incorrect data. This loop
+  // is the "ask again" - it calls refetchDraft() directly on a plain
+  // timer, independent of refetchInterval, until the poll effect above
+  // observes a non-approving status and this component re-renders out of
+  // the 'approving' branch.
+  const approvalPollActiveRef = useRef(false);
+
+  useEffect(() => () => { approvalPollActiveRef.current = false; }, []);
+
+  const pollApprovalUntilResolved = useCallback(async () => {
+    approvalPollActiveRef.current = true;
+    while (approvalPollActiveRef.current) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (!approvalPollActiveRef.current) return;
+      let result;
+      try {
+        result = await refetchDraft();
+      } catch {
+        continue; // transient network error - keep polling
+      }
+      const latestStatus = result?.data?.data?.status;
+      if (latestStatus !== 'approving' && latestStatus !== 'processing') {
+        approvalPollActiveRef.current = false;
+        return;
+      }
+    }
+  }, [refetchDraft]);
+
   const approve = useCallback(async () => {
     if (!draft) return;
     setApproving(true);
@@ -427,19 +461,8 @@ export default function InvoicePreviewWindow({
       // above once it observes status 'approved', not from this response.
       await approveDraftMutation.mutateAsync({ payload: draft, expectedVersion: draftVersion });
       dirtyRef.current = false;
-      // useInvoiceDraftPoll's refetchInterval decides whether to keep
-      // polling purely off the React Query cache's own last-fetched
-      // status, not this component's local `status` state. The cache
-      // still holds 'ready' from before approval (this mutation doesn't
-      // touch it), so without updating it too, refetchInterval sees a
-      // status that isn't in its poll list and stops forever - the poll
-      // never runs again to notice the backend later flip this draft to
-      // 'approved', leaving the UI stuck on this screen even after the
-      // invoice actually finishes generating.
-      queryClient.setQueryData(queryKeys.invoices.drafts.detail(draftId), (old) =>
-        old ? { ...old, data: { ...old.data, status: 'approving' } } : old
-      );
       setStatus('approving');
+      pollApprovalUntilResolved();
     } catch (err) {
       if (err?.response?.status === 409 && err?.response?.data?.currentVersion !== undefined) {
         // Someone else edited this draft since it was loaded. Do not
@@ -452,7 +475,7 @@ export default function InvoicePreviewWindow({
     } finally {
       setApproving(false);
     }
-  }, [draft, draftId, draftVersion, onApprovedProp, approveDraftMutation]);
+  }, [draft, draftId, draftVersion, onApprovedProp, approveDraftMutation, pollApprovalUntilResolved]);
 
   // ---- derived ----------------------------------------------------------
 
