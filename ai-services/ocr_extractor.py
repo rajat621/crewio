@@ -437,6 +437,48 @@ def _run_ocr_on_image(image: Any) -> List[Dict[str, Any]]:
     return tokens
 
 
+def _get_ocr_dpi() -> int:
+    return max(
+        120,
+        int(os.getenv("OCR_RASTER_DPI", os.getenv("OCR_DPI", "250"))),
+    )
+
+
+# pdf_path -> (dpi, pages, tokens_by_page). A single extraction request can
+# need OCR twice on the exact same document - once to classify the layout
+# (layout_geometry.probe_layout_geometry, called from layout_classifier's
+# resolve_layout whenever the text layer alone can't classify a scanned
+# page) and again here for the actual extraction. Both used to render and
+# OCR independently (previously even at different DPIs), so a single scanned
+# timesheet paid for two full OCR passes. Caching the render+OCR result per
+# document lets whichever call runs second reuse the first one's work
+# outright. Bounded and pruned oldest-first since pdf_path is a temp upload
+# path that's never reused across requests, so entries are pure dead weight
+# once a request finishes - this just caps worst-case memory if cleanup
+# ever lags.
+_page_ocr_cache: Dict[str, tuple] = {}
+_PAGE_OCR_CACHE_MAX = 8
+
+
+def _render_and_ocr_pages(pdf_path: str, dpi: Optional[int] = None) -> tuple:
+    """Render every page of pdf_path and OCR each one, once per (path, dpi)."""
+    if dpi is None:
+        dpi = _get_ocr_dpi()
+
+    cached = _page_ocr_cache.get(pdf_path)
+    if cached is not None and cached[0] == dpi:
+        return cached[1], cached[2]
+
+    pages = _render_pages(pdf_path, dpi=dpi)
+    tokens_by_page = [_run_ocr_on_image(page) for page in pages]
+
+    _page_ocr_cache[pdf_path] = (dpi, pages, tokens_by_page)
+    if len(_page_ocr_cache) > _PAGE_OCR_CACHE_MAX:
+        _page_ocr_cache.pop(next(iter(_page_ocr_cache)))
+
+    return pages, tokens_by_page
+
+
 def _cluster_tokens_into_lines(
     tokens: Sequence[Dict[str, Any]],
 ) -> List[List[Dict[str, Any]]]:
@@ -834,16 +876,8 @@ def extract_ocr(pdf_path: str) -> NormalizedInvoice:
 
     logger.info("ocr_extract starting (final fallback) pdf=%s", pdf_path)
 
-    dpi = max(
-        120,
-        int(
-            os.getenv(
-                "OCR_RASTER_DPI",
-                os.getenv("OCR_DPI", "250"),
-            )
-        ),
-    )
-    pages = _render_pages(pdf_path, dpi=dpi)
+    dpi = _get_ocr_dpi()
+    pages, tokens_by_page = _render_and_ocr_pages(pdf_path, dpi=dpi)
     if not pages:
         invoice.error = "OCR_NO_PAGES_RENDERED"
         return invoice
@@ -853,8 +887,7 @@ def extract_ocr(pdf_path: str) -> NormalizedInvoice:
     all_summary_rows: List[NormalizedInvoiceRow] = []
     all_lines: List[List[Dict[str, Any]]] = []
 
-    for page_idx, page_img in enumerate(pages, 1):
-        tokens = _run_ocr_on_image(page_img)
+    for page_idx, tokens in enumerate(tokens_by_page, 1):
         if not tokens:
             invoice.warnings.append(f"ocr_page_{page_idx}:no_tokens")
             continue

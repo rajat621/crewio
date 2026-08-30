@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from statistics import median
 from typing import Iterable, List, Sequence, Tuple
 
-from ocr_extractor import _cluster_tokens_into_lines, _line_text, _render_pages, _run_ocr_on_image
+from ocr_extractor import _cluster_tokens_into_lines, _get_ocr_dpi, _line_text, _render_and_ocr_pages
 
 
 _MONTH_NAMES = {
@@ -169,8 +169,21 @@ def _summary_row_score(line: Sequence[dict]) -> int:
     return 1 if has_trade_like and len(numeric_tokens) >= 3 and not _line_has_invoice_header(text) else 0
 
 
-def probe_layout_geometry(pdf_path: str, max_pages: int = 2, dpi: int = 150) -> LayoutGeometryProfile:
-    pages = _render_pages(pdf_path, dpi=dpi)
+def probe_layout_geometry(pdf_path: str, max_pages: int = 2, dpi: int | None = None) -> LayoutGeometryProfile:
+    # Renders and OCRs at the same DPI extract_ocr() uses (was a fixed 150
+    # here vs extract_ocr's own 250) and through the same cache, so when
+    # this probe runs first - as it does for essentially every scanned
+    # document, since resolve_layout() only calls it when the text layer
+    # can't classify the page - and the resulting strategy turns out to be
+    # OCR, extract_ocr() reuses this pass outright instead of rendering and
+    # OCRing the whole document a second time. Only the first `max_pages`
+    # are actually inspected below (classification only ever needed a
+    # couple of pages), but the full document still gets OCRed here since
+    # extraction will want every page regardless - deferring that cost
+    # instead of duplicating it.
+    if dpi is None:
+        dpi = _get_ocr_dpi()
+    pages, tokens_by_page = _render_and_ocr_pages(pdf_path, dpi=dpi)
     if not pages:
         return LayoutGeometryProfile(
             page_count=0,
@@ -189,8 +202,7 @@ def probe_layout_geometry(pdf_path: str, max_pages: int = 2, dpi: int = 150) -> 
         )
 
     profiles: List[PageGeometryProfile] = []
-    for page_index, page in enumerate(pages[:max_pages], 1):
-        tokens = _run_ocr_on_image(page)
+    for page_index, tokens in enumerate(tokens_by_page[:max_pages], 1):
         lines = _cluster_tokens_into_lines(tokens)
         band_count, alignment_score = _page_band_count(lines)
         has_day_header = any(_line_has_day_header(line) for line in lines)
