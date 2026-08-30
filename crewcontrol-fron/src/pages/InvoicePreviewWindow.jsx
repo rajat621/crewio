@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import api from '../api/client';
 import {
   recompute,
@@ -11,6 +12,7 @@ import {
 } from '../lib/invoiceCalc';
 import { useInvoiceDraftPoll } from '../hooks/useInvoiceDraftPoll';
 import { useSaveInvoiceDraftMutation, useApproveInvoiceDraftMutation } from '../hooks/mutations/useInvoiceDraftMutations';
+import { queryKeys } from '../queryKeys';
 
 /**
  * InvoicePreviewWindow
@@ -122,6 +124,7 @@ export default function InvoicePreviewWindow({
   const { data: pollResponse, error: pollError, refetch: refetchDraft } = useInvoiceDraftPoll(draftId);
   const saveDraftMutation = useSaveInvoiceDraftMutation(draftId);
   const approveDraftMutation = useApproveInvoiceDraftMutation(draftId);
+  const queryClient = useQueryClient();
 
   const handleReloadStaleDraft = useCallback(() => {
     hasSeededDraftRef.current = false;
@@ -424,6 +427,18 @@ export default function InvoicePreviewWindow({
       // above once it observes status 'approved', not from this response.
       await approveDraftMutation.mutateAsync({ payload: draft, expectedVersion: draftVersion });
       dirtyRef.current = false;
+      // useInvoiceDraftPoll's refetchInterval decides whether to keep
+      // polling purely off the React Query cache's own last-fetched
+      // status, not this component's local `status` state. The cache
+      // still holds 'ready' from before approval (this mutation doesn't
+      // touch it), so without updating it too, refetchInterval sees a
+      // status that isn't in its poll list and stops forever - the poll
+      // never runs again to notice the backend later flip this draft to
+      // 'approved', leaving the UI stuck on this screen even after the
+      // invoice actually finishes generating.
+      queryClient.setQueryData(queryKeys.invoices.drafts.detail(draftId), (old) =>
+        old ? { ...old, data: { ...old.data, status: 'approving' } } : old
+      );
       setStatus('approving');
     } catch (err) {
       if (err?.response?.status === 409 && err?.response?.data?.currentVersion !== undefined) {
