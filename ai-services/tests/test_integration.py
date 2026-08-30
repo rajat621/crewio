@@ -280,15 +280,17 @@ class TestScannedPDFPath(unittest.TestCase):
 
     @patch("extraction_pipeline.classify_document")
     @patch("extraction_pipeline.extract_vision")
-    @patch("extraction_pipeline.extract_ocr")
     @patch("extraction_pipeline.extract_native")
     @patch("extraction_pipeline._vision_available", return_value=True)
-    def test_scanned_pdf_vision_timeout_falls_back_to_ocr(
-        self, mock_vis_avail, mock_native, mock_ocr, mock_vision, mock_classify
+    def test_scanned_pdf_vision_timeout_has_no_ocr_fallback(
+        self, mock_vis_avail, mock_native, mock_vision, mock_classify
     ):
         """
-        Scanned PDF → Vision times out → OCR fallback is triggered.
-        OCR must only run AFTER Vision fails.
+        Scanned PDF → Vision times out → nothing else runs. OCR was removed
+        as a fallback entirely (a source of unreliable, occasionally
+        worker-crashing extractions) - see extraction_strategy_router.py and
+        extraction_pipeline.py comments. The document must surface as failed
+        rather than silently falling back to OCR.
         """
         mock_classify.return_value = ClassificationResult(
             document_type=DocumentType.SCANNED,
@@ -299,27 +301,14 @@ class TestScannedPDFPath(unittest.TestCase):
         import requests
         mock_vision.side_effect = requests.Timeout("vision API timeout")
 
-        ocr_inv = NormalizedInvoice()
-        ocr_inv.invoice_rows = [
-            NormalizedInvoiceRow("CARPENTER", 180.0, 15.0, 2700.0),
-        ]
-        ocr_inv.subtotal = 2700.0
-        ocr_inv.vat = 135.0
-        ocr_inv.net_total = 2835.0
-        ocr_inv.extraction_source = "ocr"
-        ocr_inv.confidence = 0.65
-        ocr_inv.deduction_detail = NormalizedDeductions()
-        mock_ocr.return_value = ocr_inv
-
         from extraction_pipeline import run_extraction_pipeline
         result = run_extraction_pipeline("test_scanned_timeout.pdf")
 
         mock_vision.assert_called_once()
-        mock_ocr.assert_called_once()
         mock_native.assert_not_called()
 
-        self.assertTrue(result.is_valid)
-        self.assertIn(result.extraction_source, ("ocr", "hybrid"))
+        self.assertFalse(result.is_valid)
+        self.assertEqual(result.extraction_source, "none")
 
 
 # ---------------------------------------------------------------------------
@@ -330,16 +319,18 @@ class TestHybridFlow(unittest.TestCase):
 
     @patch("extraction_pipeline.classify_document")
     @patch("extraction_pipeline.extract_vision")
-    @patch("extraction_pipeline.extract_ocr")
     @patch("extraction_pipeline.extract_native")
     @patch("extraction_pipeline._vision_available", return_value=True)
-    def test_hybrid_vision_financials_plus_ocr_rows(
-        self, mock_vis_avail, mock_native, mock_ocr, mock_vision, mock_classify
+    def test_vision_zero_rows_has_no_ocr_to_hybridize_with(
+        self, mock_vis_avail, mock_native, mock_vision, mock_classify
     ):
         """
-        Vision extracts correct financial totals but returns zero employee rows.
-        OCR extracts employee rows but poor financials.
-        Pipeline must combine both → hybrid source.
+        Vision extracts correct financial totals but returns zero employee
+        rows. There is no OCR fallback to hybridize with anymore (removed as
+        a source of unreliable, occasionally worker-crashing extractions -
+        see extraction_strategy_router.py and extraction_pipeline.py
+        comments), so the pipeline must surface Vision's own result as-is
+        rather than reaching for OCR rows.
         """
         mock_classify.return_value = ClassificationResult(
             document_type=DocumentType.SCANNED,
@@ -347,7 +338,7 @@ class TestHybridFlow(unittest.TestCase):
             digital_ratio=0.0, avg_chars_per_page=2.0, confidence=0.95,
         )
 
-        # Vision: good financials, no employee rows (zero rows triggers OCR fallback)
+        # Vision: good financials, no employee rows
         vision_inv = NormalizedInvoice()
         vision_inv.invoice_rows = []
         vision_inv.subtotal = 8500.0
@@ -361,41 +352,14 @@ class TestHybridFlow(unittest.TestCase):
         vision_inv.confidence = 0.82
         mock_vision.return_value = vision_inv
 
-        # OCR: has employee rows, weaker financials
-        ocr_rows = [
-            NormalizedInvoiceRow("CARPENTER", 200.0, 15.0, 3000.0, "EMP001"),
-            NormalizedInvoiceRow("MASON", 220.0, 18.0, 3960.0, "EMP002"),
-            NormalizedInvoiceRow("HELPER", 180.0, 12.0, 2160.0, "EMP003"),
-        ]
-        ocr_inv = NormalizedInvoice()
-        ocr_inv.invoice_rows = ocr_rows
-        ocr_inv.subtotal = sum(r.amount for r in ocr_rows)
-        ocr_inv.deductions = 0.0
-        ocr_inv.deduction_detail = NormalizedDeductions()
-        ocr_inv.vat = 0.0
-        ocr_inv.net_total = 0.0
-        ocr_inv.extraction_source = "ocr"
-        ocr_inv.confidence = 0.68
-        mock_ocr.return_value = ocr_inv
-
         from extraction_pipeline import run_extraction_pipeline
         result = run_extraction_pipeline("test_hybrid.pdf")
 
-        # Must be hybrid
-        self.assertEqual(result.extraction_source, "hybrid")
-
-        # Must have employee rows (from OCR)
-        self.assertEqual(len(result.invoice_rows), 3)
-
-        # Must have Vision financials (subtotal and deductions preserved)
+        mock_native.assert_not_called()
+        self.assertEqual(result.extraction_source, "vision")
+        self.assertEqual(len(result.invoice_rows), 0)
         self.assertAlmostEqual(result.subtotal, 8500.0, places=1)
         self.assertAlmostEqual(result.deductions, 600.0, places=1)
-        self.assertGreater(result.net_total, 0)
-
-        # Renderer contract satisfied
-        d = result.to_dict()
-        self.assertEqual(len(d["invoice_rows"]), 3)
-        self.assertAlmostEqual(d["subtotal"], 8500.0, places=1)
 
 
 # ---------------------------------------------------------------------------

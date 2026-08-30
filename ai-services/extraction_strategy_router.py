@@ -32,69 +32,29 @@ def plan_strategy(document_type: DocumentType, layout_type: LayoutType) -> Extra
     """
     Build an extraction order based on document type + inferred layout.
 
-    This remains conservative:
-    - DIGITAL docs still prefer native extraction first
-    - SCANNED/MIXED docs still prefer vision first
-    - OCR remains final fallback
+    OCR is never selected, for any document type or layout. It was a source
+    of unreliable, occasionally worker-crashing extractions (rendering +
+    RapidOCR run inside a gunicorn request thread - see the ai-services
+    invoice-extraction incident history) and is strictly worse than Gemini
+    Vision for this document class. Gemini Vision is the only fallback for
+    scanned/mixed documents regardless of inferred layout; layout_type is
+    kept only for diagnostics/warnings, not for routing.
+
+    - DIGITAL docs still prefer native extraction first, falling back to
+      Vision if native comes back empty/invalid.
+    - Every other document (scanned/mixed) always uses Vision, with no
+      fallback stage - if Vision fails, the document is surfaced for human
+      review rather than silently handed to OCR.
     """
     if document_type == DocumentType.DIGITAL:
         return ExtractionStrategy(
             primary=ExtractionStage.NATIVE,
-            fallbacks=[ExtractionStage.VISION, ExtractionStage.OCR],
+            fallbacks=[ExtractionStage.VISION],
             reason="digital_pdf_prefers_native",
-        )
-
-    if layout_type == LayoutType.ATTENDANCE_MATRIX_WITH_SUMMARY:
-        return ExtractionStrategy(
-            primary=ExtractionStage.OCR,
-            fallbacks=[ExtractionStage.VISION],
-            reason="attendance_matrix_with_summary_prefers_ocr_geometry",
-        )
-
-    if layout_type == LayoutType.EMPLOYEE_DAILY_SHEET:
-        return ExtractionStrategy(
-            primary=ExtractionStage.OCR,
-            fallbacks=[ExtractionStage.VISION],
-            reason="employee_daily_sheet_prefers_ocr_geometry",
-        )
-
-    if layout_type == LayoutType.TRADE_SUMMARY_ONLY:
-        return ExtractionStrategy(
-            primary=ExtractionStage.OCR,
-            fallbacks=[ExtractionStage.VISION],
-            reason="trade_summary_only_prefers_ocr_geometry",
-        )
-
-    if layout_type == LayoutType.MULTI_PAGE_SUMMARY:
-        return ExtractionStrategy(
-            primary=ExtractionStage.OCR,
-            fallbacks=[ExtractionStage.VISION],
-            reason="multi_page_summary_prefers_ocr_geometry",
-        )
-
-    if layout_type == LayoutType.INVOICE_STYLE:
-        return ExtractionStrategy(
-            primary=ExtractionStage.VISION,
-            fallbacks=[ExtractionStage.OCR],
-            reason="invoice_style_prefers_vision_semantics",
-        )
-
-    if layout_type == LayoutType.NATIVE_TABLE:
-        return ExtractionStrategy(
-            primary=ExtractionStage.OCR,
-            fallbacks=[ExtractionStage.VISION],
-            reason="native_table_prefers_ocr_geometry",
-        )
-
-    if layout_type == LayoutType.MIXED_LAYOUT:
-        return ExtractionStrategy(
-            primary=ExtractionStage.VISION,
-            fallbacks=[ExtractionStage.OCR],
-            reason="mixed_layout_prefers_vision_then_ocr",
         )
 
     return ExtractionStrategy(
         primary=ExtractionStage.VISION,
-        fallbacks=[ExtractionStage.OCR],
-        reason="scanned_pdf_prefers_vision",
+        fallbacks=[],
+        reason=f"non_digital_always_vision_layout={layout_type.value}",
     )

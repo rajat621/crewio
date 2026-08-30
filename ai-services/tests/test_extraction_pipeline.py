@@ -400,10 +400,9 @@ class TestExtractionRouting(unittest.TestCase):
     @patch("extraction_pipeline.classify_document")
     @patch("extraction_pipeline.extract_native")
     @patch("extraction_pipeline.extract_vision")
-    @patch("extraction_pipeline.extract_ocr")
     @patch("extraction_pipeline._vision_available", return_value=True)
     def test_scanned_pdf_skips_native_uses_vision(
-        self, mock_vis_avail, mock_ocr, mock_vision, mock_native, mock_classify
+        self, mock_vis_avail, mock_vision, mock_native, mock_classify
     ):
         """Scanned PDF must skip native and use Vision."""
         mock_classify.return_value = ClassificationResult(
@@ -421,45 +420,44 @@ class TestExtractionRouting(unittest.TestCase):
 
         mock_native.assert_not_called()   # native not used for scanned
         mock_vision.assert_called_once()
-        mock_ocr.assert_not_called()      # OCR not called when Vision succeeds
         self.assertEqual(result.extraction_source, "vision")
 
     @patch("extraction_pipeline.classify_document")
     @patch("extraction_pipeline.extract_native")
     @patch("extraction_pipeline.extract_vision")
-    @patch("extraction_pipeline.extract_ocr")
     @patch("extraction_pipeline._vision_available", return_value=True)
-    def test_vision_failure_triggers_ocr_fallback(
-        self, mock_vis_avail, mock_ocr, mock_vision, mock_native, mock_classify
+    def test_vision_failure_has_no_ocr_fallback(
+        self, mock_vis_avail, mock_vision, mock_native, mock_classify
     ):
-        """When Vision fails (raises), OCR must be called as fallback."""
+        """
+        OCR was removed as a fallback entirely (see extraction_strategy_router.py
+        and extraction_pipeline.py comments - it was a source of unreliable,
+        occasionally worker-crashing extractions). When Vision raises on a
+        scanned document there is nothing else to try, so the pipeline must
+        surface a failed result rather than silently reaching for OCR.
+        """
         mock_classify.return_value = ClassificationResult(
             document_type=DocumentType.SCANNED,
             total_pages=1, digital_pages=0, scanned_pages=1,
             digital_ratio=0.0, avg_chars_per_page=5.0, confidence=0.95,
         )
         mock_vision.side_effect = RuntimeError("GEMINI_TIMEOUT")
-        ocr_invoice = _make_invoice(
-            rows=[_make_row()], subtotal=1500, net_total=1500, source="ocr"
-        )
-        mock_ocr.return_value = ocr_invoice
 
         from extraction_pipeline import run_extraction_pipeline
         result = run_extraction_pipeline("fake_scan.pdf")
 
         mock_vision.assert_called_once()
-        mock_ocr.assert_called_once()    # OCR triggered after Vision failure
-        self.assertIn(result.extraction_source, ("ocr", "hybrid"))
+        self.assertFalse(result.is_valid)
+        self.assertEqual(result.extraction_source, "none")
 
     @patch("extraction_pipeline.classify_document")
     @patch("extraction_pipeline.extract_native")
     @patch("extraction_pipeline.extract_vision")
-    @patch("extraction_pipeline.extract_ocr")
     @patch("extraction_pipeline._vision_available", return_value=True)
-    def test_vision_zero_rows_triggers_ocr_fallback(
-        self, mock_vis_avail, mock_ocr, mock_vision, mock_native, mock_classify
+    def test_vision_zero_rows_has_no_ocr_fallback(
+        self, mock_vis_avail, mock_vision, mock_native, mock_classify
     ):
-        """When Vision returns zero employees, OCR fallback must run."""
+        """When Vision returns zero employees there is no OCR to fall back to."""
         mock_classify.return_value = ClassificationResult(
             document_type=DocumentType.SCANNED,
             total_pages=1, digital_pages=0, scanned_pages=1,
@@ -467,40 +465,33 @@ class TestExtractionRouting(unittest.TestCase):
         )
         # Vision succeeds but returns no employees
         mock_vision.return_value = _make_invoice(rows=[], subtotal=1500, source="vision")
-        ocr_invoice = _make_invoice(
-            rows=[_make_row()], subtotal=1500, net_total=1500, source="ocr"
-        )
-        mock_ocr.return_value = ocr_invoice
 
         from extraction_pipeline import run_extraction_pipeline
         result = run_extraction_pipeline("fake_scan.pdf")
 
-        mock_ocr.assert_called_once()   # OCR triggered because Vision had 0 employees
+        mock_vision.assert_called_once()
+        self.assertEqual(len(result.invoice_rows), 0)
 
     @patch("extraction_pipeline.classify_document")
     @patch("extraction_pipeline.extract_native")
     @patch("extraction_pipeline.extract_vision")
-    @patch("extraction_pipeline.extract_ocr")
     @patch("extraction_pipeline._vision_available", return_value=False)
-    def test_no_vision_key_goes_to_ocr(
-        self, mock_vis_avail, mock_ocr, mock_vision, mock_native, mock_classify
+    def test_no_vision_key_fails_scanned_doc(
+        self, mock_vis_avail, mock_vision, mock_native, mock_classify
     ):
-        """When Gemini is not configured, skip Vision and use OCR."""
+        """When Gemini is not configured, a scanned doc has no extractor to use at all (no OCR)."""
         mock_classify.return_value = ClassificationResult(
             document_type=DocumentType.SCANNED,
             total_pages=1, digital_pages=0, scanned_pages=1,
             digital_ratio=0.0, avg_chars_per_page=5.0, confidence=0.95,
         )
-        ocr_invoice = _make_invoice(
-            rows=[_make_row()], subtotal=1500, net_total=1500, source="ocr"
-        )
-        mock_ocr.return_value = ocr_invoice
 
         from extraction_pipeline import run_extraction_pipeline
         result = run_extraction_pipeline("fake_scan.pdf")
 
         mock_vision.assert_not_called()  # Vision skipped, no API key
-        mock_ocr.assert_called_once()
+        self.assertFalse(result.is_valid)
+        self.assertEqual(result.extraction_source, "none")
 
     @unittest.skip(
         "Stale: asserts the pre-'vision-first' routing strategy - see "

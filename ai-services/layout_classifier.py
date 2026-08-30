@@ -18,7 +18,6 @@ from enum import Enum
 from typing import List, Optional
 
 from document_classifier import DocumentType
-from layout_geometry import LayoutGeometryProfile, probe_layout_geometry
 
 logger = logging.getLogger(__name__)
 
@@ -153,103 +152,18 @@ def classify_layout(text_chunks: List[str]) -> LayoutClassificationResult:
     return result
 
 
-def _geometry_to_layout(geometry: LayoutGeometryProfile) -> LayoutClassificationResult:
-    if geometry.page_count <= 0:
-        return LayoutClassificationResult(
-            layout_type=LayoutType.UNKNOWN,
-            confidence=0.0,
-            has_employee_markers=False,
-            has_project_markers=False,
-            has_trade_markers=False,
-            has_deduction_markers=False,
-            has_summary_markers=False,
-        )
-
-    if geometry.mixed_pages:
-        layout = LayoutType.MIXED_LAYOUT
-    elif geometry.attendance_pages and geometry.summary_pages:
-        layout = LayoutType.ATTENDANCE_MATRIX_WITH_SUMMARY
-    elif geometry.attendance_pages:
-        layout = LayoutType.EMPLOYEE_DAILY_SHEET
-    elif geometry.multi_page_summary_pages > 1 and geometry.page_count > 1:
-        layout = LayoutType.MULTI_PAGE_SUMMARY
-    elif geometry.invoice_pages:
-        layout = LayoutType.INVOICE_STYLE
-    elif geometry.summary_pages:
-        layout = LayoutType.TRADE_SUMMARY_ONLY
-    elif geometry.native_table_pages:
-        layout = LayoutType.NATIVE_TABLE
-    else:
-        layout = LayoutType.UNKNOWN
-
-    confidence = 0.52
-    if layout == LayoutType.ATTENDANCE_MATRIX_WITH_SUMMARY:
-        confidence = min(0.95, 0.70 + geometry.average_alignment * 0.25)
-    elif layout == LayoutType.EMPLOYEE_DAILY_SHEET:
-        confidence = min(0.93, 0.66 + geometry.average_alignment * 0.22)
-    elif layout == LayoutType.TRADE_SUMMARY_ONLY:
-        confidence = min(0.90, 0.62 + geometry.average_alignment * 0.20)
-    elif layout == LayoutType.INVOICE_STYLE:
-        confidence = min(0.92, 0.64 + geometry.average_alignment * 0.20)
-    elif layout == LayoutType.MULTI_PAGE_SUMMARY:
-        confidence = min(0.90, 0.68 + geometry.average_alignment * 0.18)
-    elif layout == LayoutType.NATIVE_TABLE:
-        confidence = min(0.90, 0.60 + geometry.average_alignment * 0.20)
-
-    return LayoutClassificationResult(
-        layout_type=layout,
-        confidence=round(confidence, 4),
-        has_employee_markers=geometry.attendance_pages > 0,
-        has_project_markers=geometry.native_table_pages > 0,
-        has_trade_markers=geometry.summary_pages > 0,
-        has_deduction_markers=geometry.has_invoice_header,
-        has_summary_markers=geometry.summary_pages > 0 or geometry.has_summary_header,
-    )
-
-
 def resolve_layout(
     pdf_path: str,
     text_chunks: List[str],
     document_type: Optional[DocumentType] = None,
 ) -> LayoutClassificationResult:
-    text_result = classify_layout(text_chunks)
-
-    # extraction_strategy_router.plan_strategy() always routes DIGITAL
-    # documents to native extraction regardless of layout_type/confidence -
-    # so refining the layout label via probe_layout_geometry() below (a full
-    # page render + OCR pass, ~50s+ on a multi-page doc) can never change the
-    # extraction outcome for a digital PDF, only the diagnostic label. Skip
-    # it and pay for that OCR pass only when it can actually affect routing
-    # (scanned/mixed documents, where layout_type picks between OCR/Vision).
-    if document_type == DocumentType.DIGITAL:
-        return text_result
-
-    needs_geometry = (
-        text_result.layout_type == LayoutType.UNKNOWN
-        or text_result.confidence < 0.68
-    )
-    if not needs_geometry:
-        return text_result
-
-    geometry = probe_layout_geometry(pdf_path)
-    geometry_result = _geometry_to_layout(geometry)
-
-    if geometry_result.layout_type == LayoutType.UNKNOWN:
-        return text_result
-
-    if text_result.layout_type == LayoutType.UNKNOWN:
-        return geometry_result
-
-    if geometry_result.confidence >= text_result.confidence or document_type != DocumentType.DIGITAL:
-        logger.info(
-            "layout_geometry_resolved type=%s confidence=%.2f page_count=%d summary_pages=%d attendance_pages=%d native_table_pages=%d",
-            geometry_result.layout_type.value,
-            geometry_result.confidence,
-            geometry.page_count,
-            geometry.summary_pages,
-            geometry.attendance_pages,
-            geometry.native_table_pages,
-        )
-        return geometry_result
-
-    return text_result
+    # extraction_strategy_router.plan_strategy() no longer branches on
+    # layout_type at all - DIGITAL always goes native->vision, and every
+    # other document always goes straight to Gemini Vision. That means
+    # refining the layout label via probe_layout_geometry() (a full page
+    # render + RapidOCR pass, ~50s+ on a multi-page doc, and the source of
+    # this pipeline's worker-crashing extraction incidents) can never change
+    # the extraction outcome, only a diagnostic label. Never pay for that
+    # OCR pass; text-based classification is used purely for warnings/
+    # diagnostics now.
+    return classify_layout(text_chunks)

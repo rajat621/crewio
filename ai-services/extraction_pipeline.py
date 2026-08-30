@@ -382,28 +382,31 @@ from document_classifier import ClassificationResult, DocumentType, classify_doc
 from extraction_strategy_router import ExtractionStage, plan_strategy
 from extraction_validator import validate_and_repair
 from financial_reconciliation import reconcile_invoice_financials
-from hybrid_recovery import attempt_hybrid_recovery
 from layout_classifier import resolve_layout
 from native_extractor import extract_native
 from normalized_output import NormalizedInvoice
-from ocr_extractor import extract_ocr
 from vision_extractor import extract_vision
 
 logger = logging.getLogger(__name__)
 
-# The legacy pipeline (pipeline/run.py) already bounds concurrent
-# Gemini/OCR calls via threading.Semaphore, but this v2 pipeline - the one
-# actually wired to /v2/* - called extract_vision/extract_ocr directly with
-# no guard at all. With only 2 gunicorn workers x 4 threads (8 total
-# request slots) and Gemini calls that can take up to 120s each, an
-# unguarded pipeline lets a burst of concurrent extractions exhaust every
-# slot at once with no backpressure. Reuses the same CONFIG values the
-# legacy pipeline's guards are sized from, just applied at this pipeline's
-# actual call sites (extraction_pipeline.py -> vision_extractor/
-# ocr_extractor), initialized at import time so it doesn't depend on the
-# legacy pipeline's lazy _init_concurrency_guards() ever having run.
+# The legacy pipeline (pipeline/run.py) already bounds concurrent Gemini
+# calls via threading.Semaphore, but this v2 pipeline - the one actually
+# wired to /v2/* - called extract_vision directly with no guard at all.
+# With only 1 gunicorn worker x 4 threads (4 total request slots) and
+# Gemini calls that can take up to 120s each, an unguarded pipeline lets a
+# burst of concurrent extractions exhaust every slot at once with no
+# backpressure. Reuses the same CONFIG value the legacy pipeline's guard is
+# sized from, just applied at this pipeline's actual call site
+# (extraction_pipeline.py -> vision_extractor), initialized at import time
+# so it doesn't depend on the legacy pipeline's lazy
+# _init_concurrency_guards() ever having run.
+#
+# OCR is intentionally not used anywhere in this pipeline (no semaphore, no
+# import, no call site) - it was a source of unreliable, occasionally
+# worker-crashing extractions (rendering + RapidOCR run inside a gunicorn
+# request thread). Every non-digital document goes straight to Gemini
+# Vision; see extraction_strategy_router.plan_strategy().
 _vision_semaphore = threading.Semaphore(CONFIG.concurrency_limits.inference_concurrency)
-_ocr_semaphore = threading.Semaphore(CONFIG.concurrency_limits.ocr_concurrency)
 
 
 def _vision_available() -> bool:
@@ -425,16 +428,6 @@ def _vision_result_is_usable(result: NormalizedInvoice) -> bool:
       - API timeout            (handled by exception)
     """
     return len(result.invoice_rows) > 0
-
-
-def _ocr_should_run(vision_result: Optional[NormalizedInvoice]) -> bool:
-    """
-    Per spec: OCR only runs when Vision fails.
-    Vision "fails" when it raises or returns zero employees.
-    """
-    if vision_result is None:
-        return True
-    return not _vision_result_is_usable(vision_result)
 
 
 def _extract_layout_text_chunks(pdf_path: str, max_pages: int = 4) -> List[str]:
@@ -517,15 +510,18 @@ def run_extraction_pipeline(
     """
     Full extraction pipeline.
 
-    Priority order is decided by extraction_strategy_router.plan_strategy()
-    based on document classification + layout, per spec:
+    Priority order is decided by extraction_strategy_router.plan_strategy():
       - Digital PDFs try native (pdfplumber) extraction first - it's near
-        instant and doesn't touch any external API. Vision/OCR only run
-        as a fallback when native comes back with zero rows/subtotal or
-        errors out.
-      - Scanned/mixed PDFs use whichever of Vision/OCR the layout
-        classifier judged more reliable for that geometry, with the other
-        as fallback.
+        instant and doesn't touch any external API. Gemini Vision only
+        runs as a fallback when native comes back with zero rows/subtotal
+        or errors out.
+      - Every scanned/mixed PDF always goes straight to Gemini Vision,
+        regardless of inferred layout. There is no OCR fallback anywhere
+        in this pipeline: OCR (rendering + RapidOCR run inside a gunicorn
+        request thread) was a source of unreliable, occasionally
+        worker-crashing extractions, and Vision alone is more reliable for
+        this document class. If Vision fails, the document is surfaced
+        for human review instead.
     This avoids paying a ~20-75s Gemini Vision round trip on every digital
     PDF when native extraction alone is already reliable and sufficient.
 
@@ -562,7 +558,6 @@ def run_extraction_pipeline(
 
     native_result: Optional[NormalizedInvoice] = None
     vision_result: Optional[NormalizedInvoice] = None
-    ocr_result: Optional[NormalizedInvoice] = None
     final: Optional[NormalizedInvoice] = None
 
     def _finalize(result: NormalizedInvoice) -> NormalizedInvoice:
@@ -624,33 +619,6 @@ def run_extraction_pipeline(
                 final = vision_result
                 break
 
-        elif stage == ExtractionStage.OCR:
-            logger.info("step2_route ocr_extraction reason=%s", strategy.reason)
-            try:
-                with _ocr_semaphore:
-                    ocr_result = extract_ocr(pdf_path)
-                logger.info(
-                    "step2_ocr rows=%d subtotal=%.2f confidence=%.2f",
-                    len(ocr_result.invoice_rows),
-                    ocr_result.subtotal,
-                    ocr_result.confidence,
-                )
-            except Exception as exc:
-                logger.error("step2_ocr also failed: %s", exc)
-                ocr_result = NormalizedInvoice()
-                ocr_result.error = f"ALL_EXTRACTORS_FAILED:{exc}"
-                ocr_result.extraction_source = "ocr"
-
-            if ocr_result is not None and ocr_result.invoice_rows:
-                if vision_result is not None:
-                    # Vision ran earlier in the chain but wasn't usable alone -
-                    # combine what each engine got right instead of discarding it.
-                    logger.info("step5_hybrid_recovery")
-                    final = attempt_hybrid_recovery(vision_result, ocr_result)
-                else:
-                    final = ocr_result
-                break
-
     if final is not None:
         _log_completion(final := _finalize(final), run_tag, started)
         return final
@@ -667,32 +635,11 @@ def run_extraction_pipeline(
         except Exception as exc:
             logger.warning("step2_native_mixed_recovery failed: %s", exc)
 
-    # Final fallback pass — nothing in the strategy's stage order produced a
-    # standalone-usable result. Run OCR if it hasn't already been tried, as
-    # the last resort before giving up.
-    if ocr_result is None and _ocr_should_run(vision_result):
-        logger.info("step2_route ocr_extraction (final fallback — nothing usable yet)")
-        try:
-            ocr_result = extract_ocr(pdf_path)
-            logger.info(
-                "step2_ocr rows=%d subtotal=%.2f confidence=%.2f",
-                len(ocr_result.invoice_rows),
-                ocr_result.subtotal,
-                ocr_result.confidence,
-            )
-        except Exception as exc:
-            logger.error("step2_ocr also failed: %s", exc)
-            ocr_result = NormalizedInvoice()
-            ocr_result.error = f"ALL_EXTRACTORS_FAILED:{exc}"
-            ocr_result.extraction_source = "ocr"
-
     # -----------------------------------------------------------------------
-    # STEP 5 — Hybrid recovery
+    # STEP 5 — Final selection (no OCR fallback — Vision failing here means
+    # the document goes to human review, not to a less reliable extractor)
     # -----------------------------------------------------------------------
-    if vision_result is not None and ocr_result is not None:
-        logger.info("step5_hybrid_recovery")
-        final = attempt_hybrid_recovery(vision_result, ocr_result)
-    elif native_result is not None and vision_result is not None:
+    if native_result is not None and vision_result is not None:
         # Prefer richer row extraction from vision while preserving strong native totals when useful.
         if len(vision_result.invoice_rows) >= len(native_result.invoice_rows):
             final = vision_result
@@ -704,8 +651,6 @@ def run_extraction_pipeline(
                 final.deductions = vision_result.deductions
     elif vision_result is not None:
         final = vision_result
-    elif ocr_result is not None:
-        final = ocr_result
     elif native_result is not None:
         # native ran but was insufficient — use it anyway
         final = native_result
