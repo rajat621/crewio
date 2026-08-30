@@ -1593,12 +1593,25 @@ export default function GenerateTaxInvoice() {
   // success screen (and its Preview/Download buttons) the old synchronous
   // generation path already used, by populating the same `generatedInvoice`
   // state those buttons read from.
+  //
+  // Deliberately does NOT clear reviewDraftId here. The review window and
+  // the success dialog below are rendered from two separate conditions
+  // (genPhase === "review" vs genPhase !== "review") that used to also
+  // both require/exclude reviewDraftId - clearing it in the same call that
+  // flips genPhase meant a render could briefly observe one state updated
+  // but not the other (e.g. genPhase already "success" while reviewDraftId
+  // hadn't cleared yet, or vice versa), flashing the full editable review
+  // screen for a frame right before the success screen took over. genPhase
+  // alone is now the single source of truth for which of the two mutually
+  // exclusive screens is visible; reviewDraftId only needs to hold the
+  // correct id whenever genPhase is actually "review" again, which
+  // handleGenerateReview already guarantees by setting it fresh before
+  // flipping genPhase back to "review".
   const handleReviewApproved = (data) => {
     setGeneratedInvoice({
       _id: data.invoiceId,
       invoiceNumber: data.invoiceNumber,
     });
-    setReviewDraftId(null);
     setIsSuccess(true);
     setGenPhase("success");
   };
@@ -1844,6 +1857,7 @@ export default function GenerateTaxInvoice() {
   const handleEdit = () => {
     setIsSuccess(false);
     setGeneratedInvoice(null);
+    setReviewDraftId(null);
     setCurrentStep(1);
     setGenerateError("");
   };
@@ -1851,6 +1865,7 @@ export default function GenerateTaxInvoice() {
   const handleSuccessClose = () => {
     setIsSuccess(false);
     setGenPhase(null);
+    setReviewDraftId(null);
     navigate("/tax-invoices");
   };
 
@@ -2017,7 +2032,7 @@ p:0 ,mb:2 ,      "& .MuiAlert-icon": {
         </DialogShell>
       ) : null}
 
-      {genPhase === "review" && reviewDraftId ? (
+      {genPhase === "review" ? (
         <InvoicePreviewWindow
           draftId={reviewDraftId}
           embedded
