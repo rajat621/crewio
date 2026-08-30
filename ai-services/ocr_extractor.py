@@ -386,6 +386,25 @@ def _render_pages(pdf_path: str, dpi: int = 250) -> List[Any]:
         return []
 
 
+_rapid_ocr_engine = None
+
+
+def _get_rapid_ocr_engine():
+    """
+    RapidOCR() loads its ONNX models from disk on construction. Rebuilding
+    it on every page/probe call (as this used to do) meant every OCR call
+    paid full model-load cost on top of inference - the dominant cost in a
+    single request that calls this multiple times (layout-geometry probe
+    plus the actual OCR extraction pass). Cache one engine per worker
+    process instead.
+    """
+    global _rapid_ocr_engine
+    if _rapid_ocr_engine is None:
+        from rapidocr_onnxruntime import RapidOCR
+        _rapid_ocr_engine = RapidOCR()
+    return _rapid_ocr_engine
+
+
 def _run_ocr_on_image(image: Any) -> List[Dict[str, Any]]:
     """
     Run RapidOCR on a single page image.
@@ -394,8 +413,7 @@ def _run_ocr_on_image(image: Any) -> List[Dict[str, Any]]:
     tokens: List[Dict[str, Any]] = []
 
     try:
-        from rapidocr_onnxruntime import RapidOCR
-        engine = RapidOCR()
+        engine = _get_rapid_ocr_engine()
         result, _ = engine(image)
         if not result:
             return tokens
