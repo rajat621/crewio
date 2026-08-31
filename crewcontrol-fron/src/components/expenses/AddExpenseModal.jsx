@@ -362,8 +362,7 @@
 
 import { useState, useEffect } from "react";
 import { employeesApi } from '../../api/employees'
-import { useEmployees } from '../../hooks/useEmployees'
-import SearchableSelect from '../common/SearchableSelect'
+import SearchableEmployeeDropdown from '../common/SearchableEmployeeDropdown'
 
 const BORDER = "var(--border-card)";
 const DARK   = "var(--text-primary)";
@@ -492,13 +491,6 @@ export default function AddExpenseModal({ open, onClose, onSubmit, prefillEmploy
     amount:       "",
   });
 
-  // Phase 3.13: was its own useState/useEffect fetch duplicating
-  // useEmployees()'s exact params ({page:1,limit:500}) and output shape -
-  // every modal open re-fetched from scratch even when Employees.jsx/
-  // AddEmployee.jsx/etc. had already populated this exact cache entry
-  // earlier in the session.
-  const { data: employees = [] } = useEmployees();
-
   // Reset to fresh state if prefill changes (e.g. different rows)
   const [lastPrefill, setLastPrefill] = useState(prefillEmployee);
   if (prefillEmployee !== lastPrefill) {
@@ -567,13 +559,9 @@ export default function AddExpenseModal({ open, onClose, onSubmit, prefillEmploy
         {/* Body */}
         <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: 18 }}>
           <Field label="Employee Name">
-            <SearchableSelect
-              options={employees.map((emp) => ({
-                value: emp._id || emp.id,
-                label: emp.name || `${emp.firstName || ""} ${emp.lastName || ""}`.trim(),
-              }))}
+            <SearchableEmployeeDropdown
               value={form.employeeId}
-              placeholder="Select or type to search"
+              valueLabel={form.employeeName}
               onChange={async (id) => {
                 setForm((p) => ({ ...p, employeeId: id }));
                 if (!id) return;

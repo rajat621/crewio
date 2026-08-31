@@ -23,7 +23,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import InvoicePreviewWindow from "../../InvoicePreviewWindow";
-import SearchableSelect from "../../../components/common/SearchableSelect";
+import SearchableCompanyDropdown from "../../../components/common/SearchableCompanyDropdown";
 
 
 /* ═══════════════════════════════════════════════════════════════
@@ -316,7 +316,7 @@ const UploadCloudIconComponent = () => (
    STEP 1: SELECT COMPANY
 ═══════════════════════════════════════════════════════════════ */
 
-function Step1({ data, onChange, companies }) {
+function Step1({ data, onChange }) {
   return (
     <div style={{ maxWidth: "560px" }}>
       <FormHeading
@@ -326,11 +326,10 @@ function Step1({ data, onChange, companies }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
         <Field label="Select a company" required>
-          <SearchableSelect
-            options={companies.map((c) => ({ value: c._id || c.id, label: c.name }))}
+          <SearchableCompanyDropdown
             value={data.companyId}
-            onChange={(companyId) => onChange({ ...data, companyId })}
-            placeholder="Select or type to search"
+            valueLabel={data.companyName}
+            onChange={(companyId, option) => onChange({ ...data, companyId, companyName: option?.label || "" })}
           />
         </Field>
       </div>
@@ -1330,7 +1329,6 @@ export default function GenerateTaxInvoice() {
   // "review"). Null when the review stage isn't showing.
   const [reviewDraftId, setReviewDraftId] = useState(null);
   const [invoiceNumberPreview, setInvoiceNumberPreview] = useState("--");
-  const [companies, setCompanies] = useState([]);
   const [generateError, setGenerateError] = useState("");
 
   // ----------------- Generation dialog presentation state -----------------
@@ -1345,6 +1343,7 @@ export default function GenerateTaxInvoice() {
 
   const [formData, setFormData] = useState({
     companyId: "",
+    companyName: "",
     companyDetails: {
       name: "",
       phone: "",
@@ -1365,55 +1364,60 @@ export default function GenerateTaxInvoice() {
 
   const preselectedCompanyId = searchParams.get("companyId") || "";
 
+  // Deep-link case only (e.g. "Generate Invoice" from a company profile,
+  // which already knows the company id up front) - fetches that ONE
+  // company's full record directly rather than loading the tenant's whole
+  // company list just to find it locally. Step 1's own dropdown never
+  // needs this list either now - SearchableCompanyDropdown fetches its own
+  // (small, server-searched) options on demand.
   useEffect(() => {
     let active = true;
+    if (!preselectedCompanyId) return undefined;
 
-    const loadCompanies = async () => {
+    const loadPreselectedCompany = async () => {
       try {
-        const response = await companiesApi.getClientCompanies();
-        const nextCompanies = Array.isArray(response?.data?.data) ? response.data.data : [];
-
-        if (active) {
-          setCompanies(nextCompanies);
-
-          if (preselectedCompanyId) {
-            const preselectedCompany = nextCompanies.find(
-              (company) => String(company?._id || company?.id) === String(preselectedCompanyId)
-            );
-
-            if (preselectedCompany) {
-              setFormData((prev) => ({
-                ...prev,
-                companyId: String(preselectedCompany._id || preselectedCompany.id),
-                companyDetails: {
-                  name: preselectedCompany.name || preselectedCompany.companyLegalName || "",
-                  phone: preselectedCompany.telephoneNumber || preselectedCompany.phone || "",
-                  poBox: preselectedCompany.poBox || "",
-                  fax: preselectedCompany.faxNumber || preselectedCompany.fax || "",
-                  address: preselectedCompany.address || preselectedCompany.companyAddress || "",
-                  trn: preselectedCompany.trn || "",
-                },
-              }));
-              setCurrentStep(2);
-            }
-          }
+        const response = await companiesApi.getCompany(preselectedCompanyId);
+        const company = response?.data?.data || response?.data;
+        if (active && company) {
+          setFormData((prev) => ({
+            ...prev,
+            companyId: String(company._id || company.id),
+            companyName: company.name || company.companyLegalName || "",
+            companyDetails: {
+              name: company.name || company.companyLegalName || "",
+              phone: company.telephoneNumber || company.phone || "",
+              poBox: company.poBox || "",
+              fax: company.faxNumber || company.fax || "",
+              address: company.address || company.companyAddress || "",
+              trn: company.trn || "",
+            },
+          }));
+          setCurrentStep(2);
         }
       } catch (error) {
-        if (active) {
-          setCompanies([]);
-        }
+        // Deep-link company id was invalid/inaccessible - leave the wizard
+        // on Step 1 so the user can pick a company manually instead.
       }
     };
 
-    loadCompanies();
+    loadPreselectedCompany();
 
     return () => {
       active = false;
     };
   }, [preselectedCompanyId]);
 
-  const getSelectedCompany = () => {
-    return companies.find((c) => String(c._id || c.id) === String(formData.companyId));
+  // Fetches the selected company's full record on demand (Step 1 only ever
+  // knows its id + display name from the search dropdown) instead of
+  // requiring the whole list to already be loaded client-side.
+  const getSelectedCompany = async () => {
+    if (!formData.companyId) return null;
+    try {
+      const response = await companiesApi.getCompany(formData.companyId);
+      return response?.data?.data || response?.data || null;
+    } catch (error) {
+      return null;
+    }
   };
 
   useEffect(() => {
@@ -1453,9 +1457,9 @@ export default function GenerateTaxInvoice() {
     );
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep === 1) {
-      const company = getSelectedCompany();
+      const company = await getSelectedCompany();
       if (company) {
         setFormData((prev) => ({
           ...prev,
@@ -2000,7 +2004,7 @@ p:0 ,mb:2 ,      "& .MuiAlert-icon": {
       ) : null}
 
       {currentStep === 1 ? (
-        <Step1 data={formData} onChange={setFormData} companies={companies} />
+        <Step1 data={formData} onChange={setFormData} />
       ) : currentStep === 2 ? (
         <Step2 data={formData.companyDetails} />
       ) : (

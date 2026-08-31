@@ -20,7 +20,7 @@ import { useEmployees } from "../../hooks/useEmployees";
 import { useSalarySlipForEdit } from "../../hooks/useSalarySlipForEdit";
 import { salarySlipsApi } from "../../api/salarySlips";
 import { useSaveSalarySlipMutation } from "../../hooks/mutations/useSalarySlipGenerationMutations";
-import SearchableSelect from "../../components/common/SearchableSelect";
+import SearchableEmployeeDropdown from "../../components/common/SearchableEmployeeDropdown";
 /* ═══════════════════════════════════════════════════════════════
    CONSTANTS
    (kept identical to GenerateTaxInvoice.jsx so both screens share
@@ -1751,13 +1751,9 @@ invoiceDate:
             <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "18px" }}>
               
               <Field label="Employee Name" required>
-                <SearchableSelect
-                  options={employees.map((emp) => ({
-                    value: emp._id || emp.id,
-                    label: emp.name || `${emp.firstName || ""} ${emp.lastName || ""}`.trim(),
-                  }))}
+                <SearchableEmployeeDropdown
                   value={form.employeeId || ""}
-                  placeholder="Select or type to search"
+                  valueLabel={form.employeeName}
                   onChange={async (id) => {
                     setForm((p) => ({ ...p, employeeId: id }));
                     if (!id) return;

@@ -13,11 +13,11 @@ import { useSocket } from "../context/SocketContext";
 import { useEmployeesPage } from "../hooks/useEmployeesPage";
 import { useEmployeeStats } from "../hooks/useEmployeeStats";
 import { useEmployeeAttendancePage, useAttendanceSummary } from "../hooks/useEmployeeAttendancePage";
-import { useActiveClientCompanies } from "../hooks/useActiveClientCompanies";
 import { useUnassignEmployeeMutation, useReactivateEmployeeMutation, useAssignEmployeeMutation } from "../hooks/mutations/useEmployeeMutations";
 import { applySocketEvent } from "../sockets/socketBridge";
 import { getCurrentMonthValue } from "../utils/dateRanges";
 import { getDocumentExpiryStatus } from "../utils/documentExpiryStatus";
+import SearchableCompanyDropdown from "../components/common/SearchableCompanyDropdown";
 
 import EmployeesTabs from "../components/employees/EmployeesTabs";
 
@@ -373,7 +373,6 @@ const Employees = () => {
   const { data: trackPageData } = useEmployeeAttendancePage(trackTablePage, TRACK_PAGE_SIZE, trackTableSearch, undefined, undefined, activeTab === "track");
   const trackRows = trackPageData?.items || [];
 
-  const { data: companies = [] } = useActiveClientCompanies();
   const [assignDialogRow, setAssignDialogRow] = useState(null);
   const [selectedCompanyId, setSelectedCompanyId] = useState("");
 
@@ -806,11 +805,9 @@ const Employees = () => {
               <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
                 Select a company
               </label>
-              <SearchableSelect
-                options={companies.map((company) => ({ value: company.id, label: company.name }))}
+              <SearchableCompanyDropdown
                 value={selectedCompanyId}
                 onChange={setSelectedCompanyId}
-                placeholder="Select or type to search"
                 style={{ maxWidth: "560px" }}
               />
             </div>

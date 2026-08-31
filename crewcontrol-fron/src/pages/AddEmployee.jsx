@@ -5,7 +5,7 @@ import { useActiveClientCompanies } from "../hooks/useActiveClientCompanies";
 import { useCreateEmployeeMutation } from "../hooks/mutations/useCreateEmployeeMutation";
 import { useAssignEmployeeMutation } from "../hooks/mutations/useEmployeeMutations";
 import { useDocumentUpload, DOCUMENT_ACCEPT_ATTR } from "../hooks/useDocumentUpload";
-import SearchableSelect from "../components/common/SearchableSelect";
+import SearchableCompanyDropdown from "../components/common/SearchableCompanyDropdown";
 import ReactCountryFlag from "react-country-flag";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -2394,9 +2394,9 @@ function AddEmployee() {
               <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
                 Select a company
               </label>
-              <SearchableSelect
-                options={companyOptions.map((company) => ({ value: company.id, label: company.name }))}
+              <SearchableCompanyDropdown
                 value={selectedCompanyId}
+                valueLabel={companyOptions.find((c) => c.id === selectedCompanyId)?.name}
                 onChange={setSelectedCompanyId}
                 disabled={companyLoading || assigningCompany}
                 placeholder={

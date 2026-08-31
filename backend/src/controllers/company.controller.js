@@ -652,6 +652,21 @@ const parseCompanyPagination = (req) => {
   return { page, limit, skip: (page - 1) * limit };
 };
 
+// Same reasoning and shape as employee.controller.js's getEmployees search
+// clause: without this, every company-picker dropdown could only search
+// within whichever single already-fetched page (capped at 500) happened to
+// be loaded, so a company outside that page was unreachable by typing its
+// name no matter how many characters were typed. Escaped before use in a
+// $regex - this is user input. Matches on `name` (what every dropdown
+// displays) and `trn` (the other identifier a company is looked up by in
+// this app, e.g. on invoices).
+const buildCompanySearchClause = (search) => {
+  if (!search || !String(search).trim()) return null;
+  const escaped = String(search).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(escaped, 'i');
+  return { $or: [{ name: pattern }, { trn: pattern }] };
+};
+
 export const getCompanies = async (req, res) => {
   try {
     const userId = getAuthenticatedUserId(req);
@@ -661,13 +676,16 @@ export const getCompanies = async (req, res) => {
 
     const ownerId = req.user?.ownerId || userId;
     const { page, limit, skip } = parseCompanyPagination(req);
-    const query = {
-      ownerId,
+    const roleClause = {
       $or: [
         { companyRole: 'client' },
         { companyRole: { $exists: false }, isOwner: { $ne: true } },
       ],
     };
+    const searchClause = buildCompanySearchClause(req.query.search);
+    const query = searchClause
+      ? { ownerId, $and: [roleClause, searchClause] }
+      : { ownerId, ...roleClause };
 
     // Cached like every other list endpoint in this codebase (employees,
     // salary-slips) - was previously the one hot list endpoint hitting Mongo
@@ -675,8 +693,9 @@ export const getCompanies = async (req, res) => {
     // siblings. Same prefix getCompanyWorkforceSummary already uses, so the
     // existing delete-time cacheInvalidate call below already covers this;
     // create/update now also invalidate it (see createCompany/updateCompany/
-    // createClientCompany).
-    const cacheKey = `${employeeCachePrefix(ownerId)}companies:list:${page}:${limit}`;
+    // createClientCompany). search included in the key (empty string for
+    // "no search") so a filtered and unfiltered request never collide.
+    const cacheKey = `${employeeCachePrefix(ownerId)}companies:list:${page}:${limit}:${req.query.search || ''}`;
     const { companies, total } = await cacheGetOrSet(cacheKey, 30, async () => {
       const [companies, total] = await Promise.all([
         Company.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
@@ -796,13 +815,16 @@ export const getClientCompanies = async (req, res) => {
 
     const ownerId = req.user?.ownerId || userId;
     const { page, limit, skip } = parseCompanyPagination(req);
-    const query = {
-      ownerId,
+    const roleClause = {
       $or: [
         { companyRole: 'client' },
         { companyRole: { $exists: false }, isOwner: { $ne: true } },
       ],
     };
+    const searchClause = buildCompanySearchClause(req.query.search);
+    const query = searchClause
+      ? { ownerId, $and: [roleClause, searchClause] }
+      : { ownerId, ...roleClause };
 
     // .lean() - result goes straight to res.json(), never mutated here.
     // Excludes logo/stamp/signature/invoiceTemplate - found via direct DB
@@ -813,7 +835,7 @@ export const getClientCompanies = async (req, res) => {
     // endpoint transferred every client company's full asset payload on
     // every Companies-page/Home load regardless of list size, with no
     // pagination on top of that.
-    const cacheKey = `${employeeCachePrefix(ownerId)}companies:clients:${page}:${limit}`;
+    const cacheKey = `${employeeCachePrefix(ownerId)}companies:clients:${page}:${limit}:${req.query.search || ''}`;
     const { companies, total } = await cacheGetOrSet(cacheKey, 30, async () => {
       const [companies, total] = await Promise.all([
         Company.find(query)

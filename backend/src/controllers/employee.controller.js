@@ -10,6 +10,7 @@ import { reportLifecycleEvent } from '../services/lifecycle.service.js';
 import { cacheGetOrSet, cacheInvalidate } from '../utils/cache.util.js';
 import { getUaeDayBounds } from '../utils/businessTime.util.js';
 import { sumEmployeeExpenseCategories } from '../utils/employeeExpenseFields.js';
+import { startOfUtcDay, addCalendarMonths, buildDocumentStatusExpr } from '../utils/documentExpiryStatus.util.js';
 
 // All employee cache keys for one owner live under this prefix, so any
 // write just has to invalidate `employeeCachePrefix(ownerId)` rather than
@@ -65,8 +66,22 @@ export const getEmployees = async (req, res) => {
     // card the user clicked, instead of filtering whatever page happens
     // to already be loaded client-side.
     if (assignedStatus) scopedClauses.push({ assignedStatus });
-    if (passportStatus) scopedClauses.push({ passportStatus });
-    if (emirateIdStatus) scopedClauses.push({ emirateIdStatus });
+    // passportStatus/emirateIdStatus are derived live from the expiry date
+    // via $expr (same buildDocumentStatusExpr used by getEmployeeStats'
+    // aggregation below), NOT matched against the stored passportStatus/
+    // emirateIdStatus field - that field is set once at employee creation
+    // and never recomputed as dates pass, so filtering on it directly could
+    // return a different set of employees than the KPI card's own count.
+    if (passportStatus || emirateIdStatus) {
+      const today = startOfUtcDay(new Date());
+      const cutoff = addCalendarMonths(today, 1);
+      if (passportStatus) {
+        scopedClauses.push({ $expr: { $eq: [buildDocumentStatusExpr('passportExpiry', today, cutoff), passportStatus] } });
+      }
+      if (emirateIdStatus) {
+        scopedClauses.push({ $expr: { $eq: [buildDocumentStatusExpr('emiratesIdExpiry', today, cutoff), emirateIdStatus] } });
+      }
+    }
 
     // Server-side search so a match beyond whatever page happens to be
     // loaded is still reachable - the frontend previously only searched
@@ -116,10 +131,23 @@ export const getEmployees = async (req, res) => {
     });
 
     // Self-healing backfill: employees created before assignedStatus existed
-    // won't have it set in the database at all. Rather than requiring a
-    // manual migration, fix them up the first time they're read and use the
-    // correct value immediately in this response too.
-    const needsBackfill = items.filter((it) => !it.assignedStatus);
+    // won't have it set in the database at all - fix them up the first time
+    // they're read, same as before. Also now catches the two states that
+    // are impossible if `company` (the real reference, not this cached
+    // field - see getEmployeeStats's comment) is trusted: assignedStatus
+    // says 'on-site' but there's no company, or says 'on-hold' while a
+    // company IS set. Those arise from updateEmployee changing `company`
+    // without this field being in the same request (fixed going forward,
+    // but existing drifted records still need correcting) - 'site-over' is
+    // deliberately left alone in both directions since a site-finished
+    // employee legitimately still has a company on file.
+    const needsBackfill = items.filter((it) => {
+      if (!it.assignedStatus) return true;
+      const hasCompany = Boolean(it.company);
+      if (!hasCompany && it.assignedStatus === 'on-site') return true;
+      if (hasCompany && it.assignedStatus === 'on-hold') return true;
+      return false;
+    });
     if (needsBackfill.length > 0) {
       await Promise.all(
         needsBackfill.map((it) => {
@@ -149,11 +177,23 @@ export const getEmployees = async (req, res) => {
 // of employees happens to be loaded client-side, which silently
 // undercounts once a tenant has more employees than one page holds.
 //
-// assignedStatus is the canonical site-assignment field (set explicitly
-// by assignEmployee/unassignEmployee/reactivateEmployee - see those
-// below), not an ad-hoc `company == null` check computed differently in
-// different places (getEmployee's single-record shape used to do exactly
-// that, inconsistently - see the comment there).
+// `assignedStatus` is a denormalized cache of `company` (set alongside it
+// by createEmployee/assignEmployee/unassignEmployee/the company-deletion
+// cascade), NOT an independent source of truth - it existed here so this
+// aggregation didn't need to inspect `company` directly. That cache is only
+// as good as every write path remembering to update it, and one didn't
+// (the generic updateEmployee PATCH could change `company` without
+// touching `assignedStatus` - see the fix there), which is exactly why this
+// endpoint's "Worker Unassigned" number could disagree with
+// AssignEmployeeDialog's actual `company`-based query: they were reading
+// two different fields that were supposed to (but didn't always) agree.
+// `onHold` below is now computed the same way that dialog computes
+// "unassigned" - directly off `company`, scoped to active employees - so
+// the two can never drift apart again, regardless of assignedStatus's
+// state. onSite/siteOver are left reading the cached field: distinguishing
+// "still assigned, site finished" (site-over) from "still assigned, on
+// site" (on-site) genuinely needs a signal beyond a plain company-null
+// check, and neither of those two was the bug being fixed here.
 export const getEmployeeStats = async (req, res) => {
   try {
     const user = req.user;
@@ -162,15 +202,37 @@ export const getEmployeeStats = async (req, res) => {
     const cacheKey = `${employeeCachePrefix(user.ownerId)}stats`;
     const stats = await cacheGetOrSet(cacheKey, 30, async () => {
       const ownerId = new mongoose.Types.ObjectId(user.ownerId);
+      // byPassportStatus/byEmirateIdStatus are grouped by status DERIVED
+      // from passportExpiry/emiratesIdExpiry (via buildDocumentStatusExpr),
+      // not by the stored passportStatus/emirateIdStatus field - that field
+      // defaults to 'valid' at creation and is never recomputed as dates
+      // pass, which is why these KPI cards used to disagree with the
+      // Employees page's own per-row (expiry-date-derived) status. today/
+      // cutoff are computed once per request, not per document.
+      const today = startOfUtcDay(new Date());
+      const cutoff = addCalendarMonths(today, 1);
       const [result] = await Employee.aggregate([
         { $match: { ownerId } },
         {
           $facet: {
             total: [{ $count: 'count' }],
             byAssignedStatus: [{ $group: { _id: '$assignedStatus', count: { $sum: 1 } } }],
-            byPassportStatus: [{ $group: { _id: '$passportStatus', count: { $sum: 1 } } }],
-            byEmirateIdStatus: [{ $group: { _id: '$emirateIdStatus', count: { $sum: 1 } } }],
+            byPassportStatus: [
+              { $group: { _id: buildDocumentStatusExpr('passportExpiry', today, cutoff), count: { $sum: 1 } } },
+            ],
+            byEmirateIdStatus: [
+              { $group: { _id: buildDocumentStatusExpr('emiratesIdExpiry', today, cutoff), count: { $sum: 1 } } },
+            ],
             byStatus: [{ $group: { _id: '$status', count: { $sum: 1 } } }],
+            // Same predicate AssignEmployeeDialog's popup uses
+            // (assignedCompanyId: 'unassigned' -> this exact $or, scoped to
+            // status: 'active') - literally the same query, not a
+            // re-derivation of it, so this number and that popup's total
+            // can never disagree.
+            unassignedActive: [
+              { $match: { status: 'active', $or: [{ company: null }, { company: { $exists: false } }] } },
+              { $count: 'count' },
+            ],
           },
         },
       ]);
@@ -182,14 +244,15 @@ export const getEmployeeStats = async (req, res) => {
         }, {});
 
       const assignedStatus = toCountMap(result.byAssignedStatus);
+      const unassignedActive = result.unassignedActive[0]?.count || 0;
       return {
         total: result.total[0]?.count || 0,
         assignedStatus,
-        // Named aliases matching the dashboard's own vocabulary, derived
-        // from the same canonical field - 'on-hold' IS 'unassigned' here,
-        // not a separately-computed value.
+        // Named aliases matching the dashboard's own vocabulary. onHold
+        // ("Worker Unassigned") is the company-derived count, not the
+        // cached assignedStatus facet - see the function comment above.
         onSite: assignedStatus['on-site'] || 0,
-        onHold: assignedStatus['on-hold'] || 0,
+        onHold: unassignedActive,
         siteOver: assignedStatus['site-over'] || 0,
         passportStatus: toCountMap(result.byPassportStatus),
         emirateIdStatus: toCountMap(result.byEmirateIdStatus),
@@ -552,11 +615,28 @@ export const updateEmployee = async (req, res) => {
     payload.employeeId = payload.employeeId || payload.emiratesId;
     payload.emiratesId = payload.emiratesId || payload.employeeId;
 
-    if (Object.prototype.hasOwnProperty.call(payload, 'company') && payload.company != null) {
-      if (!mongoose.Types.ObjectId.isValid(payload.company)) {
+    if (Object.prototype.hasOwnProperty.call(payload, 'company')) {
+      if (payload.company != null && !mongoose.Types.ObjectId.isValid(payload.company)) {
         return res.status(400).json({ message: 'Invalid company id' });
       }
-      // Assume owner-level scoping; company must belong to same owner when enforced elsewhere
+      // Every OTHER write path that changes `company` (createEmployee,
+      // assignEmployee, unassignEmployee, and the company-deletion cascade
+      // in company.controller.js) recomputes assignedStatus in the same
+      // write - this generic PATCH endpoint was the one path that didn't,
+      // silently desyncing the two fields whenever a caller included
+      // `company` in the body without also explicitly setting
+      // assignedStatus (root cause of the Employees page's "Worker
+      // Unassigned" KPI disagreeing with the Assign Employee popup's actual
+      // count - see getEmployeeStats below, which now reads `company`
+      // directly instead of trusting this cached field). Skipped only when
+      // the caller ALSO explicitly sets assignedStatus in the same request
+      // (e.g. the site-finished mobile lifecycle flow intentionally sets
+      // assignedStatus without touching company - that path doesn't go
+      // through this generic handler, but this guard keeps the same
+      // "explicit wins" precedent if it ever does).
+      if (!Object.prototype.hasOwnProperty.call(payload, 'assignedStatus')) {
+        payload.assignedStatus = payload.company ? 'on-site' : 'on-hold';
+      }
     }
 
     // Hash new password if admin is updating app credentials, and keep the

@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -22,99 +22,116 @@ import SearchIcon from "@mui/icons-material/Search";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ACTION_CELL_SX, ACTION_ICON_BUTTON_SX } from "../table/tableUtils";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { useNavigate } from "react-router-dom";
 import { employeesApi } from "../../api/employees";
+import { normalizeListResponse } from "../../utils/apiResponseNormalizer";
+import { queryKeys } from "../../queryKeys";
 
 const ROWS_PER_PAGE = 5;
+const SEARCH_DEBOUNCE_MS = 300;
+
+function useDebouncedValue(value, delayMs) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delayMs);
+    return () => clearTimeout(timer);
+  }, [value, delayMs]);
+  return debounced;
+}
+
+const mapEmployeeRow = (employee) => ({
+  id: employee?._id,
+  employeeId: employee?.employeeId || employee?._id || "-",
+  name:
+    `${employee?.firstName || ""} ${employee?.lastName || ""}`.trim() ||
+    employee?.name ||
+    "-",
+  trade: employee?.trade || employee?.position || "-",
+  rate: Number(employee?.ratePerHour || employee?.salary || 0).toFixed(2),
+});
 
 function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
   const [assigning, setAssigning] = useState(false);
-  const [employees, setEmployees] = useState([]);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState([]);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [menuRow, setMenuRow] = useState(null);
 
-  const loadUnassignedEmployees = async () => {
-    try {
-      setLoading(true);
-      // Filter server-side (assignedCompanyId: 'unassigned' - see
-      // employee.controller.js's getEmployees) instead of fetching every
-      // active employee and filtering in the browser. The old approach
-      // asked for limit: 500 but the server clamps limit to 200 and sorts
-      // by createdAt desc, so on any tenant with more than 200 active
-      // employees, unassigned employees outside the 200 most-recently-
-      // created active ones could never appear here at all, regardless of
-      // this filter's own logic. Filtering unassigned status server-side
-      // means the 200-row cap only ever has to cover the (usually much
-      // smaller) unassigned pool, not the whole active population.
+  const debouncedQuery = useDebouncedValue(query.trim(), SEARCH_DEBOUNCE_MS);
+
+  // Adjusted during render (React's documented pattern for "reset state
+  // when a value changes between renders") rather than in a useEffect -
+  // avoids an extra render-then-effect round trip for what's otherwise a
+  // pure "does this differ from last time" comparison.
+  const [prevDebouncedQuery, setPrevDebouncedQuery] = useState(debouncedQuery);
+  if (debouncedQuery !== prevDebouncedQuery) {
+    setPrevDebouncedQuery(debouncedQuery);
+    // Resets to page 1 whenever the (debounced) search term actually
+    // changes - staying on e.g. page 3 of an old, wider result set while a
+    // narrower one has only 1 page would otherwise show an empty page with
+    // working Previous/Next buttons pointing nowhere useful.
+    setPage(1);
+  }
+
+  // Same render-time-adjustment pattern: reset transient dialog state (not
+  // the debounce itself) each time it opens, so a previous open's
+  // search/page/selection never leaks into the next one.
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) {
+      setQuery("");
+      setPage(1);
+      setSelectedIds([]);
+    }
+  }
+
+  // Same predicate the "Worker Unassigned" KPI now reads directly
+  // (employee.controller.js's getEmployeeStats unassignedActive facet) -
+  // status: 'active' + assignedCompanyId: 'unassigned' (company is null/
+  // missing). Server-side search + pagination: previously this fetched a
+  // single capped page (limit: 200) and searched/paginated only within it
+  // client-side, which is exactly backwards from what the dashboard counts
+  // - a tenant with more unassigned employees than fit in view could never
+  // see or search the rest here. React Query's own key-based caching means
+  // typing the same term twice, or two dialogs open with the same filters,
+  // never issue duplicate network requests, and a slow response for an
+  // abandoned older search term can only ever populate ITS OWN cache entry
+  // - never overwrite what a newer, faster-resolving search term is
+  // currently displaying.
+  const { data, isFetching } = useQuery({
+    queryKey: queryKeys.employees.list({
+      scope: "unassigned-popup",
+      search: debouncedQuery,
+      page,
+      limit: ROWS_PER_PAGE,
+    }),
+    queryFn: async () => {
       const response = await employeesApi.getEmployees({
         status: "active",
         assignedCompanyId: "unassigned",
-        page: 1,
-        limit: 200,
+        search: debouncedQuery || undefined,
+        page,
+        limit: ROWS_PER_PAGE,
       });
-      const rawEmployees = Array.isArray(response?.data?.employees)
-        ? response.data.employees
-        : Array.isArray(response?.data?.data)
-          ? response.data.data
-          : [];
+      const { items, meta } = normalizeListResponse(response);
+      return { rows: items.map(mapEmployeeRow), total: Number(meta?.total) || 0 };
+    },
+    enabled: open,
+    placeholderData: (previous) => previous,
+  });
 
-      const rows = rawEmployees
-        .map((employee) => ({
-          id: employee?._id,
-          employeeId: employee?.employeeId || employee?._id || "-",
-          name:
-            `${employee?.firstName || ""} ${employee?.lastName || ""}`.trim() ||
-            employee?.name ||
-            "-",
-          trade: employee?.trade || employee?.position || "-",
-          rate: Number(employee?.ratePerHour || employee?.salary || 0).toFixed(2),
-        }));
-
-      setEmployees(rows);
-      setSelectedIds([]);
-      setPage(1);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (open) {
-      loadUnassignedEmployees();
-    }
-  }, [open]);
-
-  const filteredEmployees = useMemo(() => {
-    const keyword = query.trim().toLowerCase();
-    if (!keyword) return employees;
-
-    return employees.filter((employee) => {
-      return (
-        employee.employeeId.toLowerCase().includes(keyword) ||
-        employee.name.toLowerCase().includes(keyword)
-      );
-    });
-  }, [employees, query]);
-
-  useEffect(() => {
-    const maxPage = Math.max(1, Math.ceil(filteredEmployees.length / ROWS_PER_PAGE));
-    if (page > maxPage) {
-      setPage(maxPage);
-    }
-  }, [filteredEmployees.length, page]);
-
-  const total = filteredEmployees.length;
+  const pageRows = data?.rows || [];
+  const total = data?.total || 0;
   const maxPage = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
-  const startIndex = (page - 1) * ROWS_PER_PAGE;
-  const endIndex = Math.min(startIndex + ROWS_PER_PAGE, total);
-  const pageRows = filteredEmployees.slice(startIndex, endIndex);
+  const startIndex = total ? (page - 1) * ROWS_PER_PAGE + 1 : 0;
+  const endIndex = Math.min(page * ROWS_PER_PAGE, total);
 
   const toggleSelection = (employeeId) => {
     setSelectedIds((prev) =>
@@ -137,6 +154,14 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
         const chunk = selectedIds.slice(i, i + ASSIGN_CHUNK_SIZE);
         await Promise.all(chunk.map((employeeId) => employeesApi.assignEmployee(employeeId, companyId)));
       }
+      // Keeps every other consumer of "who's unassigned"/"who's in this
+      // company" in sync without a full page reload: this dialog's own
+      // list (so the just-assigned employees actually disappear from it if
+      // reopened), the Employees page's "Worker Unassigned" KPI and table,
+      // and the Companies page's per-company worker counts.
+      await queryClient.invalidateQueries({ queryKey: queryKeys.employees.all });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard", "summary"] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.companies.all });
       await onAssigned?.();
     } finally {
       setAssigning(false);
@@ -188,7 +213,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
         <Box sx={{ border: "1px solid var(--border-card)", borderRadius: "10px", overflow: "hidden" }}>
           <Box sx={{ p: "10px 12px", borderBottom: "1px solid var(--border-card)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
             <TextField
-              placeholder="Search for application id, name..."
+              placeholder="Search for employee id, name..."
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               size="small"
@@ -222,12 +247,17 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
                     <SearchIcon sx={{ color: "var(--text-disabled)", fontSize: 18 }} />
                   </InputAdornment>
                 ),
+                endAdornment: isFetching ? (
+                  <InputAdornment position="end">
+                    <CircularProgress size={14} sx={{ color: "var(--text-disabled)" }} />
+                  </InputAdornment>
+                ) : null,
               }}
             />
 
             <Box sx={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
               <Typography sx={{ fontSize: "12px", color: "var(--text-secondary)" }}>
-                {total ? `${startIndex + 1}-${endIndex} of ${total}` : "0-0 of 0"}
+                {total ? `${startIndex}-${endIndex} of ${total}` : "0-0 of 0"}
               </Typography>
               <IconButton
                 size="small"
@@ -261,7 +291,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
             </TableHead>
 
             <TableBody>
-              {loading ? (
+              {isFetching && !pageRows.length ? (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                     <CircularProgress size={20} />
@@ -295,7 +325,7 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ py: 4, color: "var(--text-secondary)" , borderBottom: "none", fontSize: "12px" }}>
-                    No unassigned employees found
+                    {debouncedQuery ? "No employees found" : "No unassigned employees found"}
                   </TableCell>
                 </TableRow>
               )}
@@ -352,4 +382,3 @@ function AssignEmployeeDialog({ open, onClose, companyId, onAssigned }) {
 }
 
 export default AssignEmployeeDialog;
-

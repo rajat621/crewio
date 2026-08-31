@@ -1,7 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { employeesApi } from "../../api/employees";
-import { useActiveClientCompanies } from "../../hooks/useActiveClientCompanies";
-import SearchableSelect from "../common/SearchableSelect";
+import SearchableCompanyDropdown from "../common/SearchableCompanyDropdown";
 
 /**
  * The same "Assign to Company" popup already used on the Employees page's
@@ -10,15 +9,6 @@ import SearchableSelect from "../common/SearchableSelect";
  * exact same flow instead of just linking off to a profile page.
  */
 function AssignToCompanyDialog({ open, employee, onClose, onAssigned }) {
-  // Phase 3.12: was its own useState/useEffect fetch duplicating
-  // useActiveClientCompanies' exact logic (same endpoint, same fallback,
-  // same filter, same {id,name} shape) - every dialog open re-fetched
-  // from scratch even when Employees.jsx/AddEmployee.jsx had already
-  // populated this exact cache entry moments earlier. enabled={open}
-  // preserves the original's "only fetch when the dialog is actually
-  // open" timing exactly, rather than fetching unconditionally on the
-  // (always-mounted) component's mount.
-  const { data: companies = [] } = useActiveClientCompanies(open);
   const [selectedCompanyId, setSelectedCompanyId] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
   const [error, setError] = useState("");
@@ -113,11 +103,9 @@ function AssignToCompanyDialog({ open, employee, onClose, onAssigned }) {
           <label style={{ display: "block", fontSize: "14px", color: "var(--text-primary)", marginBottom: "12px", fontWeight: 400 }}>
             Select a company
           </label>
-          <SearchableSelect
-            options={companies.map((company) => ({ value: company.id, label: company.name }))}
+          <SearchableCompanyDropdown
             value={selectedCompanyId}
             onChange={setSelectedCompanyId}
-            placeholder="Select or type to search"
             style={{ maxWidth: "560px" }}
           />
           {error ? (
