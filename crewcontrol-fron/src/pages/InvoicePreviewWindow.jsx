@@ -160,9 +160,21 @@ export default function InvoicePreviewWindow({
     // approveInvoiceDraft + invoiceApproval.worker.js) - the draft sits
     // here while a BullMQ job does the actual recompute/render/save work
     // off the request thread. Must be checked before the 'ready'
-    // fallthrough below, or an 'approving' draft would be treated as
-    // ready-for-editing and briefly re-seed the edit form mid-approval.
-    if (d.status === 'approving') {
+    // fallthrough below, or an 'approving'/'processing' draft would be
+    // treated as ready-for-editing and briefly re-seed the edit form
+    // mid-approval.
+    //
+    // 'processing' is a real, separate status the worker sets for the
+    // ENTIRE render/save duration (invoiceApproval.worker.js atomically
+    // claims the job by flipping 'approving' -> 'processing' before doing
+    // any of the actual work, only reaching 'approved' once it's done) -
+    // this branch was missing that case entirely, so every poll tick
+    // during that whole window fell through to the 'ready' branch below
+    // and flashed the full editable split-screen grid back onscreen right
+    // before the success screen took over. pollApprovalUntilResolved
+    // already treated 'approving' and 'processing' as equivalent
+    // still-working states; this effect needs to as well.
+    if (d.status === 'approving' || d.status === 'processing') {
       setStatus('approving');
       return;
     }
