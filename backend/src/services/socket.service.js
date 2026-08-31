@@ -53,7 +53,33 @@ export const initSocket = (httpServer) => {
   if (redisConnection) {
     const pubClient = redisConnection.duplicate();
     const subClient = redisConnection.duplicate();
-    io.adapter(createAdapter(pubClient, subClient));
+    // redis.connection.js only attaches an 'error' listener to the
+    // ORIGINAL connection - .duplicate() returns brand-new ioredis
+    // instances that don't inherit it.
+    pubClient.on('error', (err) => console.error('[socket] redis pub client error:', err.message));
+    subClient.on('error', (err) => console.error('[socket] redis sub client error:', err.message));
+
+    // createAdapter()'s constructor immediately calls subClient.subscribe(...)
+    // with no .catch() of its own. When Redis can't actually serve commands
+    // right now (down, or - as happened in production - the Upstash plan's
+    // monthly command quota fully exhausted), that SUBSCRIBE rejects with
+    // nothing to catch it: an unhandled promise rejection that server.js's
+    // safety net treats as a fatal, corrupted-state crash, taking the whole
+    // API down in a loop on every restart. Ping first and only wire the
+    // adapter up if Redis actually answers, so a Redis outage degrades
+    // realtime delivery to single-instance-only instead of crash-looping
+    // the entire backend - the same fail-open philosophy already used for
+    // caching (cache.util.js) and rate limiting (rateLimiters.js).
+    Promise.all([pubClient.ping(), subClient.ping()])
+      .then(() => {
+        io.adapter(createAdapter(pubClient, subClient));
+        console.log('[socket] Redis adapter attached for cross-replica realtime delivery.');
+      })
+      .catch((err) => {
+        console.error('[socket] Redis unavailable, running single-instance only (no cross-replica realtime delivery):', err.message);
+        pubClient.disconnect();
+        subClient.disconnect();
+      });
   } else {
     console.warn('[socket] Redis disabled - Socket.IO adapter running single-instance only. Realtime events will NOT reach clients on other replicas if this API is horizontally scaled.');
   }
