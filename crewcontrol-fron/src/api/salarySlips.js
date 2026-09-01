@@ -33,9 +33,14 @@ export const salarySlipsApi = {
   updateSalarySlip: (id, data) =>
     api.put(`/api/salary-slips/${id}`, data),
 
-  // downloadSalarySlip removed (dead code cleanup) - zero usage anywhere
-  // in the frontend; PDF generation happens client-side via
-  // GenerateSalarySlip.jsx's generateSalarySlipPdf instead of fetching a
-  // pre-rendered file from the backend.
+  // Restored (was removed as "dead code" - it wasn't: the backend route
+  // it hits, GET /api/salary-slips/:id/download, is the only place that
+  // reconstructs a usable slipData snapshot for a slip saved before that
+  // snapshot field existed - see salarySlip.controller.js's
+  // downloadSalarySlip. SalarySlipRow.jsx's client-side path has no such
+  // fallback and just fails with "Full slip data not available" for any
+  // pre-existing slip missing slipData; this is the fallback it now calls.
+  downloadSalarySlip: (id) =>
+    api.get(`/api/salary-slips/${id}/download`, { responseType: 'blob' }),
 }
 

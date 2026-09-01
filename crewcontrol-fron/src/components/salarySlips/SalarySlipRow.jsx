@@ -132,17 +132,27 @@ export default function SalarySlipRow({ row, onNotify }) {
 
     try {
       const slipData = row.slipData || (await fetchSlipData(row.id));
+      let blob;
+      let payMonth = row.invoiceDate || '';
       if (!slipData) {
-        onNotify?.('Full slip data not available', 'error');
-        return;
+        // No slipData snapshot to render client-side - this is normal for
+        // a slip saved before that field existed (see fetchSlipData above).
+        // The backend's own /download route reconstructs a usable snapshot
+        // from the slip's other stored fields in that exact case (see
+        // salarySlip.controller.js's downloadSalarySlip), so fall back to
+        // it instead of failing outright.
+        const response = await salarySlipsApi.downloadSalarySlip(row.id);
+        blob = response.data;
+      } else {
+        const data = normalizeSlipData(slipData, row);
+        blob = await generateSalarySlipPdf(data);
+        payMonth = data.payMonth || payMonth;
       }
-      const data = normalizeSlipData(slipData, row);
-      const blob = await generateSalarySlipPdf(data);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       const safeName = (row.employeeName || 'salary-slip').trim().replace(/\s+/g, '_');
-      a.download = `${safeName}_Salary_Slip_${data.payMonth || ''}.pdf`;
+      a.download = `${safeName}_Salary_Slip_${payMonth}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
