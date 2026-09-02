@@ -8,7 +8,7 @@ import EmployeeDocument from '../models/EmployeeDocument.js';
 import FileRecord from '../models/FileRecord.js';
 import { reportLifecycleEvent } from '../services/lifecycle.service.js';
 import { cacheGetOrSet, cacheInvalidate } from '../utils/cache.util.js';
-import { getUaeDayBounds } from '../utils/businessTime.util.js';
+import { getUaeDayBounds, getUaeDateKey } from '../utils/businessTime.util.js';
 import { sumEmployeeExpenseCategories } from '../utils/employeeExpenseFields.js';
 import { startOfUtcDay, addCalendarMonths, buildDocumentStatusExpr } from '../utils/documentExpiryStatus.util.js';
 
@@ -266,14 +266,32 @@ export const getEmployeeStats = async (req, res) => {
   }
 };
 
+// UAE-calendar-day key, not Node-process-local - attendance.date is stored
+// as the UAE day's start instant (see getUaeDayBounds), which in UTC clock
+// time is actually 20:00 the PREVIOUS day. Using local/UTC Date components
+// here (as this used to) reads that instant back as the wrong (previous)
+// day whenever the Node process isn't itself running in UAE time (e.g.
+// Railway's UTC containers) - so today's own present record would never
+// match `todayKey`, always falling back to attendanceStatus: 'absent'
+// even for an employee the KPI's UAE-aware allowlist query (getUaeDayBounds)
+// correctly counted as present today.
 const _getDateKey = (value) => {
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return '';
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return getUaeDateKey(d);
 };
+// UAE-calendar-month boundaries as real UTC instants (same reasoning as
+// getUaeDayBounds) - the previous local-Date-components version built
+// boundaries 4 hours later than the UAE month actually starts/ends, so the
+// month's own 1st-day attendance record (stored at UAE-midnight, i.e.
+// 20:00 UTC the PREVIOUS calendar day) fell just outside `start` and was
+// silently dropped from the query.
+const UAE_OFFSET_MS = 4 * 60 * 60 * 1000;
 const _monthRange = (monthValue) => {
   const [y, m] = String(monthValue).split('-').map(Number);
-  return { start: new Date(y, m - 1, 1, 0, 0, 0, 0), end: new Date(y, m, 0, 23, 59, 59, 999) };
+  const startUtcMs = Date.UTC(y, m - 1, 1, 0, 0, 0, 0) - UAE_OFFSET_MS;
+  const endUtcMs = Date.UTC(y, m, 1, 0, 0, 0, 0) - UAE_OFFSET_MS - 1;
+  return { start: new Date(startUtcMs), end: new Date(endUtcMs) };
 };
 const _normalizeStatus = (status) => {
   if (status === 'leave') return 'on-leave';
@@ -364,8 +382,9 @@ export const getEmployeeAttendancePage = async (req, res) => {
       Employee.countDocuments(filter),
     ]);
 
-    const selectedMonth = month || `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-    const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+    const uaeTodayKey = getUaeDateKey(new Date());
+    const selectedMonth = month || uaeTodayKey.slice(0, 7);
+    const currentMonth = uaeTodayKey.slice(0, 7);
     const selectedRange = _monthRange(selectedMonth);
     const currentRange = _monthRange(currentMonth);
     const from = selectedRange.start < currentRange.start ? selectedRange.start : currentRange.start;
