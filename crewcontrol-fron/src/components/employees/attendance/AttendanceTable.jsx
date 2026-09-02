@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   Box,
   Divider,
@@ -18,64 +17,28 @@ import TableHeader from "../../table/TableHeader";
 import AttendanceRow from "./AttendanceRow";
 import MonthFilterSelect from "../../common/MonthFilterSelect";
 
-// Present/Absent/On Leave KPI cards filter the row LIST by today's
-// attendance (see employee.controller.js's getEmployeeAttendancePage -
-// statusFilter always resolves against getUaeDayBounds, i.e. today, never
-// the selected month), but the "Hour of work"/"Total Present"/"Total
-// Absent"/"Total Leave" figures next to those rows are a separate stat and
-// must still follow whichever month is selected in the filter - they used
-// to be hardcoded to selectedMonth*'s "currentMonth*" sibling fields
-// (today's actual calendar month), so picking a past month while a KPI
-// card was active silently kept showing this month's totals instead.
-const getColumns = (activeStatus) => {
-  if (activeStatus === "present") {
-    return [
-      { key: "id", label: "Employee ID" },
-      { key: "name", label: "Employee Name" },
-      { key: "selectedMonthWorkHours", label: "Hour of work" },
-      { key: "currentCheckIn", label: "Check-In Time" },
-      { key: "currentCheckOut", label: "Check-Out Time" },
-      { key: "selectedMonthPresentCount", label: "Total Present" },
-      { key: "attendanceStatus", label: "Status", align: "center" },
-      { key: "action", label: "Action", align: "center" },
-    ];
-  }
-
-  if (activeStatus === "absent") {
-    return [
-      { key: "id", label: "Employee ID" },
-      { key: "name", label: "Employee Name" },
-      { key: "currentCheckIn", label: "Check-in Time" },
-      { key: "currentCheckOut", label: "Check-out Time" },
-      { key: "selectedMonthAbsentCount", label: "Total Absent" },
-      { key: "attendanceStatus", label: "Status", align: "center" },
-      { key: "action", label: "Action", align: "center" },
-    ];
-  }
-
-  if (activeStatus === "on-leave") {
-    return [
-      { key: "id", label: "Employee ID" },
-      { key: "name", label: "Employee Name" },
-      { key: "currentCheckIn", label: "Check-in Time" },
-      { key: "currentCheckOut", label: "Check-out Time" },
-      { key: "selectedMonthLeaveCount", label: "Total Leave" },
-      { key: "attendanceStatus", label: "Status", align: "center" },
-      { key: "action", label: "Action", align: "center" },
-    ];
-  }
-
-  return [
-    { key: "id", label: "Employee ID" },
-    { key: "name", label: "Employee Name" },
-    { key: "selectedMonthWorkHours", label: "Total Work Hour" },
-    { key: "selectedMonthPresentCount", label: "Total Present" },
-    { key: "selectedMonthLeaveCount", label: "Total Leave" },
-    { key: "selectedMonthAbsentCount", label: "Total Absent" },
-    { key: "attendanceStatus", label: "Status", align: "center" },
-    { key: "action", label: "Action", align: "center" },
-  ];
-};
+// One fixed column set for every view - default (no KPI card active) and
+// each of Present/Absent/On Leave used to show a different, reduced subset
+// (e.g. the "present" filter dropped Total Leave/Total Absent entirely,
+// "absent" dropped Total Work Hour/Total Present/Total Leave, etc.), which
+// made the same employee's totals look inconsistent depending on which
+// card was clicked. All of these read from the selectedMonth* fields (see
+// employee.controller.js's getEmployeeAttendancePage), so they already
+// follow whichever month is selected in the filter regardless of which
+// KPI card (if any) is active - only the row LIST itself is scoped to
+// today by the KPI card (statusFilter resolves against getUaeDayBounds).
+const COLUMNS = [
+  { key: "id", label: "Employee ID" },
+  { key: "name", label: "Employee Name" },
+  { key: "selectedMonthWorkHours", label: "Total Work Hour" },
+  { key: "currentCheckIn", label: "Check-In Time" },
+  { key: "currentCheckOut", label: "Check-Out Time" },
+  { key: "selectedMonthPresentCount", label: "Total Present" },
+  { key: "selectedMonthLeaveCount", label: "Total Leave" },
+  { key: "selectedMonthAbsentCount", label: "Total Absent" },
+  { key: "attendanceStatus", label: "Status", align: "center" },
+  { key: "action", label: "Action", align: "center" },
+];
 
 // Server-driven now: `rows` is already the current page's data, already
 // filtered by `activeStatus` and `search` server-side (see
@@ -99,8 +62,6 @@ export default function AttendanceTable({
   search,
   onSearchChange,
 }) {
-  const columns = useMemo(() => getColumns(activeStatus), [activeStatus]);
-
   const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
   const start = total === 0 ? 0 : (page - 1) * rowsPerPage + 1;
   const end = total === 0 ? 0 : Math.min(page * rowsPerPage, total);
@@ -175,13 +136,13 @@ export default function AttendanceTable({
       <Divider sx={{ borderColor: "var(--border-card)" }} />
 
       <Table>
-        <TableHeader columns={columns} />
+        <TableHeader columns={COLUMNS} />
         <TableBody>
           {rows.map((row) => (
             <AttendanceRow
               key={row.id}
               row={row}
-              columns={columns}
+              columns={COLUMNS}
               onViewProfile={onViewProfile}
               onChat={onChat}
             />
