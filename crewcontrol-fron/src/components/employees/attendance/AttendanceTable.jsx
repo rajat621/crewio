@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Box,
   Divider,
@@ -17,28 +18,32 @@ import TableHeader from "../../table/TableHeader";
 import AttendanceRow from "./AttendanceRow";
 import MonthFilterSelect from "../../common/MonthFilterSelect";
 
-// One fixed column set for every view - default (no KPI card active) and
-// each of Present/Absent/On Leave used to show a different, reduced subset
-// (e.g. the "present" filter dropped Total Leave/Total Absent entirely,
-// "absent" dropped Total Work Hour/Total Present/Total Leave, etc.), which
-// made the same employee's totals look inconsistent depending on which
-// card was clicked. All of these read from the selectedMonth* fields (see
-// employee.controller.js's getEmployeeAttendancePage), so they already
-// follow whichever month is selected in the filter regardless of which
-// KPI card (if any) is active - only the row LIST itself is scoped to
-// today by the KPI card (statusFilter resolves against getUaeDayBounds).
-const COLUMNS = [
-  { key: "id", label: "Employee ID" },
-  { key: "name", label: "Employee Name" },
-  { key: "selectedMonthWorkHours", label: "Total Work Hour" },
-  { key: "currentCheckIn", label: "Check-In Time" },
-  { key: "currentCheckOut", label: "Check-Out Time" },
-  { key: "selectedMonthPresentCount", label: "Total Present" },
-  { key: "selectedMonthLeaveCount", label: "Total Leave" },
-  { key: "selectedMonthAbsentCount", label: "Total Absent" },
-  { key: "attendanceStatus", label: "Status", align: "center" },
-  { key: "action", label: "Action", align: "center" },
-];
+// Same column LAYOUT everywhere (default view and every Present/Absent/On
+// Leave KPI card), but a different DATA SOURCE depending on which is
+// active. The default (no KPI card) view follows the month dropdown -
+// selectedMonth* (see employee.controller.js's getEmployeeAttendancePage),
+// which tracks whatever `month` the caller passed. The three "Today" KPI
+// cards are inherently about right now, so their totals must stay pinned
+// to the REAL current calendar month (currentMonth*, computed server-side
+// independent of the `month` param) regardless of what a user previously
+// picked in the dropdown - otherwise "Present Today" could sit next to a
+// "Total Present" figure for some unrelated past month still selected
+// from an earlier session on this same page.
+const getColumns = (activeStatus) => {
+  const prefix = activeStatus ? "current" : "selected";
+  return [
+    { key: "id", label: "Employee ID" },
+    { key: "name", label: "Employee Name" },
+    { key: `${prefix}MonthWorkHours`, label: "Total Work Hour" },
+    { key: "currentCheckIn", label: "Check-In Time" },
+    { key: "currentCheckOut", label: "Check-Out Time" },
+    { key: `${prefix}MonthPresentCount`, label: "Total Present" },
+    { key: `${prefix}MonthLeaveCount`, label: "Total Leave" },
+    { key: `${prefix}MonthAbsentCount`, label: "Total Absent" },
+    { key: "attendanceStatus", label: "Status", align: "center" },
+    { key: "action", label: "Action", align: "center" },
+  ];
+};
 
 // Server-driven now: `rows` is already the current page's data, already
 // filtered by `activeStatus` and `search` server-side (see
@@ -62,6 +67,8 @@ export default function AttendanceTable({
   search,
   onSearchChange,
 }) {
+  const columns = useMemo(() => getColumns(activeStatus), [activeStatus]);
+
   const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
   const start = total === 0 ? 0 : (page - 1) * rowsPerPage + 1;
   const end = total === 0 ? 0 : Math.min(page * rowsPerPage, total);
@@ -107,6 +114,7 @@ export default function AttendanceTable({
           <MonthFilterSelect
             value={selectedMonth}
             onChange={onMonthChange}
+            disabled={Boolean(activeStatus)}
           />
 
           <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
@@ -136,13 +144,13 @@ export default function AttendanceTable({
       <Divider sx={{ borderColor: "var(--border-card)" }} />
 
       <Table>
-        <TableHeader columns={COLUMNS} />
+        <TableHeader columns={columns} />
         <TableBody>
           {rows.map((row) => (
             <AttendanceRow
               key={row.id}
               row={row}
-              columns={COLUMNS}
+              columns={columns}
               onViewProfile={onViewProfile}
               onChat={onChat}
             />
