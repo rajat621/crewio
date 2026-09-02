@@ -16,19 +16,26 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import TableHeader from "../../table/TableHeader";
 import AttendanceRow from "./AttendanceRow";
-import MonthFilterSelect, { getCurrentMonthValue as getSharedCurrentMonthValue } from "../../common/MonthFilterSelect";
+import MonthFilterSelect from "../../common/MonthFilterSelect";
 
-const CURRENT_MONTH = getSharedCurrentMonthValue();
-
+// Present/Absent/On Leave KPI cards filter the row LIST by today's
+// attendance (see employee.controller.js's getEmployeeAttendancePage -
+// statusFilter always resolves against getUaeDayBounds, i.e. today, never
+// the selected month), but the "Hour of work"/"Total Present"/"Total
+// Absent"/"Total Leave" figures next to those rows are a separate stat and
+// must still follow whichever month is selected in the filter - they used
+// to be hardcoded to selectedMonth*'s "currentMonth*" sibling fields
+// (today's actual calendar month), so picking a past month while a KPI
+// card was active silently kept showing this month's totals instead.
 const getColumns = (activeStatus) => {
   if (activeStatus === "present") {
     return [
       { key: "id", label: "Employee ID" },
       { key: "name", label: "Employee Name" },
-      { key: "currentMonthWorkHours", label: "Hour of work" },
+      { key: "selectedMonthWorkHours", label: "Hour of work" },
       { key: "currentCheckIn", label: "Check-In Time" },
       { key: "currentCheckOut", label: "Check-Out Time" },
-      { key: "currentMonthPresentCount", label: "Total Present" },
+      { key: "selectedMonthPresentCount", label: "Total Present" },
       { key: "attendanceStatus", label: "Status", align: "center" },
       { key: "action", label: "Action", align: "center" },
     ];
@@ -40,7 +47,7 @@ const getColumns = (activeStatus) => {
       { key: "name", label: "Employee Name" },
       { key: "currentCheckIn", label: "Check-in Time" },
       { key: "currentCheckOut", label: "Check-out Time" },
-      { key: "currentMonthAbsentCount", label: "Total Absent" },
+      { key: "selectedMonthAbsentCount", label: "Total Absent" },
       { key: "attendanceStatus", label: "Status", align: "center" },
       { key: "action", label: "Action", align: "center" },
     ];
@@ -52,7 +59,7 @@ const getColumns = (activeStatus) => {
       { key: "name", label: "Employee Name" },
       { key: "currentCheckIn", label: "Check-in Time" },
       { key: "currentCheckOut", label: "Check-out Time" },
-      { key: "currentMonthLeaveCount", label: "Total Leave" },
+      { key: "selectedMonthLeaveCount", label: "Total Leave" },
       { key: "attendanceStatus", label: "Status", align: "center" },
       { key: "action", label: "Action", align: "center" },
     ];
@@ -92,7 +99,6 @@ export default function AttendanceTable({
   search,
   onSearchChange,
 }) {
-  const effectiveMonth = activeStatus ? CURRENT_MONTH : selectedMonth;
   const columns = useMemo(() => getColumns(activeStatus), [activeStatus]);
 
   const totalPages = Math.max(1, Math.ceil(total / rowsPerPage));
@@ -138,9 +144,8 @@ export default function AttendanceTable({
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
           <MonthFilterSelect
-            value={effectiveMonth}
+            value={selectedMonth}
             onChange={onMonthChange}
-            disabled={Boolean(activeStatus)}
           />
 
           <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
